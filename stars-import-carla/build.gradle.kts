@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2022-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,14 @@
  * limitations under the License.
  */
 
-rootProject.name = "stars"
+plugins { id("tools.aqua.stars.library-conventions") }
 
-include(
-    "stars-core",
-    "stars-logic-kcmftbl",
-    "stars-data-av",
-    "stars-import-carla",
-)
+mavenMetadata {
+  name.set("STARS Carla Importer")
+  description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter")
+}
+
+dependencies {
+  implementation(project(":stars-core"))
+  implementation(project(":stars-data-av"))
+}
