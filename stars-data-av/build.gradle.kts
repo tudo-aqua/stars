@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 The BoardGameWork Authors
+ * Copyright 2022-2023 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,8 @@ plugins { id("tools.aqua.stars.library-conventions") }
 
 mavenMetadata {
   name.set("STARS Data AV")
-  description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles")
+  description.set(
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles")
 }
 
-dependencies {
-  implementation(project(":stars-core"))
-}
+dependencies { implementation(project(":stars-core")) }
