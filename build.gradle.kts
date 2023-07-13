@@ -25,12 +25,10 @@ group = "tools.aqua"
 
 mavenMetadata {
   developers.addAll(
-      Developer("Simon Dierl", "simon.dierl@tu-dortmund.de"),
-      Developer("Stefan Naujokat", "stefan.naujokat@tu-dortmund.de"),
       Developer("Till Schallau", "till.schallau@tu-dortmund.de"),
-      Developer("Amin Bouzerda", "amin.bouzerda@tu-dortmund.de"),
-      Developer("Dominik Mäckel", "dominik.maeckel@tu-dortmund.de"),
-      Developer("Fabian Klümpers", "fabian.kluempers@tu-dortmund.de"),
+      Developer("Stefan Naujokat", "stefan.naujokat@tu-dortmund.de"),
+      Developer("Fiona Kullmann", "fiona.kullmann@tu-dortmund.de"),
+      Developer("Falk Howar", "falk.howar@tu-dortmund.de"),
   )
   githubProject.set(GithubProject("tudo-aqua", "stars"))
   licenses.addAll(APACHE_2)
