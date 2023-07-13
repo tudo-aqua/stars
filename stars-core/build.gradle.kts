@@ -21,3 +21,8 @@ mavenMetadata {
   name.set("STARS Core Library")
   description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Core Library")
 }
+
+dependencies {
+  implementation(libs.letsplot.kotlinjvm)
+  implementation(libs.letsplot.imageexport)
+}
