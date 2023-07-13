@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 
 // region nullary predicate
 
-class NullaryPredicate<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>> (
+class NullaryPredicate<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> (
     val eval: (PredicateContext<E, T, S>, T) -> Boolean,
 )
 {
@@ -18,14 +18,14 @@ class NullaryPredicate<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>> (
 /**
  * Creates a nullary tick predicate
  */
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E,T>> predicate(eval: (PredicateContext<E,T,S>, T) -> Boolean) = NullaryPredicate(eval)
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> predicate(eval: (PredicateContext<E,T,S>, T) -> Boolean) = NullaryPredicate(eval)
 
 
 // endregion
 
 // region unary predicate
 
-class UnaryPredicate<E1:E, E: EntityType, T: TickDataType<E>,S: SegmentType<E,T>>(
+class UnaryPredicate<E1:E, E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     val eval: (PredicateContext<E,T,S>, E1) -> Boolean,
     val klass: KClass<E1>
 )
@@ -46,13 +46,13 @@ class UnaryPredicate<E1:E, E: EntityType, T: TickDataType<E>,S: SegmentType<E,T>
 /**
  * Creates a unary tick predicate
  */
-fun <E1:E, E: EntityType, T: TickDataType<E>,S: SegmentType<E,T>>predicate(klass: KClass<E1>, eval: (PredicateContext<E,T,S>, E1) -> Boolean): UnaryPredicate<E1, E, T, S> = UnaryPredicate(eval, klass)
+fun <E1:E, E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>predicate(klass: KClass<E1>, eval: (PredicateContext<E,T,S>, E1) -> Boolean): UnaryPredicate<E1, E, T, S> = UnaryPredicate(eval, klass)
 
 // endregion
 
 // region binary predicate
 
-class BinaryPredicate<E1:E, E2:E, E: EntityType, T: TickDataType<E>,S: SegmentType<E,T>>(
+class BinaryPredicate<E1:E, E2:E, E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     val eval: (PredicateContext<E,T,S>, E1, E2) -> Boolean,
     val klass: Pair<KClass<E1>, KClass<E2>>)
 {
@@ -76,6 +76,6 @@ class BinaryPredicate<E1:E, E2:E, E: EntityType, T: TickDataType<E>,S: SegmentTy
 /**
  * Creates a binary tick predicate in this context
  */
-fun <E1:E, E2:E, E: EntityType, T: TickDataType<E>,S: SegmentType<E,T>>predicate(klasses: Pair<KClass<E1>, KClass<E2>>, eval: (PredicateContext<E,T,S>, E1, E2) -> Boolean) = BinaryPredicate(eval, klasses)
+fun <E1:E, E2:E, E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>predicate(klasses: Pair<KClass<E1>, KClass<E2>>, eval: (PredicateContext<E,T,S>, E1, E2) -> Boolean) = BinaryPredicate(eval, klasses)
 
 // endregion

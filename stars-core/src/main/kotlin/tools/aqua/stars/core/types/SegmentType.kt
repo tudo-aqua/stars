@@ -1,6 +1,6 @@
 package tools.aqua.stars.core.types
 
-interface SegmentType<E: EntityType, T:TickDataType<E>> {
+interface SegmentType<E: EntityType<E,T,S>, T:TickDataType<E,T,S>, S: SegmentType<E,T,S>> {
 
     val tickData: List<T>
     val ticks: Map<Double, T>

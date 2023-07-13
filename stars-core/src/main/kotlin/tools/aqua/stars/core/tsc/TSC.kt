@@ -9,7 +9,7 @@ import tools.aqua.stars.core.powerlist
 fun proj(id: Any) = Pair(id, false)
 fun projRec(id: Any) = Pair(id, true)
 
-abstract class TSCNode<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
+abstract class TSCNode<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     val valueFunction: (PredicateContext<E,T,S>) -> Any,
     val monitorFunction: (PredicateContext<E,T,S>) -> Boolean,
     val projectionIDWrappers: Map<Any, Boolean>,
@@ -169,7 +169,7 @@ abstract class TSCNode<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
 }
 
 
-class TSCBoundedNode<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
+class TSCBoundedNode<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     valueFunction: (PredicateContext<E,T,S>) -> Any = { },
     monitorFunction: (PredicateContext<E,T,S>) -> Boolean = { true },
     projectionIDs: Map<Any, Boolean> = mapOf(),
@@ -283,7 +283,7 @@ fun <T> crossProduct(input: List<List<List<T>>>): List<List<T>> {
 
 
 
-open class TSCEdge<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
+open class TSCEdge<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     val label: String,
     val condition: (PredicateContext<E,T,S>) -> Boolean = { true },
     val destination: TSCNode<E,T,S>,
@@ -302,9 +302,11 @@ open class TSCEdge<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
 
 }
 
-class TSCAlwaysEdge<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(label: String, destination: TSCNode<E,T,S>) : TSCEdge<E,T,S>(label, { true }, destination)
+class TSCAlwaysEdge<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
+    label: String, destination: TSCNode<E,T,S>
+) : TSCEdge<E,T,S>(label, { true }, destination)
 
-class TSCInstanceNode<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
+class TSCInstanceNode<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     val value: Any,
     val monitorResult: Boolean,
     val tscNode: TSCNode<E,T,S>
@@ -379,7 +381,7 @@ class TSCInstanceNode<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
     }
 }
 
-class TSCInstanceEdge<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(
+class TSCInstanceEdge<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(
     val label: String,
     val destination: TSCInstanceNode<E,T,S>,
     val tscEdge: TSCEdge<E,T,S>,

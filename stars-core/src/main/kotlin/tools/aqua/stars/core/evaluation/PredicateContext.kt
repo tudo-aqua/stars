@@ -5,7 +5,7 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 import kotlin.reflect.cast
 
-class PredicateContext<E: EntityType, T:TickDataType<E>,S:SegmentType<E,T>>(val segment: S) {
+class PredicateContext<E: EntityType<E,T,S>, T:TickDataType<E,T,S>,S:SegmentType<E,T,S>>(val segment: S) {
 
     var egoID = segment.egoVehicleId // TODO: rename to primaryEntityId
 

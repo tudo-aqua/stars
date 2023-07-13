@@ -17,7 +17,7 @@ import tools.aqua.stars.core.types.TickDataType
  * @property edges contains all edges of the node
  * @property condition condition of the edge
  */
-class TSCBuilder<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(var label: String = "") {
+class TSCBuilder<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>(var label: String = "") {
     var valueFunction: (PredicateContext<E,T,S>) -> Any = {}
     var monitorFunction: (PredicateContext<E, T, S>) -> Boolean = {true}
     var projectionIDs: Map<Any, Boolean> = mapOf()
@@ -52,48 +52,74 @@ class TSCBuilder<E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>(var lab
     }
 }
 
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>root(init: TSCBuilder<E,T,S>.() -> Unit = {}): TSCNode<E,T,S> {
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>root(
+    init: TSCBuilder<E,T,S>.() -> Unit = {}
+): TSCNode<E,T,S> {
     val placeholderNode = TSCBuilder<E,T,S>().apply { init(); this.bounds = edgesCount() to edgesCount()  }.buildBounded()
     check (placeholderNode.destination.edges.size < 2) { "Too many elements to add - root can only host one."}
     check (placeholderNode.destination.edges.isNotEmpty()) { "init must add exactly one element to root"}
     return placeholderNode.destination.edges[0].destination
 }
 
-
 /**
  * DSL function for an edge with BoundedNode
  * @param label name of the edge
  * @param bounds defines lower and upper limit of the BoundedNode
  */
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>TSCBuilder<E,T,S>.bounded(label: String, bounds: Pair<Int, Int> = Pair(1,1), init: TSCBuilder<E,T,S>.() -> Unit = {}): TSCEdge<E,T,S> {
-    return TSCBuilder<E,T,S>(label).apply { init(); this.bounds = bounds }.buildBounded().also { this.addEdge(it) }
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.bounded(
+    label: String, bounds: Pair<Int, Int> = Pair(1,1), init: TSCBuilder<E,T,S>.() -> Unit = {}
+): TSCEdge<E,T,S> {
+    return TSCBuilder<E,T,S>(label)
+        .apply { init(); this.bounds = bounds }
+        .buildBounded()
+        .also { this.addEdge(it) }
 }
+
 /**
  * DSL function for an edge with BoundedNode with the limits of (1,1)
  * @param label name of the edge
  */
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>TSCBuilder<E,T,S>.exclusive(label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}): TSCEdge<E,T,S> {
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.exclusive(
+    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+): TSCEdge<E,T,S> {
     return this.bounded(label, 1 to 1) { init() }
 }
+
 /**
  * DSL function for an edge with BoundedNode with the limits of (0,#Edges)
  * @param label name of the edge
  */
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>TSCBuilder<E,T,S>.optional(label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}): TSCEdge<E,T,S> {
-    return TSCBuilder<E,T,S>(label).apply { init(); bounds = 0 to edgesCount() }.buildBounded().also { addEdge(it) }
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.optional(
+    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+): TSCEdge<E,T,S> {
+    return TSCBuilder<E,T,S>(label)
+        .apply { init(); bounds = 0 to edgesCount() }
+        .buildBounded()
+        .also { addEdge(it) }
 }
+
 /**
  * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges)
  * @param label name of the edge
  */
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>TSCBuilder<E,T,S>.all(label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}): TSCEdge<E,T,S> {
-    return TSCBuilder<E,T,S>(label).apply { init(); this.bounds = edgesCount() to edgesCount() }.buildBounded().also { addEdge(it) }
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.all(
+    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+): TSCEdge<E,T,S> {
+    return TSCBuilder<E,T,S>(label)
+        .apply { init(); this.bounds = edgesCount() to edgesCount() }
+        .buildBounded()
+        .also { addEdge(it) }
 }
 
 /**
  * DSL function for an edge with LeafNode
  * @param label name of the edge
  */
-fun <E: EntityType, T: TickDataType<E>,S: SegmentType<E, T>>TSCBuilder<E,T,S>.leaf(label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}): TSCEdge<E,T,S> {
-    return TSCBuilder<E,T,S>(label).apply { init(); this.bounds = 0 to 0  }.buildBounded().also { this.addEdge(it) }
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.leaf(
+    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+): TSCEdge<E,T,S> {
+    return TSCBuilder<E,T,S>(label)
+        .apply { init(); this.bounds = 0 to 0  }
+        .buildBounded()
+        .also { this.addEdge(it) }
 }
