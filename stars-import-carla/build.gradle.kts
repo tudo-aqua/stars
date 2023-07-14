@@ -31,4 +31,7 @@ dependencies {
     implementation(project(":stars-core"))
     implementation(project(":stars-data-av"))
     implementation(libs.kotlinx.serialization.json)
+
+    // Use the Kotlin test library.
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
