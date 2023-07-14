@@ -26,4 +26,5 @@ mavenMetadata {
 dependencies {
   implementation(project(":stars-core"))
   implementation(project(":stars-data-av"))
+  implementation(libs.kotlinx.serialization.json)
 }
