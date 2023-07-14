@@ -16,16 +16,16 @@ fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String): 
 fun convertJsonTickDataToTickData(jsonTickData: JsonTickData, blocks: List<Block>): TickData {
     // Create new empty TickData
     val tickData = TickData(
-        currentTick = jsonTickData.current_tick,
-        trafficLights = jsonTickData.actor_positions.mapNotNull { convertJsonActorPositionToTrafficLight(it) },
+        currentTick = jsonTickData.currentTick,
+        trafficLights = jsonTickData.actorPositions.mapNotNull { convertJsonActorPositionToTrafficLight(it) },
         blocks = blocks,
-        weather = jsonTickData.weather_parameters.toWeatherParameters(),
-        daytime = jsonTickData.weather_parameters.type.toDaytime(),
+        weather = jsonTickData.weatherParameters.toWeatherParameters(),
+        daytime = jsonTickData.weatherParameters.type.toDaytime(),
         entities = listOf()
     )
 
     tickData.entities =
-        jsonTickData.actor_positions.mapNotNull { convertJsonActorPositionToEntity(it, tickData, blocks) }
+        jsonTickData.actorPositions.mapNotNull { convertJsonActorPositionToEntity(it, tickData, blocks) }
 
     return tickData
 }
@@ -89,11 +89,11 @@ fun updateActorVelocity(actor: Vehicle, currentTick: TickData, previousTick: Tic
 
 fun convertJsonVehicleToVehicle(actor: JsonVehicle, tickData: TickData, positionOnLane: Double, lane: Lane): Vehicle {
     return Vehicle(
-        typeId = actor.type_id,
+        typeId = actor.typeId,
         acceleration = actor.acceleration.toVector3D(),
-        angularVelocity = actor.angular_velocity.toVector3D(),
+        angularVelocity = actor.angularVelocity.toVector3D(),
         egoVehicle = false,
-        forwardVector = actor.forward_vector.toVector3D(),
+        forwardVector = actor.forwardVector.toVector3D(),
         id = actor.id,
         lane = lane,
         location = actor.location.toLocation(),
@@ -130,23 +130,23 @@ fun convertJsonRoadToRoad(jsonRoad: JsonRoad, block: Block): Road {
 
 fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane {
     val lane = Lane(
-        laneId = jsonLane.lane_id,
+        laneId = jsonLane.laneId,
         road = road,
-        laneType = LaneType.getByValue(jsonLane.lane_type.value),
-        laneWidth = jsonLane.lane_width,
-        laneLength = jsonLane.lane_length,
+        laneType = LaneType.getByValue(jsonLane.laneType.value),
+        laneWidth = jsonLane.laneWidth,
+        laneLength = jsonLane.laneLength,
         predecessorLanes = listOf(),
         successorLanes = listOf(),
         intersectingLanes = listOf(),
         yieldLanes = listOf(),
-        laneMidpoints = jsonLane.lane_midpoints.map { it.toLaneMidpoint() },
+        laneMidpoints = jsonLane.laneMidpoints.map { it.toLaneMidpoint() },
         speedLimits = listOf(),
         landmarks = jsonLane.landmarks.filter { it.type != JsonLandmarkType.LightPost }.map { it.toLandmark() },
         contactAreas = listOf(),
         trafficLights = listOf(),
         laneDirection = LaneDirection.UNKNOWN,
     )
-    lane.trafficLights = jsonLane.traffic_lights.map { it.toStaticTrafficLight() }
+    lane.trafficLights = jsonLane.trafficLights.map { it.toStaticTrafficLight() }
     lane.speedLimits = getSpeedLimitsFromLandmarks(lane, jsonLane.landmarks)
 
     if (road.isJunction) {
@@ -202,11 +202,11 @@ fun convertJsonContactLaneInfoToContactLaneInfo(lane: Lane): ContactLaneInfo {
 fun convertJsonContactAreaToContactArea(jsonContactArea: JsonContactArea, lane1: Lane, lane2: Lane): ContactArea {
     return ContactArea(
         id = jsonContactArea.id,
-        contactLocation = jsonContactArea.contact_location.toLocation(),
-        lane1EndPos = jsonContactArea.lane_1_end_pos,
-        lane1StartPos = jsonContactArea.lane_1_start_pos,
-        lane2EndPos = jsonContactArea.lane_2_end_pos,
-        lane2StartPos = jsonContactArea.lane_2_start_pos,
+        contactLocation = jsonContactArea.contactLocation.toLocation(),
+        lane1EndPos = jsonContactArea.lane1EndPos,
+        lane1StartPos = jsonContactArea.lane1StartPos,
+        lane2EndPos = jsonContactArea.lane2EndPos,
+        lane2StartPos = jsonContactArea.lane2StartPos,
         lane1 = lane1,
         lane2 = lane2
     )
@@ -214,21 +214,21 @@ fun convertJsonContactAreaToContactArea(jsonContactArea: JsonContactArea, lane1:
 
 fun updateLaneContactLaneInfos(jsonLanes: List<JsonLane>, lanes: List<Lane>) {
     jsonLanes.map { jsonLane ->
-        val lane = lanes.firstOrNull { it.laneId == jsonLane.lane_id && it.road.id == jsonLane.road_id }
-        checkNotNull(lane) { "No lane with the id ${jsonLane.lane_id} was found while updating the ContactLaneInfos" }
-        lane.predecessorLanes = jsonLane.predecessor_lanes.map { contactLaneInfo ->
+        val lane = lanes.firstOrNull { it.laneId == jsonLane.laneId && it.road.id == jsonLane.roadId }
+        checkNotNull(lane) { "No lane with the id ${jsonLane.laneId} was found while updating the ContactLaneInfos" }
+        lane.predecessorLanes = jsonLane.predecessorLanes.map { contactLaneInfo ->
             val contactLane =
-                lanes.first { it.laneId == contactLaneInfo.lane_id && it.road.id == contactLaneInfo.road_id }
+                lanes.first { it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId }
             convertJsonContactLaneInfoToContactLaneInfo(contactLane)
         }
-        lane.successorLanes = jsonLane.successor_lanes.map { contactLaneInfo ->
+        lane.successorLanes = jsonLane.successorLanes.map { contactLaneInfo ->
             val contactLane =
-                lanes.first { it.laneId == contactLaneInfo.lane_id && it.road.id == contactLaneInfo.road_id }
+                lanes.first { it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId }
             convertJsonContactLaneInfoToContactLaneInfo(contactLane)
         }
-        lane.intersectingLanes = jsonLane.intersecting_lanes.mapNotNull { contactLaneInfo ->
+        lane.intersectingLanes = jsonLane.intersectingLanes.mapNotNull { contactLaneInfo ->
             val contactLane =
-                lanes.first { it.laneId == contactLaneInfo.lane_id && it.road.id == contactLaneInfo.road_id }
+                lanes.first { it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId }
             if (lane.laneId == contactLane.laneId && lane.road.id == contactLane.road.id) {
                 check(true) { "The same lane is intersecting with itself" }
                 null
@@ -236,11 +236,11 @@ fun updateLaneContactLaneInfos(jsonLanes: List<JsonLane>, lanes: List<Lane>) {
                 convertJsonContactLaneInfoToContactLaneInfo(contactLane)
         }
 
-        lane.contactAreas = jsonLane.contact_areas.map { jsonContactArea ->
+        lane.contactAreas = jsonLane.contactAreas.map { jsonContactArea ->
             val contactLane1 =
-                lanes.first { it.laneId == jsonContactArea.lane_1_id && it.road.id == jsonContactArea.lane_1_road_id }
+                lanes.first { it.laneId == jsonContactArea.lane1Id && it.road.id == jsonContactArea.lane1RoadId }
             val contactLane2 =
-                lanes.first { it.laneId == jsonContactArea.lane_2_id && it.road.id == jsonContactArea.lane_2_road_id }
+                lanes.first { it.laneId == jsonContactArea.lane2Id && it.road.id == jsonContactArea.lane2RoadId }
             convertJsonContactAreaToContactArea(jsonContactArea, contactLane1, contactLane2)
         }
 

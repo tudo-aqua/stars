@@ -10,27 +10,27 @@ import tools.aqua.stars.data.av.*
 
 @Serializable
 data class JsonTickData(
-    val current_tick: Double,
-    val actor_positions: List<JsonActorPosition>,
-    val weather_parameters: JSonDataWeatherParameters
+    @SerialName("current_tick") val currentTick: Double,
+    @SerialName("actor_positions") val actorPositions: List<JsonActorPosition>,
+    @SerialName("weather_parameters") val weatherParameters: JSonDataWeatherParameters
 )
 
 @Serializable
 data class JSonDataWeatherParameters(
-    val type: JsonDataWeatherParametersType,
-    val cloudiness: Double,
-    val precipitation: Double,
-    val precipitation_deposits: Double,
-    val wind_intensity: Double,
-    val sun_azimuth_angle: Double,
-    val sun_altitude_angle: Double,
-    val fog_density: Double,
-    val fog_distance: Double,
-    val wetness: Double,
-    val fog_falloff: Double,
-    val scattering_intensity: Double,
-    val mie_scattering_scale: Double,
-    val rayleigh_scattering_scale: Double,
+    @SerialName("type") val type: JsonDataWeatherParametersType,
+    @SerialName("cloudiness") val cloudiness: Double,
+    @SerialName("precipitation") val precipitation: Double,
+    @SerialName("precipitation_deposits") val precipitationDeposits: Double,
+    @SerialName("wind_intensity") val windIntensity: Double,
+    @SerialName("sun_azimuth_angle") val sunAzimuthAngle: Double,
+    @SerialName("sun_altitude_angle") val sunAltitudeAngle: Double,
+    @SerialName("fog_density") val fogDensity: Double,
+    @SerialName("fog_distance") val fogDistance: Double,
+    @SerialName("wetness") val wetness: Double,
+    @SerialName("fog_falloff") val fogFalloff: Double,
+    @SerialName("scattering_intensity") val scatteringIntensity: Double,
+    @SerialName("mie_scattering_scale") val mieScatteringScale: Double,
+    @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double,
 ) {
     fun toWeatherParameters(): WeatherParameters {
         val weatherType = this.type.toWeatherType()
@@ -38,17 +38,17 @@ data class JSonDataWeatherParameters(
             type = weatherType,
             cloudiness = this.cloudiness,
             precipitation = this.precipitation,
-            precipitationDeposits = this.precipitation_deposits,
-            windIntensity = this.wind_intensity,
-            sunAzimuthAngle = this.sun_azimuth_angle,
-            sunAltitudeAngle = this.sun_altitude_angle,
-            fogDensity = this.fog_density,
-            fogDistance = this.fog_distance,
+            precipitationDeposits = this.precipitationDeposits,
+            windIntensity = this.windIntensity,
+            sunAzimuthAngle = this.sunAzimuthAngle,
+            sunAltitudeAngle = this.sunAltitudeAngle,
+            fogDensity = this.fogDensity,
+            fogDistance = this.fogDistance,
             wetness = this.wetness,
-            fogFalloff = this.fog_falloff,
-            scatteringIntensity = this.scattering_intensity,
-            mieScatteringScale = this.mie_scattering_scale,
-            rayleighScatteringScale = this.rayleigh_scattering_scale
+            fogFalloff = this.fogFalloff,
+            scatteringIntensity = this.scatteringIntensity,
+            mieScatteringScale = this.mieScatteringScale,
+            rayleighScatteringScale = this.rayleighScatteringScale
         )
     }
 }
@@ -56,46 +56,46 @@ data class JSonDataWeatherParameters(
 
 @Serializable
 data class JsonBlock(
-    val id: String,
-    val roads: List<JsonRoad>,
+    @SerialName("id") val id: String,
+    @SerialName("roads") val roads: List<JsonRoad>,
 )
 
 @Serializable
 data class JsonRoad(
     @SerialName("road_id") val roadId: Int,
     @SerialName("is_junction") val isJunction: Boolean,
-    val lanes: List<JsonLane>,
+    @SerialName("lanes") val lanes: List<JsonLane>,
 )
 
 @Serializable
 data class JsonLane(
-    val road_id: Int,
-    val lane_id: Int,
-    val lane_type: JsonLaneType,
-    val lane_width: Double,
-    var lane_length: Double,
-    val s: Double,
-    val predecessor_lanes: List<JsonContactLaneInfo>,
-    val successor_lanes: List<JsonContactLaneInfo>,
-    val intersecting_lanes: List<JsonContactLaneInfo>,
-    val lane_midpoints: List<JsonLaneMidpoint>,
-    val speed_limits: List<JsonSpeedLimit>,
-    var landmarks: List<JsonLandmark>,
-    val contact_areas: List<JsonContactArea>,
-    var traffic_lights: List<JsonStaticTrafficLight>,
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("lane_id") val laneId: Int,
+    @SerialName("lane_type") val laneType: JsonLaneType,
+    @SerialName("lane_width") val laneWidth: Double,
+    @SerialName("lane_length") var laneLength: Double,
+    @SerialName("s") val s: Double,
+    @SerialName("predecessor_lanes") val predecessorLanes: List<JsonContactLaneInfo>,
+    @SerialName("successor_lanes") val successorLanes: List<JsonContactLaneInfo>,
+    @SerialName("intersecting_lanes") val intersectingLanes: List<JsonContactLaneInfo>,
+    @SerialName("lane_midpoints") val laneMidpoints: List<JsonLaneMidpoint>,
+    @SerialName("speed_limits") val speedLimits: List<JsonSpeedLimit>,
+    @SerialName("landmarks") var landmarks: List<JsonLandmark>,
+    @SerialName("contact_areas") val contactAreas: List<JsonContactArea>,
+    @SerialName("traffic_lights") var trafficLights: List<JsonStaticTrafficLight>,
 )
 
 @Serializable
 data class JsonLaneMidpoint(
-    val lane_id: Int,
-    val road_id: Int,
-    val distance_to_start: Double,
-    val location: JsonLocation,
-    val rotation: JsonRotation,
+    @SerialName("lane_id") val laneId: Int,
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("distance_to_start") val distanceToStart: Double,
+    @SerialName("location") val location: JsonLocation,
+    @SerialName("rotation") val rotation: JsonRotation,
 ) {
     fun toLaneMidpoint(): LaneMidpoint {
         return LaneMidpoint(
-            distanceToStart = this.distance_to_start,
+            distanceToStart = this.distanceToStart,
             location = this.location.toLocation(),
             rotation = this.rotation.toRotation()
         )
@@ -107,7 +107,7 @@ data class JsonActorPosition(
     @SerialName("position_on_lane") val positionOnLane: Double,
     @SerialName("lane_id") var laneId: Int,
     @SerialName("road_id") var roadId: Int,
-    var actor: JsonActor
+    @SerialName("actor") var actor: JsonActor
 )
 
 @Serializable
@@ -119,9 +119,9 @@ data class JsonSpeedLimit(
 
 @Serializable
 data class JsonLocation(
-    val x: Double,
-    val y: Double,
-    val z: Double
+    @SerialName("x") val x: Double,
+    @SerialName("y") val y: Double,
+    @SerialName("z") val z: Double
 ) {
     override fun toString(): String = "($x,$y,$z)"
 
@@ -132,9 +132,9 @@ data class JsonLocation(
 
 @Serializable
 data class JsonVector3D(
-    val x: Double,
-    val y: Double,
-    val z: Double
+    @SerialName("x") val x: Double,
+    @SerialName("y") val y: Double,
+    @SerialName("z") val z: Double
 ) {
     fun toVector3D(): Vector3D {
         return Vector3D(this.x, this.y, this.z)
@@ -143,9 +143,9 @@ data class JsonVector3D(
 
 @Serializable
 data class JsonRotation(
-    val pitch: Double,
-    val yaw: Double,
-    val roll: Double
+    @SerialName("pitch") val pitch: Double,
+    @SerialName("yaw") val yaw: Double,
+    @SerialName("roll") val roll: Double
 ) {
     fun toRotation(): Rotation {
         return Rotation(this.pitch, this.yaw, this.roll)
@@ -154,41 +154,41 @@ data class JsonRotation(
 
 @Serializable
 data class JsonContactArea(
-    val id: String,
-    val contact_location: JsonLocation,
-    val lane_1_road_id: Int,
-    val lane_1_id: Int,
-    val lane_1_start_pos: Double,
-    val lane_1_end_pos: Double,
-    val lane_2_road_id: Int,
-    val lane_2_id: Int,
-    val lane_2_start_pos: Double,
-    val lane_2_end_pos: Double,
+    @SerialName("id") val id: String,
+    @SerialName("contact_location") val contactLocation: JsonLocation,
+    @SerialName("lane_1_road_id") val lane1RoadId: Int,
+    @SerialName("lane_1_id") val lane1Id: Int,
+    @SerialName("lane_1_start_pos") val lane1StartPos: Double,
+    @SerialName("lane_1_end_pos") val lane1EndPos: Double,
+    @SerialName("lane_2_road_id") val lane2RoadId: Int,
+    @SerialName("lane_2_id") val lane2Id: Int,
+    @SerialName("lane_2_start_pos") val lane2StartPos: Double,
+    @SerialName("lane_2_end_pos") val lane2EndPos: Double,
 )
 
 @Serializable
 data class JsonLandmark(
-    var id: Int,
-    val road_id: Int,
-    val name: String,
-    val distance: Double,
-    var s: Double,
-    val is_dynamic: Boolean,
-    val orientation: JsonLandmarkOrientation,
-    val z_offset: Double,
-    val country: String,
-    var type: JsonLandmarkType,
-    val sub_type: String,
-    var value: Double,
-    var unit: String,
-    val height: Double,
-    val width: Double,
-    val text: String,
-    val h_offset: Double,
-    val pitch: Double,
-    val roll: Double,
-    val location: JsonLocation,
-    val rotation: JsonRotation
+    @SerialName("id") var id: Int,
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("name") val name: String,
+    @SerialName("distance") val distance: Double,
+    @SerialName("s") var s: Double,
+    @SerialName("is_dynamic") val isDynamic: Boolean,
+    @SerialName("orientation") val orientation: JsonLandmarkOrientation,
+    @SerialName("z_offset") val zOffset: Double,
+    @SerialName("country") val country: String,
+    @SerialName("type") var type: JsonLandmarkType,
+    @SerialName("sub_type") val subType: String,
+    @SerialName("value") var value: Double,
+    @SerialName("unit") var unit: String,
+    @SerialName("height") val height: Double,
+    @SerialName("width") val width: Double,
+    @SerialName("text") val text: String,
+    @SerialName("h_offset") val hOffset: Double,
+    @SerialName("pitch") val pitch: Double,
+    @SerialName("roll") val roll: Double,
+    @SerialName("location") val location: JsonLocation,
+    @SerialName("rotation") val rotation: JsonRotation
 ) {
     fun toLandmark(): Landmark {
         return Landmark(
@@ -211,16 +211,16 @@ data class JsonLandmark(
 data class JsonStaticTrafficLight(
     @SerialName("open_drive_id") var id: Int,
     @SerialName("position_distance") val positionDistance: Float,
-    var location: JsonLocation,
-    var rotation: JsonRotation,
-    var stop_locations: List<JsonLocation>,
+    @SerialName("location") var location: JsonLocation,
+    @SerialName("rotation") var rotation: JsonRotation,
+    @SerialName("stop_locations") var stopLocations: List<JsonLocation>,
 ) {
     fun toStaticTrafficLight(): StaticTrafficLight {
         return StaticTrafficLight(
             id = this.id,
             location = this.location.toLocation(),
             rotation = this.rotation.toRotation(),
-            stopLocations = this.stop_locations.map { it.toLocation() }
+            stopLocations = this.stopLocations.map { it.toLocation() }
         )
     }
 }
@@ -239,8 +239,8 @@ data class JsonTrafficLight(
     @SerialName("id") override var id: Int,
     @SerialName("type_id") val typeId: String,
     @SerialName("state") var state: Int,
-    override var location: JsonLocation,
-    override var rotation: JsonRotation,
+    @SerialName("location") override var location: JsonLocation,
+    @SerialName("rotation") override var rotation: JsonRotation,
     @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
 ) : JsonActor() {
     fun toTrafficLight(): TrafficLight {
@@ -255,50 +255,50 @@ data class JsonTrafficLight(
 @Serializable
 @SerialName("Pedestrian")
 data class JsonPedestrian(
-    override val id: Int,
+    @SerialName("id") override val id: Int,
     @SerialName("type_id") val typeId: String,
-    override var location: JsonLocation,
-    override var rotation: JsonRotation,
+    @SerialName("location") override var location: JsonLocation,
+    @SerialName("rotation") override var rotation: JsonRotation,
 ) : JsonActor()
 
 @Serializable
 @SerialName("TrafficSign")
 data class JsonTrafficSign(
-    override val id: Int,
+    @SerialName("id")override val id: Int,
     @SerialName("traffic_sign_type") val trafficSignType: JsonTrafficSignType,
     @SerialName("speed_limit") val speedLimit: Double?,
     @SerialName("type_id") val typeId: String,
-    override var location: JsonLocation,
-    override var rotation: JsonRotation,
+    @SerialName("location") override var location: JsonLocation,
+    @SerialName("rotation") override var rotation: JsonRotation,
 ) : JsonActor()
 
 @Serializable
 @SerialName("Vehicle")
 data class JsonVehicle(
-    override val id: Int,
-    override var location: JsonLocation,
-    override var rotation: JsonRotation,
-    val type_id: String,
-    var ego_vehicle: Boolean,
-    val forward_vector: JsonVector3D,
-    val velocity: JsonVector3D,
-    val acceleration: JsonVector3D,
-    val angular_velocity: JsonVector3D
+    @SerialName("id")override val id: Int,
+    @SerialName("location") override var location: JsonLocation,
+    @SerialName("rotation") override var rotation: JsonRotation,
+    @SerialName("type_id") val typeId: String,
+    @SerialName("ego_vehicle") var egoVehicle: Boolean,
+    @SerialName("forward_vector") val forwardVector: JsonVector3D,
+    @SerialName("velocity") val velocity: JsonVector3D,
+    @SerialName("acceleration") val acceleration: JsonVector3D,
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D
 ) : JsonActor()
 
 @Serializable
 data class JsonContactLaneInfo(
-    val road_id: Int,
-    val lane_id: Int,
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("lane_id") val laneId: Int,
 )
 
 val JsonVehicle.effVelocity get() = sqrt(this.velocity.x.pow(2) + this.velocity.y.pow(2) + this.velocity.z.pow(2))
 
 @Serializable
 data class JsonCoordinates(
-    val x: Double,
-    val y: Double,
-    val z: Double,
+    @SerialName("x") val x: Double,
+    @SerialName("y") val y: Double,
+    @SerialName("z") val z: Double,
 )
 
 @Serializable

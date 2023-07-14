@@ -24,7 +24,7 @@ fun getLaneProgressionForVehicle(
     val lanes = roads.flatMap { it.lanes }
     val laneProgression: MutableList<Pair<Lane?, Boolean>> = mutableListOf()
     jsonSimulationRun.forEach { jsonTickData ->
-        val vehiclePosition = jsonTickData.actor_positions.firstOrNull { it.actor.id == vehicle.id }
+        val vehiclePosition = jsonTickData.actorPositions.firstOrNull { it.actor.id == vehicle.id }
         if (vehiclePosition == null) {
             laneProgression.add(null to false)
             return@forEach
@@ -53,7 +53,7 @@ fun convertJsonData(
     check(mapNameBlocks == mapNameSimulationRun)
 
     val egoVehicles: List<JsonVehicle> =
-        jsonSimulationRun.first().actor_positions.map { it.actor }.filterIsInstance<JsonVehicle>()
+        jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
 
     /** Stores all simulation runs (List<TickData>) for each ego vehicle*/
     val simulationRuns = mutableListOf<Pair<String, List<TickData>>>()
@@ -148,7 +148,7 @@ fun cleanJsonData(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>
 ) {
-    val vehicles = jsonSimulationRun.flatMap { it.actor_positions }.map { it.actor }.filterIsInstance<JsonVehicle>()
+    val vehicles = jsonSimulationRun.flatMap { it.actorPositions }.map { it.actor }.filterIsInstance<JsonVehicle>()
         .distinctBy { it.id }
     vehicles.forEach { vehicle ->
         val laneProgression = getLaneProgressionForVehicle(blocks, jsonSimulationRun, vehicle)
@@ -238,7 +238,7 @@ fun cleanJunctionData(
     }
     if (newLane != null) {
         junctionIndices.forEach { (index, _) ->
-            val vehiclePositionToUpdate = simulationRun[index].actor_positions.firstOrNull { it.actor.id == vehicle.id }
+            val vehiclePositionToUpdate = simulationRun[index].actorPositions.firstOrNull { it.actor.id == vehicle.id }
             checkNotNull(vehiclePositionToUpdate)
             vehiclePositionToUpdate.laneId = newLane.laneId
             vehiclePositionToUpdate.roadId = newLane.road.id
