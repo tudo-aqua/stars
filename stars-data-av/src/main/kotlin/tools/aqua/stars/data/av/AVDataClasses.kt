@@ -8,9 +8,7 @@ data class Segment(
     val mainInitList: List<TickData>,
     val simulationRunId: String = "",
     override val mapName: String,
-)
-    : SegmentType<Actor, TickData, Segment>
-{
+) : SegmentType<Actor, TickData, Segment> {
     override val tickData: List<TickData> = mainInitList.map { it.segment = this; it }
     override val ticks: Map<Double, TickData> = tickData.associateBy { it.currentTick }
     override val tickIDs: List<Double> = tickData.map { it.currentTick }
@@ -30,16 +28,17 @@ data class Segment(
     /**
      * all vehicle IDs of the segment
      */
-    val vehicleIds: List<Int> get() {
-        if (vehicleIdsCache.isEmpty()) {
-            vehicleIdsCache.addAll(
-                tickData.flatMap { tickData ->
-                    tickData.entities.filterIsInstance<Vehicle>().map { it.id }
-                }.distinct()
-            )
+    val vehicleIds: List<Int>
+        get() {
+            if (vehicleIdsCache.isEmpty()) {
+                vehicleIdsCache.addAll(
+                    tickData.flatMap { tickData ->
+                        tickData.entities.filterIsInstance<Vehicle>().map { it.id }
+                    }.distinct()
+                )
+            }
+            return vehicleIdsCache
         }
-        return vehicleIdsCache
-    }
 
 
     /** cache for all vehicle IDs */
@@ -48,17 +47,17 @@ data class Segment(
     /**
      * all vehicle IDs of the segment
      */
-    val pedestrianIds: List<Int> get() {
-        if (pedestrianIdsCache.isEmpty()) {
-            pedestrianIdsCache.addAll(
-                tickData.flatMap { tickData ->
-                    tickData.entities.filterIsInstance<Pedestrian>().map { it.id }
-                }.distinct()
-            )
+    val pedestrianIds: List<Int>
+        get() {
+            if (pedestrianIdsCache.isEmpty()) {
+                pedestrianIdsCache.addAll(
+                    tickData.flatMap { tickData ->
+                        tickData.entities.filterIsInstance<Pedestrian>().map { it.id }
+                    }.distinct()
+                )
+            }
+            return pedestrianIdsCache
         }
-        return pedestrianIdsCache
-    }
-
 
 
     override fun toString(): String {
@@ -67,7 +66,7 @@ data class Segment(
     }
 
     override fun equals(other: Any?): Boolean {
-        if(other is Segment){
+        if (other is Segment) {
             return other.toString() == this.toString()
         }
         return super.equals(other)
@@ -85,11 +84,11 @@ data class TickData(
     val blocks: List<Block>,
     val weather: WeatherParameters,
     val daytime: Daytime
-) : TickDataType<Actor, TickData, Segment>
-{
+) : TickDataType<Actor, TickData, Segment> {
     override lateinit var segment: Segment
     val actors: List<Actor>
         get() = entities
+
     fun actor(actorID: Int): Actor? = actors.firstOrNull { it.id == actorID }
     val egoVehicle: Vehicle get() = actors.firstOrNull { it is Vehicle && it.egoVehicle } as Vehicle
     val vehicles: List<Vehicle> get() = actors.filterIsInstance<Vehicle>()
@@ -119,32 +118,7 @@ data class WeatherParameters(
     val scatteringIntensity: Double,
     val mieScatteringScale: Double,
     val rayleighScatteringScale: Double,
-) {
-    /*
-    companion object {
-        fun fromJsonWeatherParameters(jsonWeatherParameters: JSonDataWeatherParameters): WeatherParameters {
-            val weatherType = WeatherType.fromJsonWeatherParameterType(jsonWeatherParameters.type)
-            return WeatherParameters(
-                type = weatherType,
-                cloudiness = jsonWeatherParameters.cloudiness,
-                precipitation = jsonWeatherParameters.precipitation,
-                precipitationDeposits = jsonWeatherParameters.precipitation_deposits,
-                windIntensity = jsonWeatherParameters.wind_intensity,
-                sunAzimuthAngle = jsonWeatherParameters.sun_azimuth_angle,
-                sunAltitudeAngle = jsonWeatherParameters.sun_altitude_angle,
-                fogDensity = jsonWeatherParameters.fog_density,
-                fogDistance = jsonWeatherParameters.fog_distance,
-                wetness = jsonWeatherParameters.wetness,
-                fogFalloff = jsonWeatherParameters.fog_falloff,
-                scatteringIntensity = jsonWeatherParameters.scattering_intensity,
-                mieScatteringScale = jsonWeatherParameters.mie_scattering_scale,
-                rayleighScatteringScale = jsonWeatherParameters.rayleigh_scattering_scale
-            )
-        }
-    }
-
-     */
-}
+)
 
 data class Block(
     val fileName: String,
@@ -158,7 +132,7 @@ data class Block(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is Block){
+        if (other is Block) {
             return other.id == this.id
         }
         return false
@@ -221,12 +195,14 @@ data class Lane(
     val turnsLeft get() = laneDirection == LaneDirection.LEFT_TURN
     val turnsRight get() = laneDirection == LaneDirection.RIGHT_TURN
     val isStraight get() = laneDirection == LaneDirection.STRAIGHT
-    val hasStopSign get() =
-        landmarks.any { it.type == LandmarkType.StopSign && it.s > laneLength - 10.0 } ||
-                successorLanes.any { it.lane.landmarks.any { it.type == LandmarkType.StopSign && it.s < 10.0 } }
-    val hasYieldSign get() =
-        landmarks.any { it.type == LandmarkType.YieldSign && it.s > laneLength - 10.0 } ||
-                successorLanes.any { it.lane.landmarks.any { it.type == LandmarkType.YieldSign && it.s < 10.0 } }
+    val hasStopSign
+        get() =
+            landmarks.any { it.type == LandmarkType.StopSign && it.s > laneLength - 10.0 } ||
+                    successorLanes.any { it.lane.landmarks.any { it.type == LandmarkType.StopSign && it.s < 10.0 } }
+    val hasYieldSign
+        get() =
+            landmarks.any { it.type == LandmarkType.YieldSign && it.s > laneLength - 10.0 } ||
+                    successorLanes.any { it.lane.landmarks.any { it.type == LandmarkType.YieldSign && it.s < 10.0 } }
     val hasStopOrYieldSign get() = hasStopSign || hasYieldSign
     val hasTrafficLight get() = trafficLights.isNotEmpty()
 
@@ -299,47 +275,13 @@ data class Landmark(
     val text: String,
     val location: Location,
     val rotation: Rotation
-) {
-    /*
-    companion object {
-        fun fromJsonLandmark(jsonLandmark: JsonLandmark): Landmark {
-            return Landmark(
-                id = jsonLandmark.id,
-                name = jsonLandmark.name,
-                distance = jsonLandmark.distance,
-                s = jsonLandmark.s,
-                country = jsonLandmark.country,
-                type = LandmarkType.getByValue(jsonLandmark.type.value),
-                value = jsonLandmark.value,
-                unit = jsonLandmark.unit,
-                text = jsonLandmark.text,
-                location = Location.fromJsonLocation(jsonLandmark.location),
-                rotation = Rotation.fromJsonRotation(jsonLandmark.rotation)
-            )
-        }
-    }
-
-     */
-}
+)
 
 data class LaneMidpoint(
     val distanceToStart: Double,
     val location: Location,
     val rotation: Rotation,
-) {
-    /*
-    companion object {
-        fun fromJsonLaneMidpoint(jsonLaneMidpoint: JsonLaneMidpoint): LaneMidpoint {
-            return LaneMidpoint(
-                distanceToStart = jsonLaneMidpoint.distance_to_start,
-                location = Location.fromJsonLocation(jsonLaneMidpoint.location),
-                rotation = Rotation.fromJsonRotation(jsonLaneMidpoint.rotation)
-            )
-        }
-    }
-
-     */
-}
+)
 
 data class StaticTrafficLight(
     var id: Int,
@@ -355,20 +297,6 @@ data class StaticTrafficLight(
         val trafficLight = tickData.trafficLights.firstOrNull { it.relatedOpenDriveId == this.id }
         return trafficLight?.state ?: TrafficLightState.Unknown
     }
-
-    /*
-    companion object {
-        fun fromJsonStaticTrafficLight(jsonStaticTrafficLight: JsonStaticTrafficLight): StaticTrafficLight {
-            return StaticTrafficLight(
-                id = jsonStaticTrafficLight.id,
-                location = Location.fromJsonLocation(jsonStaticTrafficLight.location),
-                rotation = Rotation.fromJsonRotation(jsonStaticTrafficLight.rotation),
-                stopLocations = jsonStaticTrafficLight.stop_locations.map { Location.fromJsonLocation(it) }
-            )
-        }
-    }
-
-     */
 }
 
 data class TrafficLight(
@@ -379,50 +307,19 @@ data class TrafficLight(
     override fun toString(): String {
         return "TrafficLight($id, $state)"
     }
-
-    /*
-    companion object {
-        fun fromJsonTrafficLight(jsonTrafficLight: JsonTrafficLight): TrafficLight {
-            return TrafficLight(
-                id = jsonTrafficLight.id,
-                state = TrafficLightState.getByValue(jsonTrafficLight.state),
-                relatedOpenDriveId = jsonTrafficLight.relatedOpenDriveId
-            )
-        }
-    }
-
-     */
 }
 
 data class Rotation(
     val pitch: Double,
     val yaw: Double,
     val roll: Double
-) {
-    /*
-    companion object {
-        fun fromJsonRotation(jsonRotation: JsonRotation): Rotation {
-            return Rotation(jsonRotation.pitch, jsonRotation.yaw, jsonRotation.roll)
-        }
-    }
-
-     */
-}
+)
 
 data class Location(
     val x: Double,
     val y: Double,
     val z: Double
-) {
-    /*
-    companion object {
-        fun fromJsonLocation(jsonLocation: JsonLocation): Location {
-            return Location(jsonLocation.x, jsonLocation.y, jsonLocation.z)
-        }
-    }
-
-     */
-}
+)
 
 val Lane.uid: String get() = "${road.id}_${laneId}"
 
@@ -430,7 +327,7 @@ data class ContactLaneInfo(
     val lane: Lane,
 )
 
-sealed class Actor: EntityType<Actor, TickData, Segment> {
+sealed class Actor : EntityType<Actor, TickData, Segment> {
     abstract fun clone(newTickData: TickData): Actor
 }
 
@@ -495,16 +392,7 @@ data class Vector3D(
     val x: Double,
     val y: Double,
     val z: Double
-) {
-    /*
-    companion object {
-        fun fromJsonVector3D(jsonVector3D: JsonVector3D): Vector3D {
-            return Vector3D(jsonVector3D.x, jsonVector3D.y, jsonVector3D.z)
-        }
-    }
-
-     */
-}
+)
 
 // region Enums
 enum class LaneDirection {
@@ -610,51 +498,10 @@ enum class WeatherType {
     SoftRainy,
     MidRainy,
     HardRainy;
-
-    /*
-    companion object {
-        fun fromJsonWeatherParameterType(jsonWeatherParametersType: JsonDataWeatherParametersType): WeatherType {
-            return when (jsonWeatherParametersType) {
-                JsonDataWeatherParametersType.ClearNoon, JsonDataWeatherParametersType.ClearSunset -> Clear
-                JsonDataWeatherParametersType.CloudyNoon, JsonDataWeatherParametersType.CloudySunset -> Cloudy
-                JsonDataWeatherParametersType.WetNoon, JsonDataWeatherParametersType.WetSunset -> Wet
-                JsonDataWeatherParametersType.WetCloudyNoon, JsonDataWeatherParametersType.WetCloudySunset -> WetCloudy
-                JsonDataWeatherParametersType.SoftRainNoon, JsonDataWeatherParametersType.SoftRainSunset -> SoftRainy
-                JsonDataWeatherParametersType.MidRainNoon, JsonDataWeatherParametersType.MidRainSunset -> MidRainy
-                JsonDataWeatherParametersType.HardRainNoon, JsonDataWeatherParametersType.HardRainSunset -> HardRainy
-                else -> {
-                    Clear
-                }
-            }
-        }
-    }
-
-     */
 }
 
 enum class Daytime {
     Noon,
     Sunset;
-
-    /*
-    companion object {
-        fun fromJsonWeatherParameterType(jsonWeatherParametersType: JsonDataWeatherParametersType): Daytime {
-            return when (jsonWeatherParametersType) {
-                JsonDataWeatherParametersType.HardRainNoon, JsonDataWeatherParametersType.WetNoon,
-                JsonDataWeatherParametersType.MidRainNoon, JsonDataWeatherParametersType.SoftRainNoon,
-                JsonDataWeatherParametersType.CloudyNoon, JsonDataWeatherParametersType.WetCloudyNoon,
-                JsonDataWeatherParametersType.ClearNoon -> Noon
-
-                JsonDataWeatherParametersType.HardRainSunset, JsonDataWeatherParametersType.SoftRainSunset,
-                JsonDataWeatherParametersType.MidRainSunset, JsonDataWeatherParametersType.WetSunset,
-                JsonDataWeatherParametersType.WetCloudySunset, JsonDataWeatherParametersType.CloudySunset,
-                JsonDataWeatherParametersType.ClearSunset -> Sunset
-
-                else -> Sunset
-            }
-        }
-    }
-
-     */
 }
 // endregion
