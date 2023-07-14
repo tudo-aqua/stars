@@ -1,7 +1,6 @@
-package tools.aqua.stars.framework
+package tools.aqua.stars.core.tsc
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.*
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -53,7 +52,7 @@ class TSCBuilder<E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T
 }
 
 fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>root(
-    init: TSCBuilder<E,T,S>.() -> Unit = {}
+    init: TSCBuilder<E, T, S>.() -> Unit = {}
 ): TSCNode<E,T,S> {
     val placeholderNode = TSCBuilder<E,T,S>().apply { init(); this.bounds = edgesCount() to edgesCount()  }.buildBounded()
     check (placeholderNode.destination.edges.size < 2) { "Too many elements to add - root can only host one."}
@@ -66,8 +65,8 @@ fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>root(
  * @param label name of the edge
  * @param bounds defines lower and upper limit of the BoundedNode
  */
-fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.bounded(
-    label: String, bounds: Pair<Int, Int> = Pair(1,1), init: TSCBuilder<E,T,S>.() -> Unit = {}
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> TSCBuilder<E, T, S>.bounded(
+    label: String, bounds: Pair<Int, Int> = Pair(1,1), init: TSCBuilder<E, T, S>.() -> Unit = {}
 ): TSCEdge<E,T,S> {
     return TSCBuilder<E,T,S>(label)
         .apply { init(); this.bounds = bounds }
@@ -79,8 +78,8 @@ fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuild
  * DSL function for an edge with BoundedNode with the limits of (1,1)
  * @param label name of the edge
  */
-fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.exclusive(
-    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> TSCBuilder<E, T, S>.exclusive(
+    label: String, init: TSCBuilder<E, T, S>.() -> Unit = {}
 ): TSCEdge<E,T,S> {
     return this.bounded(label, 1 to 1) { init() }
 }
@@ -89,8 +88,8 @@ fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuild
  * DSL function for an edge with BoundedNode with the limits of (0,#Edges)
  * @param label name of the edge
  */
-fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.optional(
-    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> TSCBuilder<E, T, S>.optional(
+    label: String, init: TSCBuilder<E, T, S>.() -> Unit = {}
 ): TSCEdge<E,T,S> {
     return TSCBuilder<E,T,S>(label)
         .apply { init(); bounds = 0 to edgesCount() }
@@ -102,8 +101,8 @@ fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuild
  * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges)
  * @param label name of the edge
  */
-fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.all(
-    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> TSCBuilder<E, T, S>.all(
+    label: String, init: TSCBuilder<E, T, S>.() -> Unit = {}
 ): TSCEdge<E,T,S> {
     return TSCBuilder<E,T,S>(label)
         .apply { init(); this.bounds = edgesCount() to edgesCount() }
@@ -115,8 +114,8 @@ fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuild
  * DSL function for an edge with LeafNode
  * @param label name of the edge
  */
-fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>>TSCBuilder<E,T,S>.leaf(
-    label: String, init: TSCBuilder<E,T,S>.() -> Unit = {}
+fun <E: EntityType<E,T,S>, T: TickDataType<E,T,S>,S: SegmentType<E,T,S>> TSCBuilder<E, T, S>.leaf(
+    label: String, init: TSCBuilder<E, T, S>.() -> Unit = {}
 ): TSCEdge<E,T,S> {
     return TSCBuilder<E,T,S>(label)
         .apply { init(); this.bounds = 0 to 0  }
