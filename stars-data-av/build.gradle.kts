@@ -23,4 +23,9 @@ mavenMetadata {
       "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles")
 }
 
-dependencies { implementation(project(":stars-core")) }
+dependencies {
+    implementation(project(":stars-core"))
+    testImplementation(project(":stars-logic-kcmftbl"))
+    testImplementation(libs.bundles.test)
+}
+
