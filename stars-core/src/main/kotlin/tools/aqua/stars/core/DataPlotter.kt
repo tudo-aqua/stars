@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.framework
+package tools.aqua.stars.core
 
 import java.io.File
 import jetbrains.letsPlot.Stat
