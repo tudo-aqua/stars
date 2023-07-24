@@ -16,22 +16,21 @@
  */
 
 plugins {
-    id("tools.aqua.stars.library-conventions")
-    kotlin("plugin.serialization") version "1.7.10"
+  id("tools.aqua.stars.library-conventions")
+  kotlin("plugin.serialization") version "1.7.10"
 }
 
 mavenMetadata {
-    name.set("STARS Carla Importer")
-    description.set(
-        "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter"
-    )
+  name.set("STARS Carla Importer")
+  description.set(
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter")
 }
 
 dependencies {
-    implementation(project(":stars-core"))
-    implementation(project(":stars-data-av"))
-    implementation(libs.kotlinx.serialization.json)
+  implementation(project(":stars-core"))
+  implementation(project(":stars-data-av"))
+  implementation(libs.kotlinx.serialization.json)
 
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+  // Use the Kotlin test library.
+  testImplementation("org.jetbrains.kotlin:kotlin-test")
 }

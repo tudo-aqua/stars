@@ -24,8 +24,7 @@ mavenMetadata {
 }
 
 dependencies {
-    implementation(project(":stars-core"))
-    testImplementation(project(":stars-logic-kcmftbl"))
-    testImplementation(libs.bundles.test)
+  implementation(project(":stars-core"))
+  testImplementation(project(":stars-logic-kcmftbl"))
+  testImplementation(libs.bundles.test)
 }
-

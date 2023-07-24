@@ -1,20 +1,38 @@
+/*
+ * Copyright 2023 The STARS Project Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tools.aqua.stars.import.carla
 
-import tools.aqua.stars.data.av.*
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import tools.aqua.stars.data.av.*
 
 class JSONLandmarkTest {
 
-    private lateinit var completeJsonLandmark: JsonLandmark
-    private lateinit var completeLandmark: Landmark
-    private lateinit var jsonSpeedLimit: JsonLandmark
-    private lateinit var speedLimit: Landmark
+  private lateinit var completeJsonLandmark: JsonLandmark
+  private lateinit var completeLandmark: Landmark
+  private lateinit var jsonSpeedLimit: JsonLandmark
+  private lateinit var speedLimit: Landmark
 
-    @BeforeTest
-    fun setup() {
-        completeJsonLandmark = JsonLandmark(
+  @BeforeTest
+  fun setup() {
+    completeJsonLandmark =
+        JsonLandmark(
             id = 100,
             roadId = 1,
             location = JsonLocation(0.0, 0.0, 0.0),
@@ -35,27 +53,26 @@ class JSONLandmarkTest {
             s = 10.0,
             subType = "Subtype",
             width = 1.0,
-            zOffset = 0.0
-        )
-        completeLandmark = completeJsonLandmark.toLandmark()
-    }
+            zOffset = 0.0)
+    completeLandmark = completeJsonLandmark.toLandmark()
+  }
 
-    @Test
-    fun checkAttributeSetter() {
-        assertEquals(completeJsonLandmark.id, completeLandmark.id)
-        assertEquals(completeJsonLandmark.country, completeLandmark.country)
-        assertEquals(completeJsonLandmark.distance, completeLandmark.distance)
-        assertEquals(completeJsonLandmark.s, completeLandmark.s)
-        assertEquals(completeJsonLandmark.location.x, completeLandmark.location.x)
-        assertEquals(completeJsonLandmark.location.y, completeLandmark.location.y)
-        assertEquals(completeJsonLandmark.location.z, completeLandmark.location.z)
-        assertEquals(completeJsonLandmark.rotation.yaw, completeLandmark.rotation.yaw)
-        assertEquals(completeJsonLandmark.rotation.pitch, completeLandmark.rotation.pitch)
-        assertEquals(completeJsonLandmark.rotation.roll, completeLandmark.rotation.roll)
-        assertEquals(completeJsonLandmark.name, completeLandmark.name)
-        assertEquals(completeJsonLandmark.text, completeLandmark.text)
-        assertEquals(completeJsonLandmark.type.value, completeLandmark.type.value)
-        assertEquals(completeJsonLandmark.value, completeLandmark.value)
-        assertEquals(completeJsonLandmark.unit, completeLandmark.unit)
-    }
+  @Test
+  fun checkAttributeSetter() {
+    assertEquals(completeJsonLandmark.id, completeLandmark.id)
+    assertEquals(completeJsonLandmark.country, completeLandmark.country)
+    assertEquals(completeJsonLandmark.distance, completeLandmark.distance)
+    assertEquals(completeJsonLandmark.s, completeLandmark.s)
+    assertEquals(completeJsonLandmark.location.x, completeLandmark.location.x)
+    assertEquals(completeJsonLandmark.location.y, completeLandmark.location.y)
+    assertEquals(completeJsonLandmark.location.z, completeLandmark.location.z)
+    assertEquals(completeJsonLandmark.rotation.yaw, completeLandmark.rotation.yaw)
+    assertEquals(completeJsonLandmark.rotation.pitch, completeLandmark.rotation.pitch)
+    assertEquals(completeJsonLandmark.rotation.roll, completeLandmark.rotation.roll)
+    assertEquals(completeJsonLandmark.name, completeLandmark.name)
+    assertEquals(completeJsonLandmark.text, completeLandmark.text)
+    assertEquals(completeJsonLandmark.type.value, completeLandmark.type.value)
+    assertEquals(completeJsonLandmark.value, completeLandmark.value)
+    assertEquals(completeJsonLandmark.unit, completeLandmark.unit)
+  }
 }
