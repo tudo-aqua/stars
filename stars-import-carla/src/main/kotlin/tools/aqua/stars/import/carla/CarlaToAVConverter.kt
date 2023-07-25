@@ -17,65 +17,10 @@
 
 package tools.aqua.stars.import.carla
 
-import java.nio.file.Path
-import java.nio.file.Paths
-import kotlin.io.path.inputStream
-import kotlin.io.path.isDirectory
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
 import tools.aqua.stars.data.av.*
-
-// Create JsonBuilder with correct settings
-private val jsonBuilder = Json {
-  prettyPrint = true
-  isLenient = true
-  serializersModule = CarlaDataSerializerModule
-}
-
-fun main() {
-  val mapFilePath =
-      "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01\\static_data__Game_Carla_Maps_Town01.json"
-  val dynamicFilePath =
-      "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01\\dynamic_data__Game_Carla_Maps_Town01_seed2.json"
-  val segments = getSegments(Paths.get(mapFilePath), Paths.get(dynamicFilePath), true)
-  val s = ""
-  println("Done")
-}
-
-/**
- * Return an array deque of [Segment]s given a path to a [mapDataFile] in combination with a
- * [dynamicDataFile] path. [useEveryVehicleAsEgo] lets you decide whether to use every vehicle to be
- * used as the ego vehicle. This will multiply the size of the resulting sequence of [Segment]s by
- * the number of vehicles.
- */
-fun getSegments(
-    mapDataFile: Path,
-    dynamicDataFile: Path,
-    useEveryVehicleAsEgo: Boolean = false
-): List<Segment> {
-  // A single file is required. Check if given path is a directory
-  if (mapDataFile.isDirectory()) {
-    error(
-        "The given mapDataFilePath argument is a directory. Expecting a single file. Given path: $mapDataFile")
-  }
-  // A single file is required. Check if given path is a directory
-  if (dynamicDataFile.isDirectory()) {
-    error(
-        "The given dynamicDataFile argument is a directory. Expecting a single file. Given path: $dynamicDataFile")
-  }
-  /** Holds the decoded list of [JsonBlock]s from the specified [mapDataFile] */
-  val jsonBlocks = jsonBuilder.decodeFromStream<List<JsonBlock>>(mapDataFile.inputStream())
-  val blocks = calculateStaticBlocks(jsonBlocks, mapDataFile.fileName.toString())
-
-  val simulationRun =
-      jsonBuilder.decodeFromStream<List<JsonTickData>>(dynamicDataFile.inputStream())
-
-  return sliceRunIntoSegments(
-          blocks, simulationRun, useEveryVehicleAsEgo, dynamicDataFile.fileName.toString())
-}
 
 fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String): List<Block> {
   val staticBlocks = staticJsonBlocks.map { block -> convertJsonBlockToBlock(block, fileName) }
