@@ -23,7 +23,20 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.data.av.*
+
+// Declare data structure of Json file
+val CarlaDataSerializerModule = SerializersModule {
+  polymorphic(JsonActor::class) {
+    subclass(JsonVehicle::class)
+    subclass(JsonTrafficLight::class)
+    subclass(JsonTrafficSign::class)
+    subclass(JsonPedestrian::class)
+  }
+}
 
 @Serializable
 data class JsonTickData(
