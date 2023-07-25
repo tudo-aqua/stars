@@ -65,10 +65,6 @@ fun convertJsonData(
     useEveryVehicleAsEgo: Boolean,
     simulationRunId: String
 ): MutableList<Pair<String, List<TickData>>> {
-  val mapNameBlocks = getMapName(blocks.first().fileName)
-  val mapNameSimulationRun = getMapName(simulationRunId)
-  check(mapNameBlocks == mapNameSimulationRun)
-
   val egoVehicles: List<JsonVehicle> =
       jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
 
@@ -79,7 +75,7 @@ fun convertJsonData(
   var referenceTickData: List<TickData>? = null
 
   egoVehicles.forEach { egoVehicle ->
-    // If UseEveryVehicleAsEgo is false and there was already on símulationRun recorded: skip next
+    // If UseEveryVehicleAsEgo is false and there was already on simulationRun recorded: skip next
     // vehicles
     if (simulationRuns.isNotEmpty() && !useEveryVehicleAsEgo) {
       return@forEach
