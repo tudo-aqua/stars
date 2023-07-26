@@ -48,7 +48,67 @@ fun main() {
 }
 
 /**
- * Return an array deque of [Segment]s given a path to a [mapDataFile] in combination with a
+ * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
+ * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
+ * data, each as [Path]s.
+ */
+fun loadSegments(
+    simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
+    useEveryVehicleAsEgo: Boolean = false
+): Sequence<Segment> {
+  // Load Blocks and save in SimulationRunsWrapper
+  simulationRunsWrappers.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
+
+  // Load InputStreams for dynamic data files
+  simulationRunsWrappers.forEach {
+    it.dynamicDataInputStreamsList =
+        it.dynamicDataFiles.map { getInputStreamsFromFile(it) }.flatten()
+  }
+
+  // Check that every SimulationRunsWrapper has dynamic data files loaded
+  simulationRunsWrappers.forEach {
+    check(it.dynamicDataInputStreamsArrayDeque.any()) {
+      "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no loaded dynamic files. Dynamic file " +
+          "paths: ${it.dynamicDataFiles.map { dynamicDataFilePath ->  dynamicDataFilePath.toUri() }}"
+    }
+  }
+
+  /** Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters */
+  val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrappers)
+  /** Holds the [Segment]s that still need to be calculated for the [Sequence] of [Segment]s */
+  val segmentBuffer = ArrayDeque<Segment>()
+
+  return generateSequence {
+    // There currently is another Segment that was already calculated
+    if (segmentBuffer.size > 0) {
+      return@generateSequence segmentBuffer.removeFirst()
+    }
+    // No calculated Segment is left. Calculate new Segments
+    if (simulationRunsWrappersDeque.size > 0) {
+      /** Holds the current [CarlaSimulationRunsWrapper] */
+      val simulationRunsWrapper = simulationRunsWrappersDeque.removeFirst()
+      /** Holds the current [InputStream] of the next dynamic data file to be calculated */
+      val dataInputStream = simulationRunsWrapper.dynamicDataInputStreamsArrayDeque.removeFirst()
+      /** Holds the current simulationRun object */
+      val simulationRun = jsonBuilder.decodeFromStream<List<JsonTickData>>(dataInputStream.first)
+
+      // Calculate Blocks for current file and add each Segment to the Sequence
+      segmentBuffer.addAll(
+          sliceRunIntoSegments(
+              simulationRunsWrapper.blocks,
+              simulationRun,
+              useEveryVehicleAsEgo,
+              dataInputStream.second.fileName.toString()))
+      return@generateSequence segmentBuffer.removeFirst()
+    }
+    // If there are no Segments nor Files to process, return null to indicate the end of the
+    // Sequence
+    return@generateSequence null
+  }
+}
+
+/**
+ * Return a [Sequence] of [Segment]s given a path to a [mapDataFile] in combination with a
  * [dynamicDataFile] path. [useEveryVehicleAsEgo] lets you decide whether to use every vehicle to be
  * used as the ego vehicle. This will multiply the size of the resulting sequence of [Segment]s by
  * the number of vehicles.
@@ -58,50 +118,41 @@ fun loadSegments(
     dynamicDataFile: Path,
     useEveryVehicleAsEgo: Boolean = false
 ): Sequence<Segment> {
-  /** Holds the converted [Block]s based on the [mapDataFile] path */
-  val blocks = loadBlocks(mapDataFile).toList()
-
-  /** Holds the [InputStream]s for the [dynamicDataFile] */
-  val dynamicDataFileInputStreams = getInputStreamsFromFile(dynamicDataFile)
-
-  check(dynamicDataFileInputStreams.any()) {
-    "There are no readable files at path: $dynamicDataFile"
-  }
-
-  val segmentBuffer = ArrayDeque<Segment>()
-
-  return generateSequence {
-    if (segmentBuffer.size > 0) {
-      return@generateSequence segmentBuffer.removeFirst()
-    }
-    if (dynamicDataFileInputStreams.size > 0) {
-      /** Holds the current [InputStream] and [Path] pair of the current dynamic data file */
-      val dataInputStream = dynamicDataFileInputStreams.removeFirst()
-      /** Holds the current simulationRun object */
-      val simulationRun = jsonBuilder.decodeFromStream<List<JsonTickData>>(dataInputStream.first)
-
-      // Calculate Blocks for current file and add each Segment to the Sequence
-      segmentBuffer.addAll(
-          sliceRunIntoSegments(
-              blocks,
-              simulationRun,
-              useEveryVehicleAsEgo,
-              dataInputStream.second.fileName.toString()))
-      return@generateSequence segmentBuffer.removeFirst()
-    }
-    // If there are no Segments nor Files to process, return null to indicate the end of the Sequence
-    return@generateSequence null
-  }
+  // Call actual implementation of loadSegments with correct data structure
+  return loadSegments(
+      listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+      useEveryVehicleAsEgo)
 }
 
+/**
+ * Load [Segment]s for one specific map. The map data comes from the file [mapDataFile] and the
+ * dynamic data from multiple files [dynamicDataFiles].
+ */
 fun loadSegments(
     mapDataFile: Path,
     dynamicDataFiles: List<Path>,
     useEveryVehicleAsEgo: Boolean = false
 ): Sequence<Segment> {
-  /** Holds the converted [Block]s based on the [mapDataFile] path */
-  val blocks = loadBlocks(mapDataFile)
-  return sequenceOf()
+  // Call actual implementation of loadSegments with correct data structure
+  return loadSegments(
+      listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)), useEveryVehicleAsEgo)
+}
+
+/**
+ * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[Path],
+ * List[Path]> with the semantics: Map<MapDataPath, List<DynamicDataPath>>. As each dynamic data is
+ * linked to a map data, they are linked in the [Map].
+ */
+fun loadSegments(
+    mapToDynamicDataFiles: Map<Path, List<Path>>,
+    useEveryVehicleAsEgo: Boolean = false
+): Sequence<Segment> {
+  /** Holds the [List] of [CarlaSimulationRunsWrapper]s */
+  val listOfCarlaSimulationRunsWrappers =
+      mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) }
+
+  // Call actual implementation of loadSegments with correct data structure
+  return loadSegments(listOfCarlaSimulationRunsWrappers, useEveryVehicleAsEgo)
 }
 
 /** Return a [Sequence] of [Block]s from a given [mapDataFile] path. */
@@ -154,4 +205,23 @@ fun getInputStreamsFromFile(inputFilePath: Path): ArrayDeque<Pair<InputStream, P
   // If none of the supported file extensions is present, throw an Exception
   error(
       "Unexpected file extension: ${inputFilePath.extension}. Supported extensions: '.json', '.zip'")
+}
+
+/**
+ * Contains the information for all simulation runs for one specific map. Each
+ * [CarlaSimulationRunsWrapper] contains a [Path] to the [mapDataFile] and a list of [Path]s for the
+ * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [InputStream]s for
+ * each [Path] of [dynamicDataFiles].
+ */
+data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
+  /** Holds the [List] of [Block]s after calling [loadBlocks]. */
+  var blocks: List<Block> = listOf()
+  /** Holds a [List] of [Pair]s of an [InputStream] and the related [Path] */
+  var dynamicDataInputStreamsList: List<Pair<InputStream, Path>> = listOf()
+  /**
+   * Holds a [ArrayDeque] of [Pair]s of an [InputStream] and the related [Path]. Is only available
+   * after initializing [dynamicDataInputStreamsList]
+   */
+  val dynamicDataInputStreamsArrayDeque: ArrayDeque<Pair<InputStream, Path>>
+    get() = ArrayDeque(dynamicDataInputStreamsList)
 }
