@@ -20,8 +20,8 @@ package tools.aqua.stars.import.carla
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.zip.ZipFile
+import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
@@ -29,30 +29,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import tools.aqua.stars.data.av.Block
 import tools.aqua.stars.data.av.Segment
-
-// Create JsonBuilder with correct settings
-private val jsonBuilder = Json {
-  prettyPrint = true
-  isLenient = true
-  serializersModule = CarlaDataSerializerModule
-}
-
-fun main() {
-  val mapFilePath =
-      "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01\\static_data__Game_Carla_Maps_Town01.json"
-  val dynamicFilePath =
-      "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01\\dynamic_data__Game_Carla_Maps_Town01_seed2.json"
-  val dynamicFilePath2 =
-      "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01" +
-          "\\dynamic_data__Game_Carla_Maps_Town01_seed7.zip"
-  val segments =
-      loadSegments(
-          Paths.get(mapFilePath),
-          listOf(Paths.get(dynamicFilePath), Paths.get(dynamicFilePath2)),
-          true)
-  val s = segments.toList()
-  println("Done")
-}
 
 /**
  * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
@@ -66,16 +42,10 @@ fun loadSegments(
   // Load Blocks and save in SimulationRunsWrapper
   simulationRunsWrappers.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
 
-  // Load InputStreams for dynamic data files
-  simulationRunsWrappers.forEach {
-    it.dynamicDataInputStreamsList =
-        it.dynamicDataFiles.map { getInputStreamsFromFile(it) }.flatten()
-  }
-
   // Check that every SimulationRunsWrapper has dynamic data files loaded
   simulationRunsWrappers.forEach {
-    check(it.dynamicDataInputStreamsArrayDeque.any()) {
-      "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no loaded dynamic files. Dynamic file " +
+    check(it.dynamicDataFiles.any()) {
+      "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no dynamic files. Dynamic file " +
           "paths: ${it.dynamicDataFiles.map { dynamicDataFilePath ->  dynamicDataFilePath.toUri() }}"
     }
   }
@@ -93,11 +63,18 @@ fun loadSegments(
     // No calculated Segment is left. Calculate new Segments
     if (simulationRunsWrappersDeque.size > 0) {
       /** Holds the current [CarlaSimulationRunsWrapper] */
-      val simulationRunsWrapper = simulationRunsWrappersDeque.removeFirst()
+      val simulationRunsWrapper = simulationRunsWrappersDeque.first()
+      // Remove current simulationRunsWrapper only if there is no dynamic data file left to analyze
+      if (simulationRunsWrapper.dynamicDataFilesArrayDeque.size == 1) {
+        simulationRunsWrappersDeque.removeFirst()
+      }
       /** Holds the current [InputStream] of the next dynamic data file to be calculated */
-      val dataInputStream = simulationRunsWrapper.dynamicDataInputStreamsArrayDeque.removeFirst()
+      val currentDynamicDataPath = simulationRunsWrapper.dynamicDataFilesArrayDeque.removeFirst()
+
+      println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
+
       /** Holds the current simulationRun object */
-      val simulationRun = jsonBuilder.decodeFromStream<List<JsonTickData>>(dataInputStream.first)
+      val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
 
       // Calculate Blocks for current file and add each Segment to the Sequence
       segmentBuffer.addAll(
@@ -105,7 +82,7 @@ fun loadSegments(
               simulationRunsWrapper.blocks,
               simulationRun,
               useEveryVehicleAsEgo,
-              dataInputStream.second.fileName.toString()))
+              currentDynamicDataPath.fileName.toString()))
       return@generateSequence segmentBuffer.removeFirst()
     }
     // If there are no Segments nor Files to process, return null to indicate the end of the
@@ -164,37 +141,36 @@ fun loadSegments(
 
 /** Return a [Sequence] of [Block]s from a given [mapDataFile] path. */
 fun loadBlocks(mapDataFile: Path): Sequence<Block> {
-  /** Holds the InputStreams for the mapDataFile */
-  val mapDataInputStreams = getInputStreamsFromFile(mapDataFile)
-
-  check(mapDataInputStreams.count() == 1) {
-    "Only one file is allowed for map data. Found ${mapDataInputStreams.count()} file under path: $mapDataFile"
-  }
-
-  /** Holds the single InputStream for the mapDataFile */
-  val mapDataInputStream = mapDataInputStreams.first()
-
   /** Holds the decoded list of [JsonBlock]s from the specified [mapDataFile] */
-  val jsonBlocks = jsonBuilder.decodeFromStream<List<JsonBlock>>(mapDataInputStream.first)
+  val jsonBlocks = getJsonContentOfPath<List<JsonBlock>>(mapDataFile)
 
   return calculateStaticBlocks(jsonBlocks, mapDataFile.fileName.toString()).asSequence()
 }
 
 /**
- * Returns an [InputStream] for the given [inputFilePath]. Currently supported file extensions:
- * ".json", ".zip".
+ * Returns the parsed Json content for the given [inputFilePath]. Currently supported file
+ * extensions: ".json", ".zip". The generic parameter [T] specifies the class to which the content
+ * should be parsed to
  */
-fun getInputStreamsFromFile(inputFilePath: Path): ArrayDeque<Pair<InputStream, Path>> {
-  val inputStreamBuffer = ArrayDeque<Pair<InputStream, Path>>()
+inline fun <reified T> getJsonContentOfPath(inputFilePath: Path): T {
+  // Create JsonBuilder with correct settings
+  val jsonBuilder = Json {
+    prettyPrint = true
+    isLenient = true
+    serializersModule = CarlaDataSerializerModule
+  }
+
+  // Check if inputFilePath exists
+  check(inputFilePath.exists()) { "The given file path does not exist: ${inputFilePath.toUri()}" }
+
   // Check whether the given inputFilePath is a directory
-  if (inputFilePath.isDirectory()) {
-    error("Cannot get InputStream for directory. Path: $inputFilePath")
+  check(!inputFilePath.isDirectory()) {
+    "Cannot get InputStream for directory. Path: $inputFilePath"
   }
 
   // If ".json"-file: Just return InputStream of file
   if (inputFilePath.extension == "json") {
-    inputStreamBuffer.add(inputFilePath.inputStream() to inputFilePath)
-    return inputStreamBuffer
+    return jsonBuilder.decodeFromStream<T>(inputFilePath.inputStream())
   }
 
   // if ".zip"-file: Extract single archived file
@@ -203,10 +179,9 @@ fun getInputStreamsFromFile(inputFilePath: Path): ArrayDeque<Pair<InputStream, P
     ZipFile(File(inputFilePath.toUri())).use { zip ->
       zip.entries().asSequence().forEach { entry ->
         // Add InputStream to inputStreamBuffer
-        inputStreamBuffer.add(zip.getInputStream(entry) to inputFilePath)
+        return jsonBuilder.decodeFromStream<T>(zip.getInputStream(entry))
       }
     }
-    return inputStreamBuffer
   }
 
   // If none of the supported file extensions is present, throw an Exception
@@ -223,12 +198,9 @@ fun getInputStreamsFromFile(inputFilePath: Path): ArrayDeque<Pair<InputStream, P
 data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
   /** Holds the [List] of [Block]s after calling [loadBlocks]. */
   var blocks: List<Block> = listOf()
-  /** Holds a [List] of [Pair]s of an [InputStream] and the related [Path] */
-  var dynamicDataInputStreamsList: List<Pair<InputStream, Path>> = listOf()
   /**
    * Holds a [ArrayDeque] of [Pair]s of an [InputStream] and the related [Path]. Is only available
    * after initializing [dynamicDataInputStreamsList]
    */
-  val dynamicDataInputStreamsArrayDeque: ArrayDeque<Pair<InputStream, Path>>
-    get() = ArrayDeque(dynamicDataInputStreamsList)
+  val dynamicDataFilesArrayDeque = ArrayDeque(dynamicDataFiles)
 }
