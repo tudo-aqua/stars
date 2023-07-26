@@ -42,7 +42,14 @@ fun main() {
       "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01\\static_data__Game_Carla_Maps_Town01.json"
   val dynamicFilePath =
       "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01\\dynamic_data__Game_Carla_Maps_Town01_seed2.json"
-  val segments = loadSegments(Paths.get(mapFilePath), Paths.get(dynamicFilePath), true)
+  val dynamicFilePath2 =
+      "D:\\aqua\\stars-main\\stars-experiments-data\\simulation_runs\\_Game_Carla_Maps_Town01" +
+          "\\dynamic_data__Game_Carla_Maps_Town01_seed7.zip"
+  val segments =
+      loadSegments(
+          Paths.get(mapFilePath),
+          listOf(Paths.get(dynamicFilePath), Paths.get(dynamicFilePath2)),
+          true)
   val s = segments.toList()
   println("Done")
 }
