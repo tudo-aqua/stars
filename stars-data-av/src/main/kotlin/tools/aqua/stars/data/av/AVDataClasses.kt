@@ -341,6 +341,12 @@ sealed class Actor : EntityType<Actor, TickData, Segment> {
   abstract fun clone(newTickData: TickData): Actor
 }
 
+val Actor.lane
+  get() = when (this) {
+    is Pedestrian -> lane
+    is Vehicle -> lane
+  }
+
 data class Pedestrian(
     override val id: Int,
     override val tickData: TickData,
