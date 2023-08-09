@@ -65,8 +65,12 @@ fun convertJsonData(
     useEveryVehicleAsEgo: Boolean,
     simulationRunId: String
 ): MutableList<Pair<String, List<TickData>>> {
-  val egoVehicles: List<JsonVehicle> =
+  var egoVehicles: List<JsonVehicle> =
       jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+
+  if (!useEveryVehicleAsEgo && egoVehicles.any { e -> e.egoVehicle }) {
+    egoVehicles = egoVehicles.filter { e -> e.egoVehicle }
+  }
 
   /** Stores all simulation runs (List<TickData>) for each ego vehicle */
   val simulationRuns = mutableListOf<Pair<String, List<TickData>>>()
