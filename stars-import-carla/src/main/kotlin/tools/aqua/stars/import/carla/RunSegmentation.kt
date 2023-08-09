@@ -125,7 +125,8 @@ fun sliceRunIntoSegments(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
     useEveryVehicleAsEgo: Boolean,
-    simulationRunId: String
+    simulationRunId: String,
+    minSegmentTickCount: Int
 ): List<Segment> {
   cleanJsonData(blocks, jsonSimulationRun)
   val simulationRuns =
@@ -152,7 +153,7 @@ fun sliceRunIntoSegments(
           simulationRun
               .filter { it.currentTick in blockRange.first..blockRange.second }
               .map { it.clone() }
-      if (mainSegment.size > 10) {
+      if (mainSegment.size > minSegmentTickCount) {
         segments +=
             Segment(
                 mainSegment,

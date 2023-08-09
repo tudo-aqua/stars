@@ -37,7 +37,8 @@ import tools.aqua.stars.data.av.Segment
  */
 fun loadSegments(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
-    useEveryVehicleAsEgo: Boolean = false
+    useEveryVehicleAsEgo: Boolean = false,
+    minSegmentTickCount: Int = 10
 ): Sequence<Segment> {
   // Load Blocks and save in SimulationRunsWrapper
   simulationRunsWrappers.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
@@ -82,7 +83,8 @@ fun loadSegments(
               simulationRunsWrapper.blocks,
               simulationRun,
               useEveryVehicleAsEgo,
-              currentDynamicDataPath.fileName.toString()))
+              currentDynamicDataPath.fileName.toString(),
+              minSegmentTickCount))
       return@generateSequence segmentBuffer.removeFirst()
     }
     // If there are no Segments nor Files to process, return null to indicate the end of the
