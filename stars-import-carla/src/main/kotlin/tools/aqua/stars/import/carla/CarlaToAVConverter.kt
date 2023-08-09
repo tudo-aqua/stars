@@ -91,6 +91,11 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
 fun updateActorVelocity(actor: Vehicle, currentTick: TickData, previousTick: TickData) {
   val previousPActor = previousTick.actors.firstOrNull { it.id == actor.id }
 
+    if(previousPActor == null){
+        actor.effVelocityInMPerS = 0.0;
+        return;
+    }
+
   previousPActor as Vehicle
   val xDelta = previousPActor.location.x - actor.location.x
   val yDelta = previousPActor.location.y - actor.location.y
