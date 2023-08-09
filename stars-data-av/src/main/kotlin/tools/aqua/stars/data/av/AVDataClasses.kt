@@ -342,10 +342,11 @@ sealed class Actor : EntityType<Actor, TickData, Segment> {
 }
 
 val Actor.lane
-  get() = when (this) {
-    is Pedestrian -> lane
-    is Vehicle -> lane
-  }
+  get() =
+      when (this) {
+        is Pedestrian -> lane
+        is Vehicle -> lane
+      }
 
 data class Pedestrian(
     override val id: Int,
