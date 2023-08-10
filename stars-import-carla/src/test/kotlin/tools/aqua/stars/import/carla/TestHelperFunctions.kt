@@ -169,12 +169,12 @@ fun emptyVehicle(
     lane: Lane = emptyLane(),
     positionOnLane: Double = 0.0,
     tickData: TickData = emptyTickData(),
-    effVelocityMPH: Double = 0.0
+    location: Location = emptyLocation()
 ): Vehicle {
   return Vehicle(
       id = id,
       rotation = emptyRotation(),
-      location = emptyLocation(),
+      location = location,
       egoVehicle = egoVehicle,
       acceleration = emptyVector3D(),
       angularVelocity = emptyVector3D(),
