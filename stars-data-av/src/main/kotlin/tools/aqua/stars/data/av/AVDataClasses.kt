@@ -373,11 +373,13 @@ data class Vehicle(
     val location: Location,
     val forwardVector: Vector3D,
     val rotation: Rotation,
+    /** The velocity vector in m/s*/
     var velocity: Vector3D,
+    /** The acceleration vector in m/s²*/
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
 ) : Actor() {
-  /** Effective velocity in m/s based on position delta between two adjacent ticks */
+  /** Effective velocity in m/s based on the [velocity] vector */
   val effVelocityInMPerS
     get() = sqrt(velocity.x.pow(2) + velocity.y.pow(2) + velocity.z.pow(2))
   /** Effective velocity in km/h based on [effVelocityInMPerS] */
@@ -386,6 +388,9 @@ data class Vehicle(
   /** Effective velocity in miles/hour based on [effVelocityInMPerS] */
   val effVelocityInMPH
     get() = this.effVelocityInMPerS * 2.237
+  /** Effective acceleration in m/s² based on the [acceleration] vector */
+  val effAccelerationInMPerSSquared
+    get() = sqrt(acceleration.x.pow(2) + acceleration.y.pow(2) + acceleration.z.pow(2))
   /** SpeedLimit of the road/lane for the current location of this vehicle */
   val applicableSpeedLimit
     get() =

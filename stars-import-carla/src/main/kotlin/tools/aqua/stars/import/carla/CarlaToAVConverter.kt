@@ -78,40 +78,77 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
   for (i in 1 until simulationRun.size) {
     val currentTick = simulationRun[i]
     val previousTick = simulationRun[i - 1]
-    currentTick.actors.forEach {
-      if (it is Vehicle) {
-        updateActorVelocity(it, previousTick)
+    currentTick.actors.forEach { currentActor ->
+      if (currentActor is Vehicle) {
+        updateActorVelocityAndAcceleration(
+            currentActor, previousTick.actors.firstOrNull { it.id == currentActor.id })
       }
     }
   }
 }
 
-fun updateActorVelocity(actor: Vehicle, previousTick: TickData) {
-  val previousPActor = previousTick.actors.firstOrNull { it.id == actor.id }
+fun updateActorVelocityAndAcceleration(actor: Vehicle, previousActor: Actor?) {
 
   // When there is no previous actor position, set velocity and acceleration to 0.0
-  if (previousPActor == null) {
+  if (previousActor == null) {
     actor.velocity = Vector3D(0.0, 0.0, 0.0)
     actor.acceleration = Vector3D(0.0, 0.0, 0.0)
     return
   }
-  previousPActor as Vehicle
 
-  // Calculate the position deltas for each direction
-  val xDelta = actor.location.x - previousPActor.location.x
-  val yDelta = actor.location.y - previousPActor.location.y
-  val zDelta = actor.location.z - previousPActor.location.z
+  check(previousActor is Vehicle) {
+    "The Actor with id '${previousActor.id}' from the previous tick is of type '${previousActor::class}' " +
+        "but '${Vehicle::class}' was expected."
+  }
 
   // Calculate the time difference
-  val timeDelta = actor.tickData.currentTick - previousPActor.tickData.currentTick
+  val timeDelta = actor.tickData.currentTick - previousActor.tickData.currentTick
+
+  // If the time difference is exactly 0.0 set default values, as division by 0.0 is not allowed
+  if (timeDelta == 0.0) {
+    actor.velocity = Vector3D(0.0, 0.0, 0.0)
+    actor.acceleration = Vector3D(0.0, 0.0, 0.0)
+    return
+  }
+
+  check(timeDelta > 0) {
+    "The time delta between the vehicles is less than 0. Maybe you have switched the vehicles? " +
+        "Tick of current vehicle: ${actor.tickData.currentTick} vs. previous vehicle: ${previousActor.tickData.currentTick}"
+  }
+
+  // region Calculate velocity
+
+  // Calculate the position deltas for each direction
+  val xDelta = actor.location.x - previousActor.location.x
+  val yDelta = actor.location.y - previousActor.location.y
+  val zDelta = actor.location.z - previousActor.location.z
 
   // Calculate the velocity for each direction
   val velocityX = xDelta / timeDelta
   val velocityY = yDelta / timeDelta
   val velocityZ = zDelta / timeDelta
 
-  // Set velocity vector based on deltas
+  // Set velocity vector based on velocity values for each direction
   actor.velocity = Vector3D(velocityX, velocityY, velocityZ)
+
+  // endregion
+
+  // region Calculate acceleration
+
+  // Calculate the velocity delta for each direction
+  val velocityDeltaX = actor.velocity.x - previousActor.velocity.x
+  val velocityDeltaY = actor.velocity.y - previousActor.velocity.y
+  val velocityDeltaZ = actor.velocity.z - previousActor.velocity.z
+
+  // Calculate the acceleration for each direction
+  val accelerationX = velocityDeltaX / timeDelta
+  val accelerationY = velocityDeltaY / timeDelta
+  val accelerationZ = velocityDeltaZ / timeDelta
+
+  // Set acceleration vector based on acceleration values for each direction
+  actor.acceleration = Vector3D(accelerationX, accelerationY, accelerationZ)
+
+  // endregion
 }
 
 fun convertJsonVehicleToVehicle(
