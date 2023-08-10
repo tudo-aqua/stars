@@ -178,7 +178,6 @@ fun emptyVehicle(
       egoVehicle = egoVehicle,
       acceleration = emptyVector3D(),
       angularVelocity = emptyVector3D(),
-      effVelocityInMPerS = effVelocityMPH / 2.237,
       forwardVector = emptyVector3D(),
       lane = lane,
       positionOnLane = positionOnLane,

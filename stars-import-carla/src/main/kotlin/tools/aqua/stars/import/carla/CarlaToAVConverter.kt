@@ -18,8 +18,6 @@
 package tools.aqua.stars.import.carla
 
 import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
 import tools.aqua.stars.data.av.*
 
 fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String): List<Block> {
@@ -82,28 +80,38 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
     val previousTick = simulationRun[i - 1]
     currentTick.actors.forEach {
       if (it is Vehicle) {
-        updateActorVelocity(it, currentTick, previousTick)
+        updateActorVelocity(it, previousTick)
       }
     }
   }
 }
 
-fun updateActorVelocity(actor: Vehicle, currentTick: TickData, previousTick: TickData) {
+fun updateActorVelocity(actor: Vehicle, previousTick: TickData) {
   val previousPActor = previousTick.actors.firstOrNull { it.id == actor.id }
 
+  // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousPActor == null) {
-    actor.effVelocityInMPerS = 0.0
+    actor.velocity = Vector3D(0.0, 0.0, 0.0)
+    actor.acceleration = Vector3D(0.0, 0.0, 0.0)
     return
   }
-
   previousPActor as Vehicle
-  val xDelta = previousPActor.location.x - actor.location.x
-  val yDelta = previousPActor.location.y - actor.location.y
-  val zDelta = previousPActor.location.z - actor.location.z
 
-  actor.effVelocityInMPerS =
-      sqrt(xDelta.pow(2) + yDelta.pow(2) + zDelta.pow(2)) /
-          (currentTick.currentTick - previousTick.currentTick)
+  // Calculate the position deltas for each direction
+  val xDelta = actor.location.x - previousPActor.location.x
+  val yDelta = actor.location.y - previousPActor.location.y
+  val zDelta = actor.location.z - previousPActor.location.z
+
+  // Calculate the time difference
+  val timeDelta = actor.tickData.currentTick - previousPActor.tickData.currentTick
+
+  // Calculate the velocity for each direction
+  val velocityX = xDelta / timeDelta
+  val velocityY = yDelta / timeDelta
+  val velocityZ = zDelta / timeDelta
+
+  // Set velocity vector based on deltas
+  actor.velocity = Vector3D(velocityX, velocityY, velocityZ)
 }
 
 fun convertJsonVehicleToVehicle(
@@ -124,8 +132,7 @@ fun convertJsonVehicleToVehicle(
       positionOnLane = positionOnLane,
       rotation = actor.rotation.toRotation(),
       tickData = tickData,
-      velocity = actor.velocity.toVector3D(),
-      effVelocityInMPerS = 0.0)
+      velocity = actor.velocity.toVector3D())
 }
 
 fun convertJsonPedestrianToPedestrian(

@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av
 
+import kotlin.math.pow
+import kotlin.math.sqrt
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -371,19 +373,25 @@ data class Vehicle(
     val location: Location,
     val forwardVector: Vector3D,
     val rotation: Rotation,
-    var velocity: Vector3D, // Always about 0.0
-    val acceleration: Vector3D,
+    var velocity: Vector3D,
+    var acceleration: Vector3D,
     val angularVelocity: Vector3D,
-    /** Effective velocity in m/s based on position delta between two adjacent ticks */
-    var effVelocityInMPerS: Double,
 ) : Actor() {
+  /** Effective velocity in m/s based on position delta between two adjacent ticks */
+  val effVelocityInMPerS
+    get() = sqrt(velocity.x.pow(2) + velocity.y.pow(2) + velocity.z.pow(2))
+  /** Effective velocity in km/h based on [effVelocityInMPerS] */
+  val effVelocityInKmPH
+    get() = this.effVelocityInMPerS * 3.6
+  /** Effective velocity in miles/hour based on [effVelocityInMPerS] */
+  val effVelocityInMPH
+    get() = this.effVelocityInMPerS * 2.237
+  /** SpeedLimit of the road/lane for the current location of this vehicle */
   val applicableSpeedLimit
     get() =
         this.lane.speedLimits.firstOrNull { speedLimit ->
           this.positionOnLane in (speedLimit.fromDistanceFromStart..speedLimit.toDistanceFromStart)
         }
-  val effVelocityInMPH
-    get() = this.effVelocityInMPerS * 2.237
 
   override fun clone(newTickData: TickData): Actor =
       Vehicle(
@@ -398,8 +406,7 @@ data class Vehicle(
           rotation,
           velocity,
           acceleration,
-          angularVelocity,
-          effVelocityInMPerS)
+          angularVelocity)
 
   override fun toString() =
       "Vehicle(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
