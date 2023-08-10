@@ -373,9 +373,9 @@ data class Vehicle(
     val location: Location,
     val forwardVector: Vector3D,
     val rotation: Rotation,
-    /** The velocity vector in m/s*/
+    /** The velocity vector in m/s */
     var velocity: Vector3D,
-    /** The acceleration vector in m/s²*/
+    /** The acceleration vector in m/s² */
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
 ) : Actor() {

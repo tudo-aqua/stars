@@ -24,6 +24,7 @@ import tools.aqua.stars.data.av.Location
 
 class VelocityAndAccelerationTest {
 
+  /** Tests the velocity and acceleration calculations on pre-defined values. */
   @Test
   fun testVelocityCalculation() {
     val tick0 = emptyTickData(currentTick = 0.0)
@@ -66,6 +67,10 @@ class VelocityAndAccelerationTest {
     assert(vehicle2.acceleration.z == 0.0)
   }
 
+  /**
+   * Tests the velocity and acceleration calculations and check the case when there is no time
+   * difference between two ticks (namely: time difference = 0.0)
+   */
   @Test
   fun testZeroTimeDifference() {
     val tick0 = emptyTickData(currentTick = 0.0)
