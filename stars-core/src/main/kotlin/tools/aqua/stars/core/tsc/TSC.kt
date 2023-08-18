@@ -88,7 +88,7 @@ abstract class TSCNode<
    * null if the given [projectionId] is not found in [projectionIDWrappers] of the current
    * [TSCNode].
    */
-  private fun buildProjection(projectionId: Any): TSCNode<E, T, S>? {
+  fun buildProjection(projectionId: Any): TSCNode<E, T, S>? {
     when (projectionIDWrappers[projectionId]) {
       // the normal case: projection id is there, but recursive is off
       false -> {
@@ -422,8 +422,8 @@ class TSCInstanceEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
   override fun toString() = "--${label}->"
 }
 
-/** Holds the [tsc] in form of the root [TSCNode] for the [projectionId]. */
+/** Holds the [tsc] in form of the root [TSCNode] for the [id]. */
 class TSCProjection<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val projectionId: Any,
-    val tsc: TSCNode<E, T, S>
+  val id: Any,
+  val tsc: TSCNode<E, T, S>
 )

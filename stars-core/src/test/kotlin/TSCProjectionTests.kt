@@ -39,8 +39,8 @@ class TSCProjectionTests {
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.projectionId == projection1 })
-    assert(projections.any { it.projectionId == projection2 })
+    assert(projections.any { it.id == projection1 })
+    assert(projections.any { it.id == projection2 })
   }
 
   /**
@@ -60,40 +60,40 @@ class TSCProjectionTests {
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.projectionId == projection1 })
-    assert(projections.any { it.projectionId == projection2 })
+    assert(projections.any { it.id == projection1 })
+    assert(projections.any { it.id == projection2 })
 
     // Check empty ignore list. The projections should not be filtered
     projections = tsc.buildProjections(listOf())
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.projectionId == projection1 })
-    assert(projections.any { it.projectionId == projection2 })
+    assert(projections.any { it.id == projection1 })
+    assert(projections.any { it.id == projection2 })
 
     // Check ignore list with projection 1 to be ignored
     projections = tsc.buildProjections(listOf(projection1))
     // Check that exactly one projection is produced
     assert(projections.size == 1)
     // Check that projection 1 is not included, while projection 2 is still in the result
-    assert(!projections.any { it.projectionId == projection1 })
-    assert(projections.any { it.projectionId == projection2 })
+    assert(!projections.any { it.id == projection1 })
+    assert(projections.any { it.id == projection2 })
 
     // Check ignore list with projection 2 to be ignored
     projections = tsc.buildProjections(listOf(projection2))
     // Check that exactly one projection is produced
     assert(projections.size == 1)
     // Check that projection 2 is not included, while projection 1 is still in the result
-    assert(projections.any { it.projectionId == projection1 })
-    assert(!projections.any { it.projectionId == projection2 })
+    assert(projections.any { it.id == projection1 })
+    assert(!projections.any { it.id == projection2 })
 
     // Check ignore list with both projections to be ignored
     projections = tsc.buildProjections(listOf(projection1, projection2))
     // Check that exactly zero projections are produced
     assert(projections.isEmpty())
     // Check that projection 2 is not included, while projection 1 is still in the result
-    assert(!projections.any { it.projectionId == projection1 })
-    assert(!projections.any { it.projectionId == projection2 })
+    assert(!projections.any { it.id == projection1 })
+    assert(!projections.any { it.id == projection2 })
   }
 
   /**
