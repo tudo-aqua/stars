@@ -25,7 +25,7 @@ import tools.aqua.stars.logic.kcmftbl.*
 class AVTSC {
 
   @Test
-  fun testTSCconstruction() {
+  fun testTSCConstruction() {
 
     val soBetween =
         predicate(Vehicle::class to Vehicle::class) { _, v0, v1 ->
