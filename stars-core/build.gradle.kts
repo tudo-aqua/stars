@@ -25,4 +25,7 @@ mavenMetadata {
 dependencies {
   implementation(libs.letsplot.kotlinjvm)
   implementation(libs.letsplot.imageexport)
+
+  // Use the Kotlin test library.
+  testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
