@@ -194,15 +194,12 @@ inline fun <reified T> getJsonContentOfPath(inputFilePath: Path): T {
 /**
  * Contains the information for all simulation runs for one specific map. Each
  * [CarlaSimulationRunsWrapper] contains a [Path] to the [mapDataFile] and a list of [Path]s for the
- * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [InputStream]s for
- * each [Path] of [dynamicDataFiles].
+ * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [Path]s as an
+ * [ArrayDeque] in [dynamicDataFilesArrayDeque]
  */
 data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
-  /** Holds the [List] of [Block]s after calling [loadBlocks]. */
+  /** Holds a [List] of [Block]s. */
   var blocks: List<Block> = listOf()
-  /**
-   * Holds a [ArrayDeque] of [Pair]s of an [InputStream] and the related [Path]. Is only available
-   * after initializing [dynamicDataInputStreamsList]
-   */
+  /** Holds an [ArrayDeque] of [Path]s. */
   val dynamicDataFilesArrayDeque = ArrayDeque(dynamicDataFiles)
 }
