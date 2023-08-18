@@ -48,7 +48,7 @@ class AVTSC {
         leaf("someone between") {
           condition = { ctx ->
             ctx.segment.vehicleIds.any { v1 ->
-              soBetween.holds(ctx, ctx.segment.firstTickId, ctx.egoID, v1)
+              soBetween.holds(ctx, ctx.segment.firstTickId, ctx.primaryEntityId, v1)
             }
           }
         }

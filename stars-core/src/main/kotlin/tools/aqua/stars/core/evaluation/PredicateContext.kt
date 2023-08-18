@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.TickDataType
 class PredicateContext<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(val segment: S) {
 
-  var egoID = segment.egoVehicleId // TODO: rename to primaryEntityId
+  var primaryEntityId = segment.primaryEntityId
 
   /** cache for all entity IDs */
   private val entityIdsCache = mutableListOf<Int>()

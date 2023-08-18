@@ -23,7 +23,7 @@ interface SegmentType<
   val tickData: List<T>
   val ticks: Map<Double, T>
   val tickIDs: List<Double>
-  val mapName: String // TODO: rename to segmentIdentifier
+  val segmentIdentifier: String
   val firstTickId: Double
-  val egoVehicleId: Int // TODO: rename to primaryEntityId
+  val primaryEntityId: Int
 }
