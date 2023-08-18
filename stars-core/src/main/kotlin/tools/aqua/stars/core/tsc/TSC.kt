@@ -67,10 +67,20 @@ abstract class TSCNode<
     return instanceNode
   }
 
-  fun buildProjections(): Map<Any, TSCNode<E, T, S>> {
-    val returnMap = mutableMapOf<Any, TSCNode<E, T, S>>()
-    projectionIDWrappers.keys.forEach { id -> buildProjection(id)?.let { returnMap += id to it } }
-    return returnMap
+  /**
+   * Builds the TSCs for each projection defined in this [TSCNode] and returns a [TSCProjection] for
+   * each projection id. All projection ids in [projectionIgnoreList] are ignored and will not be in
+   * the resulting projection list.
+   */
+  fun buildProjections(projectionIgnoreList: List<Any> = listOf()): List<TSCProjection<E, T, S>> {
+    /** Holds the filtered projection id list based on [projectionIgnoreList] */
+    val filteredProjectionIds =
+        projectionIDWrappers.filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
+    // Build the TSC for each remaining projection
+    return filteredProjectionIds.mapNotNull {
+      val projectionId = it.key
+      buildProjection(projectionId)?.let { tsc -> TSCProjection(projectionId, tsc) }
+    }
   }
 
   fun buildProjection(projectionID: Any): TSCNode<E, T, S>? {
@@ -406,3 +416,9 @@ class TSCInstanceEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
 
   override fun toString() = "--${label}->"
 }
+
+/** Holds the [tsc] in form of the root [TSCNode] for the [projectionId]. */
+class TSCProjection<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    val projectionId: Any,
+    val tsc: TSCNode<E, T, S>
+)
