@@ -24,9 +24,9 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 data class Segment(
-    val mainInitList: List<TickData>,
-    val simulationRunId: String = "",
-    override val mapName: String,
+  val mainInitList: List<TickData>,
+  val simulationRunId: String = "",
+  override val segmentIdentifier: String,
 ) : SegmentType<Actor, TickData, Segment> {
   override val tickData: List<TickData> =
       mainInitList.map {
@@ -38,7 +38,7 @@ data class Segment(
 
   override val firstTickId: Double = this.tickIDs.first()
 
-  override val egoVehicleId: Int
+  override val primaryEntityId: Int
     get() {
       val firstEgo = tickData.first().egoVehicle
       if (tickData.any { it.egoVehicle.id != firstEgo.id })
@@ -80,7 +80,7 @@ data class Segment(
 
   override fun toString(): String {
     return "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $simulationRunId " +
-        "with ego ${this.egoVehicleId}"
+        "with ego ${this.primaryEntityId}"
   }
 
   override fun equals(other: Any?): Boolean {
