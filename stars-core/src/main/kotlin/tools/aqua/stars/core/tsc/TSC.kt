@@ -83,13 +83,18 @@ abstract class TSCNode<
     }
   }
 
-  fun buildProjection(projectionID: Any): TSCNode<E, T, S>? {
-    when (projectionIDWrappers[projectionID]) {
-      // the normal case: projection ID is there, but recursive is off
+  /**
+   * Builds the TSC (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
+   * null if the given [projectionId] is not found in [projectionIDWrappers] of the current
+   * [TSCNode].
+   */
+  private fun buildProjection(projectionId: Any): TSCNode<E, T, S>? {
+    when (projectionIDWrappers[projectionId]) {
+      // the normal case: projection id is there, but recursive is off
       false -> {
         val outgoingEdges =
             edges
-                .map { edge -> edge to edge.destination.buildProjection(projectionID) }
+                .map { edge -> edge to edge.destination.buildProjection(projectionId) }
                 .mapNotNull {
                   when (it.first) {
                     is TSCAlwaysEdge ->
@@ -117,11 +122,11 @@ abstract class TSCNode<
           else -> error("unknown tsc node type $this")
         }
       }
-      // projection ID is there and everything below should be include -> just deep clone
+      // projection id is there and everything below should be included -> just deep clone
       true -> {
         return deepClone()
       }
-      // this projection ID is not found, don't project, return null
+      // this projection id is not found, don't project, return null
       null -> return null
     }
   }
