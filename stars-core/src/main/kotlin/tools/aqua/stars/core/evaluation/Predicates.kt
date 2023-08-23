@@ -60,7 +60,8 @@ class UnaryPredicate<
   ) = ctx.holds(this, tickId, actorId)
   fun holds(ctx: PredicateContext<E, T, S>, entity: E) =
       holds(ctx, entity.tickData.currentTick, entity.id)
-  fun holds(ctx: PredicateContext<E, T, S>) = holds(ctx, ctx.segment.firstTickId, ctx.primaryEntityId)
+  fun holds(ctx: PredicateContext<E, T, S>) =
+      holds(ctx, ctx.segment.firstTickId, ctx.primaryEntityId)
 }
 
 /** Creates a unary tick predicate */
@@ -89,10 +90,10 @@ class BinaryPredicate<
    * @param actor2Id The ID of the second actor to evaluate this predicate for.
    */
   fun holds(
-    ctx: PredicateContext<E, T, S>,
-    tickId: Double = ctx.segment.firstTickId,
-    actor1Id: Int = ctx.primaryEntityId,
-    actor2Id: Int
+      ctx: PredicateContext<E, T, S>,
+      tickId: Double = ctx.segment.firstTickId,
+      actor1Id: Int = ctx.primaryEntityId,
+      actor2Id: Int
   ) = ctx.holds(this, tickId, actor1Id, actor2Id)
   fun holds(ctx: PredicateContext<E, T, S>, actor1: E1, actor2: E2) =
       holds(
