@@ -422,7 +422,7 @@ class TSCInstanceEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
   override fun toString() = "--${label}->"
 }
 
-/** Holds the [tsc] in form of the root [TSCNode] for the [id]. */
+/** Holds the [tsc] in form of the root [TSCNode] for a projection [id]. */
 class TSCProjection<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
   val id: Any,
   val tsc: TSCNode<E, T, S>
