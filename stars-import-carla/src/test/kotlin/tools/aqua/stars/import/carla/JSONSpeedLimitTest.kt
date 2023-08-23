@@ -22,7 +22,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.*
-import tools.aqua.stars.import.carla.*
 
 class JSONSpeedLimitTest {
 

@@ -20,7 +20,7 @@ package tools.aqua.stars.import.carla
 import java.lang.IllegalStateException
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
-import tools.aqua.stars.data.av.Location
+import tools.aqua.stars.data.av.*
 
 class VelocityAndAccelerationTest {
 

@@ -28,3 +28,12 @@ dependencies {
   testImplementation(project(":stars-logic-kcmftbl"))
   testImplementation(libs.bundles.test)
 }
+
+configurations { create("test") }
+
+tasks.register<Jar>("testArchive") {
+  archiveBaseName.set("tools.aqua.stars.data.av.test")
+  from(project.the<SourceSetContainer>()["test"].output)
+}
+
+artifacts { add("test", tasks["testArchive"]) }
