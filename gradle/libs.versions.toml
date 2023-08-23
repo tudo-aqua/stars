@@ -20,6 +20,8 @@ testcontainers = "1.17.3"
 
 # Regular Libraries
 
+kotlin-test = {group = "org.jetbrains.kotlin", name="kotlin-test"}
+
 assertj = { group = "org.assertj", name = "assertj-core", version = "3.23.1" }
 
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.21" }
@@ -103,6 +105,6 @@ dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin",
 
 ktor-netty = ["ktor-core", "ktor-netty"]
 openjfx-small = ["openjfx-base", "openjfx-controls", "openjfx-graphics"]
-test = ["assertj", "junit-jupiter"]
+test = ["assertj", "kotlin-test"]
 
 gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin", "gradle-kotlin-allopen", "gradle-kotlin-noarg"]
