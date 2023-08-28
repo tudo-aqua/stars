@@ -32,7 +32,8 @@ import tools.aqua.stars.core.types.TickDataType
 
 /**
  * This class holds every important data to evaluate a given TSC. The [TSCEvaluation.runEvaluation]
- * function evaluates the [tsc] based on the given [segments]. The [TSCProjection]s are filtered by the [projectionIgnoreList].
+ * function evaluates the [tsc] based on the given [segments]. The [TSCProjection]s are filtered by
+ * the [projectionIgnoreList].
  */
 @OptIn(ExperimentalTime::class)
 class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
@@ -54,8 +55,8 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
 
   /**
    * Runs the evaluation of the [tsc] based on the [segments]. For each [SegmentType],
-   * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called.
-   * It requires at least one [MetricProvider].
+   * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called. It requires at
+   * least one [MetricProvider].
    *
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered
    */
@@ -116,7 +117,6 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
       if (evaluationTimeEnabled)
           println("The evaluation of all segments took: $segmentsEvaluationTime")
     }
-    if (evaluationTimeEnabled)
-      println("The whole evaluation took: $totalEvaluationTime")
+    if (evaluationTimeEnabled) println("The whole evaluation took: $totalEvaluationTime")
   }
 }

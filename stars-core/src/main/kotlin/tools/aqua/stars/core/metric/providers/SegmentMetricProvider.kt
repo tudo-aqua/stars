@@ -23,6 +23,6 @@ import tools.aqua.stars.core.types.TickDataType
 
 interface SegmentMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-  MetricProvider<E, T, S> {
+    MetricProvider<E, T, S> {
   fun evaluate(segment: SegmentType<E, T, S>): Any?
 }

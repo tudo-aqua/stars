@@ -21,8 +21,10 @@ import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
-class SimpleEntity(override val id: Int = 0, override val tickData: SimpleTickData = SimpleTickData()) :
-    EntityType<SimpleEntity, SimpleTickData, SimpleSegment>
+class SimpleEntity(
+    override val id: Int = 0,
+    override val tickData: SimpleTickData = SimpleTickData()
+) : EntityType<SimpleEntity, SimpleTickData, SimpleSegment>
 
 class SimpleSegment(
     override val tickData: List<SimpleTickData> = listOf(),

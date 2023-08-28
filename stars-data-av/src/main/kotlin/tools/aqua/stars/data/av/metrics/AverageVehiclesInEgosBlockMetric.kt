@@ -37,10 +37,9 @@ class AverageVehiclesInEgosBlockMetric : SegmentMetricProvider<Actor, TickData, 
    */
   override fun evaluate(segment: SegmentType<Actor, TickData, Segment>): Double {
     val averageVehiclesInEgosBlock =
-        segment.tickData
-            .map { it.vehiclesInBlock(it.egoVehicle.lane.road.block).size }
-            .average()
-    println("The average count of vehicles in Segment '$segment' for ego's block is: $averageVehiclesInEgosBlock")
+        segment.tickData.map { it.vehiclesInBlock(it.egoVehicle.lane.road.block).size }.average()
+    println(
+        "The average count of vehicles in Segment '$segment' for ego's block is: $averageVehiclesInEgosBlock")
     return averageVehiclesInEgosBlock
   }
 }
