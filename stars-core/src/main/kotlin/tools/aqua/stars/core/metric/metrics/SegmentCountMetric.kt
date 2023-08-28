@@ -22,6 +22,10 @@ import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/**
+ * This class is an implementation of [SegmentMetricProvider] which provides the count of evaluated
+ * segments. This Metric is stateful as it has to track the count of observed [SegmentType]s.
+ */
 class SegmentCountMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     SegmentMetricProvider<E, T, S> {
