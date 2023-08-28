@@ -15,11 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metrics
+package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.tsc.TSCInstanceNode
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
-interface MetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>
+interface TSCInstanceMetricProvider<
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
+  MetricProvider<E, T, S> {
+  public fun evaluate(tscInstance: TSCInstanceNode<E, T, S>)
+}

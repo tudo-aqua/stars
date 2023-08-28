@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metrics
+package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.tsc.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
-interface SegmentMetricProvider<
+interface ProjectionMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    MetricProvider<E, T, S> {
-  fun evaluate(segment: SegmentType<E, T, S>): Any?
+  MetricProvider<E, T, S> {
+  fun evaluate(projection: TSCProjection<E, T, S>)
 }
