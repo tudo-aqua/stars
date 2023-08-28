@@ -19,10 +19,10 @@ package tools.aqua.stars.core.evaluation
 
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
-import tools.aqua.stars.core.metrics.MetricProvider
-import tools.aqua.stars.core.metrics.ProjectionMetricProvider
-import tools.aqua.stars.core.metrics.SegmentMetricProvider
-import tools.aqua.stars.core.metrics.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metric.providers.MetricProvider
+import tools.aqua.stars.core.metric.providers.ProjectionMetricProvider
+import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.providers.TSCInstanceMetricProvider
 import tools.aqua.stars.core.tsc.TSCInstanceNode
 import tools.aqua.stars.core.tsc.TSCNode
 import tools.aqua.stars.core.tsc.TSCProjection

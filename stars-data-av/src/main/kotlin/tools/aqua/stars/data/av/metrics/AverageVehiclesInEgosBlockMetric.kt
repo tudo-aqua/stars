@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.data.av.metrics
 
-import tools.aqua.stars.core.metrics.SegmentMetricProvider
+import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.data.av.Actor
 import tools.aqua.stars.data.av.Block
