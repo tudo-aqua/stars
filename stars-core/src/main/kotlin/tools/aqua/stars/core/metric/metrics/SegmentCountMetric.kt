@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.metric.metrics
 
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -28,12 +29,12 @@ import tools.aqua.stars.core.types.TickDataType
  */
 class SegmentCountMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    SegmentMetricProvider<E, T, S> {
+    SegmentMetricProvider<E, T, S>, Stateful {
   /** Holds the count of [SegmentType]s that are analyzed */
   private var segmentCount: Int = 0
 
   /**
-   * Increases the count of evaluated [SegmentType]s
+   * Increases the count of evaluated [SegmentType]s.
    *
    * @param segment The current [SegmentType] that is evaluated
    * @return The number of analyzed [SegmentType]s so far
@@ -41,5 +42,19 @@ class SegmentCountMetric<
   override fun evaluate(segment: SegmentType<E, T, S>): Int {
     segmentCount++
     return segmentCount
+  }
+
+  /**
+   * Returns the current [segmentCount].
+   *
+   * @return Returns the current [segmentCount]
+   */
+  override fun getState(): Int {
+    return segmentCount
+  }
+
+  /** Prints the current state using [println]. */
+  override fun printState() {
+    println("Analyzed $segmentCount Segments!")
   }
 }
