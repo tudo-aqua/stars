@@ -30,8 +30,8 @@ import tools.aqua.stars.core.types.TickDataType
 class SegmentDurationPerIdentifierMetricTest {
 
   /**
-   * This test checks that the map and actual values inside the
-   * [SegmentDurationPerIdentifierMetric] are correctly set for exactly one [SegmentType].
+   * This test checks that the map and actual values inside the [SegmentDurationPerIdentifierMetric]
+   * are correctly set for exactly one [SegmentType].
    */
   @Test
   fun testOneSegmentIdentifier() {
@@ -45,20 +45,15 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment), 2.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier),
-        2.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier), 2.0)
   }
 
   /**
-   * This test checks that the map and actual values inside the
-   * [SegmentDurationPerIdentifierMetric] are correctly set with default values with no
-   * [TickDataType]s in the [SegmentType].
+   * This test checks that the map and actual values inside the [SegmentDurationPerIdentifierMetric]
+   * are correctly set with default values with no [TickDataType]s in the [SegmentType].
    */
   @Test
   fun testOneSegmentIdentifierWithNoTickData() {
@@ -70,20 +65,15 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment), 0.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier),
-        0.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier), 0.0)
   }
 
   /**
-   * This test checks that the map and actual values inside the
-   * [SegmentDurationPerIdentifierMetric] are correctly set with default values with
-   * exactly one [TickDataType] in the [SegmentType].
+   * This test checks that the map and actual values inside the [SegmentDurationPerIdentifierMetric]
+   * are correctly set with default values with exactly one [TickDataType] in the [SegmentType].
    */
   @Test
   fun testOneSegmentIdentifierWithOneTickData() {
@@ -96,14 +86,10 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment), 0.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier),
-        0.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier), 0.0)
   }
 
   /**
@@ -119,9 +105,7 @@ class SegmentDurationPerIdentifierMetricTest {
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
 
-    assertFailsWith<IllegalStateException> {
-      segmentDurationPerIdentifierMetric.evaluate(segment)
-    }
+    assertFailsWith<IllegalStateException> { segmentDurationPerIdentifierMetric.evaluate(segment) }
   }
 
   /**
@@ -146,30 +130,18 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment1), 2.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment1.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment1.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .getValue(segment1.segmentIdentifier),
-        2.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment1.segmentIdentifier), 2.0)
 
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment2), 3.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment2.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment2.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .getValue(segment2.segmentIdentifier),
-        3.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment2.segmentIdentifier), 3.0)
   }
 
   /**
@@ -194,29 +166,17 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment1), 2.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment1.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment1.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .getValue(segment1.segmentIdentifier),
-        2.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment1.segmentIdentifier), 2.0)
 
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment2), 7.0)
     // Check that the segment identifier was registered in the map
-    assert(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .containsKey(segment2.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment2.segmentIdentifier))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric
-            .getState()
-            .getValue(segment2.segmentIdentifier),
-        7.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment2.segmentIdentifier), 7.0)
   }
 }
