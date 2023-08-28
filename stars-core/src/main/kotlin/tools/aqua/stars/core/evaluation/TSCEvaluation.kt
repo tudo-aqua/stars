@@ -19,10 +19,7 @@ package tools.aqua.stars.core.evaluation
 
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
-import tools.aqua.stars.core.metric.providers.MetricProvider
-import tools.aqua.stars.core.metric.providers.ProjectionMetricProvider
-import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
-import tools.aqua.stars.core.metric.providers.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSCInstanceNode
 import tools.aqua.stars.core.tsc.TSCNode
 import tools.aqua.stars.core.tsc.TSCProjection
@@ -118,5 +115,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
           println("The evaluation of all segments took: $segmentsEvaluationTime")
     }
     if (evaluationTimeEnabled) println("The whole evaluation took: $totalEvaluationTime")
+    // Print the results of all Stateful metrics
+    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
   }
 }
