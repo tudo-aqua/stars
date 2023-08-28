@@ -15,8 +15,11 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core
+package tools.aqua.stars.core.tools.aqua.stars.core.tsc
 
+import tools.aqua.stars.core.SimpleEntity
+import tools.aqua.stars.core.SimpleSegment
+import tools.aqua.stars.core.SimpleTickData
 import kotlin.test.Test
 import tools.aqua.stars.core.tsc.*
 
