@@ -73,6 +73,6 @@ class TotalSegmentTimeLengthMetric<
 
   /** Prints the current [totalTimeDuration] using [println] */
   override fun printState() {
-    println("The analyzed segments yielded a total of $totalTimeDuration seconds.")
+    println("The analyzed segments yielded a total of $totalTimeDuration seconds that were analyzed.")
   }
 }
