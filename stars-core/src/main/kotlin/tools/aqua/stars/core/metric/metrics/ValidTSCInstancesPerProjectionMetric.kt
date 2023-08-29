@@ -30,7 +30,7 @@ import tools.aqua.stars.core.types.TickDataType
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred
  * valid [TSCInstance] for each [TSCProjection].
  */
-class ValidTSCInstancePerProjectionMetric<
+class ValidTSCInstancesPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful {
   /**
