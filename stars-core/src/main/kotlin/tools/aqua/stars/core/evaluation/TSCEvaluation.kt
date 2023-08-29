@@ -97,6 +97,12 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
                   metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S>>().forEach {
                     it.evaluate(segmentProjectionTSCInstance)
                   }
+                  // Run the "evaluate" function for all
+                  // ProjectionAndTSCInstanceNodeMetricProviders on the current  projection and
+                  // instance
+                  metricProviders
+                      .filterIsInstance<ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>>()
+                      .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
                 }
                 if (evaluationTimeEnabled)
                     println(
