@@ -91,7 +91,7 @@ class MissedTSCInstancesPerProjectionMetric<
   override fun printState() {
     getState().forEach { (projection, missedInstances) ->
       println(
-        "For projection '$projection', there are ${missedInstances.size} unique missed instances (of ${projection
+          "For projection '$projection', there are ${missedInstances.size} unique missed instances (of ${projection
           .possibleTSCInstances.size} possible instances).")
     }
   }
