@@ -27,8 +27,8 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred valid [TSCInstance]
- * for each [TSCProjection].
+ * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred
+ * valid [TSCInstance] for each [TSCProjection].
  */
 class ValidTSCInstancePerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
@@ -44,8 +44,8 @@ class ValidTSCInstancePerProjectionMetric<
       mutableMapOf()
 
   /**
-   * Track the valid [TSCInstance]s for each [TSCProjection] in the [validInstancesMap].
-   * If the current [tscInstance] is invalid it is skipped.
+   * Track the valid [TSCInstance]s for each [TSCProjection] in the [validInstancesMap]. If the
+   * current [tscInstance] is invalid it is skipped.
    *
    * @param projection The current [TSCProjection] for which the validity should be checked
    * @param tscInstance The current [TSCInstance] which is checked for validity
@@ -65,7 +65,8 @@ class ValidTSCInstancePerProjectionMetric<
   }
 
   /**
-   * Returns the full [validInstancesMap] containing the list of valid [TSCInstance]s for each [TSCProjection].
+   * Returns the full [validInstancesMap] containing the list of valid [TSCInstance]s for each
+   * [TSCProjection].
    */
   override fun getState():
       MutableMap<
@@ -74,13 +75,12 @@ class ValidTSCInstancePerProjectionMetric<
     return validInstancesMap
   }
 
-  /**
-   * Prints the number of valid [TSCInstance] for each [TSCProjection] using [println].
-   */
+  /** Prints the number of valid [TSCInstance] for each [TSCProjection] using [println]. */
   override fun printState() {
     validInstancesMap.forEach { (projection, validInstancesMap) ->
       println(
-          "For projection '$projection', there are ${validInstancesMap.size} unique valid instances.")
+          "For projection '$projection', there are ${validInstancesMap.size} unique valid instances (of ${projection
+            .possibleTSCInstances.size} possible instances).")
       println(validInstancesMap.map { it.value.size })
     }
   }
