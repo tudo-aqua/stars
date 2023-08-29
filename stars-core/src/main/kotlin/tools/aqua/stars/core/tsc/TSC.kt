@@ -27,6 +27,28 @@ fun proj(id: Any) = Pair(id, false)
 
 fun projRec(id: Any) = Pair(id, true)
 
+class TSC<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    val rootNode: TSCNode<E, T, S>
+) {
+  fun evaluate(context: PredicateContext<E, T, S>): TSCInstance<E, T, S> {
+    val tscInstanceRoot = rootNode.evaluate(context)
+    return TSCInstance(tscInstanceRoot, context.segment.segmentSource)
+  }
+
+  fun buildProjections(projectionIgnoreList: List<Any> = listOf()): List<TSCProjection<E, T, S>> {
+    return rootNode.buildProjections(projectionIgnoreList)
+  }
+
+  override fun toString(): String {
+    return this.rootNode.toString()
+  }
+}
+
+class TSCInstance<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    val rootNode: TSCInstanceNode<E, T, S>,
+    val sourceSegmentIdentifier: String
+)
+
 abstract class TSCNode<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val valueFunction: (PredicateContext<E, T, S>) -> Any,
@@ -79,7 +101,7 @@ abstract class TSCNode<
     // Build the TSC for each remaining projection
     return filteredProjectionIds.mapNotNull {
       val projectionId = it.key
-      buildProjection(projectionId)?.let { tsc -> TSCProjection(projectionId, tsc) }
+      buildProjection(projectionId)?.let { tsc -> TSCProjection(projectionId, TSC(rootNode = tsc)) }
     }
   }
 
@@ -425,7 +447,7 @@ class TSCInstanceEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
 /** Holds the [tsc] in form of the root [TSCNode] for a projection [id]. */
 class TSCProjection<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val id: Any,
-    val tsc: TSCNode<E, T, S>
+    val tsc: TSC<E, T, S>
 ) {
   /** Holds the [List] of all possible [TSCInstanceNode]s from the base [tsc] */
   val possibleTSCInstances: List<TSCInstanceNode<E, T, S>> = tsc.generateAllInstances()

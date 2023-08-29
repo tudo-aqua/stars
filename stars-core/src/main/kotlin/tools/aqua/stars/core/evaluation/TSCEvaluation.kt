@@ -20,8 +20,8 @@ package tools.aqua.stars.core.evaluation
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.TSCInstanceNode
-import tools.aqua.stars.core.tsc.TSCNode
 import tools.aqua.stars.core.tsc.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
@@ -34,7 +34,7 @@ import tools.aqua.stars.core.types.TickDataType
  */
 @OptIn(ExperimentalTime::class)
 class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    private val tsc: TSCNode<E, T, S>,
+    private val tsc: TSC<E, T, S>,
     private val segments: Sequence<SegmentType<E, T, S>>,
     private val projectionIgnoreList: List<String> = listOf(),
     private val evaluationTimeEnabled: Boolean = true
@@ -51,7 +51,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
   }
 
   /**
-   * Runs the evaluation of the [tsc] based on the [segments]. For each [SegmentType],
+   * Runs the evaluation of the [TSC] based on the [segments]. For each [SegmentType],
    * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called. It requires at
    * least one [MetricProvider].
    *
