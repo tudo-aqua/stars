@@ -26,6 +26,10 @@ import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/**
+ * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred valid [TSCInstance]
+ * for each [TSCProjection].
+ */
 class ValidTSCInstancePerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful {
@@ -39,6 +43,13 @@ class ValidTSCInstancePerProjectionMetric<
           MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
       mutableMapOf()
 
+  /**
+   * Track the valid [TSCInstance]s for each [TSCProjection] in the [validInstancesMap].
+   * If the current [tscInstance] is invalid it is skipped.
+   *
+   * @param projection The current [TSCProjection] for which the validity should be checked
+   * @param tscInstance The current [TSCInstance] which is checked for validity
+   */
   override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
     // Check if given tscInstance is valid
     if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
@@ -53,6 +64,9 @@ class ValidTSCInstancePerProjectionMetric<
     projectionValidInstanceList.add(tscInstance)
   }
 
+  /**
+   * Returns the full [validInstancesMap] containing the list of valid [TSCInstance]s for each [TSCProjection].
+   */
   override fun getState():
       MutableMap<
           TSCProjection<E, T, S>,
@@ -60,8 +74,11 @@ class ValidTSCInstancePerProjectionMetric<
     return validInstancesMap
   }
 
+  /**
+   * Prints the number of valid [TSCInstance] for each [TSCProjection] using [println].
+   */
   override fun printState() {
-    validInstancesMap.forEach { projection, validInstancesMap ->
+    validInstancesMap.forEach { (projection, validInstancesMap) ->
       println(
           "For projection '$projection', there are ${validInstancesMap.size} unique valid instances.")
       println(validInstancesMap.map { it.value.size })
