@@ -123,5 +123,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
     if (evaluationTimeEnabled) println("The whole evaluation took: $totalEvaluationTime")
     // Print the results of all Stateful metrics
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+    // Call the 'evaluate' function for all PostEvaluationMetricProviders
+    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>().forEach { it.print() }
   }
 }
