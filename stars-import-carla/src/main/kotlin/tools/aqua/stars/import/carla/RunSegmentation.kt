@@ -158,7 +158,7 @@ fun sliceRunIntoSegments(
             Segment(
                 mainSegment,
                 simulationRunId = simulationRunId,
-                segmentIdentifier = getMapName(simulationRunId))
+                segmentSource = getMapName(simulationRunId))
       }
     }
   }

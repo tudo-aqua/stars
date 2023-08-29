@@ -37,7 +37,7 @@ class SegmentDurationPerIdentifierMetricTest {
   fun testOneSegmentIdentifier() {
     val tickData = SimpleTickData(currentTick = 0.0)
     val tickData1 = SimpleTickData(currentTick = 2.0)
-    val segment = SimpleSegment(tickData = listOf(tickData, tickData1), segmentIdentifier = "Map1")
+    val segment = SimpleSegment(tickData = listOf(tickData, tickData1), segmentSource = "Map1")
 
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
@@ -45,10 +45,9 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment), 2.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
-    assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier), 2.0)
+    assertEquals(segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentSource), 2.0)
   }
 
   /**
@@ -57,7 +56,7 @@ class SegmentDurationPerIdentifierMetricTest {
    */
   @Test
   fun testOneSegmentIdentifierWithNoTickData() {
-    val segment = SimpleSegment(segmentIdentifier = "Map1")
+    val segment = SimpleSegment(segmentSource = "Map1")
 
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
@@ -65,10 +64,9 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment), 0.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
-    assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier), 0.0)
+    assertEquals(segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentSource), 0.0)
   }
 
   /**
@@ -78,7 +76,7 @@ class SegmentDurationPerIdentifierMetricTest {
   @Test
   fun testOneSegmentIdentifierWithOneTickData() {
     val tickData = SimpleTickData()
-    val segment = SimpleSegment(tickData = listOf(tickData), segmentIdentifier = "Map1")
+    val segment = SimpleSegment(tickData = listOf(tickData), segmentSource = "Map1")
 
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
@@ -86,10 +84,9 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment), 0.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
-    assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentIdentifier), 0.0)
+    assertEquals(segmentDurationPerIdentifierMetric.getState().getValue(segment.segmentSource), 0.0)
   }
 
   /**
@@ -100,7 +97,7 @@ class SegmentDurationPerIdentifierMetricTest {
   fun testOneSegmentIdentifierWithNegativeTimeLength() {
     val tickData = SimpleTickData(currentTick = 0.0)
     val tickData1 = SimpleTickData(currentTick = -2.0)
-    val segment = SimpleSegment(tickData = listOf(tickData, tickData1), segmentIdentifier = "Map1")
+    val segment = SimpleSegment(tickData = listOf(tickData, tickData1), segmentSource = "Map1")
 
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
@@ -109,20 +106,18 @@ class SegmentDurationPerIdentifierMetricTest {
   }
 
   /**
-   * This test checks that different [SegmentType.segmentIdentifier]s are correctly stored as
-   * different keys in the [Map] and that the values are also correctly added.
+   * This test checks that different [SegmentType.segmentSource]s are correctly stored as different
+   * keys in the [Map] and that the values are also correctly added.
    */
   @Test
   fun testTwoSegmentIdentifiersOneSegmentEach() {
     val tickData11 = SimpleTickData(currentTick = 0.0)
     val tickData12 = SimpleTickData(currentTick = 2.0)
-    val segment1 =
-        SimpleSegment(tickData = listOf(tickData11, tickData12), segmentIdentifier = "Map1")
+    val segment1 = SimpleSegment(tickData = listOf(tickData11, tickData12), segmentSource = "Map1")
 
     val tickData21 = SimpleTickData(currentTick = 1.0)
     val tickData22 = SimpleTickData(currentTick = 4.0)
-    val segment2 =
-        SimpleSegment(tickData = listOf(tickData21, tickData22), segmentIdentifier = "Map2")
+    val segment2 = SimpleSegment(tickData = listOf(tickData21, tickData22), segmentSource = "Map2")
 
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
@@ -130,35 +125,33 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment1), 2.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment1.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment1.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment1.segmentIdentifier), 2.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment1.segmentSource), 2.0)
 
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment2), 3.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment2.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment2.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment2.segmentIdentifier), 3.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment2.segmentSource), 3.0)
   }
 
   /**
-   * This test checks that same [SegmentType.segmentIdentifier]s are stored using the same key and
-   * that the values are correctly added up.
+   * This test checks that same [SegmentType.segmentSource]s are stored using the same key and that
+   * the values are correctly added up.
    */
   @Test
   fun testTwoSegmentIdentifiersTwoSegments() {
     val tickData11 = SimpleTickData(currentTick = 0.0)
     val tickData12 = SimpleTickData(currentTick = 2.0)
-    val segment1 =
-        SimpleSegment(tickData = listOf(tickData11, tickData12), segmentIdentifier = "Map1")
+    val segment1 = SimpleSegment(tickData = listOf(tickData11, tickData12), segmentSource = "Map1")
 
     val tickData21 = SimpleTickData(currentTick = 5.0)
     val tickData22 = SimpleTickData(currentTick = 10.0)
-    val segment2 =
-        SimpleSegment(tickData = listOf(tickData21, tickData22), segmentIdentifier = "Map1")
+    val segment2 = SimpleSegment(tickData = listOf(tickData21, tickData22), segmentSource = "Map1")
 
     val segmentDurationPerIdentifierMetric =
         SegmentDurationPerIdentifierMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
@@ -166,17 +159,17 @@ class SegmentDurationPerIdentifierMetricTest {
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment1), 2.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment1.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment1.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment1.segmentIdentifier), 2.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment1.segmentSource), 2.0)
 
     // Check that the evaluate function returns the correct value
     assertEquals(segmentDurationPerIdentifierMetric.evaluate(segment2), 7.0)
     // Check that the segment identifier was registered in the map
-    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment2.segmentIdentifier))
+    assert(segmentDurationPerIdentifierMetric.getState().containsKey(segment2.segmentSource))
     // Check that the value for the segment identifier in the map was correctly updated
     assertEquals(
-        segmentDurationPerIdentifierMetric.getState().getValue(segment2.segmentIdentifier), 7.0)
+        segmentDurationPerIdentifierMetric.getState().getValue(segment2.segmentSource), 7.0)
   }
 }
