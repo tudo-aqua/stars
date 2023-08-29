@@ -17,13 +17,14 @@
 
 package tools.aqua.stars.core.metric.providers
 
-import tools.aqua.stars.core.tsc.TSCInstance
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
-interface TSCInstanceMetricProvider<
+/**
+ * This interface should be implemented by all metrics that have to evaluated during the evaluation
+ * phase.
+ */
+interface EvaluationMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
-  fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
-}
+    MetricProvider<E, T, S> {}
