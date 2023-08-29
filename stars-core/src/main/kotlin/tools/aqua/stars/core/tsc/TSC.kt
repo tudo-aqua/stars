@@ -426,4 +426,7 @@ class TSCInstanceEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
 class TSCProjection<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val id: Any,
     val tsc: TSCNode<E, T, S>
-)
+) {
+  /** Holds the [List] of all possible [TSCInstanceNode]s from the base [tsc] */
+  val possibleTSCInstances: List<TSCInstanceNode<E, T, S>> = tsc.generateAllInstances()
+}
