@@ -25,6 +25,6 @@ import tools.aqua.stars.core.types.TickDataType
 
 interface ProjectionAndTSCInstanceNodeMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    MetricProvider<E, T, S> {
+    EvaluationMetricProvider<E, T, S> {
   fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>)
 }
