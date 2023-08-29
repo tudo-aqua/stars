@@ -450,5 +450,9 @@ class TSCProjection<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
     val tsc: TSC<E, T, S>
 ) {
   /** Holds the [List] of all possible [TSCInstanceNode]s from the base [tsc] */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, S>> = tsc.generateAllInstances()
+  val possibleTSCInstances: List<TSCInstanceNode<E, T, S>> = tsc.rootNode.generateAllInstances()
+
+  override fun toString(): String {
+    return id.toString()
+  }
 }
