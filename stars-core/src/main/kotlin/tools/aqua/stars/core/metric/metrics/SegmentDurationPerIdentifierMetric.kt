@@ -25,31 +25,31 @@ import tools.aqua.stars.core.types.TickDataType
 
 /**
  * This metric implements the [SegmentMetricProvider] and tracks the total analysis time of all
- * [SegmentType]s for each existing [SegmentType.segmentIdentifier]. Normally each
- * [SegmentType.segmentIdentifier] defines the source of the [SegmentType] (e.g. a map name,
- * analysis name).
+ * [SegmentType]s for each existing [SegmentType.segmentSource]. Normally each
+ * [SegmentType.segmentSource] defines the source of the [SegmentType] (e.g. a map name, analysis
+ * name).
  */
 class SegmentDurationPerIdentifierMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     SegmentMetricProvider<E, T, S>, Stateful {
   /**
-   * Holds the Map of [SegmentType.segmentIdentifier] to total time length of all [SegmentType]s for
-   * the [SegmentType.segmentIdentifier] in seconds ([Double]).
+   * Holds the Map of [SegmentType.segmentSource] to total time length of all [SegmentType]s for the
+   * [SegmentType.segmentSource] in seconds ([Double]).
    */
   private var segmentIdentifierToTotalSegmentDurationMap: MutableMap<String, Double> =
       mutableMapOf()
 
   /**
    * Track the current length of the [SegmentType] in the
-   * [segmentIdentifierToTotalSegmentDurationMap]. If the [SegmentType.segmentIdentifier] is
-   * currently not in the map it is added as a new key.
+   * [segmentIdentifierToTotalSegmentDurationMap]. If the [SegmentType.segmentSource] is currently
+   * not in the map it is added as a new key.
    *
    * @param segment The [SegmentType] for which the total time length should be tracked
    * @return The current total time length of all [SegmentType] with identifier
-   * [SegmentType.segmentIdentifier] of the given [segment]
+   * [SegmentType.segmentSource] of the given [segment]
    */
   override fun evaluate(segment: SegmentType<E, T, S>): Double {
-    segmentIdentifierToTotalSegmentDurationMap.putIfAbsent(segment.segmentIdentifier, 0.0)
+    segmentIdentifierToTotalSegmentDurationMap.putIfAbsent(segment.segmentSource, 0.0)
 
     // The Segment does not have any analyzable time duration
     if (segment.tickData.isEmpty()) {
@@ -68,29 +68,29 @@ class SegmentDurationPerIdentifierMetric<
           "Actual duration: $segmentTimeLength."
     }
 
-    // Add segmentTimeLength to the map with key "segment.segmentIdentifier"
-    segmentIdentifierToTotalSegmentDurationMap[segment.segmentIdentifier] =
-        segmentIdentifierToTotalSegmentDurationMap.getValue(segment.segmentIdentifier) +
+    // Add segmentTimeLength to the map with key "segment.segmentSource"
+    segmentIdentifierToTotalSegmentDurationMap[segment.segmentSource] =
+        segmentIdentifierToTotalSegmentDurationMap.getValue(segment.segmentSource) +
             segmentTimeLength
-    return segmentIdentifierToTotalSegmentDurationMap.getValue(segment.segmentIdentifier)
+    return segmentIdentifierToTotalSegmentDurationMap.getValue(segment.segmentSource)
   }
 
   /**
-   * Returns the Map of [SegmentType.segmentIdentifier] to total time length of segments for the
-   * [SegmentType.segmentIdentifier] in seconds ([Double])
+   * Returns the Map of [SegmentType.segmentSource] to total time length of segments for the
+   * [SegmentType.segmentSource] in seconds ([Double])
    */
   override fun getState(): Map<String, Double> {
     return segmentIdentifierToTotalSegmentDurationMap
   }
 
   /**
-   * Prints a line for each [SegmentType.segmentIdentifier] with the related time length of segments
-   * in seconds ([Double]).
+   * Prints a line for each [SegmentType.segmentSource] with the related time length of segments in
+   * seconds ([Double]).
    */
   override fun printState() {
     segmentIdentifierToTotalSegmentDurationMap.forEach { identifier, totalTimeLength ->
       println(
-          "The analyzed segments with identifier '$identifier' yielded a total of $totalTimeLength seconds.")
+          "The analyzed segments with source '$identifier' yielded a total of $totalTimeLength seconds.")
     }
   }
 }

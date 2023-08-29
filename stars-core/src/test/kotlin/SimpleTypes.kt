@@ -34,12 +34,12 @@ class SimpleSegment(
     override val tickData: List<SimpleTickData> = listOf(),
     override val ticks: Map<Double, SimpleTickData> = mapOf(),
     override val tickIDs: List<Double> = listOf(),
-    override val segmentIdentifier: String = "",
+    override val segmentSource: String = "",
     override val firstTickId: Double = 0.0,
     override val primaryEntityId: Int = 0
 ) : SegmentType<SimpleEntity, SimpleTickData, SimpleSegment> {
   override fun toString(): String {
-    return "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentIdentifier'"
+    return "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentSource'"
   }
 }
 

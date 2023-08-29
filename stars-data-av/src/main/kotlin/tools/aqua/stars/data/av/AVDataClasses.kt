@@ -26,7 +26,7 @@ import tools.aqua.stars.core.types.TickDataType
 data class Segment(
     val mainInitList: List<TickData>,
     val simulationRunId: String = "",
-    override val segmentIdentifier: String,
+    override val segmentSource: String,
 ) : SegmentType<Actor, TickData, Segment> {
   override val tickData: List<TickData> =
       mainInitList.map {
