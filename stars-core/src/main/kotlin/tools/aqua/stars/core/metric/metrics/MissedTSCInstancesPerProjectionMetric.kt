@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
@@ -26,16 +27,15 @@ import tools.aqua.stars.core.tsc.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
-import java.util.logging.Logger
 
 /**
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the missed
  * [TSCInstance]s for each [TSCProjection].
  */
 class MissedTSCInstancesPerProjectionMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(override val logger: Logger =
-      Loggable.getLogger("missed-tsc-instances-per-projection")) :
-    ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    override val logger: Logger = Loggable.getLogger("missed-tsc-instances-per-projection")
+) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
   /**
    * Map a [TSCProjection] to a map in which the missed valid [TSCInstanceNode]s are stored:
    * Map<projection,Map<referenceInstance,missed>>
@@ -96,9 +96,7 @@ class MissedTSCInstancesPerProjectionMetric<
       logInfo(
           "Count of unique missed instances for projection '$projection': ${missedInstances.size} (of ${projection
           .possibleTSCInstances.size} possible instances).")
-      missedInstances.forEach {
-        logFine(it)
-      }
+      missedInstances.forEach { logFine(it) }
     }
   }
 }
