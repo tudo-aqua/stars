@@ -90,8 +90,10 @@ class InvalidTSCInstancesPerProjectionMetric<
   override fun printState() {
     invalidInstancesMap.forEach { (projection, invalidInstancesMap) ->
       logInfo(
-          "Unique invalid TSC instances for projection '$projection': ${invalidInstancesMap.size}.")
-      logInfo(invalidInstancesMap.map { it.value.size })
+          "Count of unique invalid instances for projection '$projection': ${invalidInstancesMap.size}.")
+      logFine("Count of unique invalid instances for projection '$projection' per instance: " + invalidInstancesMap.map
+      { it.value
+        .size })
       invalidInstancesMap.forEach { (referenceInstance, invalidInstances) ->
         logFiner(
             "The following invalid class occurred ${
