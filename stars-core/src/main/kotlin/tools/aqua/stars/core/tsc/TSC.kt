@@ -32,7 +32,7 @@ class TSC<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E,
 ) {
   fun evaluate(context: PredicateContext<E, T, S>): TSCInstance<E, T, S> {
     val tscInstanceRoot = rootNode.evaluate(context)
-    return TSCInstance(tscInstanceRoot, context.segment.segmentSource)
+    return TSCInstance(tscInstanceRoot, context.segment.getSegmentIdentifier())
   }
 
   fun buildProjections(projectionIgnoreList: List<Any> = listOf()): List<TSCProjection<E, T, S>> {
