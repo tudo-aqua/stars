@@ -23,7 +23,7 @@ import kotlin.test.assertFailsWith
 import tools.aqua.stars.core.SimpleEntity
 import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
-import tools.aqua.stars.core.metric.metrics.SegmentDurationPerIdentifierMetric
+import tools.aqua.stars.core.metric.metrics.evaluation.SegmentDurationPerIdentifierMetric
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 

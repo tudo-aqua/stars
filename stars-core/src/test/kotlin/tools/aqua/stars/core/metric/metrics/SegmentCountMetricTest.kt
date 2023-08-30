@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
 import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
-import tools.aqua.stars.core.metric.metrics.SegmentCountMetric
+import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 
 class SegmentCountMetricTest {
 
