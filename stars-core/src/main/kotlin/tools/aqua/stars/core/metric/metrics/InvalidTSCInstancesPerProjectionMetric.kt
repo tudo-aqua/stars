@@ -91,9 +91,9 @@ class InvalidTSCInstancesPerProjectionMetric<
     invalidInstancesMap.forEach { (projection, invalidInstancesMap) ->
       logInfo(
           "Count of unique invalid instances for projection '$projection': ${invalidInstancesMap.size}.")
-      logFine("Count of unique invalid instances for projection '$projection' per instance: " + invalidInstancesMap.map
-      { it.value
-        .size })
+      logFine(
+          "Count of unique invalid instances for projection '$projection' per instance: " +
+              invalidInstancesMap.map { it.value.size })
       invalidInstancesMap.forEach { (referenceInstance, invalidInstances) ->
         logFiner(
             "The following invalid class occurred ${
