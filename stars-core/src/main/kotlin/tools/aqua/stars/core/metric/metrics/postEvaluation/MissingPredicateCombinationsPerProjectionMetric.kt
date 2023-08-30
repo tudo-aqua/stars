@@ -37,8 +37,8 @@ import tools.aqua.stars.core.types.TickDataType
  */
 class MissingPredicateCombinationsPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-  override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
-  override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
+    override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
+    override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
 ) : PostEvaluationMetricProvider<E, T, S>, Loggable {
 
   /**
