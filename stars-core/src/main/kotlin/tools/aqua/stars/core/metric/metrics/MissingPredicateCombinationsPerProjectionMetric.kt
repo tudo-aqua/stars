@@ -17,7 +17,9 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
 import tools.aqua.stars.core.evaluation.PredicateCombination
+import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.*
 import tools.aqua.stars.core.types.EntityType
@@ -27,11 +29,16 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * This class implements the [PostEvaluationMetricProvider] and calculates all missing
  * [PredicateCombination]s for all [TSCProjection]s.
+ *
+ * This class implements the [Loggable] interface. It logs and prints the count of missing
+ * [PredicateCombination]s for each [TSCProjection]. It logs the missing [PredicateCombination]s for
+ * each [TSCProjection].
  */
 class MissingPredicateCombinationsPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    private val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>
-) : PostEvaluationMetricProvider<E, T, S> {
+    private val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
+    override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
+) : PostEvaluationMetricProvider<E, T, S>, Loggable {
 
   /**
    * Returns a [Set] of all missing [PredicateCombination]s for all [TSCProjection]s that are
@@ -50,9 +57,12 @@ class MissingPredicateCombinationsPerProjectionMetric<
   override fun print() {
     val evaluationResult = evaluate()
     evaluationResult.forEach { (projection, missedPredicates) ->
-      println(
-          "For projection '${projection}' there are ${missedPredicates.size} missed predicate combinations:")
-      missedPredicates.forEach { println(it) }
+      logInfo(
+          "Count of missing predicate combinations for projection '$projection': ${missedPredicates.size}.")
+      missedPredicates
+          .sortedWith(compareBy<PredicateCombination> { it.predicate1 }.thenBy { it.predicate2 })
+          .forEach { logFine(it) }
+      logFine()
     }
   }
 
