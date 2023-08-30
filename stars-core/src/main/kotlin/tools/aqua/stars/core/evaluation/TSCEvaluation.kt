@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.evaluation
 
+import java.util.logging.Logger
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
@@ -29,16 +30,17 @@ import tools.aqua.stars.core.types.TickDataType
 
 /**
  * This class holds every important data to evaluate a given TSC. The [TSCEvaluation.runEvaluation]
- * function evaluates the [tsc] based on the given [segments]. The [TSCProjection]s are filtered by
- * the [projectionIgnoreList].
+ * function evaluates the [TSC] based on the given [SegmentType]s. The [TSCProjection]s are filtered
+ * by the [projectionIgnoreList].
  */
 @OptIn(ExperimentalTime::class)
 class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     private val tsc: TSC<E, T, S>,
     private val segments: Sequence<SegmentType<E, T, S>>,
     private val projectionIgnoreList: List<String> = listOf(),
-    private val evaluationTimeEnabled: Boolean = true
-) {
+    override val logger: Logger = Loggable.getLogger("evaluation-time")
+) : Loggable {
+  /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProvider]. */
   private val metricProviders: MutableList<MetricProvider<E, T, S>> = mutableListOf()
 
   /**
@@ -66,9 +68,8 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
         // Build all projections of the base TSC
         tscProjections = tsc.buildProjections(projectionIgnoreList)
       }
-      if (evaluationTimeEnabled)
-          println(
-              "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
+      logFine(
+          "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
 
       val segmentsEvaluationTime = measureTime {
         segments.forEach { segment ->
@@ -104,28 +105,25 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
                       .filterIsInstance<ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>>()
                       .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
                 }
-                if (evaluationTimeEnabled)
-                    println(
-                        "The evaluation of projection '${projection.id}' for segment '$segment' took: $projectionEvaluationTime")
+                logFine(
+                    "The evaluation of projection '${projection.id}' for segment '$segment' took: $projectionEvaluationTime")
               }
             }
-            if (evaluationTimeEnabled)
-                println(
-                    "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
+            logFine(
+                "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
           }
-          if (evaluationTimeEnabled)
-              println("The evaluation of segment '$segment' took: $segmentEvaluationTime")
+          logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
         }
       }
-      if (evaluationTimeEnabled)
-          println("The evaluation of all segments took: $segmentsEvaluationTime")
+      logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
     }
-    if (evaluationTimeEnabled) println("The whole evaluation took: $totalEvaluationTime")
+    logInfo("The whole evaluation took: $totalEvaluationTime")
     // Print the results of all Stateful metrics
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
     // Call the 'evaluate' function for all PostEvaluationMetricProviders
     metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>().forEach { it.print() }
     // Close all logging handlers to prevent .lck files to remain
     metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
+    closeLogger()
   }
 }
