@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.tsc.TSCInstance
@@ -26,17 +28,29 @@ import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/**
+ * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] interface and tracks the
+ * invalid [TSCInstance]s for each [TSCProjection].
+ *
+ * This class implements the [Stateful] interface. Its state contains the [Map] of [TSCProjection]
+ * to a [List] of invalid [TSCInstance].
+ *
+ * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for
+ * [TSCProjection]s.
+ */
 class InvalidTSCInstancesPerProjectionMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful {
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-projection")
+) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
   /**
    * Map the [TSCProjection] to a map in which the occurrences of invalid [TSCInstance]s are stored
    */
-  val invalidInstancesMap:
+  private val invalidInstancesMap:
       MutableMap<
           TSCProjection<E, T, S>,
           MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
       mutableMapOf()
+
   /**
    * Track the invalid [TSCInstance]s for each [TSCProjection] in the [invalidInstancesMap]. If the
    * current [tscInstance] is valid it is skipped.
@@ -57,6 +71,7 @@ class InvalidTSCInstancesPerProjectionMetric<
     // Add current instance to list of observed invalid instances
     projectionValidInstanceList.add(tscInstance)
   }
+
   /**
    * Returns the full [invalidInstancesMap] containing the list of invalid [TSCInstance]s for each
    * [TSCProjection].
@@ -68,12 +83,32 @@ class InvalidTSCInstancesPerProjectionMetric<
     return invalidInstancesMap
   }
 
-  /** Prints the number of invalid [TSCInstance] for each [TSCProjection] using [println]. */
+  /**
+   * Logs and prints the number of invalid [TSCInstance] for each [TSCProjection]. Also logs count
+   * of invalid classes and their reasons for invalidity.
+   */
   override fun printState() {
     invalidInstancesMap.forEach { (projection, invalidInstancesMap) ->
-      println(
-          "For projection '$projection', there are ${invalidInstancesMap.size} unique invalid instances.")
-      println(invalidInstancesMap.map { it.value.size })
+      logInfo(
+          "Unique invalid TSC instances for projection '$projection': ${invalidInstancesMap.size}.")
+      logInfo(invalidInstancesMap.map { it.value.size })
+      invalidInstancesMap.forEach { (referenceInstance, invalidInstances) ->
+        logFiner(
+            "The following invalid class occurred ${
+            when (invalidInstances.size) {
+              1 -> "1 time."
+              else -> "${invalidInstances.size} times."
+            }
+          }")
+        logFiner(referenceInstance)
+        logFiner("Reasons for invalidity:")
+        referenceInstance.validate().forEach { validation -> logFiner("- ${validation.second}") }
+        logFiner("Occurred in:")
+        invalidInstances.forEachIndexed { index, instance ->
+          logFiner("- $index -  ${instance.sourceSegmentIdentifier}")
+        }
+        logFiner()
+      }
     }
   }
 }
