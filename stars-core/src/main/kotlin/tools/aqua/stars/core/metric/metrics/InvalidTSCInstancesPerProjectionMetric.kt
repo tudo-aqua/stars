@@ -59,11 +59,11 @@ class InvalidTSCInstancesPerProjectionMetric<
    * @param tscInstance The current [TSCInstance] which is checked for invalidity
    */
   override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+    invalidInstancesMap.putIfAbsent(projection, mutableMapOf())
     // Check if the given tscInstance is valid. If so, skip
     if (projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
       return
     }
-    invalidInstancesMap.putIfAbsent(projection, mutableMapOf())
     val projectionValidInstances = invalidInstancesMap.getValue(projection)
     projectionValidInstances.putIfAbsent(tscInstance.rootNode, mutableListOf())
     // Get already observed invalid instances for current projection

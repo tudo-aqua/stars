@@ -53,11 +53,11 @@ class MissedTSCInstancesPerProjectionMetric<
    * list.
    */
   override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+    missedInstancesMap.putIfAbsent(projection, createDefaultMissedInstanceFlagMap(projection))
     // The current tscInstance is invalid: skip
     if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
       return
     }
-    missedInstancesMap.putIfAbsent(projection, createDefaultMissedInstanceFlagMap(projection))
     // Get the valid instances map for the current projection
     val projectionMissedInstancesMap = missedInstancesMap.getValue(projection)
     // Set the state for the current tscInstance to: "not missed"

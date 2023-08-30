@@ -54,11 +54,11 @@ class ValidTSCInstancesPerProjectionMetric<
    * @param tscInstance The current [TSCInstance] which is checked for validity
    */
   override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+    validInstancesMap.putIfAbsent(projection, mutableMapOf())
     // Check if given tscInstance is valid
     if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
       return
     }
-    validInstancesMap.putIfAbsent(projection, mutableMapOf())
     val projectionValidInstances = validInstancesMap.getValue(projection)
     projectionValidInstances.putIfAbsent(tscInstance.rootNode, mutableListOf())
     // Get already observed instances for current projection
