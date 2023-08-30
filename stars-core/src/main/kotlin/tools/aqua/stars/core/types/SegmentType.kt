@@ -26,4 +26,9 @@ interface SegmentType<
   val segmentSource: String
   val firstTickId: Double
   val primaryEntityId: Int
+
+  fun getSegmentIdentifier(): String {
+    return "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $segmentSource " +
+        "with primary entity ${this.primaryEntityId}"
+  }
 }
