@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.types.EntityType
@@ -30,8 +32,9 @@ import tools.aqua.stars.core.types.TickDataType
  * name).
  */
 class SegmentDurationPerIdentifierMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    SegmentMetricProvider<E, T, S>, Stateful {
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    override val logger: Logger = Loggable.getLogger("segment-duration-per-identifier")
+) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
   /**
    * Holds the Map of [SegmentType.segmentSource] to total time length of all [SegmentType]s for the
    * [SegmentType.segmentSource] in seconds ([Double]).
@@ -88,9 +91,9 @@ class SegmentDurationPerIdentifierMetric<
    * seconds ([Double]).
    */
   override fun printState() {
-    segmentIdentifierToTotalSegmentDurationMap.forEach { identifier, totalTimeLength ->
-      println(
-          "The analyzed segments with source '$identifier' yielded a total of $totalTimeLength seconds.")
+    segmentIdentifierToTotalSegmentDurationMap.forEach { (identifier, totalTimeLength) ->
+      logInfo(
+          "The analyzed segments with source '$identifier' yielded a total of $totalTimeLength seconds of analysis data.")
     }
   }
 }
