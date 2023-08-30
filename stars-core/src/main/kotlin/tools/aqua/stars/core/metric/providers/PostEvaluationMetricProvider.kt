@@ -28,6 +28,7 @@ import tools.aqua.stars.core.types.TickDataType
 interface PostEvaluationMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     MetricProvider<E, T, S> {
+  val dependsOn: Any?
   fun evaluate(): Any?
   fun print()
 }
