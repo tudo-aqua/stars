@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.tsc.TSCInstance
@@ -31,13 +33,14 @@ import tools.aqua.stars.core.types.TickDataType
  * valid [TSCInstance] for each [TSCProjection].
  */
 class ValidTSCInstancesPerProjectionMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful {
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    override val logger: Logger = Loggable.getLogger("valid-tsc-instances-per-projection")
+) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
   /**
    * Map a [TSCProjection] to a map in which the occurrences of valid [TSCInstanceNode]s are stored:
    * Map<projection,Map<referenceInstance,List<TSCInstance>>>
    */
-  val validInstancesMap:
+  private val validInstancesMap:
       MutableMap<
           TSCProjection<E, T, S>,
           MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
@@ -78,10 +81,17 @@ class ValidTSCInstancesPerProjectionMetric<
   /** Prints the number of valid [TSCInstance] for each [TSCProjection] using [println]. */
   override fun printState() {
     validInstancesMap.forEach { (projection, validInstancesMap) ->
-      println(
-          "For projection '$projection', there are ${validInstancesMap.size} unique valid instances (of ${projection
-            .possibleTSCInstances.size} possible instances).")
-      println(validInstancesMap.map { it.value.size })
+      logInfo(
+          "Count of unique valid instances for projection '$projection' is: ${validInstancesMap.size} (of " +
+              "${projection.possibleTSCInstances.size} possible instances)")
+      logFine("Count of valid instances per instance: " + validInstancesMap.map { it.value.size })
+      logFine()
+      logFine("Valid instances:")
+      validInstancesMap.forEach { (key, values) ->
+        logFine(key)
+        logFiner("Occurred in:")
+        values.forEach { logFiner(it.sourceSegmentIdentifier) }
+      }
     }
   }
 }
