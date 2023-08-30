@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.metrics
+package tools.aqua.stars.core.metric.metrics.postEvaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.evaluation.PredicateCombination
+import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.*
@@ -36,8 +37,8 @@ import tools.aqua.stars.core.types.TickDataType
  */
 class MissingPredicateCombinationsPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    private val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
-    override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
+  private val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
+  override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
 ) : PostEvaluationMetricProvider<E, T, S>, Loggable {
 
   /**
