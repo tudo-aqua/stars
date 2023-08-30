@@ -17,22 +17,22 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
-import java.util.logging.Logger
 
 /**
  * This class is an implementation of [SegmentMetricProvider] which provides the count of evaluated
  * segments. This Metric is stateful as it has to track the count of observed [SegmentType]s.
  */
 class SegmentCountMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(override val logger: Logger =
-      Loggable.getLogger("segment-count")) :
-    SegmentMetricProvider<E, T, S>, Stateful, Loggable {
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    override val logger: Logger = Loggable.getLogger("segment-count")
+) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
   /** Holds the count of [SegmentType]s that are analyzed */
   private var segmentCount: Int = 0
 
