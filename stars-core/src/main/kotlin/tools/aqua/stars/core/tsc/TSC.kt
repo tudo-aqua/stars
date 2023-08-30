@@ -391,11 +391,22 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
    *
    * @return list of edge labels leading to a node with `false` monitor result.
    */
-  fun validateMonitors(label: String = "RootNode"): List<String> {
+  private fun validateMonitorsRec(label: String = "RootNode"): List<String> {
     val returnList = mutableListOf<String>()
     if (!monitorResult) returnList += label
-    returnList += edges.flatMap { it.destination.validateMonitors(it.label) }
+    returnList += edges.flatMap { it.destination.validateMonitorsRec(it.label) }
     return returnList
+  }
+
+  fun validateMonitors(segmentIdentifier: String, label: String = "RootNode"): TSCMonitorResult {
+    val monitorResult =
+        TSCMonitorResult(segmentIdentifier = segmentIdentifier, monitorsValid = true)
+    val edgeLabelListLeadingToFalseMonitor = validateMonitorsRec(label)
+    if (edgeLabelListLeadingToFalseMonitor.any()) {
+      monitorResult.monitorsValid = false
+      monitorResult.edgeList = edgeLabelListLeadingToFalseMonitor
+    }
+    return monitorResult
   }
 
   override fun toString() = toString(0)
