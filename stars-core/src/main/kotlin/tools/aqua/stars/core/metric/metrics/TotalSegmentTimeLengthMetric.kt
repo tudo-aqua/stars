@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.metric.metrics
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.types.EntityType
@@ -28,8 +30,9 @@ import tools.aqua.stars.core.types.TickDataType
  * analyzed [SegmentType]s. This metric is [Stateful] and tracks the total time duration.
  */
 class TotalSegmentTimeLengthMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    SegmentMetricProvider<E, T, S>, Stateful {
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    override val logger: Logger = Loggable.getLogger("total-segment-time-length")
+) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
   /** Holds the current time duration for all already analyzed [SegmentType]s. */
   private var totalTimeDuration: Double = 0.0
   /**
@@ -73,7 +76,6 @@ class TotalSegmentTimeLengthMetric<
 
   /** Prints the current [totalTimeDuration] using [println] */
   override fun printState() {
-    println(
-        "The analyzed segments yielded a total of $totalTimeDuration seconds that were analyzed.")
+    logInfo("The analyzed segments yielded a total of $totalTimeDuration seconds of analysis data.")
   }
 }
