@@ -1,7 +1,5 @@
 # STARS
 
-----------
-
 ![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-core?logo=apache-maven&label=MavenCentral%20stars-core)
 ![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-logic-kcmftbl?logo=apache-maven&label=MavenCentral%20stars-logic-kcmftbl)
 ![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-import-carla?logo=apache-maven&label=MavenCentral%20stars-import-carla)
