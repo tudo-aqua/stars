@@ -1,4 +1,5 @@
 # STARS
+[![Build](https://github.com/tudo-aqua/stars/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/stars/actions)
 
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-core?logo=apache-maven&label=MavenCentral%20stars-core)](https://central.sonatype.com/artifact/tools.aqua/stars-core)
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-logic-kcmftbl?logo=apache-maven&label=MavenCentral%20stars-logic-kcmftbl)](https://central.sonatype.com/artifact/tools.aqua/stars-logic-kcmftbl)
