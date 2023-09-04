@@ -75,7 +75,7 @@ jobs:
         arguments: koverReport koverMergedReport
 
     - name: Upload analysis results
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
       with:
         directory: 'build/reports/kover'
         fail_ci_if_error: true
@@ -103,7 +103,7 @@ jobs:
         arguments: test
 
     - name: Upload test results
-      uses: mikepenz/action-junit-report@v2
+      uses: mikepenz/action-junit-report@v3
       if: always() # Must execute after failed tests
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
