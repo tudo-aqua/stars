@@ -36,7 +36,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run Detekt
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v2.4.2
       with:
         arguments: detekt
 
@@ -70,7 +70,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run Kover
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v2.4.2
       with:
         arguments: koverReport koverMergedReport
 
@@ -98,7 +98,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run tests
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v2.4.2
       with:
         arguments: test
 
@@ -129,7 +129,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run tests
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v2.4.2
       with:
         arguments: test
 
@@ -151,13 +151,13 @@ jobs:
 
       - name: Run Spotless checks
         id: spotlessCheck
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: spotlessCheck
 
       - name: Apply Spotless fixes
         if: failure()
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: spotlessApply
 
@@ -194,7 +194,7 @@ jobs:
 #        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
 #
 #    - name: Publish artifacts on Maven Central
-#      uses: gradle/gradle-build-action@v2
+#      uses: gradle/gradle-build-action@v2.4.2
 #      with:
 #        arguments: |
 #          -Psigning.keyId=${{ steps.importGPG.outputs.keyid }}
@@ -240,6 +240,6 @@ jobs:
 #          password: ${{ secrets.DOCKERHUB_TOKEN }}
 #
 #      - name: Publish artifacts on Docker Hub
-#        uses: gradle/gradle-build-action@v2
+#        uses: gradle/gradle-build-action@v2.4.2
 #        with:
 #          arguments: buildBootImage
