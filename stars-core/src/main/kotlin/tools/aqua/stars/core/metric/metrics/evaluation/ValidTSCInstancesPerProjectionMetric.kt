@@ -88,9 +88,11 @@ class ValidTSCInstancesPerProjectionMetric<
       logFine()
       logFine("Valid instances:")
       validInstancesMap.forEach { (key, values) ->
+        logFine("The following instance occurred ${values.size} times:")
         logFine(key)
         logFiner("Occurred in:")
         values.forEach { logFiner(it.sourceSegmentIdentifier) }
+        logFine("----------------")
       }
     }
   }
