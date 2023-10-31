@@ -20,16 +20,16 @@ package tools.aqua.stars.core.metric.utils
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import jetbrains.letsPlot.Stat
-import jetbrains.letsPlot.export.ggsave
-import jetbrains.letsPlot.geom.geomBar
-import jetbrains.letsPlot.geom.geomLine
-import jetbrains.letsPlot.intern.Plot
-import jetbrains.letsPlot.letsPlot
-import jetbrains.letsPlot.positionDodge
-import jetbrains.letsPlot.sampling.samplingNone
-import jetbrains.letsPlot.scale.scaleXContinuous
-import jetbrains.letsPlot.scale.scaleYContinuous
+import org.jetbrains.letsPlot.Stat
+import org.jetbrains.letsPlot.export.ggsave
+import org.jetbrains.letsPlot.geom.geomBar
+import org.jetbrains.letsPlot.geom.geomLine
+import org.jetbrains.letsPlot.intern.Plot
+import org.jetbrains.letsPlot.letsPlot
+import org.jetbrains.letsPlot.pos.positionDodge
+import org.jetbrains.letsPlot.sampling.samplingNone
+import org.jetbrains.letsPlot.scale.scaleXContinuous
+import org.jetbrains.letsPlot.scale.scaleYContinuous
 
 /** Sets the offset to distinguish lines with equal trajectory */
 private const val POSITION_DODGE = 0.3
