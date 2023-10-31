@@ -22,9 +22,12 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import jetbrains.letsPlot.Stat
 import jetbrains.letsPlot.export.ggsave
+import jetbrains.letsPlot.geom.geomBar
 import jetbrains.letsPlot.geom.geomLine
+import jetbrains.letsPlot.intern.Plot
 import jetbrains.letsPlot.letsPlot
 import jetbrains.letsPlot.positionDodge
+import jetbrains.letsPlot.sampling.samplingNone
 import jetbrains.letsPlot.scale.scaleXContinuous
 import jetbrains.letsPlot.scale.scaleYContinuous
 
@@ -60,8 +63,8 @@ val currentTimeAndDate: String =
  * to the resulting path
  */
 fun <T : Number> plotDataAsLineChart(
-    yValues: List<T>,
     xValues: List<T>,
+    yValues: List<T>,
     xAxisName: String,
     yAxisName: String,
     legendEntries: List<String>,
@@ -70,25 +73,123 @@ fun <T : Number> plotDataAsLineChart(
     metricName: String,
     plotFileSubFolder: String = ""
 ) {
-  // Check that both xValues and yValues are not empty
-  if (xValues.isEmpty() || yValues.isEmpty()) {
-    return
-  }
+  var plot =
+      getPlot(
+          xValues = xValues,
+          yValues = yValues,
+          xAxisName = xAxisName,
+          yAxisName = yAxisName,
+          legendEntries = legendEntries,
+          legendHeader = legendHeader)
 
-  // Check that both xValues and yValues have the same amount of elements
-  if (xValues.size != yValues.size) {
-    return
-  }
+  check(plot != null)
 
   // Convert values to float to calculate max plot size later on
   val xFloatValues = xValues.map { it.toFloat() }
   val yFloatValues = yValues.map { it.toFloat() }
 
-  val plotData =
-      mutableMapOf(
-          xAxisName to xFloatValues, yAxisName to yFloatValues, legendHeader to legendEntries)
+  val plotFolder = getAndCreatePlotFolder(metricName, plotFileSubFolder)
 
+  plot +=
+      geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE)) +
+          scaleXContinuous(limits = -0.001 to xFloatValues.max(), expand = listOf(0, 0)) +
+          scaleYContinuous(limits = -0.001 to yFloatValues.max(), expand = listOf(0, 0))
+  ggsave(plot, "$plotFileName.png", path = plotFolder)
+}
+
+/**
+ * Saves a PNG file with a bar chart of the given values.
+ *
+ * It is possible to plot multiple sources into on chart. It is important that each source has the
+ * exact same amount of elements. The Lets-Plot library requires the data to be given in the
+ * following way: Take x elements from source "a". The first x elements of [xValues] and [yValues]
+ * have to be the values of "a". To create a legend entry, the [legendEntries] have to be filled. In
+ * this [List] x elements with the value "a" have to be created. You can use [getNTimes] for this
+ * purpose. The next x entries then have to be from another source "b", and so on.
+ *
+ * For n sources each with x entries, the [xValues] and [yValues] have to have the size "x * n".
+ *
+ * @param xValues The [List] of all x-values
+ * @param yValues The [List] of all y-values
+ * @param xAxisName The name of the x-axis
+ * @param yAxisName The name of the y-axis
+ * @param legendEntries The [List] of the entries for the legend (see description)
+ * @param legendHeader The headline which is displayed above the legend entries
+ * @param plotFileName The name of the resulting PNG file
+ * @param metricName The name of the metric from which the plot is created. The resulting PNG file
+ * is located under the metrics names folder
+ * @param plotFileSubFolder (Default: "") This optional folder will be added after the [metricName]
+ * to the resulting path
+ */
+fun <T : Number> plotDataAsBarChart(
+    xValues: List<T>,
+    yValues: List<T>,
+    xAxisName: String,
+    yAxisName: String,
+    legendEntries: List<String>,
+    legendHeader: String,
+    plotFileName: String,
+    metricName: String,
+    plotFileSubFolder: String = ""
+) {
   var plot =
+      getPlot(
+          xValues = xValues,
+          yValues = yValues,
+          xAxisName = xAxisName,
+          yAxisName = yAxisName,
+          legendEntries = legendEntries,
+          legendHeader = legendHeader)
+
+  check(plot != null)
+
+  val plotFolder = getAndCreatePlotFolder(metricName, plotFileSubFolder)
+
+  plot += geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone)
+  ggsave(plot, "$plotFileName.png", path = plotFolder)
+}
+
+/**
+ * Saves a PNG file with a bar chart of the given values.
+ *
+ * It is possible to plot multiple sources into on chart. It is important that each source has the
+ * exact same amount of elements. The Lets-Plot library requires the data to be given in the
+ * following way: Take x elements from source "a". The first x elements of [xValues] and [yValues]
+ * have to be the values of "a". To create a legend entry, the [legendEntries] have to be filled. In
+ * this [List] x elements with the value "a" have to be created. You can use [getNTimes] for this
+ * purpose. The next x entries then have to be from another source "b", and so on.
+ *
+ * For n sources each with x entries, the [xValues] and [yValues] have to have the size "x * n".
+ *
+ * @param yValues The [List] of all y-values
+ * @param xValues The [List] of all x-values
+ * @param xAxisName The name of the x-axis
+ * @param yAxisName The name of the y-axis
+ * @param legendEntries The [List] of the entries for the legend (see description)
+ * @param legendHeader The headline which is displayed above the legend entries
+ */
+fun <T : Number> getPlot(
+    xValues: List<T>,
+    yValues: List<T>,
+    xAxisName: String,
+    yAxisName: String,
+    legendEntries: List<String>,
+    legendHeader: String
+): Plot? {
+  // Check that both xValues and yValues are not empty
+  if (xValues.isEmpty() || yValues.isEmpty()) {
+    return null
+  }
+
+  // Check that both xValues and yValues have the same amount of elements
+  if (xValues.size != yValues.size) {
+    return null
+  }
+
+  val plotData =
+      mutableMapOf(xAxisName to xValues, yAxisName to yValues, legendHeader to legendEntries)
+
+  val plot =
       letsPlot(plotData) {
         x = xAxisName
         y = yAxisName
@@ -96,14 +197,19 @@ fun <T : Number> plotDataAsLineChart(
         fill = legendHeader
       }
 
+  return plot
+}
+
+/**
+ * Returns the path to the folder in which the plots will be saved in. If the path does not exist it
+ * will be created
+ *
+ * @param
+ */
+private fun getAndCreatePlotFolder(metricName: String, plotFileSubFolder: String): String {
   val plotFolder = "analysis-result-logs/$currentTimeAndDate/plots/$metricName/$plotFileSubFolder"
   File(plotFolder).mkdirs()
-
-  plot +=
-      geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE)) +
-          scaleXContinuous(limits = -0.001 to xFloatValues.max(), expand = listOf(0, 0)) +
-          scaleYContinuous(limits = -0.001 to yFloatValues.max(), expand = listOf(0, 0))
-  ggsave(plot, "$plotFileName.png", path = plotFolder)
+  return plotFolder
 }
 
 /**
