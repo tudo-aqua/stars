@@ -120,6 +120,13 @@ class ValidTSCInstancesPerProjectionMetric<
     }
   }
 
+    /**
+     * Plot the data collected with this metric.
+     *
+     * For each analyzed [TSCProjection] there will be two plots that are generated.
+     * 1. A progress graph which shows the count of unique [TSCInstance]s depicted as a line chart
+     * 2. A bar chart showing the distribution of occurrences of the [TSCInstance]s
+     */
   override fun plotData() {
     val xAxisName = "unique and valid TSC instances"
     val yAxisName = "instance count"
