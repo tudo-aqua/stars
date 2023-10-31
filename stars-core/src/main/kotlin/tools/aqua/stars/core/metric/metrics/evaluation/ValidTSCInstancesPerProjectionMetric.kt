@@ -23,6 +23,7 @@ import tools.aqua.stars.core.metric.providers.Plottable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.utils.getNTimes
+import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
 import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
 import tools.aqua.stars.core.tsc.TSCInstance
 import tools.aqua.stars.core.tsc.TSCInstanceNode
@@ -191,5 +192,20 @@ class ValidTSCInstancesPerProjectionMetric<
         legendHeader = "Projection",
         metricName = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
         plotFileName = "${plotFileName}_combined_percentage")
+
+    validInstancesMap.forEach { (projection, validInstanceMap) ->
+      // Get the count of instances for the current projection ordered by occurrence
+      val instanceCounts = validInstanceMap.values.map { it.size }.sortedDescending()
+      plotDataAsBarChart(
+          xValues = List(instanceCounts.size) { it },
+          xAxisName = "instance index",
+          yValues = instanceCounts,
+          yAxisName = "instance count",
+          legendEntries = getNTimes(projection.id.toString(), instanceCounts.size),
+          legendHeader = "Projection",
+          metricName = "unique-instance-occurrences",
+          plotFileSubFolder = projection.id.toString(),
+          plotFileName = "tscInstanceOccurrences_${projection.id}")
+    }
   }
 }
