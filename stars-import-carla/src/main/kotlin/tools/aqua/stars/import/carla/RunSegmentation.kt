@@ -155,10 +155,7 @@ fun sliceRunIntoSegments(
               .map { it.clone() }
       if (mainSegment.size > minSegmentTickCount) {
         segments +=
-            Segment(
-                mainSegment,
-                simulationRunId = simulationRunId,
-                segmentSource = simulationRunId)
+            Segment(mainSegment, simulationRunId = simulationRunId, segmentSource = simulationRunId)
       }
     }
   }
