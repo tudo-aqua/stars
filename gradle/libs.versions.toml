@@ -53,6 +53,8 @@ ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "kto
 
 letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.4.3" }
 letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.0.1" }
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.6"}
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.6"}
 
 openjfx-base = { group = "org.openjfx", name = "javafx-base", version.ref = "openjfx" }
 openjfx-controls = { group = "org.openjfx", name = "javafx-controls", version.ref = "openjfx" }
