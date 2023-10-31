@@ -63,38 +63,25 @@ val currentTimeAndDate: String =
  * to the resulting path
  */
 fun <T : Number> plotDataAsLineChart(
+    plot: Plot,
     xValues: List<T>,
     yValues: List<T>,
-    xAxisName: String,
-    yAxisName: String,
-    legendEntries: List<String>,
-    legendHeader: String,
     plotFileName: String,
     metricName: String,
     plotFileSubFolder: String = ""
 ) {
-  var plot =
-      getPlot(
-          xValues = xValues,
-          yValues = yValues,
-          xAxisName = xAxisName,
-          yAxisName = yAxisName,
-          legendEntries = legendEntries,
-          legendHeader = legendHeader)
-
-  check(plot != null)
-
+  var innerPlot = plot
   // Convert values to float to calculate max plot size later on
   val xFloatValues = xValues.map { it.toFloat() }
   val yFloatValues = yValues.map { it.toFloat() }
 
   val plotFolder = getAndCreatePlotFolder(metricName, plotFileSubFolder)
 
-  plot +=
+  innerPlot +=
       geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE)) +
           scaleXContinuous(limits = -0.001 to xFloatValues.max(), expand = listOf(0, 0)) +
           scaleYContinuous(limits = -0.001 to yFloatValues.max(), expand = listOf(0, 0))
-  ggsave(plot, "$plotFileName.png", path = plotFolder)
+  ggsave(innerPlot, "$plotFileName.png", path = plotFolder)
 }
 
 /**
@@ -150,9 +137,9 @@ fun <T : Number> plotDataAsBarChart(
 }
 
 /**
- * Saves a PNG file with a bar chart of the given values.
+ * Creates a [Plot] object containing the given data.
  *
- * It is possible to plot multiple sources into on chart. It is important that each source has the
+ * It is possible to plot multiple sources into one [Plot]. It is important that each source has the
  * exact same amount of elements. The Lets-Plot library requires the data to be given in the
  * following way: Take x elements from source "a". The first x elements of [xValues] and [yValues]
  * have to be the values of "a". To create a legend entry, the [legendEntries] have to be filled. In
@@ -189,6 +176,8 @@ fun <T : Number> getPlot(
   val plotData =
       mutableMapOf(xAxisName to xValues, yAxisName to yValues, legendHeader to legendEntries)
 
+  print(plotData)
+
   val plot =
       letsPlot(plotData) {
         x = xAxisName
@@ -198,6 +187,69 @@ fun <T : Number> getPlot(
       }
 
   return plot
+}
+
+fun <T : Number> getPlot(
+    legendEntry: String,
+    xValues: List<T>,
+    xAxisName: String,
+    yAxisName: String,
+    legendHeader: String
+): Plot {
+  return getPlot(mapOf(legendEntry to xValues), xAxisName, yAxisName, legendHeader)
+}
+
+fun <T : Number> getPlot(
+    nameToValuesMap: Map<String, List<T>>,
+    xAxisName: String,
+    yAxisName: String,
+    legendHeader: String
+): Plot {
+  // Check that every value list is filled
+  check(!nameToValuesMap.values.any { it.isEmpty() })
+  // Check that every value list has the exact same amount of elements
+  check(nameToValuesMap.values.map { it.size }.distinct().count() == 1)
+  getCSVString(nameToValuesMap)
+
+  val xValues = mutableListOf<Int>()
+  val yValues = mutableListOf<T>()
+  val legendEntries = mutableListOf<String>()
+
+  nameToValuesMap.forEach { (name, values) ->
+    xValues += List(values.size) { it }
+    yValues += values
+    legendEntries += getNTimes(name, values.size)
+  }
+
+  val plotData =
+      mutableMapOf(xAxisName to xValues, yAxisName to yValues, legendHeader to legendEntries)
+
+  val plot =
+      letsPlot(plotData) {
+        x = xAxisName
+        y = yAxisName
+        color = legendHeader
+        fill = legendHeader
+      }
+
+  return plot
+}
+
+private fun <T : Number> getCSVString(
+    nameToValuesMap: Map<String, List<T>>,
+): String {
+  val valuesCount = nameToValuesMap.values.first().size
+  val keys = nameToValuesMap.keys
+
+  var csvString = "index;${keys.joinToString(";")}\n"
+  for (i in 0 until valuesCount) {
+    csvString += "$i;"
+    keys.forEach { key -> csvString += "${nameToValuesMap[key]?.get(i)};" }
+    csvString += "\n"
+  }
+  print(csvString)
+  print("")
+  return csvString
 }
 
 /**
