@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.metrics.utils
+package tools.aqua.stars.core.metric.utils
 
 import java.io.File
 import java.time.LocalDateTime

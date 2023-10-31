@@ -18,12 +18,12 @@
 package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.utils.getNTimes
-import tools.aqua.stars.core.metric.metrics.utils.plotDataAsLineChart
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.Plottable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.utils.getNTimes
+import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
 import tools.aqua.stars.core.tsc.TSCInstance
 import tools.aqua.stars.core.tsc.TSCInstanceNode
 import tools.aqua.stars.core.tsc.TSCProjection
