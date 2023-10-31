@@ -71,14 +71,14 @@ class ValidTSCInstancesPerProjectionMetric<
     // Get current count of unique and valid TSC instance for the current projection
     val projectionValidInstances = validInstancesMap.getValue(projection)
 
-    // Track current TSC instance even if it is not valid
+    // Track current TSC projection
     uniqueTimedInstances.putIfAbsent(projection, mutableListOf())
     val projectionValidInstancesCount = uniqueTimedInstances.getValue(projection)
-    // Add current count of observed instances to list of timed instance counts
-    projectionValidInstancesCount.add(projectionValidInstances.size)
 
     // Check if given tscInstance is valid
     if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
+      // Add current count of observed instances to list of timed instance counts
+      projectionValidInstancesCount.add(projectionValidInstances.size)
       return
     }
     projectionValidInstances.putIfAbsent(tscInstance.rootNode, mutableListOf())
@@ -86,6 +86,8 @@ class ValidTSCInstancesPerProjectionMetric<
     val projectionValidInstanceList = projectionValidInstances.getValue(tscInstance.rootNode)
     // Add current instance to list of observed instances
     projectionValidInstanceList.add(tscInstance)
+    // Add current count of observed instances to list of timed instance counts
+    projectionValidInstancesCount.add(projectionValidInstances.size)
   }
 
   /**
