@@ -51,8 +51,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 ktor-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 
-letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "3.0.2" }
-letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "2.1.0" }
+letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.4.3" }
+letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.0.1" }
 
 openjfx-base = { group = "org.openjfx", name = "javafx-base", version.ref = "openjfx" }
 openjfx-controls = { group = "org.openjfx", name = "javafx-controls", version.ref = "openjfx" }
