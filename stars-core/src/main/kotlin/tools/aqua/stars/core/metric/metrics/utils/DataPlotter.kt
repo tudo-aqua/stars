@@ -70,40 +70,40 @@ fun <T : Number> plotDataAsLineChart(
     metricName: String,
     plotFileSubFolder: String = ""
 ) {
-    // Check that both xValues and yValues are not empty
-    if (xValues.isEmpty() || yValues.isEmpty()) {
-        return
-    }
+  // Check that both xValues and yValues are not empty
+  if (xValues.isEmpty() || yValues.isEmpty()) {
+    return
+  }
 
-    // Check that both xValues and yValues have the same amount of elements
-    if (xValues.size != yValues.size) {
-        return
-    }
+  // Check that both xValues and yValues have the same amount of elements
+  if (xValues.size != yValues.size) {
+    return
+  }
 
-    // Convert values to float to calculate max plot size later on
-    val xFloatValues = xValues.map { it.toFloat() }
-    val yFloatValues = yValues.map { it.toFloat() }
+  // Convert values to float to calculate max plot size later on
+  val xFloatValues = xValues.map { it.toFloat() }
+  val yFloatValues = yValues.map { it.toFloat() }
 
-    val plotData =
-        mutableMapOf(
-            xAxisName to xFloatValues, yAxisName to yFloatValues, legendHeader to legendEntries)
+  val plotData =
+      mutableMapOf(
+          xAxisName to xFloatValues, yAxisName to yFloatValues, legendHeader to legendEntries)
 
-    var plot =
-        letsPlot(plotData) {
-            x = xAxisName
-            y = yAxisName
-            color = legendHeader
-            fill = legendHeader
-        }
+  var plot =
+      letsPlot(plotData) {
+        x = xAxisName
+        y = yAxisName
+        color = legendHeader
+        fill = legendHeader
+      }
 
-    val plotFolder = "analysis-result-logs/$currentTimeAndDate/plots/$metricName/$plotFileSubFolder"
-    File(plotFolder).mkdirs()
+  val plotFolder = "analysis-result-logs/$currentTimeAndDate/plots/$metricName/$plotFileSubFolder"
+  File(plotFolder).mkdirs()
 
-    plot +=
-        geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE)) +
-                scaleXContinuous(limits = -0.001 to xFloatValues.max(), expand = listOf(0, 0)) +
-                scaleYContinuous(limits = -0.001 to yFloatValues.max(), expand = listOf(0, 0))
-    ggsave(plot, "$plotFileName.png", path = plotFolder)
+  plot +=
+      geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE)) +
+          scaleXContinuous(limits = -0.001 to xFloatValues.max(), expand = listOf(0, 0)) +
+          scaleYContinuous(limits = -0.001 to yFloatValues.max(), expand = listOf(0, 0))
+  ggsave(plot, "$plotFileName.png", path = plotFolder)
 }
 
 /**
@@ -115,5 +115,5 @@ fun <T : Number> plotDataAsLineChart(
  * @return A [List] filled with [amount]-times the given [element]
  */
 fun <T> getNTimes(element: T, amount: Int): List<T> {
-    return List(amount) { element }
+  return List(amount) { element }
 }
