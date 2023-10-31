@@ -122,6 +122,8 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
     // Call the 'evaluate' function for all PostEvaluationMetricProviders
     metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>().forEach { it.print() }
+    // Plot the results of all Plottable metrics
+    metricProviders.filterIsInstance<Plottable>().forEach { it.plotData() }
     // Close all logging handlers to prevent .lck files to remain
     metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
     closeLogger()
