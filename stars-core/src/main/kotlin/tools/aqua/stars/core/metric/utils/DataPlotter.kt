@@ -28,7 +28,6 @@ import org.jetbrains.letsPlot.intern.Plot
 import org.jetbrains.letsPlot.letsPlot
 import org.jetbrains.letsPlot.pos.positionDodge
 import org.jetbrains.letsPlot.sampling.samplingNone
-import org.jetbrains.letsPlot.scale.scaleXContinuous
 import org.jetbrains.letsPlot.scale.scaleYContinuous
 
 /** Sets the offset to distinguish lines with equal trajectory */
@@ -39,166 +38,89 @@ val currentTimeAndDate: String =
     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
 
 /**
- * Saves a PNG file with a line chart of the given values.
+ * Saves a PNG file with a line chart based on the given values.
  *
- * It is possible to plot multiple sources into on chart. It is important that each source has the
- * exact same amount of elements. The Lets-Plot library requires the data to be given in the
- * following way: Take x elements from source "a". The first x elements of [xValues] and [yValues]
- * have to be the values of "a". To create a legend entry, the [legendEntries] have to be filled. In
- * this [List] x elements with the value "a" have to be created. You can use [getNTimes] for this
- * purpose. The next x entries then have to be from another source "b", and so on.
- *
- * For n sources each with x entries, the [xValues] and [yValues] have to have the size "x * n".
- *
- * @param yValues The [List] of all y-values
- * @param xValues The [List] of all x-values
- * @param xAxisName The name of the x-axis
- * @param yAxisName The name of the y-axis
- * @param legendEntries The [List] of the entries for the legend (see description)
- * @param legendHeader The headline which is displayed above the legend entries
- * @param plotFileName The name of the resulting PNG file
- * @param metricName The name of the metric from which the plot is created. The resulting PNG file
- * is located under the metrics names folder
- * @param plotFileSubFolder (Default: "") This optional folder will be added after the [metricName]
- * to the resulting path
+ * @param plot Contains all necessary data points for the bar chart
+ * @param fileName The name of the resulting PNG file
+ * @param folder The name of the metric from which the plot is created. The resulting PNG file is
+ * located under the metrics names folder
+ * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
+ * resulting path
+ * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
+ * accordingly.
  */
-fun <T : Number> plotDataAsLineChart(
+fun plotDataAsLineChart(
     plot: Plot,
-    xValues: List<T>,
-    yValues: List<T>,
-    plotFileName: String,
-    metricName: String,
-    plotFileSubFolder: String = ""
+    fileName: String,
+    folder: String,
+    subFolder: String = "",
+    yAxisScaleMaxValue: Number? = null,
 ) {
   var innerPlot = plot
-  // Convert values to float to calculate max plot size later on
-  val xFloatValues = xValues.map { it.toFloat() }
-  val yFloatValues = yValues.map { it.toFloat() }
+  val plotFolder = getAndCreatePlotFolder(folder, subFolder)
 
-  val plotFolder = getAndCreatePlotFolder(metricName, plotFileSubFolder)
-
-  innerPlot +=
-      geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE)) +
-          scaleXContinuous(limits = -0.001 to xFloatValues.max(), expand = listOf(0, 0)) +
-          scaleYContinuous(limits = -0.001 to yFloatValues.max(), expand = listOf(0, 0))
-  ggsave(innerPlot, "$plotFileName.png", path = plotFolder)
+  innerPlot += geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE))
+  if (yAxisScaleMaxValue != null) {
+    innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
+  }
+  ggsave(innerPlot, "$fileName.png", path = plotFolder)
 }
 
 /**
- * Saves a PNG file with a bar chart of the given values.
+ * Saves a PNG file with a bar chart based on the given values.
  *
- * It is possible to plot multiple sources into on chart. It is important that each source has the
- * exact same amount of elements. The Lets-Plot library requires the data to be given in the
- * following way: Take x elements from source "a". The first x elements of [xValues] and [yValues]
- * have to be the values of "a". To create a legend entry, the [legendEntries] have to be filled. In
- * this [List] x elements with the value "a" have to be created. You can use [getNTimes] for this
- * purpose. The next x entries then have to be from another source "b", and so on.
- *
- * For n sources each with x entries, the [xValues] and [yValues] have to have the size "x * n".
- *
- * @param xValues The [List] of all x-values
- * @param yValues The [List] of all y-values
- * @param xAxisName The name of the x-axis
- * @param yAxisName The name of the y-axis
- * @param legendEntries The [List] of the entries for the legend (see description)
- * @param legendHeader The headline which is displayed above the legend entries
- * @param plotFileName The name of the resulting PNG file
- * @param metricName The name of the metric from which the plot is created. The resulting PNG file
- * is located under the metrics names folder
- * @param plotFileSubFolder (Default: "") This optional folder will be added after the [metricName]
- * to the resulting path
+ * @param plot Contains all necessary data points for the bar chart
+ * @param fileName The name of the resulting PNG file
+ * @param folder The name of the top-level folder for this file
+ * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
+ * resulting path
  */
-fun <T : Number> plotDataAsBarChart(
-    xValues: List<T>,
-    yValues: List<T>,
-    xAxisName: String,
-    yAxisName: String,
-    legendEntries: List<String>,
-    legendHeader: String,
-    plotFileName: String,
-    metricName: String,
-    plotFileSubFolder: String = ""
+fun plotDataAsBarChart(
+    plot: Plot,
+    fileName: String,
+    folder: String,
+    subFolder: String = "",
 ) {
-  var plot =
-      getPlot(
-          xValues = xValues,
-          yValues = yValues,
-          xAxisName = xAxisName,
-          yAxisName = yAxisName,
-          legendEntries = legendEntries,
-          legendHeader = legendHeader)
+  var innerPlot = plot
+  val plotFolder = getAndCreatePlotFolder(folder, subFolder)
 
-  check(plot != null)
-
-  val plotFolder = getAndCreatePlotFolder(metricName, plotFileSubFolder)
-
-  plot += geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone)
-  ggsave(plot, "$plotFileName.png", path = plotFolder)
+  innerPlot += geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone)
+  ggsave(innerPlot, "$fileName.png", path = plotFolder)
 }
 
 /**
- * Creates a [Plot] object containing the given data.
+ * Creates a [Plot] object with the given values, so that it can be given to the lets-plot library
+ * for plotting.
  *
- * It is possible to plot multiple sources into one [Plot]. It is important that each source has the
- * exact same amount of elements. The Lets-Plot library requires the data to be given in the
- * following way: Take x elements from source "a". The first x elements of [xValues] and [yValues]
- * have to be the values of "a". To create a legend entry, the [legendEntries] have to be filled. In
- * this [List] x elements with the value "a" have to be created. You can use [getNTimes] for this
- * purpose. The next x entries then have to be from another source "b", and so on.
+ * Creates a new [Map] with [legendEntry] and [yValues] and calls [getPlot] with it.
  *
- * For n sources each with x entries, the [xValues] and [yValues] have to have the size "x * n".
- *
- * @param yValues The [List] of all y-values
- * @param xValues The [List] of all x-values
- * @param xAxisName The name of the x-axis
- * @param yAxisName The name of the y-axis
- * @param legendEntries The [List] of the entries for the legend (see description)
- * @param legendHeader The headline which is displayed above the legend entries
+ * @param legendEntry The name that is displayed in the legend for this data set
+ * @param yValues The y-values that should be displayed
+ * @param xAxisName The name that is displayed below the x-axis of the plot
+ * @param yAxisName The name that is displayed besides the y-axis of the plot
+ * @param legendHeader The name that is displayed above the legend list
+ * @return The initialized [Plot] object
  */
-fun <T : Number> getPlot(
-    xValues: List<T>,
-    yValues: List<T>,
-    xAxisName: String,
-    yAxisName: String,
-    legendEntries: List<String>,
-    legendHeader: String
-): Plot? {
-  // Check that both xValues and yValues are not empty
-  if (xValues.isEmpty() || yValues.isEmpty()) {
-    return null
-  }
-
-  // Check that both xValues and yValues have the same amount of elements
-  if (xValues.size != yValues.size) {
-    return null
-  }
-
-  val plotData =
-      mutableMapOf(xAxisName to xValues, yAxisName to yValues, legendHeader to legendEntries)
-
-  print(plotData)
-
-  val plot =
-      letsPlot(plotData) {
-        x = xAxisName
-        y = yAxisName
-        color = legendHeader
-        fill = legendHeader
-      }
-
-  return plot
-}
-
 fun <T : Number> getPlot(
     legendEntry: String,
-    xValues: List<T>,
+    yValues: List<T>,
     xAxisName: String,
     yAxisName: String,
     legendHeader: String
 ): Plot {
-  return getPlot(mapOf(legendEntry to xValues), xAxisName, yAxisName, legendHeader)
+  return getPlot(mapOf(legendEntry to yValues), xAxisName, yAxisName, legendHeader)
 }
 
+/**
+ * Creates a [Plot] object with the given values, so that it can be given to the lets-plot library
+ * for plotting.
+ *
+ * @param nameToValuesMap The [Map] that contains the column values and its related header entry
+ * @param xAxisName The name that is displayed below the x-axis of the plot
+ * @param yAxisName The name that is displayed besides the y-axis of the plot
+ * @param legendHeader The name that is displayed above the legend list
+ * @return The initialized [Plot] object
+ */
 fun <T : Number> getPlot(
     nameToValuesMap: Map<String, List<T>>,
     xAxisName: String,
@@ -209,59 +131,126 @@ fun <T : Number> getPlot(
   check(!nameToValuesMap.values.any { it.isEmpty() })
   // Check that every value list has the exact same amount of elements
   check(nameToValuesMap.values.map { it.size }.distinct().count() == 1)
-  getCSVString(nameToValuesMap)
 
   val xValues = mutableListOf<Int>()
   val yValues = mutableListOf<T>()
   val legendEntries = mutableListOf<String>()
 
+  // Bring data into correct form for lets-plot
   nameToValuesMap.forEach { (name, values) ->
     xValues += List(values.size) { it }
     yValues += values
-    legendEntries += getNTimes(name, values.size)
+    legendEntries += repeatNTimes(name, values.size)
   }
 
+  // Create Map with all necessary data points
   val plotData =
       mutableMapOf(xAxisName to xValues, yAxisName to yValues, legendHeader to legendEntries)
 
-  val plot =
-      letsPlot(plotData) {
-        x = xAxisName
-        y = yAxisName
-        color = legendHeader
-        fill = legendHeader
-      }
-
-  return plot
+  return letsPlot(plotData) {
+    x = xAxisName
+    y = yAxisName
+    color = legendHeader
+    fill = legendHeader
+  }
 }
 
+/**
+ * Create and return a CSV string based on the given [nameToValuesMap]. Each key in the [Map] will
+ * result in a new column with the value assigned to the key as its row values.
+ *
+ * @param nameToValuesMap The [Map] that contains the column values and its related header entry
+ * @param sliceValue (Default: null) If set the values of each key in the [nameToValuesMap] will be
+ * sliced by the given [sliceValue]
+ * @return The CSV [String] based on the [nameToValuesMap]
+ */
 private fun <T : Number> getCSVString(
     nameToValuesMap: Map<String, List<T>>,
+    sliceValue: Int? = null
 ): String {
-  val valuesCount = nameToValuesMap.values.first().size
-  val keys = nameToValuesMap.keys
+  val valueMap: Map<String, List<T>>
+  if (sliceValue != null) {
+    valueMap = mutableMapOf()
+    // Only take every "sliceValue"th entry for each key in the nameToValuesMap
+    nameToValuesMap.forEach { (key, values) ->
+      valueMap[key] = values.slice(0..values.size step (sliceValue))
+    }
+  } else {
+    // Take original map
+    valueMap = nameToValuesMap
+  }
 
-  var csvString = "index;${keys.joinToString(";")}\n"
-  for (i in 0 until valuesCount) {
+  // Create header line
+  var csvString = "index;${valueMap.keys.joinToString(";")}\n"
+
+  // Iterate over all values
+  for (i in 0 until valueMap.values.first().size) {
     csvString += "$i;"
-    keys.forEach { key -> csvString += "${nameToValuesMap[key]?.get(i)};" }
+    valueMap.keys.forEach { key -> csvString += "${valueMap[key]?.get(i)};" }
     csvString += "\n"
   }
-  print(csvString)
-  print("")
   return csvString
+}
+
+/**
+ * Converts the given [nameToValuesMap] to a CSV [String] and saves this as a file.
+ *
+ * @param nameToValuesMap The [Map] that contains the column values and its related header entry
+ * @param nameToValuesMap The [Map] that contains the column values and its related header entry
+ * @param fileName The name of the saved file
+ * @param folder The name of the top-level folder
+ * @param subFolder (Default: "") The name of the subfolder under [folder] in which the file will be
+ * saved
+ * @param sliceValue (Default: null) If set the values of each key in the [nameToValuesMap] will be
+ * sliced by the given [sliceValue]
+ */
+fun <T : Number> saveAsCSVFile(
+    nameToValuesMap: Map<String, List<T>>,
+    fileName: String,
+    folder: String,
+    sliceValue: Int? = null,
+    subFolder: String = "",
+) {
+  val resultFolder = getAndCreateCSVFolder(folder, subFolder)
+  val csvString = getCSVString(nameToValuesMap = nameToValuesMap, sliceValue = sliceValue)
+  val csvFile =
+      if (sliceValue == null) {
+        File("$resultFolder/$fileName.csv")
+      } else {
+        File("$resultFolder/${fileName}_slice_$sliceValue.csv")
+      }
+  csvFile.createNewFile()
+  csvFile.writeText(csvString)
 }
 
 /**
  * Returns the path to the folder in which the plots will be saved in. If the path does not exist it
  * will be created
  *
- * @param
+ * @param folder The name of the top-level folder
+ * @param subFolder (Default: "") The name of the subfolder under [folder] in which the file will be
+ * saved
+ * @return The path to the created folder
  */
-private fun getAndCreatePlotFolder(metricName: String, plotFileSubFolder: String): String {
-  val plotFolder = "analysis-result-logs/$currentTimeAndDate/plots/$metricName/$plotFileSubFolder"
-  File(plotFolder).mkdirs()
-  return plotFolder
+private fun getAndCreatePlotFolder(folder: String, subFolder: String): String {
+  val resultFolder = "analysis-result-logs/$currentTimeAndDate/plots/$folder/$subFolder"
+  File(resultFolder).mkdirs()
+  return resultFolder
+}
+
+/**
+ * Returns the path to the folder in which the CSV files will be saved in. If the path does not
+ * exist it will be created
+ *
+ * @param folder The name of the top-level folder
+ * @param subFolder (Default: "") The name of the subfolder under [folder] in which the file will be
+ * saved
+ * @return The path to the created folder
+ */
+private fun getAndCreateCSVFolder(folder: String, subFolder: String): String {
+  val resultFolder = "analysis-result-logs/$currentTimeAndDate/csv/$folder/$subFolder"
+  File(resultFolder).mkdirs()
+  return resultFolder
 }
 
 /**
@@ -272,6 +261,6 @@ private fun getAndCreatePlotFolder(metricName: String, plotFileSubFolder: String
  * [List]
  * @return A [List] filled with [amount]-times the given [element]
  */
-fun <T> getNTimes(element: T, amount: Int): List<T> {
+fun <T> repeatNTimes(element: T, amount: Int): List<T> {
   return List(amount) { element }
 }

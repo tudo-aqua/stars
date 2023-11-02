@@ -22,10 +22,10 @@ import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.Plottable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.metric.utils.getNTimes
 import tools.aqua.stars.core.metric.utils.getPlot
 import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
 import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
+import tools.aqua.stars.core.metric.utils.saveAsCSVFile
 import tools.aqua.stars.core.tsc.TSCInstance
 import tools.aqua.stars.core.tsc.TSCInstanceNode
 import tools.aqua.stars.core.tsc.TSCProjection
@@ -34,6 +34,8 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 const val VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME = "valid-tsc-instances-per-projection"
+const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME =
+    "valid-tsc-instances-occurrences-per-projection"
 
 /**
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred
@@ -59,6 +61,16 @@ class ValidTSCInstancesPerProjectionMetric<
    */
   private val uniqueTimedInstances: MutableMap<TSCProjection<E, T, S>, MutableList<Int>> =
       mutableMapOf()
+
+  /** Maps the name of a [TSCProjection] the a list of timed [TSCInstance] occurrences */
+  private val combinedProjectionToOccurredInstancesMap = mutableMapOf<String, List<Int>>()
+
+  /**
+   * Maps the name of a [TSCProjection] the a list of timed [TSCInstance] occurrences in relation to
+   * the count of possible [TSCInstance]s
+   */
+  private val combinedProjectionToOccurredInstancesPercentagesMap =
+      mutableMapOf<String, List<Float>>()
 
   /**
    * Track the valid [TSCInstance]s for each [TSCProjection] in the [validInstancesMap]. If the
@@ -121,6 +133,12 @@ class ValidTSCInstancesPerProjectionMetric<
     }
   }
 
+  private val xAxisName = "unique and valid TSC instances"
+  private val yAxisName = "instance count"
+  private val yAxisNamePercentage = "$yAxisName (in %)"
+  private val plotFileName = "validTSCInstancesProgressPerProjection"
+  private val legendHeader = "Projection"
+
   /**
    * Plot the data collected with this metric.
    *
@@ -129,94 +147,193 @@ class ValidTSCInstancesPerProjectionMetric<
    * 2. A bar chart showing the distribution of occurrences of the [TSCInstance]s
    */
   override fun plotData() {
-    val xAxisName = "unique and valid TSC instances"
-    val yAxisName = "instance count"
-    val yAxisNamePercentage = "$yAxisName (in %)"
-    val plotFileName = "validTSCInstancesPerProjection"
+    plotAndSaveOccurrencesProgressionPerProjection()
+    plotAndSaveOccurrencesPerProjection()
+    plotAndSaveCombinedOccurrencesProgression()
+  }
 
-    val combinedXValues = mutableListOf<Int>()
-    val combinedYValues = mutableListOf<Int>()
-    val combinedYPercentageValues = mutableListOf<Float>()
-    val combinedLegendEntries = mutableListOf<String>()
-
-    val projectionToValuesMap: MutableMap<String, List<Int>> = mutableMapOf()
-
-    uniqueTimedInstances.keys.forEach { projection ->
-      // Get list of timed instances for current projection. If not existing: return
-      val projectionTimedInstances = uniqueTimedInstances[projection] ?: return@forEach
-      val xValues: List<Int> = List(projectionTimedInstances.size) { it }
+  private fun plotAndSaveOccurrencesProgressionPerProjection() {
+    uniqueTimedInstances.forEach { (projection, instances) ->
+      // Get the count of all possible TSC instances for the current projection
       val possibleTscInstancesForProjection = projection.possibleTSCInstances.size
-      val lastYValue = projectionTimedInstances.last()
-      val legendEntry = "${projection.id} ($lastYValue/$possibleTscInstancesForProjection)"
 
-      val uniqueInstancesPlot = getPlot(legendEntry, xValues, xAxisName, yAxisName, "Projection")
+      // Get the count of occurred TSC instances
+      val lastYValue = instances.last()
 
-      // Plot the timed absolute count of unique TSC instances for the current projection
+      val legendEntry = "${projection} ($lastYValue/$possibleTscInstancesForProjection)"
+      val projectionToValuesMap = mapOf(legendEntry to instances)
+
+      // Build the plot with the values for the current projection
+      val uniqueInstancesPlot = getPlot(projectionToValuesMap, xAxisName, yAxisName, legendHeader)
+
+      // Plot the timed absolute count of unique TSC instances for the current projection, where the
+      // y-axis is scaled to the possible instances
       plotDataAsLineChart(
           plot = uniqueInstancesPlot,
-          xValues = xValues,
-          yValues = projectionTimedInstances,
-          metricName = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
-          plotFileName = "${plotFileName}_${projection.id}",
-          plotFileSubFolder = projection.id.toString())
+          yAxisScaleMaxValue = possibleTscInstancesForProjection,
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          fileName = "${plotFileName}_${projection}_scaled",
+          subFolder = projection.toString())
 
-      //      // Plot the timed percentage count of unique TSC instances for the current projection
-      //      val yValuesPercentage: List<Float> =
-      //          projectionTimedInstances.map { (it.toFloat() / possibleTscInstancesForProjection)
-      // * 100 }
-      //      plotDataAsLineChart(
-      //          xValues = xValues,
-      //          xAxisName = xAxisName,
-      //          yValues = yValuesPercentage,
-      //          yAxisName = yAxisNamePercentage,
-      //          legendEntries = legendEntries,
-      //          legendHeader = "Projection",
-      //          metricName = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
-      //          plotFileName = "${plotFileName}_${projection.id}_percentages",
-      //          plotFileSubFolder = projection.id.toString())
+      // Plot the timed absolute count of unique TSC instances for the current projection, where the
+      // y-axis is scaled to the occurred instances
+      plotDataAsLineChart(
+          plot = uniqueInstancesPlot,
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          fileName = "${plotFileName}_${projection}",
+          subFolder = projection.toString())
 
-      projectionToValuesMap.putIfAbsent(legendEntry, xValues)
+      // Save the timed absolute count of unique TSC instances data as CSV file
+      saveAsCSVFile(
+          nameToValuesMap = projectionToValuesMap,
+          fileName = "${plotFileName}_${projection}",
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString())
 
-      combinedXValues += xValues
-      combinedYValues += projectionTimedInstances
-      //      combinedYPercentageValues += yValuesPercentage
+      // Save the timed absolute count of unique TSC instances data as CSV file, but only every
+      // 100th entry is taken
+      saveAsCSVFile(
+          nameToValuesMap = projectionToValuesMap,
+          fileName = "${plotFileName}_${projection}",
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString(),
+          sliceValue = 100)
+
+      // Calculate the percentage of the occurred instances against the count of possible instances
+      val yValuesPercentage: List<Float> =
+          instances.map { (it.toFloat() / possibleTscInstancesForProjection) * 100 }
+      val projectionPercentageValuesMap = mapOf(legendEntry to yValuesPercentage)
+
+      val percentagePlot =
+          getPlot(
+              nameToValuesMap = projectionPercentageValuesMap,
+              xAxisName = xAxisName,
+              yAxisName = yAxisNamePercentage,
+              legendHeader = legendHeader)
+
+      // Plot the timed percentage count of unique TSC instances for the current projection
+      plotDataAsLineChart(
+          plot = percentagePlot,
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          fileName = "${plotFileName}_${projection}_percentage",
+          subFolder = projection.toString())
+
+      // Plot the timed percentage count of unique TSC instances for the current projection
+      plotDataAsLineChart(
+          plot = percentagePlot,
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          fileName = "${plotFileName}_${projection}_percentage_scaled",
+          yAxisScaleMaxValue = 100,
+          subFolder = projection.toString())
+
+      // Save the timed percentage count of unique TSC instances data as CSV file
+      saveAsCSVFile(
+          nameToValuesMap = projectionPercentageValuesMap,
+          fileName = "${plotFileName}_${projection}_percentage",
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString())
+
+      // Save the timed percentage count of unique TSC instances data as CSV file but only take
+      // every 100th entry
+      saveAsCSVFile(
+          nameToValuesMap = projectionPercentageValuesMap,
+          fileName = "${plotFileName}_${projection}_percentage",
+          folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString(),
+          sliceValue = 100)
+
+      // Save values of current projection to combined map
+      combinedProjectionToOccurredInstancesMap[legendEntry] = instances
+      combinedProjectionToOccurredInstancesPercentagesMap[legendEntry] = yValuesPercentage
     }
+  }
 
-    //    // Plot the timed absolute count of unique TSC instances for all projections combined
-    //    plotDataAsLineChart(
-    //        xValues = combinedXValues,
-    //        xAxisName = xAxisName,
-    //        yValues = combinedYValues,
-    //        yAxisName = yAxisName,
-    //        legendEntries = combinedLegendEntries,
-    //        legendHeader = "Projection",
-    //        metricName = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
-    //        plotFileName = "${plotFileName}_combined")
-    //
-    //    // Plot the timed percentage count of unique TSC instances for all projections combined
-    //    plotDataAsLineChart(
-    //        xValues = combinedXValues,
-    //        xAxisName = xAxisName,
-    //        yValues = combinedYPercentageValues,
-    //        yAxisName = yAxisNamePercentage,
-    //        legendEntries = combinedLegendEntries,
-    //        legendHeader = "Projection",
-    //        metricName = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
-    //        plotFileName = "${plotFileName}_combined_percentage")
-
-    validInstancesMap.forEach { (projection, validInstanceMap) ->
+  private fun plotAndSaveOccurrencesPerProjection() {
+    validInstancesMap.forEach { (projection, instances) ->
       // Get the count of instances for the current projection ordered by occurrence
-      val instanceCounts = validInstanceMap.values.map { it.size }.sortedDescending()
+      val instanceCounts = instances.values.map { it.size }.sortedDescending()
+
+      val barPlotName = "validTSCInstanceOccurrencesPerProjection"
+
+      val projectionNameToInstancesMap = mapOf(projection.toString() to instanceCounts)
+
+      val plot =
+          getPlot(
+              nameToValuesMap = projectionNameToInstancesMap,
+              xAxisName = "instance index",
+              yAxisName = "instance count",
+              legendHeader = legendHeader)
+
+      // Plot the occurrences of unique TSC instances for the current projection
       plotDataAsBarChart(
-          xValues = List(instanceCounts.size) { it },
-          xAxisName = "instance index",
-          yValues = instanceCounts,
-          yAxisName = "instance count",
-          legendEntries = getNTimes(projection.id.toString(), instanceCounts.size),
-          legendHeader = "Projection",
-          metricName = "unique-instance-occurrences",
-          plotFileSubFolder = projection.id.toString(),
-          plotFileName = "tscInstanceOccurrences_${projection.id}")
+          plot = plot,
+          fileName = "${barPlotName}_${projection}",
+          folder = VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString())
+
+      // Save the occurrences of unique TSC instances data as CSV file
+      saveAsCSVFile(
+          nameToValuesMap = projectionNameToInstancesMap,
+          fileName = "${barPlotName}_${projection}",
+          folder = VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString())
     }
+  }
+
+  private fun plotAndSaveCombinedOccurrencesProgression() {
+    val combinedTotalPlot =
+        getPlot(
+            nameToValuesMap = combinedProjectionToOccurredInstancesMap,
+            xAxisName = xAxisName,
+            yAxisName = yAxisName,
+            legendHeader = legendHeader)
+
+    val combinedPercentagePlot =
+        getPlot(
+            nameToValuesMap = combinedProjectionToOccurredInstancesPercentagesMap,
+            xAxisName = xAxisName,
+            yAxisName = yAxisNamePercentage,
+            legendHeader = legendHeader)
+
+    // Plot the timed total count of unique TSC instances for all projections combined
+    plotDataAsLineChart(
+        plot = combinedTotalPlot,
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+        fileName = "${plotFileName}_combined")
+
+    // Plot the timed percentage count of unique TSC instances for all projections combined
+    plotDataAsLineChart(
+        plot = combinedPercentagePlot,
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+        fileName = "${plotFileName}_combined_percentage")
+
+    // Save the timed total count of unique TSC instances for all projections combined as a CSV file
+    saveAsCSVFile(
+        nameToValuesMap = combinedProjectionToOccurredInstancesMap,
+        fileName = "${plotFileName}_combined",
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME)
+
+    // Save the timed total count of unique TSC instances for all projections combined as a CSV file
+    // but only take every 100th entry
+    saveAsCSVFile(
+        nameToValuesMap = combinedProjectionToOccurredInstancesMap,
+        fileName = "${plotFileName}_combined",
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+        sliceValue = 100)
+
+    // Save the timed percentage count of unique TSC instances for all projections combined as a CSV
+    // file
+    saveAsCSVFile(
+        nameToValuesMap = combinedProjectionToOccurredInstancesPercentagesMap,
+        fileName = "${plotFileName}_combined_percentage",
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME)
+
+    // Save the timed percentage count of unique TSC instances for all projections combined as a CSV
+    // file but only take every 100th entry
+    saveAsCSVFile(
+        nameToValuesMap = combinedProjectionToOccurredInstancesPercentagesMap,
+        fileName = "${plotFileName}_combined_percentage",
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+        sliceValue = 100)
   }
 }
