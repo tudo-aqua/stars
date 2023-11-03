@@ -17,18 +17,40 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * This interface should be implemented by all metrics that have to be called after the evaluation
- * phase.
+ * The [PostEvaluationMetricProvider] implements the [MetricProvider] and provides an [evaluate]
+ * function which is called after the evaluation phase. It also may depend on the results of metrics
+ * that evaluated during the evaluation phase.
+ *
+ * @see TSCEvaluation.runEvaluation
  */
 interface PostEvaluationMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     MetricProvider<E, T, S> {
+  /**
+   * Holds a reference to another metric that is evaluated during the evaluation phase.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
   val dependsOn: Any?
+
+  /**
+   * Evaluate the metric after the evaluation phase.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
   fun evaluate(): Any?
+
+  /**
+   * Print the results of the [evaluate] function. This function is called after the evaluation
+   * phase.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
   fun print()
 }

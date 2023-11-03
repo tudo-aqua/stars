@@ -17,10 +17,18 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
+
 /**
  * Implementing the [Plottable] interface allows the results of a [MetricProvider] to be plotted as
  * a graph.
  */
 interface Plottable {
+  /**
+   * This function is called after the evaluation phase and should plot the data collected during
+   * the evaluation.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
   fun plotData()
 }
