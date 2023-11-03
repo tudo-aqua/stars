@@ -145,6 +145,12 @@ class ValidTSCInstancesPerProjectionMetric<
    * For each analyzed [TSCProjection] there will be two plots that are generated.
    * 1. A progress graph which shows the count of unique [TSCInstance]s depicted as a line chart
    * 2. A bar chart showing the distribution of occurrences of the [TSCInstance]s
+   *
+   * A combined line chart is generated that depicts the combined [TSCInstance] progress for all
+   * projections in one chart.
+   *
+   * For each generated chart a CSV file with the same data and additional sliced values are
+   * exported as well.
    */
   override fun plotData() {
     plotAndSaveOccurrencesProgressionPerProjection()
@@ -152,6 +158,10 @@ class ValidTSCInstancesPerProjectionMetric<
     plotAndSaveCombinedOccurrencesProgression()
   }
 
+  /**
+   * Plots and saves CSV files for the occurrence progression of [TSCInstance]s for each
+   * [TSCProjection].
+   */
   private fun plotAndSaveOccurrencesProgressionPerProjection() {
     uniqueTimedInstances.forEach { (projection, instances) ->
       // Get the count of all possible TSC instances for the current projection
@@ -160,7 +170,7 @@ class ValidTSCInstancesPerProjectionMetric<
       // Get the count of occurred TSC instances
       val lastYValue = instances.last()
 
-      val legendEntry = "${projection} ($lastYValue/$possibleTscInstancesForProjection)"
+      val legendEntry = "$projection ($lastYValue/$possibleTscInstancesForProjection)"
       val projectionToValuesMap = mapOf(legendEntry to instances)
 
       // Build the plot with the values for the current projection
@@ -248,6 +258,9 @@ class ValidTSCInstancesPerProjectionMetric<
     }
   }
 
+  /**
+   * Plots and saves CSV files for the occurrence counts of [TSCInstance]s for each [TSCProjection].
+   */
   private fun plotAndSaveOccurrencesPerProjection() {
     validInstancesMap.forEach { (projection, instances) ->
       // Get the count of instances for the current projection ordered by occurrence
@@ -280,6 +293,10 @@ class ValidTSCInstancesPerProjectionMetric<
     }
   }
 
+  /**
+   * Plots and saves CSV files for the combined occurrence progression of [TSCInstance]s of all
+   * [TSCProjection]s.
+   */
   private fun plotAndSaveCombinedOccurrencesProgression() {
     val combinedTotalPlot =
         getPlot(
