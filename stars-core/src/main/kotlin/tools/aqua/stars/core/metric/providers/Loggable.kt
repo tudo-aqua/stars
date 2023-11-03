@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.logging.*
 
+/** This interface can be implemented to be able to log data into the stdout and log files. */
 interface Loggable {
   /** Holds the [Logger] reference for this class */
   val logger: Logger

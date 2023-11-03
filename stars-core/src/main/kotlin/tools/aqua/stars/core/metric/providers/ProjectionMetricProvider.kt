@@ -17,13 +17,26 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.tsc.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/**
+ * The [ProjectionMetricProvider] implements the [EvaluationMetricProvider] and provides an
+ * [evaluate] function which gets a [TSCProjection] which is called during the evaluation phase.
+ *
+ * @see TSCEvaluation.runEvaluation
+ */
 interface ProjectionMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
     EvaluationMetricProvider<E, T, S> {
+
+  /**
+   * Evaluate the metric based on the given parameters.
+   *
+   * @param projection The current [TSCProjection]
+   */
   fun evaluate(projection: TSCProjection<E, T, S>): Any?
 }

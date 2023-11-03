@@ -17,13 +17,16 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * This interface should be implemented by all metrics that have to evaluated during the evaluation
- * phase.
+ * The [EvaluationMetricProvider] implements the [MetricProvider] and provides an interface to all
+ * metrics that should be called during the evaluation phase.
+ *
+ * @see TSCEvaluation.runEvaluation
  */
 interface EvaluationMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
