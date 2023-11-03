@@ -17,7 +17,7 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.stars.import.carla
+package tools.aqua.stars.importer.carla
 
 import kotlin.math.pow
 import kotlin.math.sqrt
