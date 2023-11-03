@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.import.carla
+package tools.aqua.stars.importer.carla
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

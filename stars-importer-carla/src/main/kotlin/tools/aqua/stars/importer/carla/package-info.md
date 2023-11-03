@@ -1,4 +1,4 @@
-# tools.aqua.stars.import.carla Package Info
+# tools.aqua.stars.importer.carla Package Info
 
 - Specific classes for importing the STARS Carla export format into stars-data-av
   - Data classes for JSON import

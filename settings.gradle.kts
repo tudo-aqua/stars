@@ -21,5 +21,5 @@ include(
     "stars-core",
     "stars-logic-kcmftbl",
     "stars-data-av",
-    "stars-import-carla",
+    "stars-importer-carla",
 )
