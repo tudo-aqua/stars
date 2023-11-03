@@ -106,9 +106,6 @@ interface Loggable {
      */
     fun getLogger(name: String): Logger = run {
       // https://www.logicbig.com/tutorials/core-java-tutorial/logging/customizing-default-format.html
-      // System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\$tF %1\$tT] [%4$-7s]
-      // %5\$s
-      // %n")
       System.setProperty("java.util.logging.SimpleFormatter.format", "%5\$s %n")
 
       val logger = Logger.getAnonymousLogger()
