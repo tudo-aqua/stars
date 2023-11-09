@@ -161,7 +161,7 @@ fun convertJsonVehicleToVehicle(
       typeId = actor.typeId,
       acceleration = actor.acceleration.toVector3D(),
       angularVelocity = actor.angularVelocity.toVector3D(),
-      egoVehicle = false,
+      egoVehicle = actor.egoVehicle,
       forwardVector = actor.forwardVector.toVector3D(),
       id = actor.id,
       lane = lane,
