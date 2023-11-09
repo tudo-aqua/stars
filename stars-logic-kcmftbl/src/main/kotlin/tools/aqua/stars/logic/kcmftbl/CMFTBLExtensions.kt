@@ -269,8 +269,8 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
   val segment = tickData.segment
   val now = tickData.currentTick
   val nowIndex = segment.tickData.indexOf(tickData)
-
-  for (searchIndex in nowIndex..segment.tickData.lastIndex) {
+  val range: IntRange = nowIndex..segment.tickData.lastIndex
+  for (searchIndex in range) {
     val searchTickData = segment.tickData[searchIndex]
 
     if (phi2(searchTickData) &&
