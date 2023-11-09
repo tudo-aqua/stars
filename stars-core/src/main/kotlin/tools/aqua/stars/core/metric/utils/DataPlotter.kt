@@ -50,12 +50,16 @@ val currentTimeAndDate: String =
  * accordingly.
  */
 fun plotDataAsLineChart(
-    plot: Plot,
+    plot: Plot?,
     fileName: String,
     folder: String,
     subFolder: String = "",
     yAxisScaleMaxValue: Number? = null,
 ) {
+  if(plot == null){
+    println("Skip plotting, as there was no data provided.")
+    return
+  }
   var innerPlot = plot
   val plotFolder = getAndCreatePlotFolder(folder, subFolder)
 
@@ -76,11 +80,15 @@ fun plotDataAsLineChart(
  * resulting path
  */
 fun plotDataAsBarChart(
-    plot: Plot,
+    plot: Plot?,
     fileName: String,
     folder: String,
     subFolder: String = "",
 ) {
+  if(plot == null){
+    println("Skip plotting, as there was no data provided.")
+    return
+  }
   var innerPlot = plot
   val plotFolder = getAndCreatePlotFolder(folder, subFolder)
 
@@ -107,7 +115,7 @@ fun <T : Number> getPlot(
     xAxisName: String,
     yAxisName: String,
     legendHeader: String
-): Plot {
+): Plot? {
   return getPlot(mapOf(legendEntry to yValues), xAxisName, yAxisName, legendHeader)
 }
 
@@ -126,9 +134,10 @@ fun <T : Number> getPlot(
     xAxisName: String,
     yAxisName: String,
     legendHeader: String
-): Plot {
-  // Check that every value list is filled
-  check(!nameToValuesMap.values.any { it.isEmpty() })
+): Plot? {
+  if (nameToValuesMap.values.any { it.isEmpty() }) {
+    return null
+  }
   // Check that every value list has the exact same amount of elements
   check(nameToValuesMap.values.map { it.size }.distinct().count() == 1)
 
