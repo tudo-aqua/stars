@@ -56,7 +56,7 @@ fun plotDataAsLineChart(
     subFolder: String = "",
     yAxisScaleMaxValue: Number? = null,
 ) {
-  if(plot == null){
+  if (plot == null) {
     println("Skip plotting, as there was no data provided.")
     return
   }
@@ -85,7 +85,7 @@ fun plotDataAsBarChart(
     folder: String,
     subFolder: String = "",
 ) {
-  if(plot == null){
+  if (plot == null) {
     println("Skip plotting, as there was no data provided.")
     return
   }
