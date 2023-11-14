@@ -34,25 +34,54 @@ import tools.aqua.stars.data.av.Segment
  * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
  * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
  * data, each as [Path]s.
+ *
+ * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
+ * to its dynamic data
+ * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
+ * vehicle as the "ego" vehicle
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ * the map
+ * @return A [Sequence] of [Segment]s based on the given [simulationRunsWrappers]
  */
 fun loadSegments(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
     useEveryVehicleAsEgo: Boolean = false,
-    minSegmentTickCount: Int = 10
+    minSegmentTickCount: Int = 10,
+    orderFilesBySeed: Boolean = false
 ): Sequence<Segment> {
-  // Load Blocks and save in SimulationRunsWrapper
-  simulationRunsWrappers.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
-
+  var simulationRunsWrapperList = simulationRunsWrappers
   // Check that every SimulationRunsWrapper has dynamic data files loaded
-  simulationRunsWrappers.forEach {
+  simulationRunsWrapperList.forEach {
     check(it.dynamicDataFiles.any()) {
       "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no dynamic files. Dynamic file " +
           "paths: ${it.dynamicDataFiles.map { dynamicDataFilePath ->  dynamicDataFilePath.toUri() }}"
     }
   }
 
+  // If orderFilesBySeed is set, order the dynamic data files by seed instead of grouped by map name
+  if (orderFilesBySeed) {
+    // Create a single CarlaSimulationRunsWrapper for each dynamic file
+    var sortedSimulationRunsWrapperList =
+        simulationRunsWrapperList.flatMap { wrapper ->
+          wrapper.dynamicDataFiles.map {
+            CarlaSimulationRunsWrapper(wrapper.mapDataFile, listOf(it))
+          }
+        }
+    // Sort the list by the seed name in the dynamic file name
+    sortedSimulationRunsWrapperList =
+        sortedSimulationRunsWrapperList.sortedBy {
+          getSeed(it.dynamicDataFiles.first().fileName.toString())
+        }
+    // Set simulationRunsWrapperList to sorted list to proceed with the sorted list
+    simulationRunsWrapperList = sortedSimulationRunsWrapperList
+  }
+
+  // Load Blocks and save in SimulationRunsWrapper
+  simulationRunsWrapperList.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
+
   /** Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters */
-  val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrappers)
+  val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrapperList)
   /** Holds the [Segment]s that still need to be calculated for the [Sequence] of [Segment]s */
   val segmentBuffer = ArrayDeque<Segment>()
 
@@ -98,50 +127,99 @@ fun loadSegments(
  * [dynamicDataFile] path. [useEveryVehicleAsEgo] lets you decide whether to use every vehicle to be
  * used as the ego vehicle. This will multiply the size of the resulting sequence of [Segment]s by
  * the number of vehicles.
+ *
+ * @param mapDataFile The [Path] to map data file containing all static information
+ * @param dynamicDataFile The [Path] to the data file which contains the timed state data for the
+ * simulation
+ * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
+ * vehicle as the "ego" vehicle
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ * the map
+ * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFile]
  */
 fun loadSegments(
     mapDataFile: Path,
     dynamicDataFile: Path,
-    useEveryVehicleAsEgo: Boolean = false
+    useEveryVehicleAsEgo: Boolean = false,
+    minSegmentTickCount: Int = 10,
+    orderFilesBySeed: Boolean = false
 ): Sequence<Segment> {
   // Call actual implementation of loadSegments with correct data structure
   return loadSegments(
       listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
-      useEveryVehicleAsEgo)
+      useEveryVehicleAsEgo,
+      minSegmentTickCount,
+      orderFilesBySeed)
 }
 
 /**
  * Load [Segment]s for one specific map. The map data comes from the file [mapDataFile] and the
  * dynamic data from multiple files [dynamicDataFiles].
+ *
+ * @param mapDataFile The [Path] to map data file containing all static information
+ * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state data
+ * for the simulation
+ * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
+ * vehicle as the "ego" vehicle
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ * the map
+ * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles]
  */
 fun loadSegments(
     mapDataFile: Path,
     dynamicDataFiles: List<Path>,
-    useEveryVehicleAsEgo: Boolean = false
+    useEveryVehicleAsEgo: Boolean = false,
+    minSegmentTickCount: Int = 10,
+    orderFilesBySeed: Boolean = false
 ): Sequence<Segment> {
   // Call actual implementation of loadSegments with correct data structure
   return loadSegments(
-      listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)), useEveryVehicleAsEgo)
+      listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
+      useEveryVehicleAsEgo,
+      minSegmentTickCount,
+      orderFilesBySeed)
 }
 
 /**
  * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[Path],
  * List[Path]> with the semantics: Map<MapDataPath, List<DynamicDataPath>>. As each dynamic data is
  * linked to a map data, they are linked in the [Map].
+ *
+ * @param mapToDynamicDataFiles Maps the [Path] of the static file to a [List] of [Path]s of dynamic
+ * files related to the static file
+ * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
+ * vehicle as the "ego" vehicle
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ * the map
+ * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles]
  */
 fun loadSegments(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
-    useEveryVehicleAsEgo: Boolean = false
+    useEveryVehicleAsEgo: Boolean = false,
+    minSegmentTickCount: Int = 10,
+    orderFilesBySeed: Boolean = false
 ): Sequence<Segment> {
   /** Holds the [List] of [CarlaSimulationRunsWrapper]s */
   val listOfCarlaSimulationRunsWrappers =
       mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) }
 
   // Call actual implementation of loadSegments with correct data structure
-  return loadSegments(listOfCarlaSimulationRunsWrappers, useEveryVehicleAsEgo)
+  return loadSegments(
+      listOfCarlaSimulationRunsWrappers,
+      useEveryVehicleAsEgo,
+      minSegmentTickCount,
+      orderFilesBySeed)
 }
 
-/** Return a [Sequence] of [Block]s from a given [mapDataFile] path. */
+/**
+ * Return a [Sequence] of [Block]s from a given [mapDataFile] path.
+ *
+ * @param mapDataFile The [Path] which points to the file that contains the static map data
+ * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [Path]
+ */
 fun loadBlocks(mapDataFile: Path): Sequence<Block> {
   /** Holds the decoded list of [JsonBlock]s from the specified [mapDataFile] */
   val jsonBlocks = getJsonContentOfPath<List<JsonBlock>>(mapDataFile)
@@ -153,6 +231,9 @@ fun loadBlocks(mapDataFile: Path): Sequence<Block> {
  * Returns the parsed Json content for the given [inputFilePath]. Currently supported file
  * extensions: ".json", ".zip". The generic parameter [T] specifies the class to which the content
  * should be parsed to
+ *
+ * @param inputFilePath The [Path] from which the JSON content should be loaded from
+ * @return The parsed JSON content from the given [Path]
  */
 inline fun <reified T> getJsonContentOfPath(inputFilePath: Path): T {
   // Create JsonBuilder with correct settings
@@ -196,6 +277,10 @@ inline fun <reified T> getJsonContentOfPath(inputFilePath: Path): T {
  * [CarlaSimulationRunsWrapper] contains a [Path] to the [mapDataFile] and a list of [Path]s for the
  * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [Path]s as an
  * [ArrayDeque] in [dynamicDataFilesArrayDeque]
+ *
+ * @param mapDataFile The [Path] to map data file containing all static information
+ * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state data
+ * for the simulation
  */
 data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
   /** Holds a [List] of [Block]s. */
