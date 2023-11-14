@@ -32,6 +32,25 @@ fun getMapName(fileName: String): String {
   error("Unknown filename format")
 }
 
+/**
+ * Returns the seed value for the given [fileName].
+ *
+ * @param fileName The filename from which the seed value should be calculated from
+ * @throws IllegalStateException When the [fileName] does not include "dynamic_data"
+ */
+fun getSeed(fileName: String): Int {
+  if (fileName.isEmpty()) {
+    return 0
+  }
+  if (fileName.contains("static_data")) {
+    error("Cannot get seed name for map data! Analyzed file: $fileName")
+  }
+  if (fileName.contains("dynamic_data")) {
+    return fileName.split("dynamic_data_")[1].split("_seed")[1].split(".")[0].toInt()
+  }
+  error("Unknown filename format")
+}
+
 fun getLaneProgressionForVehicle(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
