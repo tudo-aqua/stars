@@ -44,6 +44,7 @@ class SegmentCountMetric<
    */
   override fun evaluate(segment: SegmentType<E, T, S>): Int {
     segmentCount++
+    logFiner("==== Segment $segmentCount: $segment ====")
     return segmentCount
   }
 
