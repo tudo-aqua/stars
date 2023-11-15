@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.metrics
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.data.av.Actor
@@ -28,7 +30,9 @@ import tools.aqua.stars.data.av.TickData
  * This class is an implementation of [SegmentMetricProvider] which provides the metric "average
  * vehicles in ego's block"
  */
-class AverageVehiclesInEgosBlockMetric : SegmentMetricProvider<Actor, TickData, Segment> {
+class AverageVehiclesInEgosBlockMetric(
+    override val logger: Logger = Loggable.getLogger("average-vehicles-in-egos-block")
+) : SegmentMetricProvider<Actor, TickData, Segment>, Loggable {
   /**
    * Evaluates the average count of [Actor]s in the [Block] of the ego vehicle.
    *
@@ -38,7 +42,7 @@ class AverageVehiclesInEgosBlockMetric : SegmentMetricProvider<Actor, TickData, 
   override fun evaluate(segment: SegmentType<Actor, TickData, Segment>): Double {
     val averageVehiclesInEgosBlock =
         segment.tickData.map { it.vehiclesInBlock(it.egoVehicle.lane.road.block).size }.average()
-    println(
+    logFiner(
         "The average count of vehicles in Segment '$segment' for ego's block is: $averageVehiclesInEgosBlock")
     return averageVehiclesInEgosBlock
   }
