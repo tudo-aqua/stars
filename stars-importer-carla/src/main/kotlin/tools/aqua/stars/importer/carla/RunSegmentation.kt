@@ -172,7 +172,7 @@ fun sliceRunIntoSegments(
           simulationRun
               .filter { it.currentTick in blockRange.first..blockRange.second }
               .map { it.clone() }
-      if (mainSegment.size > minSegmentTickCount) {
+      if (mainSegment.size >= minSegmentTickCount) {
         segments +=
             Segment(mainSegment, simulationRunId = simulationRunId, segmentSource = simulationRunId)
       }
