@@ -18,9 +18,8 @@
 package tools.aqua.stars.core.metric.providers
 
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.logging.*
+import tools.aqua.stars.core.metric.utils.ApplicationStartTimeHolder
 
 /** This interface can be implemented to be able to log data into the stdout and log files. */
 interface Loggable {
@@ -113,8 +112,11 @@ interface Loggable {
       logger.useParentHandlers = false
       logger.level = Level.FINEST
 
-      val currentTimeAndDate =
-          LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
+      /**
+       * Holds the current time in yyyy-MM-dd-HH-mm format taken from the
+       * [ApplicationStartTimeHolder] singleton
+       */
+      val currentTimeAndDate = ApplicationStartTimeHolder.applicationStartTimeString
 
       val logFolderFile = File("analysis-result-logs/$currentTimeAndDate/metrics/$name")
       logFolderFile.mkdirs()

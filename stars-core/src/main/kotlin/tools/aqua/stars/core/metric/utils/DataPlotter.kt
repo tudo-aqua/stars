@@ -18,8 +18,6 @@
 package tools.aqua.stars.core.metric.utils
 
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import org.jetbrains.letsPlot.Stat
 import org.jetbrains.letsPlot.export.ggsave
 import org.jetbrains.letsPlot.geom.geomBar
@@ -33,9 +31,11 @@ import org.jetbrains.letsPlot.scale.scaleYContinuous
 /** Sets the offset to distinguish lines with equal trajectory */
 private const val POSITION_DODGE = 0.3
 
-/** Holds the current time in yyyy-MM-dd-HH-mm format */
-val currentTimeAndDate: String =
-    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
+/**
+ * Holds the current time in yyyy-MM-dd-HH-mm format taken from the [ApplicationStartTimeHolder]
+ * singleton
+ */
+val currentTimeAndDate: String = ApplicationStartTimeHolder.applicationStartTimeString
 
 /**
  * Saves a PNG file with a line chart based on the given values.
