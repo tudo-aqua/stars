@@ -29,6 +29,7 @@ mavenMetadata {
       Developer("Stefan Naujokat", "stefan.naujokat@tu-dortmund.de"),
       Developer("Fiona Kullmann", "fiona.kullmann@tu-dortmund.de"),
       Developer("Falk Howar", "falk.howar@tu-dortmund.de"),
+      Developer("Nick Pawlinorz", "nick.pawlinorz@tu-dortmund.de"),
   )
   githubProject.set(GithubProject("tudo-aqua", "stars"))
   licenses.addAll(APACHE_2)
