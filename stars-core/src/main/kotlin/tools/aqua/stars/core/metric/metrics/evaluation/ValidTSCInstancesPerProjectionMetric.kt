@@ -268,7 +268,12 @@ class ValidTSCInstancesPerProjectionMetric<
 
       val barPlotName = "validTSCInstanceOccurrencesPerProjection"
 
-      val projectionNameToInstancesMap = mapOf(projection.toString() to instanceCounts)
+      // Get the count of occurred TSC instances
+      val lastYValue = instanceCounts.size
+
+      val legendEntry = "$projection ($lastYValue/${projection.possibleTSCInstances.size})"
+
+      val projectionNameToInstancesMap = mapOf(legendEntry to instanceCounts)
 
       val plot =
           getPlot(
