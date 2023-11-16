@@ -114,7 +114,7 @@ interface Loggable {
 
       /**
        * Holds the current time in yyyy-MM-dd-HH-mm format taken from the
-       * [ApplicationStartTimeHolder] singleton
+       * [ApplicationStartTimeHolder] singleton.
        */
       val currentTimeAndDate = ApplicationStartTimeHolder.applicationStartTimeString
 

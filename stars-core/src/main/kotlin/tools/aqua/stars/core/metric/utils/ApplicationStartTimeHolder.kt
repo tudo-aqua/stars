@@ -25,9 +25,9 @@ import java.time.format.DateTimeFormatter
  * persist a consistent folder name for all exported files.
  */
 object ApplicationStartTimeHolder {
-  /** Holds the [LocalDateTime] at the start of the application */
+  /** Holds the [LocalDateTime] at the start of the application. */
   private val applicationStartTime: LocalDateTime = LocalDateTime.now()
-  /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format */
+  /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
   val applicationStartTimeString: String =
       applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
 }

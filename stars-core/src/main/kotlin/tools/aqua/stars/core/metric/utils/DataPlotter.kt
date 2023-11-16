@@ -33,7 +33,7 @@ private const val POSITION_DODGE = 0.3
 
 /**
  * Holds the current time in yyyy-MM-dd-HH-mm format taken from the [ApplicationStartTimeHolder]
- * singleton
+ * singleton.
  */
 val currentTimeAndDate: String = ApplicationStartTimeHolder.applicationStartTimeString
 
