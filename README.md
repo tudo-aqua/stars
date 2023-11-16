@@ -19,7 +19,7 @@ Start by adding the latest version of STARS as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:stars-core:0.2")
+implementation("tools.aqua:stars-core:0.2.1")
 ```
 
 #### Maven
@@ -27,7 +27,7 @@ implementation("tools.aqua:stars-core:0.2")
 <dependency>
   <groupId>tools.aqua</groupId>
   <artifactId>stars-core</artifactId>
-  <version>0.2</version>
+  <version>0.2.1</version>
 </dependency>
 ``` 
 
