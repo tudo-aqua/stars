@@ -145,8 +145,8 @@ interface Loggable {
       logger.addHandler(finerFileHandler)
 
       val finestFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-finest.txt")
-      finerFileHandler.level = Level.FINEST
-      finerFileHandler.formatter = SimpleFormatter()
+      finestFileHandler.level = Level.FINEST
+      finestFileHandler.formatter = SimpleFormatter()
       logger.addHandler(finestFileHandler)
 
       logger
