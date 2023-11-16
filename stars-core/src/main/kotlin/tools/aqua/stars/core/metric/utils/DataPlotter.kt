@@ -26,6 +26,7 @@ import org.jetbrains.letsPlot.intern.Plot
 import org.jetbrains.letsPlot.letsPlot
 import org.jetbrains.letsPlot.pos.positionDodge
 import org.jetbrains.letsPlot.sampling.samplingNone
+import org.jetbrains.letsPlot.scale.scaleXContinuous
 import org.jetbrains.letsPlot.scale.scaleYContinuous
 
 /** Sets the offset to distinguish lines with equal trajectory */
@@ -55,6 +56,7 @@ fun plotDataAsLineChart(
     folder: String,
     subFolder: String = "",
     yAxisScaleMaxValue: Number? = null,
+    xAxisScaleMaxValue: Number? = null
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
@@ -66,6 +68,9 @@ fun plotDataAsLineChart(
   innerPlot += geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE))
   if (yAxisScaleMaxValue != null) {
     innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
+  }
+  if (xAxisScaleMaxValue != null) {
+    innerPlot += scaleXContinuous(limits = -0.001 to xAxisScaleMaxValue, expand = listOf(0, 0))
   }
   ggsave(innerPlot, "$fileName.png", path = plotFolder)
 }
@@ -84,6 +89,8 @@ fun plotDataAsBarChart(
     fileName: String,
     folder: String,
     subFolder: String = "",
+    yAxisScaleMaxValue: Number? = null,
+    xAxisScaleMaxValue: Number? = null
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
@@ -91,6 +98,12 @@ fun plotDataAsBarChart(
   }
   var innerPlot = plot
   val plotFolder = getAndCreatePlotFolder(folder, subFolder)
+  if (yAxisScaleMaxValue != null) {
+    innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
+  }
+  if (xAxisScaleMaxValue != null) {
+    innerPlot += scaleXContinuous(limits = -0.001 to xAxisScaleMaxValue, expand = listOf(0, 0))
+  }
 
   innerPlot += geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone)
   ggsave(innerPlot, "$fileName.png", path = plotFolder)
