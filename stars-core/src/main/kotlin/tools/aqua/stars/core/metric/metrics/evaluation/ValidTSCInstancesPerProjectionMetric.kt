@@ -268,7 +268,12 @@ class ValidTSCInstancesPerProjectionMetric<
 
       val barPlotName = "validTSCInstanceOccurrencesPerProjection"
 
-      val projectionNameToInstancesMap = mapOf(projection.toString() to instanceCounts)
+      // Get the count of occurred TSC instances
+      val lastYValue = instanceCounts.size
+
+      val legendEntry = "$projection ($lastYValue/${projection.possibleTSCInstances.size})"
+
+      val projectionNameToInstancesMap = mapOf(legendEntry to instanceCounts)
 
       val plot =
           getPlot(
@@ -282,6 +287,15 @@ class ValidTSCInstancesPerProjectionMetric<
           plot = plot,
           fileName = "${barPlotName}_${projection}",
           folder = VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME,
+          subFolder = projection.toString())
+
+      // Plot the occurrences of unique TSC instances for the current projection in which the x-axis
+      // is scale to the amount of all possible TSC instances
+      plotDataAsBarChart(
+          plot = plot,
+          fileName = "${barPlotName}_${projection}_scaled",
+          folder = VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME,
+          xAxisScaleMaxValue = projection.possibleTSCInstances.size,
           subFolder = projection.toString())
 
       // Save the occurrences of unique TSC instances data as CSV file
@@ -323,6 +337,14 @@ class ValidTSCInstancesPerProjectionMetric<
         plot = combinedPercentagePlot,
         folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
         fileName = "${plotFileName}_combined_percentage")
+
+    // Plot the timed percentage count of unique TSC instances for all projections combined and a
+    // y-axis scaled to 100%
+    plotDataAsLineChart(
+        plot = combinedPercentagePlot,
+        folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
+        yAxisScaleMaxValue = 100,
+        fileName = "${plotFileName}_combined_percentage_scaled")
 
     // Save the timed total count of unique TSC instances for all projections combined as a CSV file
     saveAsCSVFile(
