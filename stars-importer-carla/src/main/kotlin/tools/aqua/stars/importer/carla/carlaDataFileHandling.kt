@@ -15,16 +15,18 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.importer.carla
 
 import java.io.File
-import java.io.InputStream
 import java.nio.file.Path
 import java.util.zip.ZipFile
 import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.modules.SerializersModule
@@ -34,6 +36,7 @@ import tools.aqua.stars.data.av.Block
 import tools.aqua.stars.data.av.Segment
 import tools.aqua.stars.importer.carla.dataclasses.*
 
+/** Carla data serializer module. */
 val carlaDataSerializerModule = SerializersModule {
   polymorphic(JsonActor::class) {
     subclass(JsonVehicle::class)
@@ -42,6 +45,59 @@ val carlaDataSerializerModule = SerializersModule {
     subclass(JsonPedestrian::class)
   }
 }
+
+/**
+ * Returns the parsed Json content for the given [file]. Currently supported file extensions:
+ * ".json", ".zip". The generic parameter [T] specifies the class to which the content should be
+ * parsed to.
+ *
+ * @return The parsed JSON content from the given [Path].
+ */
+@OptIn(ExperimentalSerializationApi::class)
+inline fun <reified T> getJsonContentOfPath(file: Path): T {
+  // Create JsonBuilder with correct settings
+  val jsonBuilder = Json {
+    prettyPrint = true
+    isLenient = true
+    serializersModule = carlaDataSerializerModule
+  }
+
+  // Check if inputFilePath exists
+  check(file.exists()) { "The given file path does not exist: ${file.toUri()}" }
+
+  // Check whether the given inputFilePath is a directory
+  check(!file.isDirectory()) { "Cannot get InputStream for directory. Path: $file" }
+
+  // If ".json"-file: Just return InputStream of file
+  if (file.extension == "json") {
+    return jsonBuilder.decodeFromStream<T>(file.inputStream())
+  }
+
+  // if ".zip"-file: Extract single archived file
+  if (file.extension == "zip") {
+    // https://stackoverflow.com/a/46644254
+    ZipFile(File(file.toUri())).use { zip ->
+      zip.entries().asSequence().forEach { entry ->
+        // Add InputStream to inputStreamBuffer
+        return jsonBuilder.decodeFromStream<T>(zip.getInputStream(entry))
+      }
+    }
+  }
+
+  // If none of the supported file extensions is present, throw an Exception
+  error("Unexpected file extension: ${file.extension}. Supported extensions: '.json', '.zip'")
+}
+
+/**
+ * Return a [Sequence] of [Block]s from a given [mapDataFile] path.
+ *
+ * @param mapDataFile The [Path] which points to the file that contains the static map data
+ * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [Path]
+ */
+fun loadBlocks(mapDataFile: Path): Sequence<Block> =
+    calculateStaticBlocks(
+            getJsonContentOfPath<List<JsonBlock>>(mapDataFile), mapDataFile.fileName.toString())
+        .asSequence()
 
 /**
  * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
@@ -93,9 +149,9 @@ fun loadSegments(
   // Load Blocks and save in SimulationRunsWrapper
   simulationRunsWrapperList.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
 
-  /** Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters */
+  // Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters
   val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrapperList)
-  /** Holds the [Segment]s that still need to be calculated for the [Sequence] of [Segment]s */
+  // Holds the [Segment]s that still need to be calculated for the [Sequence] of [Segment]s
   val segmentBuffer = ArrayDeque<Segment>()
 
   return generateSequence {
@@ -105,18 +161,18 @@ fun loadSegments(
     }
     // No calculated Segment is left. Calculate new Segments
     if (simulationRunsWrappersDeque.size > 0) {
-      /** Holds the current [CarlaSimulationRunsWrapper] */
+      // Holds the current [CarlaSimulationRunsWrapper]
       val simulationRunsWrapper = simulationRunsWrappersDeque.first()
       // Remove current simulationRunsWrapper only if there is no dynamic data file left to analyze
       if (simulationRunsWrapper.dynamicDataFilesArrayDeque.size == 1) {
         simulationRunsWrappersDeque.removeFirst()
       }
-      /** Holds the current [InputStream] of the next dynamic data file to be calculated */
+      // Holds the current [InputStream] of the next dynamic data file to be calculated
       val currentDynamicDataPath = simulationRunsWrapper.dynamicDataFilesArrayDeque.removeFirst()
 
       println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
 
-      /** Holds the current simulationRun object */
+      // Holds the current simulationRun object
       val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
 
       // Calculate Blocks for current file and add each Segment to the Sequence
@@ -157,14 +213,13 @@ fun loadSegments(
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
-): Sequence<Segment> {
-  // Call actual implementation of loadSegments with correct data structure
-  return loadSegments(
-      listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
-      useEveryVehicleAsEgo,
-      minSegmentTickCount,
-      orderFilesBySeed)
-}
+): Sequence<Segment> =
+    // Call actual implementation of loadSegments with correct data structure
+    loadSegments(
+        listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+        useEveryVehicleAsEgo,
+        minSegmentTickCount,
+        orderFilesBySeed)
 
 /**
  * Load [Segment]s for one specific map. The map data comes from the file [mapDataFile] and the
@@ -186,14 +241,13 @@ fun loadSegments(
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
-): Sequence<Segment> {
-  // Call actual implementation of loadSegments with correct data structure
-  return loadSegments(
-      listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
-      useEveryVehicleAsEgo,
-      minSegmentTickCount,
-      orderFilesBySeed)
-}
+): Sequence<Segment> =
+    // Call actual implementation of loadSegments with correct data structure
+    loadSegments(
+        listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
+        useEveryVehicleAsEgo,
+        minSegmentTickCount,
+        orderFilesBySeed)
 
 /**
  * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[Path],
@@ -201,103 +255,24 @@ fun loadSegments(
  * linked to a map data, they are linked in the [Map].
  *
  * @param mapToDynamicDataFiles Maps the [Path] of the static file to a [List] of [Path]s of dynamic
- * files related to the static file
+ * files related to the static file.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- * vehicle as the "ego" vehicle
+ * vehicle as the "ego" vehicle.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ * .
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- * the map
- * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles]
+ * the map.
+ * @return A [Sequence] of [Segment]s based on the given 'mapDataFile' and 'dynamicDataFiles'.
  */
 fun loadSegments(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
-): Sequence<Segment> {
-  /** Holds the [List] of [CarlaSimulationRunsWrapper]s */
-  val listOfCarlaSimulationRunsWrappers =
-      mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) }
-
-  // Call actual implementation of loadSegments with correct data structure
-  return loadSegments(
-      listOfCarlaSimulationRunsWrappers,
-      useEveryVehicleAsEgo,
-      minSegmentTickCount,
-      orderFilesBySeed)
-}
-
-/**
- * Return a [Sequence] of [Block]s from a given [mapDataFile] path.
- *
- * @param mapDataFile The [Path] which points to the file that contains the static map data
- * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [Path]
- */
-fun loadBlocks(mapDataFile: Path): Sequence<Block> {
-  /** Holds the decoded list of [JsonBlock]s from the specified [mapDataFile] */
-  val jsonBlocks = getJsonContentOfPath<List<JsonBlock>>(mapDataFile)
-
-  return calculateStaticBlocks(jsonBlocks, mapDataFile.fileName.toString()).asSequence()
-}
-
-/**
- * Returns the parsed Json content for the given [inputFilePath]. Currently supported file
- * extensions: ".json", ".zip". The generic parameter [T] specifies the class to which the content
- * should be parsed to
- *
- * @param inputFilePath The [Path] from which the JSON content should be loaded from
- * @return The parsed JSON content from the given [Path]
- */
-inline fun <reified T> getJsonContentOfPath(inputFilePath: Path): T {
-  // Create JsonBuilder with correct settings
-  val jsonBuilder = Json {
-    prettyPrint = true
-    isLenient = true
-    serializersModule = carlaDataSerializerModule
-  }
-
-  // Check if inputFilePath exists
-  check(inputFilePath.exists()) { "The given file path does not exist: ${inputFilePath.toUri()}" }
-
-  // Check whether the given inputFilePath is a directory
-  check(!inputFilePath.isDirectory()) {
-    "Cannot get InputStream for directory. Path: $inputFilePath"
-  }
-
-  // If ".json"-file: Just return InputStream of file
-  if (inputFilePath.extension == "json") {
-    return jsonBuilder.decodeFromStream<T>(inputFilePath.inputStream())
-  }
-
-  // if ".zip"-file: Extract single archived file
-  if (inputFilePath.extension == "zip") {
-    // https://stackoverflow.com/a/46644254
-    ZipFile(File(inputFilePath.toUri())).use { zip ->
-      zip.entries().asSequence().forEach { entry ->
-        // Add InputStream to inputStreamBuffer
-        return jsonBuilder.decodeFromStream<T>(zip.getInputStream(entry))
-      }
-    }
-  }
-
-  // If none of the supported file extensions is present, throw an Exception
-  error(
-      "Unexpected file extension: ${inputFilePath.extension}. Supported extensions: '.json', '.zip'")
-}
-
-/**
- * Contains the information for all simulation runs for one specific map. Each
- * [CarlaSimulationRunsWrapper] contains a [Path] to the [mapDataFile] and a list of [Path]s for the
- * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [Path]s as an
- * [ArrayDeque] in [dynamicDataFilesArrayDeque]
- *
- * @param mapDataFile The [Path] to map data file containing all static information
- * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state data
- * for the simulation
- */
-data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
-  /** Holds a [List] of [Block]s. */
-  var blocks: List<Block> = listOf()
-  /** Holds an [ArrayDeque] of [Path]s. */
-  val dynamicDataFilesArrayDeque = ArrayDeque(dynamicDataFiles)
-}
+): Sequence<Segment> =
+    // Call actual implementation of loadSegments with correct data structure
+    loadSegments(
+        mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
+        useEveryVehicleAsEgo,
+        minSegmentTickCount,
+        orderFilesBySeed)
