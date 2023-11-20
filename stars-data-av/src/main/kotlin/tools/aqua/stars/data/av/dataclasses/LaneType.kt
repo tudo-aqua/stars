@@ -15,26 +15,35 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
+enum class LaneType(val value: Int) {
+  Any(-2),
+  Bidirectional(512),
+  Biking(16),
+  Border(64),
+  Driving(2),
+  Entry(131072),
+  Exit(262144),
+  Median(1024),
+  NONE(1),
+  OffRamp(524288),
+  OnRamp(1048576),
+  Parking(256),
+  Rail(65536),
+  Restricted(128),
+  RoadWorks(16384),
+  Shoulder(8),
+  Sidewalk(32),
+  Special1(2048),
+  Special2(4096),
+  Special3(8192),
+  Stop(4),
+  Tram(32768);
 
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
-) {
+  companion object {
+    private val VALUES = LaneType.values()
 
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
+    fun getByValue(value: Int) = VALUES.first { it.value == value }
+  }
 }

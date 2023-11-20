@@ -32,8 +32,8 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
-import tools.aqua.stars.data.av.Block
-import tools.aqua.stars.data.av.Segment
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Segment
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 /** Carla data serializer module. */

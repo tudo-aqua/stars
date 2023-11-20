@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.data.av
 
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.*
 
 fun emptyBlock(id: String = ""): Block {
   return Block(id = id, roads = listOf(), fileName = "")

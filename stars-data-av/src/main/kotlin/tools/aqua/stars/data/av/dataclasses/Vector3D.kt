@@ -15,26 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
+data class Vector3D(val x: Double, val y: Double, val z: Double) {
+  constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)
+  constructor(location: Location) : this(location.x, location.y, location.z)
 
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
-) {
+  operator fun minus(other: Vector3D) =
+      Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
 
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
+  operator fun div(scalar: Number) =
+      Vector3D(
+          x = this.x / scalar.toDouble(),
+          y = this.y / scalar.toDouble(),
+          z = this.z / scalar.toDouble())
 }

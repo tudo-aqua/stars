@@ -15,26 +15,17 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
+data class Pedestrian(
+    override val id: Int,
+    override val tickData: TickData,
+    val positionOnLane: Double,
+    val lane: Lane,
+) : Actor() {
+  override fun clone(newTickData: TickData): Actor =
+      Pedestrian(id, newTickData, positionOnLane, lane)
 
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
-) {
-
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
+  override fun toString() =
+      "Pedestrian(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 }

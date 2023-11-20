@@ -15,26 +15,22 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
+fun List<Block>.getLane(roadId: Int, laneId: Int): Lane? =
+    this.flatMap { it.roads }
+        .first { pRoad -> pRoad.id == roadId }
+        .lanes
+        .firstOrNull { pLane -> pLane.laneId == laneId }
 
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
-) {
+fun List<Block>.lanes(): List<Lane> = this.flatMap { it.roads.flatMap { road -> road.lanes } }
 
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
-}
+val Lane.uid: String
+  get() = "${road.id}_${laneId}"
+
+val Actor.lane
+  get() =
+      when (this) {
+        is Pedestrian -> lane
+        is Vehicle -> lane
+      }

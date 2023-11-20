@@ -19,8 +19,8 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.TrafficLight
-import tools.aqua.stars.data.av.TrafficLightState
+import tools.aqua.stars.data.av.dataclasses.TrafficLight
+import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 
 /**
  * Json object for traffic lights.

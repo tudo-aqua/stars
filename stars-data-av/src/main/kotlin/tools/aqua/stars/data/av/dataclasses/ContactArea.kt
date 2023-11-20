@@ -15,26 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
-
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
-) {
-
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
-}
+data class ContactArea(
+    val id: String,
+    val contactLocation: Location,
+    val lane1: Lane,
+    val lane1StartPos: Double,
+    val lane1EndPos: Double,
+    val lane2: Lane,
+    val lane2StartPos: Double,
+    val lane2EndPos: Double
+)

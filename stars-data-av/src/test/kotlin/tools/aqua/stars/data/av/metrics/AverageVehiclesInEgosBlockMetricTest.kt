@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.metrics
 
 import kotlin.test.Test
-import tools.aqua.stars.data.av.Segment
+import tools.aqua.stars.data.av.dataclasses.Segment
 import tools.aqua.stars.data.av.emptyBlock
 import tools.aqua.stars.data.av.emptyTickData
 import tools.aqua.stars.data.av.emptyVehicle

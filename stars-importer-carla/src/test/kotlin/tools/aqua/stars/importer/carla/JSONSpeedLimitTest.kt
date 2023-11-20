@@ -22,6 +22,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Lane
+import tools.aqua.stars.data.av.dataclasses.SpeedLimit
 import tools.aqua.stars.importer.carla.dataclasses.JsonLandmark
 import tools.aqua.stars.importer.carla.dataclasses.JsonLandmarkType
 

@@ -18,7 +18,9 @@
 package tools.aqua.stars.importer.carla
 
 import kotlin.test.*
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Lane
+import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 class IncompleteJSONLaneTest {

@@ -15,26 +15,21 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
-
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
-) {
-
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
-}
+data class WeatherParameters(
+    val type: WeatherType,
+    val cloudiness: Double,
+    val precipitation: Double,
+    val precipitationDeposits: Double,
+    val windIntensity: Double,
+    val sunAzimuthAngle: Double,
+    val sunAltitudeAngle: Double,
+    val fogDensity: Double,
+    val fogDistance: Double,
+    val wetness: Double,
+    val fogFalloff: Double,
+    val scatteringIntensity: Double,
+    val mieScatteringScale: Double,
+    val rayleighScatteringScale: Double,
+)

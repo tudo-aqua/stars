@@ -18,7 +18,7 @@
 package tools.aqua.stars.importer.carla
 
 import java.nio.file.Path
-import tools.aqua.stars.data.av.Block
+import tools.aqua.stars.data.av.dataclasses.Block
 
 /**
  * Contains the information for all simulation runs for one specific map. Each

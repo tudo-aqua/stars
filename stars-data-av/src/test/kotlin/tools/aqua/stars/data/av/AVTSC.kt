@@ -20,6 +20,7 @@ package tools.aqua.stars.data.av
 import kotlin.test.Test
 import tools.aqua.stars.core.evaluation.*
 import tools.aqua.stars.core.tsc.*
+import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.logic.kcmftbl.*
 
 class AVTSC {

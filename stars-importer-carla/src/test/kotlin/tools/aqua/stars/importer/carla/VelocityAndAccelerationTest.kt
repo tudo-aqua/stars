@@ -21,6 +21,7 @@ import java.lang.IllegalStateException
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Location
 
 class VelocityAndAccelerationTest {
 

@@ -15,26 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
+package tools.aqua.stars.data.av.dataclasses
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
-
-/**
- * Json object for 3D vector.
- *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
- */
-@Serializable
-data class JsonVector3D(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
+data class StaticTrafficLight(
+    var id: Int,
+    val location: Location,
+    val rotation: Rotation,
+    val stopLocations: List<Location>,
 ) {
+  override fun toString(): String {
+    return "StaticTrafficLight($id)"
+  }
 
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
+  fun getStateInTick(tickData: TickData): TrafficLightState {
+    val trafficLight = tickData.trafficLights.firstOrNull { it.relatedOpenDriveId == this.id }
+    return trafficLight?.state ?: TrafficLightState.Unknown
+  }
 }

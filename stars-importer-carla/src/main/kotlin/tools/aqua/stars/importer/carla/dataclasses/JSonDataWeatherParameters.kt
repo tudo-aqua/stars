@@ -19,7 +19,7 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.WeatherParameters
+import tools.aqua.stars.data.av.dataclasses.WeatherParameters
 
 /**
  * Json object for weather parameters.
