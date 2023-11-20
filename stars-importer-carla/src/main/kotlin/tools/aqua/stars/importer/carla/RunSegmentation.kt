@@ -18,6 +18,8 @@
 package tools.aqua.stars.importer.carla
 
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.importer.carla.dataclasses.JsonTickData
+import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
 
 fun getMapName(fileName: String): String {
   if (fileName.isEmpty()) {

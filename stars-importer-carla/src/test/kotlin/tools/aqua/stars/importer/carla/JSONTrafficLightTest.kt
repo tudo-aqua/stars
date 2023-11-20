@@ -22,6 +22,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.importer.carla.dataclasses.JsonLocation
+import tools.aqua.stars.importer.carla.dataclasses.JsonRotation
 
 class JSONTrafficLightTest {
   @Test

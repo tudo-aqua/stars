@@ -27,8 +27,21 @@ import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.data.av.Block
 import tools.aqua.stars.data.av.Segment
+import tools.aqua.stars.importer.carla.dataclasses.*
+
+val carlaDataSerializerModule = SerializersModule {
+  polymorphic(JsonActor::class) {
+    subclass(JsonVehicle::class)
+    subclass(JsonTrafficLight::class)
+    subclass(JsonTrafficSign::class)
+    subclass(JsonPedestrian::class)
+  }
+}
 
 /**
  * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
@@ -240,7 +253,7 @@ inline fun <reified T> getJsonContentOfPath(inputFilePath: Path): T {
   val jsonBuilder = Json {
     prettyPrint = true
     isLenient = true
-    serializersModule = CarlaDataSerializerModule
+    serializersModule = carlaDataSerializerModule
   }
 
   // Check if inputFilePath exists

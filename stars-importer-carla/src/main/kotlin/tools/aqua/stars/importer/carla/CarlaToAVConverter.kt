@@ -19,6 +19,7 @@ package tools.aqua.stars.importer.carla
 
 import kotlin.math.abs
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.importer.carla.dataclasses.*
 
 fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String): List<Block> {
   val staticBlocks = staticJsonBlocks.map { block -> convertJsonBlockToBlock(block, fileName) }

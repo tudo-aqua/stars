@@ -23,6 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.importer.carla.dataclasses.*
 
 class IncompleteJSONLaneTest {
 

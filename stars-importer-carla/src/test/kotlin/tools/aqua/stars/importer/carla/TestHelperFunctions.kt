@@ -18,6 +18,7 @@
 package tools.aqua.stars.importer.carla
 
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.importer.carla.dataclasses.*
 
 fun emptyJsonVehicle(): JsonVehicle {
   return JsonVehicle(
