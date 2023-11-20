@@ -157,6 +157,65 @@ fun convertJsonData(
 }
 
 /**
+ * Updates velocity of actors.
+ *
+ * @param simulationRun List of [TickData].
+ */
+fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
+  for (i in 1 until simulationRun.size) {
+    val currentTick = simulationRun[i]
+    val previousTick = simulationRun[i - 1]
+    currentTick.actors.forEach { currentActor ->
+      if (currentActor is Vehicle) {
+        updateActorVelocityAndAcceleration(
+            currentActor, previousTick.actors.firstOrNull { it.id == currentActor.id })
+      }
+    }
+  }
+}
+
+/**
+ * Updates velocity and acceleration of [vehicle].
+ *
+ * @param vehicle The [Vehicle] to update.
+ * @param previousActor The previous [Actor].
+ * @throws IllegalStateException iff [previousActor] is not [Vehicle].
+ */
+fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) {
+
+  // When there is no previous actor position, set velocity and acceleration to 0.0
+  if (previousActor == null) {
+    vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
+    vehicle.acceleration = Vector3D(0.0, 0.0, 0.0)
+    return
+  }
+
+  check(previousActor is Vehicle) {
+    "The Actor with id '${previousActor.id}' from the previous tick is of type '${previousActor::class}' " +
+        "but '${Vehicle::class}' was expected."
+  }
+
+  // Calculate the time difference
+  val timeDelta = vehicle.tickData.currentTick - previousActor.tickData.currentTick
+
+  check(timeDelta >= 0) {
+    "The time delta between the vehicles is less than 0. Maybe you have switched the vehicles? " +
+        "Tick of current vehicle: ${vehicle.tickData.currentTick} vs. previous vehicle: ${previousActor.tickData.currentTick}"
+  }
+
+  if (timeDelta == 0.0) {
+    // If the time difference is exactly 0.0 set default values, as division by 0.0 is not allowed
+    vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
+    vehicle.acceleration = Vector3D(0.0, 0.0, 0.0)
+  } else {
+    // Set velocity and acceleration vector based on velocity values for each direction
+    vehicle.velocity = (Vector3D(vehicle.location) - Vector3D(previousActor.location)) / timeDelta
+    vehicle.acceleration =
+        (Vector3D(vehicle.velocity) - Vector3D(previousActor.velocity) / timeDelta)
+  }
+}
+
+/**
  * Slices run into segments.
  *
  * @param blocks The list of [Block]s.

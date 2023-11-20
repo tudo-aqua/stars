@@ -108,15 +108,20 @@ data class TickData(
     get() = entities
 
   fun actor(actorID: Int): Actor? = actors.firstOrNull { it.id == actorID }
+
   val egoVehicle: Vehicle
     get() = actors.firstOrNull { it is Vehicle && it.egoVehicle } as Vehicle
+
   val vehicles: List<Vehicle>
     get() = actors.filterIsInstance<Vehicle>()
+
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
+
   val pedestrians: List<Pedestrian>
     get() = actors.filterIsInstance<Pedestrian>()
 
   override fun toString() = "$currentTick"
+
   fun clone(): TickData {
     val newTickData = TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime)
     newTickData.entities = actors.map { it.clone(newTickData) }
@@ -212,24 +217,30 @@ data class Lane(
 
   val turnsLeft
     get() = laneDirection == LaneDirection.LEFT_TURN
+
   val turnsRight
     get() = laneDirection == LaneDirection.RIGHT_TURN
+
   val isStraight
     get() = laneDirection == LaneDirection.STRAIGHT
+
   val hasStopSign
     get() =
         landmarks.any { it.type == LandmarkType.StopSign && it.s > laneLength - 10.0 } ||
             successorLanes.any {
               it.lane.landmarks.any { it.type == LandmarkType.StopSign && it.s < 10.0 }
             }
+
   val hasYieldSign
     get() =
         landmarks.any { it.type == LandmarkType.YieldSign && it.s > laneLength - 10.0 } ||
             successorLanes.any {
               it.lane.landmarks.any { it.type == LandmarkType.YieldSign && it.s < 10.0 }
             }
+
   val hasStopOrYieldSign
     get() = hasStopSign || hasYieldSign
+
   val hasTrafficLight
     get() = trafficLights.isNotEmpty()
 
@@ -417,7 +428,19 @@ data class Vehicle(
       "Vehicle(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 }
 
-data class Vector3D(val x: Double, val y: Double, val z: Double)
+data class Vector3D(val x: Double, val y: Double, val z: Double) {
+  constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)
+  constructor(location: Location) : this(location.x, location.y, location.z)
+
+  operator fun minus(other: Vector3D) =
+      Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
+
+  operator fun div(scalar: Number) =
+      Vector3D(
+          x = this.x / scalar.toDouble(),
+          y = this.y / scalar.toDouble(),
+          z = this.z / scalar.toDouble())
+}
 
 // region Enums
 enum class LaneDirection {
@@ -436,6 +459,7 @@ enum class TrafficLightState(val value: Int) {
 
   companion object {
     private val VALUES = values()
+
     fun getByValue(value: Int) = VALUES.first { it.value == value }
   }
 }
@@ -466,6 +490,7 @@ enum class LaneType(val value: Int) {
 
   companion object {
     private val VALUES = LaneType.values()
+
     fun getByValue(value: Int) = VALUES.first { it.value == value }
   }
 }
@@ -510,6 +535,7 @@ enum class LandmarkType(val value: Int) {
 
   companion object {
     private val VALUES = LandmarkType.values()
+
     fun getByValue(value: Int) = VALUES.first { it.value == value }
   }
 }
