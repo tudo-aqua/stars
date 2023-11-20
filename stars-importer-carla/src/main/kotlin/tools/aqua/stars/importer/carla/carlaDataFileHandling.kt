@@ -37,7 +37,7 @@ import tools.aqua.stars.data.av.Segment
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 /** Carla data serializer module. */
-val carlaDataSerializerModule = SerializersModule {
+val carlaDataSerializerModule: SerializersModule = SerializersModule {
   polymorphic(JsonActor::class) {
     subclass(JsonVehicle::class)
     subclass(JsonTrafficLight::class)

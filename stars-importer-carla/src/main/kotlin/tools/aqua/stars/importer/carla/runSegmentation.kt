@@ -132,22 +132,22 @@ fun convertJsonData(
     val egoTickData = checkNotNull(referenceTickData).map { it.clone() }
 
     // Set egoVehicle flag for each TickData
-    var tickWithoutEgo = false
+    var isTickWithoutEgo = false
     egoTickData.forEach { tickData ->
-      if (!tickWithoutEgo) {
+      if (!isTickWithoutEgo) {
         val egoInTickData =
             tickData.actors.firstOrNull { it is Vehicle && it.id == egoVehicle.id } as? Vehicle
         if (egoInTickData != null) {
           egoInTickData.egoVehicle = true
         } else {
-          tickWithoutEgo = true
+          isTickWithoutEgo = true
         }
       }
     }
 
     // There were some simulation runs where some vehicles are not always there.
     // Therefore, check if the egoVehicle was found in each tick
-    if (!tickWithoutEgo) {
+    if (!isTickWithoutEgo) {
       simulationRuns.add(simulationRunId to egoTickData)
     }
   }
@@ -286,7 +286,7 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
     // IsJunction)
     var previousMultilane: Lane? = null
     var nextMultilane: Lane?
-    var currentJunction: MutableList<Pair<Int, Lane>> = mutableListOf()
+    val currentJunction: MutableList<Pair<Int, Lane>> = mutableListOf()
 
     laneProgression.forEachIndexed { index: Int, (lane: Lane?, isJunction: Boolean) ->
       if (lane == null) {
@@ -297,7 +297,7 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
           nextMultilane = lane
           cleanJunctionData(
               jsonSimulationRun, currentJunction, previousMultilane, nextMultilane, vehicle)
-          currentJunction = mutableListOf()
+          currentJunction.clear()
           previousMultilane = lane
         } else {
           previousMultilane = lane

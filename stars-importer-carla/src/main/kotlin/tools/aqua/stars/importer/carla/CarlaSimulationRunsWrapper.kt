@@ -34,5 +34,5 @@ data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFile
   /** Holds a [List] of [Block]s. */
   var blocks: List<Block> = listOf()
   /** Holds an [ArrayDeque] of [Path]s. */
-  val dynamicDataFilesArrayDeque = ArrayDeque(dynamicDataFiles)
+  val dynamicDataFilesArrayDeque: ArrayDeque<Path> = ArrayDeque(dynamicDataFiles)
 }

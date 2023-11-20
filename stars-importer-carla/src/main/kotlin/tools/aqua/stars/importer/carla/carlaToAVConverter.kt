@@ -363,12 +363,16 @@ private fun Lane.update() {
                 this.isStraight && otherLane.isStraight -> {
                   val thisYaw =
                       this.laneMidpoints
-                          .first { this.contactPointPos(otherLane)!! > it.distanceToStart }
+                          .first {
+                            checkNotNull(this.contactPointPos(otherLane)) > it.distanceToStart
+                          }
                           .rotation
                           .yaw
                   val otherYaw =
                       otherLane.laneMidpoints
-                          .first { otherLane.contactPointPos(this)!! > it.distanceToStart }
+                          .first {
+                            checkNotNull(otherLane.contactPointPos(this)) > it.distanceToStart
+                          }
                           .rotation
                           .yaw
 
