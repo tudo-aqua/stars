@@ -19,6 +19,13 @@ package tools.aqua.stars.data.av.dataclasses
 
 import tools.aqua.stars.core.types.EntityType
 
+/** Abstract actor data class. */
 sealed class Actor : EntityType<Actor, TickData, Segment> {
+
+  /**
+   * Clones the actor.
+   *
+   * @param newTickData New [TickData] to copy to new object.
+   */
   abstract fun clone(newTickData: TickData): Actor
 }

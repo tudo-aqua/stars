@@ -19,6 +19,16 @@ package tools.aqua.stars.data.av.dataclasses
 
 import tools.aqua.stars.core.types.TickDataType
 
+/**
+ * Json format containing data for current tick.
+ *
+ * @property currentTick Current tick value.
+ * @property entities List of all [Actor]s.
+ * @property trafficLights List of all [TrafficLight]s.
+ * @property blocks ist of all [Block]s.
+ * @property weather The current [WeatherParameters].
+ * @property daytime The current [Daytime].
+ */
 data class TickData(
     override val currentTick: Double,
     override var entities: List<Actor>,
@@ -27,28 +37,38 @@ data class TickData(
     val weather: WeatherParameters,
     val daytime: Daytime
 ) : TickDataType<Actor, TickData, Segment> {
+
   override lateinit var segment: Segment
+
+  /** Name-Alias for [entities]. */
   val actors: List<Actor>
     get() = entities
 
-  fun actor(actorID: Int): Actor? = actors.firstOrNull { it.id == actorID }
-
+  /** The ego vehicle. */
   val egoVehicle: Vehicle
     get() = actors.firstOrNull { it is Vehicle && it.egoVehicle } as Vehicle
 
+  /** All vehicles. */
   val vehicles: List<Vehicle>
     get() = actors.filterIsInstance<Vehicle>()
 
-  fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
-
+  /** All pedestrians. */
+  @Suppress("unused")
   val pedestrians: List<Pedestrian>
     get() = actors.filterIsInstance<Pedestrian>()
 
-  override fun toString() = "$currentTick"
+  /** Returns [Actor] with given [actorID]. */
+  fun actor(actorID: Int): Actor? = actors.firstOrNull { it.id == actorID }
 
+  /** Returns all [Vehicle]s in given [Block]. */
+  fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
+
+  /** Clones current [TickData]. */
   fun clone(): TickData {
     val newTickData = TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime)
     newTickData.entities = actors.map { it.clone(newTickData) }
     return newTickData
   }
+
+  override fun toString() = "$currentTick"
 }

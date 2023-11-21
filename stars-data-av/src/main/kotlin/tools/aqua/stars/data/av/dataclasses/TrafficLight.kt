@@ -17,8 +17,13 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Json object for traffic lights.
+ *
+ * @property id The identifier of the traffic light.
+ * @property state The current state oif the traffic light.
+ * @property relatedOpenDriveId The related open drive identifier.
+ */
 data class TrafficLight(var id: Int, var state: TrafficLightState, val relatedOpenDriveId: Int) {
-  override fun toString(): String {
-    return "TrafficLight($id, $state)"
-  }
+  override fun toString(): String = "TrafficLight($id, $state)"
 }

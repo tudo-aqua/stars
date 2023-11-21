@@ -17,6 +17,14 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Json object for roads.
+ *
+ * @property id The identifier of the road.
+ * @property isJunction Whether this is a junction.
+ * @property block The [Block] of the [Lane].
+ * @property lanes List of [Lane]s on this road.
+ */
 data class Road(var id: Int, val isJunction: Boolean, val block: Block, var lanes: List<Lane>) {
   override fun toString() = "$id"
 }

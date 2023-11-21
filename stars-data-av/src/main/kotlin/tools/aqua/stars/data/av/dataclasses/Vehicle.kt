@@ -15,11 +15,29 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.stars.data.av.dataclasses
 
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * Data class for vehicles.
+ *
+ * @property id The identifier of the vehicle.
+ * @property tickData [TickData].
+ * @property positionOnLane The [Vehicle]'s position in the [Lane].
+ * @property lane The [Vehicle]'s [Lane].
+ * @property typeId The type identifier.
+ * @property egoVehicle Whether this is the own vehicle.
+ * @property location The [Location] of the vehicle.
+ * @property forwardVector The current forward vector.
+ * @property rotation The [Rotation] of the vehicle.
+ * @property velocity The current velocity in m/s.
+ * @property acceleration The current acceleration m/s².
+ * @property angularVelocity The current angular velocity.
+ */
 data class Vehicle(
     override val id: Int,
     override val tickData: TickData,
@@ -30,26 +48,29 @@ data class Vehicle(
     val location: Location,
     val forwardVector: Vector3D,
     val rotation: Rotation,
-    /** The velocity vector in m/s */
     var velocity: Vector3D,
-    /** The acceleration vector in m/s² */
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
 ) : Actor() {
-  /** Effective velocity in m/s based on the [velocity] vector */
-  val effVelocityInMPerS
+
+  /** Effective velocity in m/s based on the [velocity] vector. */
+  val effVelocityInMPerS: Double
     get() = sqrt(velocity.x.pow(2) + velocity.y.pow(2) + velocity.z.pow(2))
-  /** Effective velocity in km/h based on [effVelocityInMPerS] */
-  val effVelocityInKmPH
+
+  /** Effective velocity in km/h based on [effVelocityInMPerS]. */
+  val effVelocityInKmPH: Double
     get() = this.effVelocityInMPerS * 3.6
-  /** Effective velocity in miles/hour based on [effVelocityInMPerS] */
-  val effVelocityInMPH
+
+  /** Effective velocity in miles/hour based on [effVelocityInMPerS]. */
+  val effVelocityInMPH: Double
     get() = this.effVelocityInMPerS * 2.237
-  /** Effective acceleration in m/s² based on the [acceleration] vector */
-  val effAccelerationInMPerSSquared
+
+  /** Effective acceleration in m/s² based on the [acceleration] vector. */
+  val effAccelerationInMPerSSquared: Double
     get() = sqrt(acceleration.x.pow(2) + acceleration.y.pow(2) + acceleration.z.pow(2))
-  /** SpeedLimit of the road/lane for the current location of this vehicle */
-  val applicableSpeedLimit
+
+  /** SpeedLimit of the road/lane for the current location of this [Vehicle]. */
+  val applicableSpeedLimit: SpeedLimit?
     get() =
         this.lane.speedLimits.firstOrNull { speedLimit ->
           this.positionOnLane in (speedLimit.fromDistanceFromStart..speedLimit.toDistanceFromStart)

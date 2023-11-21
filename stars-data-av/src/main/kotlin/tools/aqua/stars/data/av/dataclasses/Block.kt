@@ -17,6 +17,13 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for road blocks.
+ *
+ * @property fileName The filename.
+ * @property id Identifier of the road block.
+ * @property roads Roads incorporated in this block.
+ */
 data class Block(
     val fileName: String,
     val id: String,
@@ -24,14 +31,7 @@ data class Block(
 ) {
   override fun toString() = id
 
-  override fun hashCode(): Int {
-    return id.hashCode()
-  }
+  override fun hashCode(): Int = id.hashCode()
 
-  override fun equals(other: Any?): Boolean {
-    if (other is Block) {
-      return other.id == this.id
-    }
-    return false
-  }
+  override fun equals(other: Any?): Boolean = if (other is Block) other.id == this.id else false
 }

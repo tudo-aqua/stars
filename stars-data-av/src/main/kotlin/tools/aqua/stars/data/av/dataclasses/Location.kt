@@ -17,4 +17,11 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for 3D locations.
+ *
+ * @property x The x ordinate.
+ * @property y The y ordinate.
+ * @property z The z ordinate.
+ */
 data class Location(val x: Double, val y: Double, val z: Double)

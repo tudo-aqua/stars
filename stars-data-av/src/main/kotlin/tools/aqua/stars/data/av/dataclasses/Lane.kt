@@ -17,6 +17,28 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for lanes.
+ *
+ * @property laneId The identifier of the [Lane].
+ * @property road The identifier of the [Road].
+ * @property laneType The [LaneType] of the [Lane].
+ * @property laneWidth The width of the [Lane].
+ * @property laneLength The length of the [Lane].
+ * @property predecessorLanes List of [ContactLaneInfo]s for preceding [Lane]s.
+ * @property successorLanes List of [ContactLaneInfo]s for successive [Lane]s.
+ * @property intersectingLanes List of [ContactLaneInfo]s for intersecting [Lane]s.
+ * @property yieldLanes List of [Lane]s that this [Lane] yields to. Lanes that this lane must yield
+ * to according to the "right before left" rule, i.e., traffic signs or lights are not taken into
+ * account. it is always a subset of [intersectingLanes]
+ * @property laneMidpoints List of [LaneMidpoint]s for [Lane] midpoints.
+ * @property speedLimits List of [SpeedLimit]s for the speed limits.
+ * @property landmarks List of [Landmark]s on list [Lane].
+ * @property contactAreas List of [ContactArea]s on this [Lane].
+ * @property trafficLights List of [StaticTrafficLight]s on this [Lane].
+ * @property laneDirection The [LaneDirection] of this [Lane].
+ */
+@Suppress("MemberVisibilityCanBePrivate")
 data class Lane(
     val laneId: Int,
     var road: Road,
@@ -26,12 +48,6 @@ data class Lane(
     var predecessorLanes: List<ContactLaneInfo>,
     var successorLanes: List<ContactLaneInfo>,
     var intersectingLanes: List<ContactLaneInfo>,
-    /**
-     * lanes that this lane must yield to according to the "right before left" rule, i.e., traffic
-     * signs or lights are not taken into account.
-     *
-     * it is always a subset of [intersectingLanes]
-     */
     var yieldLanes: List<ContactLaneInfo>,
     val laneMidpoints: List<LaneMidpoint>,
     var speedLimits: List<SpeedLimit>,
@@ -40,14 +56,45 @@ data class Lane(
     var trafficLights: List<StaticTrafficLight>,
     var laneDirection: LaneDirection,
 ) {
-  override fun hashCode(): Int {
-    return this.toString().hashCode()
-  }
 
-  override fun toString() = "Lane(road=${road.id}, id=$laneId)"
+  /** Whether this [Lane] turns left. */
+  val turnsLeft
+    get() = laneDirection == LaneDirection.LEFT_TURN
+
+  /** Whether this [Lane] turns right. */
+  val turnsRight
+    get() = laneDirection == LaneDirection.RIGHT_TURN
+
+  /** Whether this [Lane] is straight. */
+  val isStraight
+    get() = laneDirection == LaneDirection.STRAIGHT
+
+  /** Whether this [Lane] has stop signs. */
+  val hasStopSign
+    get() =
+        landmarks.any { it.type == LandmarkType.StopSign && it.s > laneLength - 10.0 } ||
+            successorLanes.any {
+              it.lane.landmarks.any { l -> l.type == LandmarkType.StopSign && l.s < 10.0 }
+            }
+
+  /** Whether this [Lane] has yield signs. */
+  val hasYieldSign
+    get() =
+        landmarks.any { it.type == LandmarkType.YieldSign && it.s > laneLength - 10.0 } ||
+            successorLanes.any {
+              it.lane.landmarks.any { l -> l.type == LandmarkType.YieldSign && l.s < 10.0 }
+            }
+
+  /** Whether this [Lane] has stop or yield signs. */
+  val hasStopOrYieldSign
+    get() = hasStopSign || hasYieldSign
+
+  /** Whether this [Lane] has traffic lights. */
+  val hasTrafficLight
+    get() = trafficLights.isNotEmpty()
 
   /**
-   * Returns the speed limit for the current position in mph or 30mph if no speed sign is available
+   * Returns the speed limit for the current position in mph or 30mph if no speed sign is available.
    */
   fun speedAt(vPos: Double): Double =
       speedLimits
@@ -55,37 +102,8 @@ data class Lane(
           ?.speedLimit
           ?: 30.0
 
-  val turnsLeft
-    get() = laneDirection == LaneDirection.LEFT_TURN
-
-  val turnsRight
-    get() = laneDirection == LaneDirection.RIGHT_TURN
-
-  val isStraight
-    get() = laneDirection == LaneDirection.STRAIGHT
-
-  val hasStopSign
-    get() =
-        landmarks.any { it.type == LandmarkType.StopSign && it.s > laneLength - 10.0 } ||
-            successorLanes.any {
-              it.lane.landmarks.any { it.type == LandmarkType.StopSign && it.s < 10.0 }
-            }
-
-  val hasYieldSign
-    get() =
-        landmarks.any { it.type == LandmarkType.YieldSign && it.s > laneLength - 10.0 } ||
-            successorLanes.any {
-              it.lane.landmarks.any { it.type == LandmarkType.YieldSign && it.s < 10.0 }
-            }
-
-  val hasStopOrYieldSign
-    get() = hasStopSign || hasYieldSign
-
-  val hasTrafficLight
-    get() = trafficLights.isNotEmpty()
-
   /**
-   * retrieve the position (relative to this lane's start) where [otherLane] is crossed. if the
+   * Retrieve the position (relative to this lane's start) where [otherLane] is crossed. if the
    * lanes do not cross, return -1.0
    */
   fun contactPointPos(otherLane: Lane): Double? {
@@ -107,6 +125,8 @@ data class Lane(
     return if (positions.isNotEmpty()) positions[0] else null
   }
 
+  override fun toString() = "Lane(road=${road.id}, id=$laneId)"
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
@@ -118,4 +138,6 @@ data class Lane(
 
     return true
   }
+
+  override fun hashCode(): Int = this.toString().hashCode()
 }

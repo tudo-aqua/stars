@@ -19,17 +19,27 @@ package tools.aqua.stars.data.av.dataclasses
 
 import tools.aqua.stars.core.types.SegmentType
 
+/**
+ * Evaluation segment.
+ *
+ * @property mainInitList [TickData] of the [Segment].
+ * @property simulationRunId Identifier of the simulation run.
+ * @property segmentSource Source identifier.
+ */
 data class Segment(
     val mainInitList: List<TickData>,
     val simulationRunId: String = "",
     override val segmentSource: String,
 ) : SegmentType<Actor, TickData, Segment> {
+
   override val tickData: List<TickData> =
       mainInitList.map {
         it.segment = this
         it
       }
+
   override val ticks: Map<Double, TickData> = tickData.associateBy { it.currentTick }
+
   override val tickIDs: List<Double> = tickData.map { it.currentTick }
 
   override val firstTickId: Double = this.tickIDs.first()
@@ -42,10 +52,10 @@ data class Segment(
       return firstEgo.id
     }
 
-  /** cache for all vehicle IDs */
+  /** Cache for all vehicle IDs. */
   private val vehicleIdsCache = mutableListOf<Int>()
 
-  /** all vehicle IDs of the segment */
+  /** All vehicle IDs of the segment. */
   val vehicleIds: List<Int>
     get() {
       if (vehicleIdsCache.isEmpty()) {
@@ -57,10 +67,11 @@ data class Segment(
       return vehicleIdsCache
     }
 
-  /** cache for all vehicle IDs */
+  /** Cache for all pedestrian IDs. */
   private val pedestrianIdsCache = mutableListOf<Int>()
 
-  /** all vehicle IDs of the segment */
+  /** All pedestrian IDs of the segment. */
+  @Suppress("unused")
   val pedestrianIds: List<Int>
     get() {
       if (pedestrianIdsCache.isEmpty()) {
@@ -74,10 +85,9 @@ data class Segment(
       return pedestrianIdsCache
     }
 
-  override fun toString(): String {
-    return "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $simulationRunId " +
-        "with ego ${this.primaryEntityId}"
-  }
+  override fun toString(): String =
+      "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $simulationRunId " +
+          "with ego ${this.primaryEntityId}"
 
   override fun equals(other: Any?): Boolean {
     if (other is Segment) {
@@ -86,7 +96,5 @@ data class Segment(
     return super.equals(other)
   }
 
-  override fun hashCode(): Int {
-    return this.toString().hashCode()
-  }
+  override fun hashCode(): Int = this.toString().hashCode()
 }

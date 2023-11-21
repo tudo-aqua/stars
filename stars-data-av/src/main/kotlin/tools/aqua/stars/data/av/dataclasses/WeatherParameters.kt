@@ -17,6 +17,24 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for weather parameters.
+ *
+ * @property type The [WeatherType] of the weather parameter.
+ * @property cloudiness The cloudiness.
+ * @property precipitation The precipitation.
+ * @property precipitationDeposits The deposits of precipitation.
+ * @property windIntensity The intensity of the wind.
+ * @property sunAzimuthAngle The azimuth of the sun.
+ * @property sunAltitudeAngle The altitude of the sun.
+ * @property fogDensity The density of the fog.
+ * @property fogDistance The view distance due to fog.
+ * @property wetness The wetness.
+ * @property fogFalloff The fog falloff.
+ * @property scatteringIntensity The intensity of light scattering.
+ * @property mieScatteringScale The scale of mie scattering.
+ * @property rayleighScatteringScale The scale of rayleigh scattering.
+ */
 data class WeatherParameters(
     val type: WeatherType,
     val cloudiness: Double,

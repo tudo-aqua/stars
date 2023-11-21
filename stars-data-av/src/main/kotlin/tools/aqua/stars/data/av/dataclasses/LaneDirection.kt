@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-// region Enums
+/** Enum for [Lane] directions. */
 enum class LaneDirection {
   STRAIGHT,
   LEFT_TURN,

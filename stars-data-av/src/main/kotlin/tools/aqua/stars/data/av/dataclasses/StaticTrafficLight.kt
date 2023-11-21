@@ -17,18 +17,25 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for static traffic lights.
+ *
+ * @property id The identifier of the traffic light.
+ * @property location The [Location] of the traffic light.
+ * @property rotation The [Rotation] of the traffic light.
+ * @property stopLocations List of stop locations as [Location]s.
+ */
 data class StaticTrafficLight(
     var id: Int,
     val location: Location,
     val rotation: Rotation,
     val stopLocations: List<Location>,
 ) {
-  override fun toString(): String {
-    return "StaticTrafficLight($id)"
-  }
 
-  fun getStateInTick(tickData: TickData): TrafficLightState {
-    val trafficLight = tickData.trafficLights.firstOrNull { it.relatedOpenDriveId == this.id }
-    return trafficLight?.state ?: TrafficLightState.Unknown
-  }
+  /** Returns [TrafficLightState] from [TickData]. */
+  fun getStateInTick(tickData: TickData): TrafficLightState =
+      tickData.trafficLights.firstOrNull { it.relatedOpenDriveId == this.id }?.state
+          ?: TrafficLightState.Unknown
+
+  override fun toString(): String = "StaticTrafficLight($id)"
 }

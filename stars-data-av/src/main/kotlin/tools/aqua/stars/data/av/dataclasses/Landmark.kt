@@ -17,6 +17,21 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for landmarks.
+ *
+ * @property id The identifier of the landmark.
+ * @property name The name of the landmark.
+ * @property distance The distance.
+ * @property s S.
+ * @property country The country.
+ * @property type The [LandmarkType] of the landmark.
+ * @property value The value.
+ * @property unit The unit.
+ * @property text The text.
+ * @property location The [Location] of the landmark.
+ * @property rotation The [Rotation] of the landmark.
+ */
 data class Landmark(
     val id: Int,
     val name: String,

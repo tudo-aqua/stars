@@ -17,6 +17,11 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Enum for traffic light states.
+ *
+ * @property value Internal json value.
+ */
 enum class TrafficLightState(val value: Int) {
   Red(0),
   Yellow(1),
@@ -25,8 +30,7 @@ enum class TrafficLightState(val value: Int) {
   Unknown(4);
 
   companion object {
-    private val VALUES = values()
-
-    fun getByValue(value: Int) = VALUES.first { it.value == value }
+    /** Retrieves [TrafficLightState] by internal value. */
+    fun getByValue(value: Int) = values().first { it.value == value }
   }
 }

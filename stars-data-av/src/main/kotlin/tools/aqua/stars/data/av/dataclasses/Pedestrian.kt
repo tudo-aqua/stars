@@ -17,12 +17,21 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for pedestrians.
+ *
+ * @property id The identifier of the pedestrian.
+ * @property tickData [TickData].
+ * @property positionOnLane The [Pedestrian]'s position on the [Lane].
+ * @property lane The [Pedestrian]'s [Lane].
+ */
 data class Pedestrian(
     override val id: Int,
     override val tickData: TickData,
     val positionOnLane: Double,
     val lane: Lane,
 ) : Actor() {
+
   override fun clone(newTickData: TickData): Actor =
       Pedestrian(id, newTickData, positionOnLane, lane)
 

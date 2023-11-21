@@ -17,6 +17,11 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for contact lane info.
+ *
+ * @property lane The [Lane].
+ */
 data class ContactLaneInfo(
     val lane: Lane,
 )

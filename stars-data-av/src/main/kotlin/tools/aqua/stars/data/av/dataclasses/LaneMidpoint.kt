@@ -17,6 +17,13 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for lane midpoints.
+ *
+ * @property distanceToStart The distance to the starting point.
+ * @property location The [Location] of the midpoint.
+ * @property rotation The [Rotation] of the midpoint.
+ */
 data class LaneMidpoint(
     val distanceToStart: Double,
     val location: Location,

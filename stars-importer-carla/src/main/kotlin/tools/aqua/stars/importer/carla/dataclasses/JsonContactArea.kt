@@ -28,10 +28,10 @@ import kotlinx.serialization.Serializable
  * @property lane1RoadId Road identifier of lane 1.
  * @property lane1Id Identifier of lane 1.
  * @property lane1StartPos Start position on lane 1.
- * @property lane1EndPos End position on lane 2.
+ * @property lane1EndPos End position on lane 1.
  * @property lane2RoadId Road identifier of lane 2.
  * @property lane2Id Identifier of lane 2.
- * @property lane2StartPos Start position on lane 1.
+ * @property lane2StartPos Start position on lane 2.
  * @property lane2EndPos End position on lane 2.
  */
 @Serializable

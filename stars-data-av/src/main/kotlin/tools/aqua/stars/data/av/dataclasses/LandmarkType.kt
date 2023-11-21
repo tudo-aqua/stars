@@ -17,6 +17,11 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+/**
+ * Data class for landmark types.
+ *
+ * @property value Internal json value.
+ */
 enum class LandmarkType(val value: Int) {
   Danger(101),
   LanesMerging(121),
@@ -51,13 +56,12 @@ enum class LandmarkType(val value: Int) {
   CityEnd(311),
   Highway(330),
   DeadEnd(357),
-  RecomendedSpeed(380),
-  RecomendedSpeedEnd(381),
-  LightPost(1000001);
+  RecommendedSpeed(380),
+  RecommendedSpeedEnd(381),
+  LightPost(1_000_001);
 
   companion object {
-    private val VALUES = LandmarkType.values()
-
-    fun getByValue(value: Int) = VALUES.first { it.value == value }
+    /** Retrieves [LandmarkType] by internal value. */
+    fun getByValue(value: Int) = values().first { it.value == value }
   }
 }
