@@ -17,18 +17,30 @@
 
 package tools.aqua.stars.core.types
 
+/** Interface for segment types. */
 interface SegmentType<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> {
 
+  /** List of Tick data. */
   val tickData: List<T>
+
+  /** Ticks in this [SegmentType]. */
   val ticks: Map<Double, T>
+
+  /** List of tick identifiers. */
   val tickIDs: List<Double>
+
+  /** Segment source String. */
   val segmentSource: String
+
+  /** Fist tick in segment. */
   val firstTickId: Double
+
+  /** Identifier of primary entity. */
   val primaryEntityId: Int
 
-  fun getSegmentIdentifier(): String {
-    return "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $segmentSource " +
-        "with primary entity ${this.primaryEntityId}"
-  }
+  /** Returns an Identifier for this segment. */
+  fun getSegmentIdentifier(): String =
+      "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $segmentSource " +
+          "with primary entity ${this.primaryEntityId}"
 }

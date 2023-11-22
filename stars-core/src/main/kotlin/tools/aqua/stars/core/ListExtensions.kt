@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.core
 
-/** creates TxT cross product */
+/** Creates TxT cross product. */
 fun <T> List<T>.x2() = this.flatMap { a -> this.map { b -> a to b } }
 
-/** creates TxTxT cross product */
+/** Creates TxTxT cross product. */
 fun <T> List<T>.x3() = this.flatMap { a -> this.flatMap { b -> this.map { c -> Triple(a, b, c) } } }
 
 /**
@@ -31,5 +33,5 @@ fun <T> List<T>.x3() = this.flatMap { a -> this.flatMap { b -> this.map { c -> T
 fun <T> List<T>.powerlist(): List<List<T>> =
     when {
       isEmpty() -> listOf(listOf())
-      else -> dropLast(1).powerlist().let { it + it.map { it + last() } }.sortedBy { it.size }
+      else -> dropLast(1).powerlist().let { it + it.map { t -> t + last() } }.sortedBy { it.size }
     }

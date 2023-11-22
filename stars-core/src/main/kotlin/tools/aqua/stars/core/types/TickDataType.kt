@@ -17,12 +17,23 @@
 
 package tools.aqua.stars.core.types
 
+/** Interface for tick data types. */
 interface TickDataType<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> {
 
+  /** The current tick. */
   val currentTick: Double
+
+  /** List of [EntityType]s in tick data. */
   var entities: List<E>
+
+  /** Current [SegmentType]. */
   var segment: S
 
+  /**
+   * Retrieves [EntityType] from [entities] by given [entityID].
+   *
+   * @param entityID Entity identifier.
+   */
   fun entity(entityID: Int): E? = entities.firstOrNull { it.id == entityID }
 }
