@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tools.aqua.stars.core.metric.metrics
+package tools.aqua.stars.core.metric.metrics
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

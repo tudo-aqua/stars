@@ -22,7 +22,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProje
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.TSCMonitorResult
-import tools.aqua.stars.core.tsc.TSCProjection
+import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType

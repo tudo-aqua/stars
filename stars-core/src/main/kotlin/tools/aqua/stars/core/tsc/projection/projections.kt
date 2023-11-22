@@ -15,21 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc
+@file:Suppress("unused")
 
-import tools.aqua.stars.core.types.SegmentType
+package tools.aqua.stars.core.tsc.projection
 
-/**
- * This class contains the validation result of all monitors for one TSCInstanceNode.
- *
- * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
- * results.
- * @property monitorsValid Flags whether there is an invalid monitor.
- * @property edgeList Default: null. When there is an invalid monitor, it contains the [List] of
- * edge labels leading to the invalid monitor.
- */
-class TSCMonitorResult(
-    val segmentIdentifier: String,
-    var monitorsValid: Boolean,
-    var edgeList: List<String>? = null
-)
+/** Projection to [Pair] ([id], 'false'). */
+fun proj(id: Any) = Pair(id, false)
+
+/** Projection to [Pair] ([id], 'true'). */
+fun projRec(id: Any) = Pair(id, true)

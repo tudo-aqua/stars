@@ -15,43 +15,35 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc
+package tools.aqua.stars.core.tsc.edge
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.node.TSCNode
-import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * TSC graph.
+ * Baseclass for TSC edges.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- *
- * @property rootNode The root node of the [TSC].
+ * @property label Edge label.
+ * @property condition Predicate for the edge condition.
+ * @property destination Destination [TSCNode].
  */
-class TSC<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val rootNode: TSCNode<E, T, S>
+open class TSCEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    val label: String,
+    val condition: (PredicateContext<E, T, S>) -> Boolean = { true },
+    val destination: TSCNode<E, T, S>,
 ) {
-  /**
-   * Evaluates [PredicateContext] on [TSC].
-   *
-   * @param context The [PredicateContext].
-   */
-  fun evaluate(context: PredicateContext<E, T, S>): TSCInstance<E, T, S> =
-      TSCInstance(rootNode.evaluate(context), context.segment.getSegmentIdentifier())
 
-  /**
-   * Builds all possible projections ignoring those in [projectionIgnoreList].
-   *
-   * @param projectionIgnoreList Projections to ignore.
-   */
-  fun buildProjections(projectionIgnoreList: List<Any> = listOf()): List<TSCProjection<E, T, S>> =
-      rootNode.buildProjections(projectionIgnoreList)
+  override fun equals(other: Any?): Boolean =
+      other is TSCEdge<*, *, *> &&
+          label == other.label &&
+          condition == other.condition &&
+          destination == other.destination
 
-  override fun toString(): String = this.rootNode.toString()
+  override fun hashCode(): Int = label.hashCode() + condition.hashCode() + destination.hashCode()
 }

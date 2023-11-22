@@ -15,28 +15,30 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.tsc.projection
 
-import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.tsc.instance.TSCInstance
+import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * The [TSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides an
- * [evaluate] function which gets a [TSCInstance] which is called during the evaluation phase.
+ * Holds the [tsc] in form of the root TSCNode for a projection [id].
  *
- * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @property id Identifier.
+ * @property tsc The [TSC] graph.
  */
-interface TSCInstanceMetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
+data class TSCProjection<
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    val id: Any,
+    val tsc: TSC<E, T, S>
+) {
+  /** Holds the [List] of all possible [TSCInstanceNode]s from the base [tsc]. */
+  val possibleTSCInstances: List<TSCInstanceNode<E, T, S>> = tsc.rootNode.generateAllInstances()
 
-  /**
-   * Evaluate the metric based on the given parameters.
-   *
-   * @param tscInstance The current [TSCInstance]
-   */
-  fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
+  override fun toString(): String = id.toString()
 }

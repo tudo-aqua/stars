@@ -22,8 +22,8 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.tsc.TSCInstanceNode
-import tools.aqua.stars.core.tsc.TSCProjection
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType

@@ -15,28 +15,23 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.tsc.edge
 
-import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.tsc.instance.TSCInstance
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * The [TSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides an
- * [evaluate] function which gets a [TSCInstance] which is called during the evaluation phase.
+ * TSC edge with condition 'true'.
  *
- * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param label Edge label.
+ * @param destination Destination [TSCNode].
  */
-interface TSCInstanceMetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
-
-  /**
-   * Evaluate the metric based on the given parameters.
-   *
-   * @param tscInstance The current [TSCInstance]
-   */
-  fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
-}
+class TSCAlwaysEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    label: String,
+    destination: TSCNode<E, T, S>
+) : TSCEdge<E, T, S>(label, { true }, destination)

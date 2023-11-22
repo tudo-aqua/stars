@@ -26,9 +26,9 @@ import tools.aqua.stars.core.metric.utils.getPlot
 import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
 import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
 import tools.aqua.stars.core.metric.utils.saveAsCSVFile
-import tools.aqua.stars.core.tsc.TSCInstance
-import tools.aqua.stars.core.tsc.TSCInstanceNode
-import tools.aqua.stars.core.tsc.TSCProjection
+import tools.aqua.stars.core.tsc.instance.TSCInstance
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType

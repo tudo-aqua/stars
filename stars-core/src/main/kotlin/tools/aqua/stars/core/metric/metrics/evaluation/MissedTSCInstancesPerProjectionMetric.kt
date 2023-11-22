@@ -21,9 +21,9 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.tsc.TSCInstance
-import tools.aqua.stars.core.tsc.TSCInstanceNode
-import tools.aqua.stars.core.tsc.TSCProjection
+import tools.aqua.stars.core.tsc.instance.TSCInstance
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType

@@ -20,10 +20,11 @@
 package tools.aqua.stars.core
 
 /** Creates TxT cross product. */
-fun <T> List<T>.x2() = this.flatMap { a -> this.map { b -> a to b } }
+fun <T> List<T>.x2(): List<Pair<T, T>> = this.flatMap { a -> this.map { b -> a to b } }
 
 /** Creates TxTxT cross product. */
-fun <T> List<T>.x3() = this.flatMap { a -> this.flatMap { b -> this.map { c -> Triple(a, b, c) } } }
+fun <T> List<T>.x3(): List<Triple<T, T, T>> =
+    this.flatMap { a -> this.flatMap { b -> this.map { c -> Triple(a, b, c) } } }
 
 /**
  * Adaption of com.marcinmoskala.math.powerset for lists while preserving the order of the original
@@ -35,3 +36,41 @@ fun <T> List<T>.powerlist(): List<List<T>> =
       isEmpty() -> listOf(listOf())
       else -> dropLast(1).powerlist().let { it + it.map { t -> t + last() } }.sortedBy { it.size }
     }
+
+/**
+ * Build all possible combinations of the lists in the input list. Example instances kept until
+ * better documentation will be written.
+ * ```
+ *    val input = listOf(
+ *        listOf(listOf("a"), listOf("b"), listOf("c")),
+ *        listOf(listOf("x"), listOf("y")),
+ *        listOf(listOf("1"), listOf("2"), listOf("3"), listOf("4"))
+ *    )
+ *
+ *    val afterFirstStep = listOf(
+ *        listOf(listOf("a", "x"), listOf("a", "y"), /*...*/ listOf("c", "y")),
+ *        listOf(listOf("1"), listOf("2"), listOf("3"), listOf("4"))
+ *    )
+ *
+ *     val afterSecondStep = listOf(
+ *        listOf(listOf("a", "x", "1"), listOf("a", "x", "2"), /*...*/ listOf("c", "y", "4"))
+ *    )
+ * ```
+ */
+fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
+  require(size >= 2) { "List for cross-product building must at least contain two elements." }
+
+  val nextLevelList = mutableListOf<List<T>>()
+  this[0].forEach { it1 ->
+    this[1].forEach { it2 ->
+      val nextEntry = mutableListOf<T>()
+      nextEntry.addAll(it1)
+      nextEntry.addAll(it2)
+      nextLevelList += nextEntry
+    }
+  }
+
+  // val monitorFunction: (PredicateContext, Segment) -> Boolean = { _, _ -> true }
+
+  return if (size == 2) nextLevelList else (listOf(nextLevelList) + subList(2, size)).crossProduct()
+}

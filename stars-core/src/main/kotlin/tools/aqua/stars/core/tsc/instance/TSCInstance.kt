@@ -15,28 +15,23 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.tsc.instance
 
-import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * The [TSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides an
- * [evaluate] function which gets a [TSCInstance] which is called during the evaluation phase.
+ * Instance of a TSC.
  *
- * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @property rootNode The root node.
+ * @property sourceSegmentIdentifier Segment identifier
  */
-interface TSCInstanceMetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
-
-  /**
-   * Evaluate the metric based on the given parameters.
-   *
-   * @param tscInstance The current [TSCInstance]
-   */
-  fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
-}
+data class TSCInstance<
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    val rootNode: TSCInstanceNode<E, T, S>,
+    val sourceSegmentIdentifier: String
+)
