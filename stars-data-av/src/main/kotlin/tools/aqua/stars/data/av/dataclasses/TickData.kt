@@ -70,5 +70,5 @@ data class TickData(
     return newTickData
   }
 
-  override fun toString() = "$currentTick"
+  override fun toString(): String = "$currentTick"
 }

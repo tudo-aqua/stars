@@ -29,7 +29,7 @@ data class Block(
     val id: String,
     var roads: List<Road>,
 ) {
-  override fun toString() = id
+  override fun toString(): String = id
 
   override fun hashCode(): Int = id.hashCode()
 

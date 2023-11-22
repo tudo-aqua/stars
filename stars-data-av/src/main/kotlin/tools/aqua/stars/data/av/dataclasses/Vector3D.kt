@@ -29,25 +29,25 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
   constructor(location: Location) : this(location.x, location.y, location.z)
 
   /** Addition operator. */
-  operator fun plus(other: Vector3D) =
+  operator fun plus(other: Vector3D): Vector3D =
       Vector3D(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
 
   /** Subtraction operator. */
-  operator fun minus(other: Vector3D) =
+  operator fun minus(other: Vector3D): Vector3D =
       Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
 
   /** Negation operator. */
-  operator fun unaryMinus() = Vector3D(x = -this.x, y = -this.y, z = -this.z)
+  operator fun unaryMinus(): Vector3D = Vector3D(x = -this.x, y = -this.y, z = -this.z)
 
   /** Division with scalar operator. */
-  operator fun times(scalar: Number) =
+  operator fun times(scalar: Number): Vector3D =
       Vector3D(
           x = this.x * scalar.toDouble(),
           y = this.y * scalar.toDouble(),
           z = this.z * scalar.toDouble())
 
   /** Division with scalar operator. */
-  operator fun div(scalar: Number) =
+  operator fun div(scalar: Number): Vector3D =
       Vector3D(
           x = this.x / scalar.toDouble(),
           y = this.y / scalar.toDouble(),

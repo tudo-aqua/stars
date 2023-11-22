@@ -32,11 +32,7 @@ data class Segment(
     override val segmentSource: String,
 ) : SegmentType<Actor, TickData, Segment> {
 
-  override val tickData: List<TickData> =
-      mainInitList.map {
-        it.segment = this
-        it
-      }
+  override val tickData: List<TickData> = mainInitList.onEach { it.segment = this }
 
   override val ticks: Map<Double, TickData> = tickData.associateBy { it.currentTick }
 

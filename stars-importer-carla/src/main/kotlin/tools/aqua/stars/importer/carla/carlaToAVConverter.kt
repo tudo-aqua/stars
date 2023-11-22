@@ -332,7 +332,7 @@ private fun Lane.update() {
             .filter { otherLane ->
               otherLane.predecessorLanes.none { it.lane.hasStopOrYieldSign } ||
                   otherLane.isStraight ||
-                  otherLane.turnsRight
+                  otherLane.isTurningRight
             }
             .map { ContactLaneInfo(it) }
   } else if (this.predecessorLanes.any { it.lane.hasTrafficLight }) {
@@ -345,7 +345,7 @@ private fun Lane.update() {
               val otherStartYaw = otherLane.laneMidpoints.first().rotation.yaw
               val thisStartYaw = this.laneMidpoints.first().rotation.yaw
               abs(otherStartYaw - thisStartYaw) in 175.0..185.0 &&
-                  (otherLane.isStraight || otherLane.turnsRight)
+                  (otherLane.isStraight || otherLane.isTurningRight)
             }
             .map { ContactLaneInfo(it) }
   } else {
@@ -357,7 +357,7 @@ private fun Lane.update() {
             .filter { otherLane ->
               when {
                 // the easiest case, as the one who turns left never has right of way
-                this.turnsLeft -> true
+                this.isTurningLeft -> true
                 // both lanes are straight -> use angle of points at contact area
                 // for "left before right" calculation
                 this.isStraight && otherLane.isStraight -> {

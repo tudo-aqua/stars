@@ -58,19 +58,19 @@ data class Lane(
 ) {
 
   /** Whether this [Lane] turns left. */
-  val turnsLeft
+  val isTurningLeft: Boolean
     get() = laneDirection == LaneDirection.LEFT_TURN
 
   /** Whether this [Lane] turns right. */
-  val turnsRight
+  val isTurningRight: Boolean
     get() = laneDirection == LaneDirection.RIGHT_TURN
 
   /** Whether this [Lane] is straight. */
-  val isStraight
+  val isStraight: Boolean
     get() = laneDirection == LaneDirection.STRAIGHT
 
   /** Whether this [Lane] has stop signs. */
-  val hasStopSign
+  val hasStopSign: Boolean
     get() =
         landmarks.any { it.type == LandmarkType.StopSign && it.s > laneLength - 10.0 } ||
             successorLanes.any {
@@ -78,7 +78,7 @@ data class Lane(
             }
 
   /** Whether this [Lane] has yield signs. */
-  val hasYieldSign
+  val hasYieldSign: Boolean
     get() =
         landmarks.any { it.type == LandmarkType.YieldSign && it.s > laneLength - 10.0 } ||
             successorLanes.any {
@@ -86,11 +86,11 @@ data class Lane(
             }
 
   /** Whether this [Lane] has stop or yield signs. */
-  val hasStopOrYieldSign
+  val hasStopOrYieldSign: Boolean
     get() = hasStopSign || hasYieldSign
 
   /** Whether this [Lane] has traffic lights. */
-  val hasTrafficLight
+  val hasTrafficLight: Boolean
     get() = trafficLights.isNotEmpty()
 
   /**
@@ -125,7 +125,7 @@ data class Lane(
     return if (positions.isNotEmpty()) positions[0] else null
   }
 
-  override fun toString() = "Lane(road=${road.id}, id=$laneId)"
+  override fun toString(): String = "Lane(road=${road.id}, id=$laneId)"
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

@@ -26,5 +26,5 @@ package tools.aqua.stars.data.av.dataclasses
  * @property lanes List of [Lane]s on this road.
  */
 data class Road(var id: Int, val isJunction: Boolean, val block: Block, var lanes: List<Lane>) {
-  override fun toString() = "$id"
+  override fun toString(): String = "$id"
 }

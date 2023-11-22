@@ -91,6 +91,6 @@ data class Vehicle(
           acceleration,
           angularVelocity)
 
-  override fun toString() =
+  override fun toString(): String =
       "Vehicle(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 }

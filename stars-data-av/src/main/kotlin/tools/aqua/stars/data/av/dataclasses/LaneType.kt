@@ -48,6 +48,6 @@ enum class LaneType(val value: Int) {
 
   companion object {
     /** Retrieves [LaneType] by internal value. */
-    fun getByValue(value: Int) = values().first { it.value == value }
+    fun getByValue(value: Int): LaneType = values().first { it.value == value }
   }
 }

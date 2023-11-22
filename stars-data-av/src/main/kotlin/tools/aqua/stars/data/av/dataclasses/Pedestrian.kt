@@ -35,6 +35,6 @@ data class Pedestrian(
   override fun clone(newTickData: TickData): Actor =
       Pedestrian(id, newTickData, positionOnLane, lane)
 
-  override fun toString() =
+  override fun toString(): String =
       "Pedestrian(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 }

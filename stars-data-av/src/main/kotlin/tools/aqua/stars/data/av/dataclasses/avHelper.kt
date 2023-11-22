@@ -32,7 +32,7 @@ val Lane.uid: String
   get() = "${road.id}_${laneId}"
 
 /** Returns [Lane] of [Actor] iff [Actor] is [Vehicle] or [Pedestrian]. */
-val Actor.lane
+val Actor.lane: Lane
   get() =
       when (this) {
         is Pedestrian -> lane
