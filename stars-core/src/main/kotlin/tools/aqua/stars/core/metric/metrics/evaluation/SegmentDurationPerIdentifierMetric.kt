@@ -39,7 +39,7 @@ class SegmentDurationPerIdentifierMetric<
    * Holds the Map of [SegmentType.segmentSource] to total time length of all [SegmentType]s for the
    * [SegmentType.segmentSource] in seconds ([Double]).
    */
-  private var segmentIdentifierToTotalSegmentDurationMap: MutableMap<String, Double> =
+  private val segmentIdentifierToTotalSegmentDurationMap: MutableMap<String, Double> =
       mutableMapOf()
 
   /**
@@ -54,18 +54,13 @@ class SegmentDurationPerIdentifierMetric<
   override fun evaluate(segment: SegmentType<E, T, S>): Double {
     segmentIdentifierToTotalSegmentDurationMap.putIfAbsent(segment.segmentSource, 0.0)
 
-    // The Segment does not have any analyzable time duration
-    if (segment.tickData.isEmpty()) {
-      return 0.0
-    }
-    // The Segment has only one TickData from which no time duration can be calculated.
-    if (segment.tickData.size == 1) {
-      return 0.0
-    }
+    // The Segment has no or only one TickData from which no time duration can be calculated.
+    if (segment.tickData.size <= 1) return 0.0
 
     // Calculate the time difference between the last and the first tick in the given segment.
     val segmentTimeLength =
         segment.tickData.last().currentTick - segment.tickData.first().currentTick
+
     check(segmentTimeLength >= 0.0) {
       "The duration between the first and last tick of segment '$segment' should be positive! " +
           "Actual duration: $segmentTimeLength."
@@ -75,16 +70,15 @@ class SegmentDurationPerIdentifierMetric<
     segmentIdentifierToTotalSegmentDurationMap[segment.segmentSource] =
         segmentIdentifierToTotalSegmentDurationMap.getValue(segment.segmentSource) +
             segmentTimeLength
+
     return segmentIdentifierToTotalSegmentDurationMap.getValue(segment.segmentSource)
   }
 
   /**
    * Returns the Map of [SegmentType.segmentSource] to total time length of segments for the
-   * [SegmentType.segmentSource] in seconds ([Double])
+   * [SegmentType.segmentSource] in seconds ([Double]).
    */
-  override fun getState(): Map<String, Double> {
-    return segmentIdentifierToTotalSegmentDurationMap
-  }
+  override fun getState(): Map<String, Double> = segmentIdentifierToTotalSegmentDurationMap
 
   /**
    * Prints a line for each [SegmentType.segmentSource] with the related time length of segments in

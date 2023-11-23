@@ -22,8 +22,9 @@ import java.util.logging.*
 import tools.aqua.stars.core.metric.utils.ApplicationStartTimeHolder
 
 /** This interface can be implemented to be able to log data into the stdout and log files. */
+@Suppress("unused")
 interface Loggable {
-  /** Holds the [Logger] reference for this class */
+  /** Holds the [Logger] reference for this class. */
   val logger: Logger
 
   /**
@@ -92,7 +93,7 @@ interface Loggable {
     logger.finest(message.toString())
   }
 
-  /** Close all [logger] [Handler]s to prevent ".lck" files to remain */
+  /** Close all [logger] [Handler]s to prevent ".lck" files to remain. */
   fun closeLogger() {
     logger.handlers.forEach { it.close() }
   }
@@ -108,50 +109,28 @@ interface Loggable {
       // https://www.logicbig.com/tutorials/core-java-tutorial/logging/customizing-default-format.html
       System.setProperty("java.util.logging.SimpleFormatter.format", "%5\$s %n")
 
-      val logger = Logger.getAnonymousLogger()
-      logger.useParentHandlers = false
-      logger.level = Level.FINEST
-
-      /**
-       * Holds the current time in yyyy-MM-dd-HH-mm format taken from the
-       * [ApplicationStartTimeHolder] singleton.
-       */
       val currentTimeAndDate = ApplicationStartTimeHolder.applicationStartTimeString
+      val logFolderFile =
+          File("analysis-result-logs/$currentTimeAndDate/metrics/$name").also { it.mkdirs() }
+      val file = "$logFolderFile/$name-${currentTimeAndDate}"
 
-      val logFolderFile = File("analysis-result-logs/$currentTimeAndDate/metrics/$name")
-      logFolderFile.mkdirs()
+      return@run Logger.getAnonymousLogger().apply {
+        useParentHandlers = false
+        level = Level.FINEST
 
-      val severeFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-severe.txt")
-      severeFileHandler.level = Level.SEVERE
-      severeFileHandler.formatter = SimpleFormatter()
-      logger.addHandler(severeFileHandler)
-
-      val warningFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-warning.txt")
-      warningFileHandler.level = Level.WARNING
-      warningFileHandler.formatter = SimpleFormatter()
-      logger.addHandler(warningFileHandler)
-
-      val infoFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-info.txt")
-      infoFileHandler.level = Level.INFO
-      infoFileHandler.formatter = SimpleFormatter()
-      logger.addHandler(infoFileHandler)
-
-      val fineFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-fine.txt")
-      fineFileHandler.level = Level.FINE
-      fineFileHandler.formatter = SimpleFormatter()
-      logger.addHandler(fineFileHandler)
-
-      val finerFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-finer.txt")
-      finerFileHandler.level = Level.FINER
-      finerFileHandler.formatter = SimpleFormatter()
-      logger.addHandler(finerFileHandler)
-
-      val finestFileHandler = FileHandler("$logFolderFile/$name-${currentTimeAndDate}-finest.txt")
-      finestFileHandler.level = Level.FINEST
-      finestFileHandler.formatter = SimpleFormatter()
-      logger.addHandler(finestFileHandler)
-
-      logger
+        addHandler(getLoggerHandler(file, Level.SEVERE))
+        addHandler(getLoggerHandler(file, Level.WARNING))
+        addHandler(getLoggerHandler(file, Level.INFO))
+        addHandler(getLoggerHandler(file, Level.FINE))
+        addHandler(getLoggerHandler(file, Level.FINER))
+        addHandler(getLoggerHandler(file, Level.FINEST))
+      }
     }
+
+    private fun getLoggerHandler(file: String, level: Level) =
+        FileHandler("$file-${level.name.lowercase()}.txt").apply {
+          this.level = level
+          this.formatter = SimpleFormatter()
+        }
   }
 }

@@ -42,7 +42,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
 ) {
 
   /** Edges of this [TSCInstanceNode]. */
-  var edges: MutableList<TSCInstanceEdge<E, T, S>> = mutableListOf()
+  val edges: MutableList<TSCInstanceEdge<E, T, S>> = mutableListOf()
 
   /** Returns all edges. */
   fun getAllEdges(): List<TSCEdge<E, T, S>> =
@@ -99,7 +99,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
    * [TSCEdge.label] in recursive call
    * @return list of edge labels leading to a node with `false` monitor result.
    */
-  private fun validateMonitorsRec(label: String = "RootNode"): List<String> {
+  private fun validateMonitorsRec(label: String): List<String> {
     val returnList = mutableListOf<String>()
     if (!monitorResult) returnList += label
     returnList += edges.flatMap { it.destination.validateMonitorsRec(it.label) }

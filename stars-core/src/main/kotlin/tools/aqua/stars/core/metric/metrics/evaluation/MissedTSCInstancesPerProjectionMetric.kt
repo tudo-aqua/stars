@@ -32,17 +32,19 @@ import tools.aqua.stars.core.types.TickDataType
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the missed
  * [TSCInstance]s for each [TSCProjection].
  */
+@Suppress("unused")
 class MissedTSCInstancesPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("missed-tsc-instances-per-projection")
 ) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
   /**
    * Map a [TSCProjection] to a map in which the missed valid [TSCInstanceNode]s are stored:
-   * Map<projection,Map<referenceInstance,missed>>
+   * Map<projection,Map<referenceInstance,missed>>.
    */
   private val missedInstancesMap:
       MutableMap<TSCProjection<E, T, S>, MutableMap<TSCInstanceNode<E, T, S>, Boolean>> =
       mutableMapOf()
+
   /**
    * Track the missed [TSCInstance]s for each [TSCProjection] in the [missedInstancesMap]. If the
    * current [tscInstance] is invalid it is skipped.
@@ -53,15 +55,13 @@ class MissedTSCInstancesPerProjectionMetric<
    * list.
    */
   override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
-    missedInstancesMap.putIfAbsent(projection, createDefaultMissedInstanceFlagMap(projection))
-    // The current tscInstance is invalid: skip
-    if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
-      return
-    }
-    // Get the valid instances map for the current projection
-    val projectionMissedInstancesMap = missedInstancesMap.getValue(projection)
-    // Set the state for the current tscInstance to: "not missed"
-    projectionMissedInstancesMap[tscInstance.rootNode] = false
+    // Check if the given tscInstance is invalid. If so, skip
+    if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) return
+
+    // Get the valid instances map for the current projection and set state to "not missed"
+    missedInstancesMap
+        .getOrPut(projection) { createDefaultMissedInstanceFlagMap(projection) }[
+            tscInstance.rootNode] = false
   }
 
   /**
@@ -70,25 +70,22 @@ class MissedTSCInstancesPerProjectionMetric<
    *
    * @return the filled [MutableMap] mapping all [TSCProjection.possibleTSCInstances] to true
    * (missed).
-   *
    * @throws IllegalStateException when the resulting size of the [MutableMap] is not equals to the
    * amount of [TSCInstanceNode]s in [TSCProjection.possibleTSCInstances].
    */
   private fun createDefaultMissedInstanceFlagMap(
       projection: TSCProjection<E, T, S>
-  ): MutableMap<TSCInstanceNode<E, T, S>, Boolean> {
-    val emptyMissedInstanceFlagMap = mutableMapOf<TSCInstanceNode<E, T, S>, Boolean>()
-    projection.possibleTSCInstances.forEach { emptyMissedInstanceFlagMap.putIfAbsent(it, true) }
-    check(emptyMissedInstanceFlagMap.size == projection.possibleTSCInstances.size)
-    return emptyMissedInstanceFlagMap
-  }
+  ): MutableMap<TSCInstanceNode<E, T, S>, Boolean> =
+      mutableMapOf<TSCInstanceNode<E, T, S>, Boolean>().apply {
+        projection.possibleTSCInstances.forEach { putIfAbsent(it, true) }
+        check(size == projection.possibleTSCInstances.size)
+      }
 
   /** Returns a [Map] containing the list of missed [TSCInstanceNode]s for each [TSCProjection]. */
-  override fun getState(): Map<TSCProjection<E, T, S>, List<TSCInstanceNode<E, T, S>>> {
-    return missedInstancesMap.mapValues { projection ->
-      projection.value.filter { instance -> instance.value }.map { instance -> instance.key }
-    }
-  }
+  override fun getState(): Map<TSCProjection<E, T, S>, List<TSCInstanceNode<E, T, S>>> =
+      missedInstancesMap.mapValues { projection ->
+        projection.value.filter { instance -> instance.value }.map { instance -> instance.key }
+      }
 
   /** Prints the count of missed [TSCInstance]s for each [TSCProjection] using [println]. */
   override fun printState() {
