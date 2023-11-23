@@ -42,7 +42,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
 ) {
 
   /** Edges of this [TSCInstanceNode]. */
-  var edges = mutableListOf<TSCInstanceEdge<E, T, S>>()
+  var edges: MutableList<TSCInstanceEdge<E, T, S>> = mutableListOf()
 
   /** Returns all edges. */
   fun getAllEdges(): List<TSCEdge<E, T, S>> =
@@ -124,12 +124,12 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
           }
           .toString()
 
-  override fun toString() = toString(0)
+  override fun toString(): String = toString(0)
 
   override fun equals(other: Any?): Boolean =
       other is TSCInstanceNode<*, *, *> &&
           edges.size == other.edges.size &&
           edges.withIndex().all { iv -> iv.value == other.edges[iv.index] }
 
-  override fun hashCode() = edges.sumOf { it.hashCode() }
+  override fun hashCode(): Int = edges.sumOf { it.hashCode() }
 }

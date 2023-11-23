@@ -39,7 +39,7 @@ data class TSCInstanceEdge<
     val tscEdge: TSCEdge<E, T, S>,
 ) {
 
-  override fun toString() = "--${label}->"
+  override fun toString(): String = "--${label}->"
 
   override fun equals(other: Any?): Boolean =
       other is TSCInstanceEdge<*, *, *> && label == other.label && destination == other.destination

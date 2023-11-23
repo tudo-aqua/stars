@@ -49,7 +49,7 @@ class TSCBuilder<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segment
 ) {
 
   /** All edges of the node. */
-  private var edges: MutableList<TSCEdge<E, T, S>> = mutableListOf()
+  private val edges: MutableList<TSCEdge<E, T, S>> = mutableListOf()
 
   /** Creates an Edge with a BoundedNode. Only function where [bounds] is relevant. */
   fun buildBounded(): TSCEdge<E, T, S> {
