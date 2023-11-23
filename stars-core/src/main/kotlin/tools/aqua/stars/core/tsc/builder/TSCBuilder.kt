@@ -41,8 +41,8 @@ import tools.aqua.stars.core.types.TickDataType
  */
 class TSCBuilder<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val label: String = "",
-    val valueFunction: (PredicateContext<E, T, S>) -> Any = {},
-    val monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
+    var valueFunction: (PredicateContext<E, T, S>) -> Any = {},
+    var monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
     var projectionIDs: Map<Any, Boolean> = mapOf(),
     var bounds: Pair<Int, Int> = Pair(0, 0),
     var condition: ((PredicateContext<E, T, S>) -> Boolean)? = null,

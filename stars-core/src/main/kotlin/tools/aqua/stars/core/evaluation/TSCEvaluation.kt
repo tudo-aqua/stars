@@ -105,7 +105,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
                   // [PredicateContext], representing a whole TSC.
                   val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
 
-                  // Run the "evaluate" function for all ProjectionMetricProviders on the current
+                  // Run the "evaluate" function for all TSCInstanceMetricProviders on the current
                   // segment
                   metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S>>().forEach {
                     it.evaluate(segmentProjectionTSCInstance)
