@@ -20,7 +20,7 @@
 package tools.aqua.stars.core.tsc.projection
 
 /** Projection to [Pair] ([id], 'false'). */
-fun proj(id: Any) = Pair(id, false)
+fun proj(id: Any): Pair<Any, Boolean> = Pair(id, false)
 
 /** Projection to [Pair] ([id], 'true'). */
-fun projRec(id: Any) = Pair(id, true)
+fun projRec(id: Any): Pair<Any, Boolean> = Pair(id, true)

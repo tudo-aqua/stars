@@ -32,9 +32,9 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @property label name of the edge.
- * @property valueFunction Value function predicate of the node.
- * @property monitorFunction Monitor function predicate of the node.
+ * @param label name of the edge.
+ * @param valueFunction Value function predicate of the node.
+ * @param monitorFunction Monitor function predicate of the node.
  * @property projectionIDs Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
  * @property condition Condition predicate of the edge.
@@ -53,8 +53,7 @@ class TSCBuilder<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segment
 
   /** Creates an Edge with a BoundedNode. Only function where [bounds] is relevant. */
   fun buildBounded(): TSCEdge<E, T, S> {
-    val node =
-        TSCBoundedNode(valueFunction, monitorFunction, projectionIDs, bounds, *edges.toTypedArray())
+    val node = TSCBoundedNode(valueFunction, monitorFunction, projectionIDs, bounds, edges.toList())
     return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
   }
 

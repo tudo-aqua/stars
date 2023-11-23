@@ -44,8 +44,8 @@ class TSCBoundedNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
     monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
     projectionIDMapper: Map<Any, Boolean> = mapOf(),
     val bounds: Pair<Int, Int>,
-    vararg edges: TSCEdge<E, T, S>
-) : TSCNode<E, T, S>(valueFunction, monitorFunction, projectionIDMapper, *edges) {
+    edges: List<TSCEdge<E, T, S>>
+) : TSCNode<E, T, S>(valueFunction, monitorFunction, projectionIDMapper, edges) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S>>>>()
@@ -94,7 +94,8 @@ class TSCBoundedNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
           monitorFunction == other.monitorFunction &&
           projectionIDMapper == other.projectionIDMapper &&
           bounds == other.bounds &&
-          edges.contentEquals(other.edges)
+          edges.containsAll(other.edges) &&
+          other.edges.containsAll(edges)
 
   override fun hashCode(): Int =
       valueFunction.hashCode() +

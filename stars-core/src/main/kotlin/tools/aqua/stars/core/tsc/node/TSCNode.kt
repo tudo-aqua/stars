@@ -43,7 +43,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
     val valueFunction: (PredicateContext<E, T, S>) -> Any,
     val monitorFunction: (PredicateContext<E, T, S>) -> Boolean,
     val projectionIDMapper: Map<Any, Boolean>,
-    vararg val edges: TSCEdge<E, T, S>,
+    val edges: List<TSCEdge<E, T, S>>,
 ) {
 
   /** Generates all TSC instances. */
@@ -81,7 +81,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
    *
    * @param projectionId The projection identifier as in [projectionIDMapper].
    */
-  fun buildProjection(projectionId: Any): TSCNode<E, T, S>? =
+  private fun buildProjection(projectionId: Any): TSCNode<E, T, S>? =
       when (projectionIDMapper[projectionId]) {
         // this projection id is not found, don't project, return null
         null -> null
@@ -104,7 +104,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
                           }
                     }
                   }
-                  .toTypedArray()
+                  .toList()
 
           val alwaysEdgesBefore = edges.filterIsInstance<TSCAlwaysEdge<E, T, S>>().size
           val alwaysEdgesAfter = outgoingEdges.filterIsInstance<TSCAlwaysEdge<E, T, S>>().size
@@ -117,13 +117,13 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
                     this.monitorFunction,
                     this.projectionIDMapper,
                     this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
-                    *outgoingEdges)
+                    outgoingEdges)
           }
         }
       }
 
   /** Deeply clones [TSCNode]. */
-  fun deepClone(): TSCNode<E, T, S> {
+  private fun deepClone(): TSCNode<E, T, S> {
     val outgoingEdges =
         edges
             .map { it to it.destination.deepClone() }
@@ -133,7 +133,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
                 else -> TSCEdge(it.first.label, it.first.condition, it.second)
               }
             }
-            .toTypedArray()
+            .toList()
 
     return when (this) {
       is TSCBoundedNode ->
@@ -142,7 +142,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
               this.monitorFunction,
               this.projectionIDMapper,
               this.bounds,
-              *outgoingEdges)
+              outgoingEdges)
     }
   }
 
@@ -168,6 +168,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
           .toString()
 
   /** same output as toString, but with labels on the edges provided by [labels]. */
+  @Suppress("unused")
   fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, S>, Int>): String =
       toStringWithEdgeLabels(0, labels)
 
@@ -188,7 +189,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
     return builder.toString()
   }
 
-  override fun toString() = toString(0)
+  override fun toString(): String = toString(0)
 
   override fun equals(other: Any?): Boolean =
       other is TSCNode<*, *, *> &&
@@ -196,7 +197,8 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
           valueFunction == other.valueFunction &&
           monitorFunction == other.monitorFunction &&
           projectionIDMapper == other.projectionIDMapper &&
-          edges.contentEquals(other.edges)
+          edges.containsAll(other.edges) &&
+          other.edges.containsAll(edges)
 
   override fun hashCode(): Int =
       valueFunction.hashCode() +
