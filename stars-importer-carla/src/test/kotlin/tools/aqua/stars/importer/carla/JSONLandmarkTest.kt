@@ -27,8 +27,8 @@ class JSONLandmarkTest {
 
   private lateinit var completeJsonLandmark: JsonLandmark
   private lateinit var completeLandmark: Landmark
-  private lateinit var jsonSpeedLimit: JsonLandmark
-  private lateinit var speedLimit: Landmark
+  // private lateinit var jsonSpeedLimit: JsonLandmark
+  // private lateinit var speedLimit: Landmark
 
   @BeforeTest
   fun setup() {

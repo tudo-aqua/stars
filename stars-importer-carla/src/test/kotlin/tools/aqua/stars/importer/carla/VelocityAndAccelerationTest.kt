@@ -23,6 +23,7 @@ import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.*
 import tools.aqua.stars.data.av.dataclasses.Location
 
+/** Tests the velocity and acceleration calculations. */
 class VelocityAndAccelerationTest {
 
   /** Tests the velocity and acceleration calculations on pre-defined values. */
@@ -70,7 +71,7 @@ class VelocityAndAccelerationTest {
 
   /**
    * Tests the velocity and acceleration calculations and check the case when there is no time
-   * difference between two ticks (namely: time difference = 0.0)
+   * difference between two ticks (namely: time difference = 0.0).
    */
   @Test
   fun testZeroTimeDifference() {
@@ -132,7 +133,7 @@ class VelocityAndAccelerationTest {
 
   /**
    * This test checks that when there is no previous vehicle state that the velocity and
-   * acceleration should be set to 0.0
+   * acceleration should be set to 0.0.
    */
   @Test
   fun testEmptyPreviousVehicle() {
@@ -151,7 +152,7 @@ class VelocityAndAccelerationTest {
 
   /**
    * This test checks that when there is no previous vehicle state that the velocity and
-   * acceleration should be set to 0.0
+   * acceleration should be set to 0.0.
    */
   @Test
   fun testWrongActorType() {

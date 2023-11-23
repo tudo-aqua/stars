@@ -32,17 +32,17 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param label name of the edge.
- * @param valueFunction Value function predicate of the node.
- * @param monitorFunction Monitor function predicate of the node.
+ * @property label name of the edge.
+ * @property valueFunction Value function predicate of the node.
+ * @property monitorFunction Monitor function predicate of the node.
  * @property projectionIDs Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
  * @property condition Condition predicate of the edge.
  */
 class TSCBuilder<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    private val label: String = "",
-    private val valueFunction: (PredicateContext<E, T, S>) -> Any = {},
-    private val monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
+    val label: String = "",
+    val valueFunction: (PredicateContext<E, T, S>) -> Any = {},
+    val monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
     var projectionIDs: Map<Any, Boolean> = mapOf(),
     var bounds: Pair<Int, Int> = Pair(0, 0),
     var condition: ((PredicateContext<E, T, S>) -> Boolean)? = null,

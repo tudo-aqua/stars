@@ -21,6 +21,7 @@ import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/** Simple entity. */
 class SimpleEntity(
     override val id: Int = 0,
     override val tickData: SimpleTickData = SimpleTickData()
@@ -28,6 +29,7 @@ class SimpleEntity(
   override fun toString(): String = "Entity[$id] in Tick[${tickData}]"
 }
 
+/** Simple segment. */
 class SimpleSegment(
     override val tickData: List<SimpleTickData> = listOf(),
     override val ticks: Map<Double, SimpleTickData> = mapOf(),
@@ -40,6 +42,7 @@ class SimpleSegment(
       "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentSource'"
 }
 
+/** Simple tick data. */
 class SimpleTickData(
     override val currentTick: Double = 0.0,
     override var entities: List<SimpleEntity> = listOf(),

@@ -18,15 +18,18 @@
 package tools.aqua.stars.data.av
 
 import kotlin.test.Test
-import tools.aqua.stars.core.evaluation.*
+import tools.aqua.stars.core.evaluation.BinaryPredicate.Companion.predicate
+import tools.aqua.stars.core.evaluation.UnaryPredicate.Companion.predicate
 import tools.aqua.stars.core.tsc.builder.all
 import tools.aqua.stars.core.tsc.builder.leaf
 import tools.aqua.stars.core.tsc.builder.root
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.logic.kcmftbl.*
 
+/** AVTSC test. */
 class AVTSC {
 
+  /** Tests construction of the TSC. */
   @Test
   fun testTSCConstruction() {
 
@@ -36,14 +39,14 @@ class AVTSC {
               .filter { it.id != v0.id && it.id != v1.id }
               .any { vx ->
                 (v0.lane.uid == vx.lane.uid || v1.lane.uid == vx.lane.uid) &&
-                    (!(v0.lane.uid == vx.lane.uid) || (v0.positionOnLane < vx.positionOnLane)) &&
-                    (!(v1.lane.uid == vx.lane.uid) || (v1.positionOnLane > vx.positionOnLane))
+                    (v0.lane.uid != vx.lane.uid || (v0.positionOnLane < vx.positionOnLane)) &&
+                    (v1.lane.uid != vx.lane.uid || (v1.positionOnLane > vx.positionOnLane))
               }
         }
 
     val obeyedSpeedLimit =
         predicate(Vehicle::class) { _, v ->
-          globally(v) { v -> (v.effVelocityInMPH) <= v.lane.speedAt(v.positionOnLane) }
+          globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
         }
 
     root<Actor, TickData, Segment> {

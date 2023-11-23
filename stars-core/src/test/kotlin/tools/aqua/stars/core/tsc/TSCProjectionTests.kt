@@ -25,6 +25,7 @@ import tools.aqua.stars.core.tsc.builder.all
 import tools.aqua.stars.core.tsc.builder.root
 import tools.aqua.stars.core.tsc.projection.proj
 
+/** Tests for projections. */
 class TSCProjectionTests {
 
   /**

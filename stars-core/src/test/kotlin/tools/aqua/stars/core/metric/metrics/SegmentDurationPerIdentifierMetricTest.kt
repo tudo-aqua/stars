@@ -27,6 +27,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.SegmentDurationPerIdentif
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/** Test for [SegmentDurationPerIdentifierMetric]. */
 class SegmentDurationPerIdentifierMetricTest {
 
   /**

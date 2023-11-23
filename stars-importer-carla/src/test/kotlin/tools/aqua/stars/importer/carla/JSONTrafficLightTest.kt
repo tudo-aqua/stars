@@ -26,7 +26,10 @@ import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 import tools.aqua.stars.importer.carla.dataclasses.JsonLocation
 import tools.aqua.stars.importer.carla.dataclasses.JsonRotation
 
+/** Tests for traffic lights. */
 class JSONTrafficLightTest {
+
+  /** Tests the conversion of JSONTrafficLights to TrafficLights. */
   @Test
   fun testStaticTrafficLightConversion() {
     val staticJsonTrafficLight = emptyJsonStaticTrafficLight()
@@ -54,6 +57,7 @@ class JSONTrafficLightTest {
     }
   }
 
+  /** Tests the conversion of TrafficLights to JSONTrafficLights. */
   @Test
   fun testJsonTrafficLightToTrafficLightConversion() {
     val openDriveTrafficLightId = 100
@@ -88,6 +92,7 @@ class JSONTrafficLightTest {
         tickData2.blocks[0].roads[0].lanes[0].trafficLights[0].getStateInTick(tickData2))
   }
 
+  /** Tests the conversion of Lanes to StaticTrafficLights. */
   @Test
   fun testStaticTrafficLightConversionFromLane() {
     val road = emptyRoad()
@@ -120,6 +125,7 @@ class JSONTrafficLightTest {
     }
   }
 
+  /** Tests ignoring of JSONTrafficLights as actors. */
   @Test
   fun testIgnoringJsonTrafficLightAsActorPosition() {
     val jsonTrafficLight = emptyJsonTrafficLight()
@@ -140,6 +146,7 @@ class JSONTrafficLightTest {
     assertNull(convertJsonActorPositionToEntity(jsonActorPosition, emptyTickData(), listOf(block)))
   }
 
+  /** Tests TrafficLight conversion from StaticTrafficLight. */
   @Test
   fun testTrafficLightConversion() {
     val jsonTrafficLight = emptyJsonTrafficLight()

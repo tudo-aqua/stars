@@ -72,6 +72,7 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E : EntityType<E, T, S>,
@@ -123,6 +124,7 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,

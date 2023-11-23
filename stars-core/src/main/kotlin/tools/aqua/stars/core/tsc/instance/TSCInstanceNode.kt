@@ -32,13 +32,13 @@ import tools.aqua.stars.core.types.TickDataType
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @property value Value of this node.
- * @param monitorResult Monitor result of this node.
- * @param tscNode Associated [TSCNode].
+ * @property monitorResult Monitor result of this node.
+ * @property tscNode Associated [TSCNode].
  */
 class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val value: Any,
-    private val monitorResult: Boolean,
-    private val tscNode: TSCNode<E, T, S>
+    val monitorResult: Boolean,
+    val tscNode: TSCNode<E, T, S>
 ) {
 
   /** Edges of this [TSCInstanceNode]. */

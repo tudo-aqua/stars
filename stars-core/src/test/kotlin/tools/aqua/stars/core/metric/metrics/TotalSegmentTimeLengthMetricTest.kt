@@ -28,6 +28,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.TotalSegmentTimeLengthMet
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/** Test for [TotalSegmentTimeLengthMetric]. */
 class TotalSegmentTimeLengthMetricTest {
 
   /**

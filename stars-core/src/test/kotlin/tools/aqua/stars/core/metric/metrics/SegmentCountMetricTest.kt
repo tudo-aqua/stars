@@ -24,6 +24,7 @@ import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 
+/** Test for [SegmentCountMetric]. */
 class SegmentCountMetricTest {
 
   /**
