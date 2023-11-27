@@ -104,7 +104,13 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
 fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> TSCBuilder<
     E, T, S>
     .optional(label: String, init: TSCBuilder<E, T, S>.() -> Unit = {}): TSCEdge<E, T, S> =
-    this.bounded(label, 1 to edgesCount()) { init() }
+    TSCBuilder<E, T, S>(label)
+        .apply {
+          init()
+          bounds = 0 to edgesCount()
+        }
+        .buildBounded()
+        .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges).
@@ -118,7 +124,13 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
 fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> TSCBuilder<
     E, T, S>
     .all(label: String, init: TSCBuilder<E, T, S>.() -> Unit = {}): TSCEdge<E, T, S> =
-    this.bounded(label, edgesCount() to edgesCount()) { init() }
+    TSCBuilder<E, T, S>(label)
+        .apply {
+          init()
+          bounds = edgesCount() to edgesCount()
+        }
+        .buildBounded()
+        .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with LeafNode.
