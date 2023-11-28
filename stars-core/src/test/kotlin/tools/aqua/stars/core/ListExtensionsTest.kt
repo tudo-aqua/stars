@@ -19,8 +19,10 @@ package tools.aqua.stars.core
 
 import kotlin.test.Test
 
+/** Tests for list extension functions. */
 class ListExtensionsTest {
 
+  /** Tests powerlist() on empty list. */
   @Test
   fun testPowerlistEmpty() {
     val list = listOf<Int>()
@@ -28,6 +30,7 @@ class ListExtensionsTest {
     assert(result == listOf(listOf<Int>()))
   }
 
+  /** Tests powerlist() on list with one item. */
   @Test
   fun testPowerlistOneItem() {
     val list = listOf(0)
@@ -35,6 +38,7 @@ class ListExtensionsTest {
     assert(result == listOf(listOf(), listOf(0)))
   }
 
+  /** Tests powerlist() on list with multiple items. */
   @Test
   fun testPowerlistMultipleItems() {
     val list = listOf(0, 1, 2)
@@ -52,6 +56,7 @@ class ListExtensionsTest {
     assert(result == expected)
   }
 
+  /** Tests crossProduct() on three lists with two items each. */
   @Test
   fun crossProductTestTwoItemsEach() {
     val list1 = listOf(listOf("a"), listOf("b"))
