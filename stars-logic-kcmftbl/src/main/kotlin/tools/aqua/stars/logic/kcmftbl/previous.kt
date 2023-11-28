@@ -75,33 +75,3 @@ fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType
           if (entity::class.isInstance(previousEntity)) phi(entity::class.cast(previousEntity))
           else false
         })
-
-/**
- * CMFTBL implementation of the previous operator for two entities.
- *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
- * @param interval Observation interval.
- * @param phi Predicate.
- */
-@Suppress("UNUSED_PARAMETER")
-fun <
-    E1 : E,
-    E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> previous(
-    entity1: E1,
-    entity2: E2,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
-    phi: (E1, E2) -> Boolean
-): Boolean = TODO()
