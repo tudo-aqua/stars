@@ -17,40 +17,49 @@
 
 package tools.aqua.stars.importer.carla
 
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.*
+import tools.aqua.stars.importer.carla.dataclasses.JsonTickData
+import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
 
-fun getMapName(fileName: String): String {
-  if (fileName.isEmpty()) {
-    return "test_case"
-  }
-  if (fileName.contains("static_data")) {
-    return fileName.split("static_data_")[1].split(".zip")[0]
-  }
-  if (fileName.contains("dynamic_data")) {
-    return fileName.split("dynamic_data_")[1].split("_seed")[0]
-  }
-  error("Unknown filename format")
-}
+/**
+ * Returns the name of the map.
+ *
+ * @param fileName The filename.
+ * @throws IllegalStateException When the [fileName] is not empty and does not include "static_data"
+ * or "dynamic_data".
+ */
+@Suppress("unused")
+fun getMapName(fileName: String): String =
+    when {
+      fileName.isEmpty() -> "test_case"
+      fileName.contains("static_data") -> fileName.split("static_data_")[1].split(".zip")[0]
+      fileName.contains("dynamic_data") -> fileName.split("dynamic_data_")[1].split("_seed")[0]
+      else -> error("Unknown filename format")
+    }
 
 /**
  * Returns the seed value for the given [fileName].
  *
- * @param fileName The filename from which the seed value should be calculated from
- * @throws IllegalStateException When the [fileName] does not include "dynamic_data"
+ * @param fileName The filename from which the seed value should be calculated from.
+ * @throws IllegalStateException When the [fileName] does not include "dynamic_data".
  */
-fun getSeed(fileName: String): Int {
-  if (fileName.isEmpty()) {
-    return 0
-  }
-  if (fileName.contains("static_data")) {
-    error("Cannot get seed name for map data! Analyzed file: $fileName")
-  }
-  if (fileName.contains("dynamic_data")) {
-    return fileName.split("dynamic_data_")[1].split("_seed")[1].split(".")[0].toInt()
-  }
-  error("Unknown filename format")
-}
+fun getSeed(fileName: String): Int =
+    when {
+      fileName.isEmpty() -> 0
+      fileName.contains("dynamic_data") ->
+          fileName.split("dynamic_data_")[1].split("_seed")[1].split(".")[0].toInt()
+      fileName.contains("static_data") ->
+          error("Cannot get seed name for map data! Analyzed file: $fileName")
+      else -> error("Unknown filename format")
+    }
 
+/**
+ * Returns the lane progress of a vehicle.
+ *
+ * @param blocks The list of [Block]s.
+ * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ * @param vehicle The [JsonVehicle].
+ */
 fun getLaneProgressionForVehicle(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
@@ -59,25 +68,34 @@ fun getLaneProgressionForVehicle(
   val roads = blocks.flatMap { it.roads }
   val lanes = roads.flatMap { it.lanes }
   val laneProgression: MutableList<Pair<Lane?, Boolean>> = mutableListOf()
+
   jsonSimulationRun.forEach { jsonTickData ->
     val vehiclePosition = jsonTickData.actorPositions.firstOrNull { it.actor.id == vehicle.id }
+
     if (vehiclePosition == null) {
       laneProgression.add(null to false)
       return@forEach
     }
-    val vehicleRoad = roads.firstOrNull { it.id == vehiclePosition.roadId }
-    checkNotNull(vehicleRoad) { "Road ${vehiclePosition.roadId} could not be found" }
+
     val vehicleLane =
-        lanes.firstOrNull {
-          it.laneId == vehiclePosition.laneId && it.road.id == vehiclePosition.roadId
-        }
-    checkNotNull(vehicleLane)
+        lanes.first { it.laneId == vehiclePosition.laneId && it.road.id == vehiclePosition.roadId }
+    val vehicleRoad = roads.first { it.id == vehiclePosition.roadId }
     laneProgression.add(vehicleLane to vehicleRoad.isJunction)
   }
+
   return laneProgression
 }
 
-@Suppress("LABEL_NAME_CLASH")
+/**
+ * Convert Json data.
+ *
+ * @param blocks The list of [Block]s.
+ * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ * @param useEveryVehicleAsEgo Whether to treat every vehicle as own.
+ * @param simulationRunId Identifier of the simulation run.
+ */
+// @Suppress("LABEL_NAME_CLASH")
+@Suppress("unused")
 fun convertJsonData(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
@@ -91,10 +109,10 @@ fun convertJsonData(
     egoVehicles = egoVehicles.filter { e -> e.egoVehicle }
   }
 
-  /** Stores all simulation runs (List<TickData>) for each ego vehicle */
+  // Stores all simulation runs (List<TickData>) for each ego vehicle
   val simulationRuns = mutableListOf<Pair<String, List<TickData>>>()
 
-  /** Stores a complete TickData list which will be cloned for each ego vehicle */
+  // Stores a complete TickData list which will be cloned for each ego vehicle
   var referenceTickData: List<TickData>? = null
 
   egoVehicles.forEach { egoVehicle ->
@@ -103,35 +121,33 @@ fun convertJsonData(
     if (simulationRuns.isNotEmpty() && !useEveryVehicleAsEgo) {
       return@forEach
     }
-    var egoTickData: List<TickData>
+
     // Either load data from json or clone existing data
     if (referenceTickData == null) {
-      egoTickData =
+      referenceTickData =
           jsonSimulationRun.map { jsonTickData ->
             convertJsonTickDataToTickData(jsonTickData, blocks)
           }
-      referenceTickData = egoTickData
     }
-    egoTickData = referenceTickData!!.map { it.clone() }
+    val egoTickData = checkNotNull(referenceTickData).map { it.clone() }
 
     // Set egoVehicle flag for each TickData
-    var tickWithoutEgo = false
+    var isTickWithoutEgo = false
     egoTickData.forEach { tickData ->
-      if (tickWithoutEgo) {
-        return@forEach
-      }
-      val egoInTickData =
-          tickData.actors.firstOrNull { it is Vehicle && it.id == egoVehicle.id } as Vehicle?
-      if (egoInTickData != null) {
-        egoInTickData.egoVehicle = true
-      } else {
-        tickWithoutEgo = true
+      if (!isTickWithoutEgo) {
+        val egoInTickData =
+            tickData.actors.firstOrNull { it is Vehicle && it.id == egoVehicle.id } as? Vehicle
+        if (egoInTickData != null) {
+          egoInTickData.egoVehicle = true
+        } else {
+          isTickWithoutEgo = true
+        }
       }
     }
 
     // There were some simulation runs where some vehicles are not always there.
     // Therefore, check if the egoVehicle was found in each tick
-    if (!tickWithoutEgo) {
+    if (!isTickWithoutEgo) {
       simulationRuns.add(simulationRunId to egoTickData)
     }
   }
@@ -140,6 +156,74 @@ fun convertJsonData(
   return simulationRuns
 }
 
+/**
+ * Updates velocity of actors.
+ *
+ * @param simulationRun List of [TickData].
+ */
+fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
+  for (i in 1 until simulationRun.size) {
+    val currentTick = simulationRun[i]
+    val previousTick = simulationRun[i - 1]
+    currentTick.actors.forEach { currentActor ->
+      if (currentActor is Vehicle) {
+        updateActorVelocityAndAcceleration(
+            currentActor, previousTick.actors.firstOrNull { it.id == currentActor.id })
+      }
+    }
+  }
+}
+
+/**
+ * Updates velocity and acceleration of [vehicle].
+ *
+ * @param vehicle The [Vehicle] to update.
+ * @param previousActor The previous [Actor].
+ * @throws IllegalStateException iff [previousActor] is not [Vehicle].
+ */
+fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) {
+
+  // When there is no previous actor position, set velocity and acceleration to 0.0
+  if (previousActor == null) {
+    vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
+    vehicle.acceleration = Vector3D(0.0, 0.0, 0.0)
+    return
+  }
+
+  check(previousActor is Vehicle) {
+    "The Actor with id '${previousActor.id}' from the previous tick is of type '${previousActor::class}' " +
+        "but '${Vehicle::class}' was expected."
+  }
+
+  // Calculate the time difference
+  val timeDelta = vehicle.tickData.currentTick - previousActor.tickData.currentTick
+
+  check(timeDelta >= 0) {
+    "The time delta between the vehicles is less than 0. Maybe you have switched the vehicles? " +
+        "Tick of current vehicle: ${vehicle.tickData.currentTick} vs. previous vehicle: ${previousActor.tickData.currentTick}"
+  }
+
+  if (timeDelta == 0.0) {
+    // If the time difference is exactly 0.0 set default values, as division by 0.0 is not allowed
+    vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
+    vehicle.acceleration = Vector3D(0.0, 0.0, 0.0)
+  } else {
+    // Set velocity and acceleration vector based on velocity values for each direction
+    vehicle.velocity = (Vector3D(vehicle.location) - Vector3D(previousActor.location)) / timeDelta
+    vehicle.acceleration =
+        (Vector3D(vehicle.velocity) - Vector3D(previousActor.velocity) / timeDelta)
+  }
+}
+
+/**
+ * Slices run into segments.
+ *
+ * @param blocks The list of [Block]s.
+ * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ * @param useEveryVehicleAsEgo Whether to treat every vehicle as own.
+ * @param simulationRunId Identifier of the simulation run.
+ * @param minSegmentTickCount Minimal count of ticks per segment.
+ */
 fun sliceRunIntoSegments(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
@@ -182,6 +266,12 @@ fun sliceRunIntoSegments(
   return segments
 }
 
+/**
+ * Cleans Json data.
+ *
+ * @param blocks The list of [Block]s.
+ * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ */
 fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
   val vehicles =
       jsonSimulationRun
@@ -192,13 +282,11 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
   vehicles.forEach { vehicle ->
     val laneProgression = getLaneProgressionForVehicle(blocks, jsonSimulationRun, vehicle)
 
-    /**
-     * Saves the lane progression of the current vehicle as a list of Triple(RoadId, LaneId,
-     * IsJunction)
-     */
+    // Saves the lane progression of the current vehicle as a list of Triple(RoadId, LaneId,
+    // IsJunction)
     var previousMultilane: Lane? = null
     var nextMultilane: Lane?
-    var currentJunction: MutableList<Pair<Int, Lane>> = mutableListOf()
+    val currentJunction: MutableList<Pair<Int, Lane>> = mutableListOf()
 
     laneProgression.forEachIndexed { index: Int, (lane: Lane?, isJunction: Boolean) ->
       if (lane == null) {
@@ -209,7 +297,7 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
           nextMultilane = lane
           cleanJunctionData(
               jsonSimulationRun, currentJunction, previousMultilane, nextMultilane, vehicle)
-          currentJunction = mutableListOf()
+          currentJunction.clear()
           previousMultilane = lane
         } else {
           previousMultilane = lane
@@ -226,8 +314,17 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
   }
 }
 
-fun cleanJunctionData(
-    simulationRun: List<JsonTickData>,
+/**
+ * Cleans junction data.
+ *
+ * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ * @param junctionIndices Indices of the junctions.
+ * @param laneFrom Incoming [Lane].
+ * @param laneTo Outgoing [Lane].
+ * @param vehicle The [JsonVehicle].
+ */
+private fun cleanJunctionData(
+    jsonSimulationRun: List<JsonTickData>,
     junctionIndices: List<Pair<Int, Lane>>,
     laneFrom: Lane?,
     laneTo: Lane?,
@@ -285,7 +382,7 @@ fun cleanJunctionData(
   if (newLane != null) {
     junctionIndices.forEach { (index, _) ->
       val vehiclePositionToUpdate =
-          simulationRun[index].actorPositions.firstOrNull { it.actor.id == vehicle.id }
+          jsonSimulationRun[index].actorPositions.firstOrNull { it.actor.id == vehicle.id }
       checkNotNull(vehiclePositionToUpdate)
       vehiclePositionToUpdate.laneId = newLane.laneId
       vehiclePositionToUpdate.roadId = newLane.road.id

@@ -22,7 +22,9 @@ import tools.aqua.stars.core.evaluation.PredicateCombination
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.tsc.*
+import tools.aqua.stars.core.tsc.edge.TSCAlwaysEdge
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -35,6 +37,7 @@ import tools.aqua.stars.core.types.TickDataType
  * [PredicateCombination]s for each [TSCProjection]. It logs the missing [PredicateCombination]s for
  * each [TSCProjection].
  */
+@Suppress("unused")
 class MissingPredicateCombinationsPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
@@ -45,15 +48,14 @@ class MissingPredicateCombinationsPerProjectionMetric<
    * Returns a [Set] of all missing [PredicateCombination]s for all [TSCProjection]s that are
    * calculated by the [ValidTSCInstancesPerProjectionMetric].
    */
-  override fun evaluate(): Map<TSCProjection<E, T, S>, Set<PredicateCombination>> {
-    return dependsOn.getState().mapValues {
-      getAllMissingPredicateCombinationsForProjection(it.key, it.value.map { it.key })
-    }
-  }
+  override fun evaluate(): Map<TSCProjection<E, T, S>, Set<PredicateCombination>> =
+      dependsOn.getState().mapValues {
+        getAllMissingPredicateCombinationsForProjection(it.key, it.value.map { t -> t.key })
+      }
 
   /**
    * Prints the count of missed [PredicateCombination]s for each [TSCProjection] and then the actual
-   * list of the missed predicates
+   * list of the missed predicates.
    */
   override fun print() {
     val evaluationResult = evaluate()

@@ -20,16 +20,16 @@ package tools.aqua.stars.core.tsc
 import tools.aqua.stars.core.types.SegmentType
 
 /**
- * This class contains the validation result of all monitors for one [TSCInstanceNode].
+ * This class contains the validation result of all monitors for one TSCInstanceNode.
  *
- * @param segmentIdentifier Uniquely identifies the [SegmentType] from which the [TSCInstanceNode]
- * results
- * @param monitorsValid Flags whether there is an invalid monitor
- * @param edgeList Default: null. When there is an invalid monitor, it contains the [List] of edge
- * labels leading to the invalid monitor.
+ * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
+ * results.
+ * @property monitorsValid Flags whether there is an invalid monitor.
+ * @property edgeList Default: null. When there is an invalid monitor, it contains the [List] of
+ * edge labels leading to the invalid monitor.
  */
 class TSCMonitorResult(
     val segmentIdentifier: String,
     var monitorsValid: Boolean,
     var edgeList: List<String>? = null
-) {}
+)

@@ -17,7 +17,7 @@
 
 plugins {
   id("tools.aqua.stars.library-conventions")
-  kotlin("plugin.serialization") version "1.7.10"
+  kotlin("plugin.serialization") version "1.9.10"
 }
 
 mavenMetadata {
@@ -31,5 +31,5 @@ dependencies {
   implementation(project(":stars-data-av"))
   testImplementation(project(":stars-data-av", "test"))
   implementation(libs.kotlinx.serialization.json)
-  implementation(libs.bundles.test)
+  testImplementation(libs.bundles.test)
 }

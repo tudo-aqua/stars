@@ -18,17 +18,17 @@
 package tools.aqua.stars.data.av.metrics
 
 import kotlin.test.Test
-import tools.aqua.stars.data.av.Segment
+import tools.aqua.stars.data.av.dataclasses.Segment
 import tools.aqua.stars.data.av.emptyBlock
 import tools.aqua.stars.data.av.emptyTickData
 import tools.aqua.stars.data.av.emptyVehicle
 
-/** This class tests the [AverageVehiclesInEgosBlockMetric.evaluate] function */
+/** This class tests the [AverageVehiclesInEgosBlockMetric.evaluate] function. */
 class AverageVehiclesInEgosBlockMetricTest {
 
   /**
    * This test checks that the returned value of the metric is equal to 1, as there is only the ego
-   * in the block
+   * in the block.
    */
   @Test
   fun testOnlyEgoInBlock() {
@@ -43,7 +43,7 @@ class AverageVehiclesInEgosBlockMetricTest {
     assert(evaluationResult == 1.0)
   }
 
-  /** This test checks that there are (on average) 2 vehicles */
+  /** This test checks that there are (on average) 2 vehicles. */
   @Test
   fun testOneVehicleBesidesEgoInBlock() {
     val block = emptyBlock()
@@ -63,7 +63,7 @@ class AverageVehiclesInEgosBlockMetricTest {
     assert(evaluationResult == 2.0)
   }
 
-  /** This test checks that there are (on average) over 1.5 vehicles */
+  /** This test checks that there are (on average) over 1.5 vehicles. */
   @Test
   fun testMostlyOneVehicleBesidesEgoInBlock() {
     val block = emptyBlock()

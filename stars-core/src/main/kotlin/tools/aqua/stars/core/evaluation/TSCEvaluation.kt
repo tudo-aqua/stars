@@ -22,8 +22,8 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.tsc.TSCInstanceNode
-import tools.aqua.stars.core.tsc.TSCProjection
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -31,22 +31,31 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * This class holds every important data to evaluate a given TSC. The [TSCEvaluation.runEvaluation]
  * function evaluates the [TSC] based on the given [SegmentType]s. The [TSCProjection]s are filtered
- * by the [projectionIgnoreList].
+ * by the [projectionIgnoreList]. This class implements [Loggable].
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @property tsc The [TSC].
+ * @property segments Sequence of [SegmentType]s.
+ * @property projectionIgnoreList List of projections to ignore.
+ * @property logger Logger instance.
  */
 @OptIn(ExperimentalTime::class)
 class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    private val tsc: TSC<E, T, S>,
-    private val segments: Sequence<SegmentType<E, T, S>>,
-    private val projectionIgnoreList: List<String> = listOf(),
+    val tsc: TSC<E, T, S>,
+    val segments: Sequence<S>,
+    val projectionIgnoreList: List<String> = listOf(),
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProvider]. */
   private val metricProviders: MutableList<MetricProvider<E, T, S>> = mutableListOf()
 
   /**
-   * Register a new [MetricProvider] to the list of metrics that should be called during evaluation
+   * Registers a new [MetricProvider] to the list of metrics that should be called during
+   * evaluation.
    *
-   * @param metricProvider The [MetricProvider] that should be registered
+   * @param metricProvider The [MetricProvider] that should be registered.
    */
   fun registerMetricProvider(metricProvider: MetricProvider<E, T, S>) {
     metricProviders.add(metricProvider)
@@ -57,17 +66,20 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called. It requires at
    * least one [MetricProvider].
    *
-   * @throws IllegalArgumentException When there are no [MetricProvider]s registered
+   * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun runEvaluation() {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProviders." }
+
     val totalEvaluationTime = measureTime {
       /** Holds the [List] of [TSCProjection] based on the base [tsc]. */
       var tscProjections: List<TSCProjection<E, T, S>>
+
+      // Build all projections of the base TSC
       val tscProjectionCalculationTime = measureTime {
-        // Build all projections of the base TSC
         tscProjections = tsc.buildProjections(projectionIgnoreList)
       }
+
       logFine(
           "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
 
@@ -86,18 +98,19 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
                   metricProviders.filterIsInstance<ProjectionMetricProvider<E, T, S>>().forEach {
                     it.evaluate(projection)
                   }
-                  /** Holds the PredicateContext for the current segment */
-                  val context = PredicateContext(segment as S)
-                  /**
-                   * Holds the [TSCInstanceNode] of the current [projection] using the
-                   * [PredicateContext], representing a whole TSC
-                   */
+                  // Holds the PredicateContext for the current segment
+                  val context = PredicateContext(segment)
+
+                  // Holds the [TSCInstanceNode] of the current [projection] using the
+                  // [PredicateContext], representing a whole TSC.
                   val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
-                  // Run the "evaluate" function for all ProjectionMetricProviders on the current
+
+                  // Run the "evaluate" function for all TSCInstanceMetricProviders on the current
                   // segment
                   metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S>>().forEach {
                     it.evaluate(segmentProjectionTSCInstance)
                   }
+
                   // Run the "evaluate" function for all
                   // ProjectionAndTSCInstanceNodeMetricProviders on the current  projection and
                   // instance
@@ -118,14 +131,19 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
       logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
     }
     logInfo("The whole evaluation took: $totalEvaluationTime")
+
     // Print the results of all Stateful metrics
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+
     // Call the 'evaluate' function for all PostEvaluationMetricProviders
     metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>().forEach { it.print() }
+
     // Plot the results of all Plottable metrics
     metricProviders.filterIsInstance<Plottable>().forEach { it.plotData() }
+
     // Close all logging handlers to prevent .lck files to remain
     metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
+
     closeLogger()
   }
 }

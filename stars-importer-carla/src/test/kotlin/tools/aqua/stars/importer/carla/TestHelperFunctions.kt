@@ -17,99 +17,96 @@
 
 package tools.aqua.stars.importer.carla
 
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.importer.carla.dataclasses.*
 
-fun emptyJsonVehicle(): JsonVehicle {
-  return JsonVehicle(
-      id = 0,
-      rotation = emptyJsonRotation(),
-      velocity = emptyJsonVector3D(),
-      location = emptyJsonLocation(),
-      acceleration = emptyJsonVector3D(),
-      egoVehicle = false,
-      angularVelocity = emptyJsonVector3D(),
-      forwardVector = emptyJsonVector3D(),
-      typeId = "")
-}
+/** Empty [JsonVehicle]. */
+fun emptyJsonVehicle(): JsonVehicle =
+    JsonVehicle(
+        id = 0,
+        rotation = emptyJsonRotation(),
+        velocity = emptyJsonVector3D(),
+        location = emptyJsonLocation(),
+        acceleration = emptyJsonVector3D(),
+        egoVehicle = false,
+        angularVelocity = emptyJsonVector3D(),
+        forwardVector = emptyJsonVector3D(),
+        typeId = "")
 
-fun emptyJsonActorPosition(): JsonActorPosition {
-  return JsonActorPosition(actor = emptyJsonVehicle(), positionOnLane = 0.0, laneId = 0, roadId = 0)
-}
+/** Empty [JsonActorPosition]. */
+fun emptyJsonActorPosition(): JsonActorPosition =
+    JsonActorPosition(actor = emptyJsonVehicle(), positionOnLane = 0.0, laneId = 0, roadId = 0)
 
-fun emptyBlock(id: String = ""): Block {
-  return Block(id = id, roads = listOf(), fileName = "")
-}
+/** Empty [Block]. */
+fun emptyBlock(id: String = ""): Block = Block(id = id, roads = listOf(), fileName = "")
 
-fun emptyJsonLane(): JsonLane {
-  return JsonLane(
-      laneId = 0,
-      roadId = 0,
-      s = 0.0,
-      intersectingLanes = listOf(),
-      laneLength = 0.0,
-      laneMidpoints = listOf(),
-      laneType = JsonLaneType.Driving,
-      laneWidth = 0.0,
-      predecessorLanes = listOf(),
-      contactAreas = listOf(),
-      successorLanes = listOf(),
-      speedLimits = listOf(),
-      trafficLights = listOf(),
-      landmarks = listOf())
-}
+/** Empty [JsonLane]. */
+fun emptyJsonLane(): JsonLane =
+    JsonLane(
+        laneId = 0,
+        roadId = 0,
+        s = 0.0,
+        intersectingLanes = listOf(),
+        laneLength = 0.0,
+        laneMidpoints = listOf(),
+        laneType = JsonLaneType.Driving,
+        laneWidth = 0.0,
+        predecessorLanes = listOf(),
+        contactAreas = listOf(),
+        successorLanes = listOf(),
+        speedLimits = listOf(),
+        trafficLights = listOf(),
+        landmarks = listOf())
 
-fun emptyJsonRotation(): JsonRotation {
-  return JsonRotation(0.0, 0.0, 0.0)
-}
+/** Empty [JsonRotation]. */
+fun emptyJsonRotation(): JsonRotation = JsonRotation(0.0, 0.0, 0.0)
 
-fun emptyJsonLocation(): JsonLocation {
-  return JsonLocation(0.0, 0.0, 0.0)
-}
+/** Empty [JsonLocation]. */
+fun emptyJsonLocation(): JsonLocation = JsonLocation(0.0, 0.0, 0.0)
 
-fun emptyJsonVector3D(): JsonVector3D {
-  return JsonVector3D(0.0, 0.0, 0.0)
-}
+/** Empty [JsonVector3D]. */
+fun emptyJsonVector3D(): JsonVector3D = JsonVector3D(0.0, 0.0, 0.0)
 
-fun emptyJsonStaticTrafficLight(): JsonStaticTrafficLight {
-  return JsonStaticTrafficLight(
-      id = 0,
-      rotation = emptyJsonRotation(),
-      location = emptyJsonLocation(),
-      stopLocations = listOf(),
-      positionDistance = 0.0f)
-}
+/** Empty [JsonStaticTrafficLight]. */
+fun emptyJsonStaticTrafficLight(): JsonStaticTrafficLight =
+    JsonStaticTrafficLight(
+        id = 0,
+        rotation = emptyJsonRotation(),
+        location = emptyJsonLocation(),
+        stopLocations = listOf(),
+        positionDistance = 0.0f)
 
-fun emptyJsonTrafficLight(): JsonTrafficLight {
-  return JsonTrafficLight(
-      id = 0,
-      state = 0,
-      typeId = "",
-      relatedOpenDriveId = 0,
-      rotation = emptyJsonRotation(),
-      location = emptyJsonLocation())
-}
+/** Empty [JsonTrafficLight]. */
+fun emptyJsonTrafficLight(): JsonTrafficLight =
+    JsonTrafficLight(
+        id = 0,
+        state = 0,
+        typeId = "",
+        relatedOpenDriveId = 0,
+        rotation = emptyJsonRotation(),
+        location = emptyJsonLocation())
 
-fun emptyJsonLandmark(): JsonLandmark {
-  return JsonLandmark(
-      id = 0,
-      roadId = 0,
-      location = JsonLocation(0.0, 0.0, 0.0),
-      text = "",
-      unit = "",
-      value = 0.0,
-      type = JsonLandmarkType.LightPost,
-      country = "",
-      distance = 0.0,
-      rotation = JsonRotation(0.0, 0.0, 0.0),
-      hOffset = 0.0,
-      height = 0.0,
-      isDynamic = false,
-      name = "",
-      orientation = JsonLandmarkOrientation.Both,
-      pitch = 0.0,
-      roll = 0.0,
-      s = 0.0,
-      subType = "",
-      width = 0.0,
-      zOffset = 0.0)
-}
+/** Empty [JsonLandmark]. */
+fun emptyJsonLandmark(): JsonLandmark =
+    JsonLandmark(
+        id = 0,
+        roadId = 0,
+        location = JsonLocation(0.0, 0.0, 0.0),
+        text = "",
+        unit = "",
+        value = 0.0,
+        type = JsonLandmarkType.LightPost,
+        country = "",
+        distance = 0.0,
+        rotation = JsonRotation(0.0, 0.0, 0.0),
+        hOffset = 0.0,
+        height = 0.0,
+        isDynamic = false,
+        name = "",
+        orientation = JsonLandmarkOrientation.Both,
+        pitch = 0.0,
+        roll = 0.0,
+        s = 0.0,
+        subType = "",
+        width = 0.0,
+        zOffset = 0.0)

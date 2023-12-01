@@ -15,19 +15,22 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tools.aqua.stars.core.tsc
+package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
 import tools.aqua.stars.core.SimpleEntity
 import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
-import tools.aqua.stars.core.tsc.*
+import tools.aqua.stars.core.tsc.builder.all
+import tools.aqua.stars.core.tsc.builder.root
+import tools.aqua.stars.core.tsc.projection.proj
 
+/** Tests for projections. */
 class TSCProjectionTests {
 
   /**
    * This test check that with two existing projections in the TSC, exactly two projections are
-   * returned by [TSCNode.buildProjections]
+   * returned by 'TSCNode.buildProjections'.
    */
   @Test
   fun testSimpleProjectionBuilding() {
@@ -48,7 +51,7 @@ class TSCProjectionTests {
 
   /**
    * This test checks that the ignore list, which is given as a parameter to
-   * [TSCNode.buildProjections], is working correctly.
+   * 'TSCNode.buildProjections', is working correctly.
    */
   @Test
   fun testProjectionBuildingWithIgnoreList() {
@@ -100,7 +103,7 @@ class TSCProjectionTests {
   }
 
   /**
-   * This test checks that no projections are returned by [TSCNode.buildProjections] when no
+   * This test checks that no projections are returned by 'TSCNode.buildProjections' when no
    * projections are defined in the TSC.
    */
   @Test

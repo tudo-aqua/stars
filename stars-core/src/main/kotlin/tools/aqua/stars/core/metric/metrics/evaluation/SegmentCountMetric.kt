@@ -33,7 +33,7 @@ class SegmentCountMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("segment-count")
 ) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
-  /** Holds the count of [SegmentType]s that are analyzed */
+  /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
   /**
@@ -42,20 +42,15 @@ class SegmentCountMetric<
    * @param segment The current [SegmentType] that is evaluated
    * @return The number of analyzed [SegmentType]s so far
    */
-  override fun evaluate(segment: SegmentType<E, T, S>): Int {
-    segmentCount++
-    logFiner("==== Segment $segmentCount: $segment ====")
-    return segmentCount
-  }
+  override fun evaluate(segment: SegmentType<E, T, S>): Int =
+      (++segmentCount).also { logFiner("==== Segment $segmentCount: $segment ====") }
 
   /**
    * Returns the current [segmentCount].
    *
    * @return Returns the current [segmentCount]
    */
-  override fun getState(): Int {
-    return segmentCount
-  }
+  override fun getState(): Int = segmentCount
 
   /** Prints the current state using [println]. */
   override fun printState() {

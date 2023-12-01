@@ -20,14 +20,15 @@ package tools.aqua.stars.importer.carla
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Landmark
+import tools.aqua.stars.importer.carla.dataclasses.*
 
 class JSONLandmarkTest {
 
   private lateinit var completeJsonLandmark: JsonLandmark
   private lateinit var completeLandmark: Landmark
-  private lateinit var jsonSpeedLimit: JsonLandmark
-  private lateinit var speedLimit: Landmark
+  // private lateinit var jsonSpeedLimit: JsonLandmark
+  // private lateinit var speedLimit: Landmark
 
   @BeforeTest
   fun setup() {

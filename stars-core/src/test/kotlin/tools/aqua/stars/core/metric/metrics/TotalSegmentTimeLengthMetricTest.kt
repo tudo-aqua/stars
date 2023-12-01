@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tools.aqua.stars.core.metric.metrics
+package tools.aqua.stars.core.metric.metrics
 
 import java.lang.IllegalStateException
 import kotlin.test.Test
@@ -28,6 +28,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.TotalSegmentTimeLengthMet
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/** Test for [TotalSegmentTimeLengthMetric]. */
 class TotalSegmentTimeLengthMetricTest {
 
   /**

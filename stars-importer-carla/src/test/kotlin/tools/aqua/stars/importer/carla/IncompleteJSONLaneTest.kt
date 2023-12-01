@@ -17,12 +17,11 @@
 
 package tools.aqua.stars.importer.carla
 
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNull
-import tools.aqua.stars.data.av.*
+import kotlin.test.*
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Lane
+import tools.aqua.stars.data.av.dataclasses.Road
+import tools.aqua.stars.importer.carla.dataclasses.*
 
 class IncompleteJSONLaneTest {
 
@@ -96,7 +95,7 @@ class IncompleteJSONLaneTest {
 
   @Test
   fun checkUpdatingOfContactLaneInfos() {
-    assertFailsWith<NoSuchElementException> { updateLaneContactLaneInfos(jsonLanes, lanes) }
+    assertFailsWith<NoSuchElementException> { updateLanes(jsonLanes, lanes) }
     assertEquals(incompleteLane.intersectingLanes.size, 0)
     assertEquals(incompleteLane.predecessorLanes.size, 0)
     assertEquals(incompleteLane.successorLanes.size, 0)

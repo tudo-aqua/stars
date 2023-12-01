@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tools.aqua.stars.core.metric.metrics
+package tools.aqua.stars.core.metric.metrics
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,6 +24,7 @@ import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 
+/** Test for [SegmentCountMetric]. */
 class SegmentCountMetricTest {
 
   /**

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tools.aqua.stars.core.metric.metrics
+package tools.aqua.stars.core.metric.metrics
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,6 +27,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.SegmentDurationPerIdentif
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
+/** Test for [SegmentDurationPerIdentifierMetric]. */
 class SegmentDurationPerIdentifierMetricTest {
 
   /**

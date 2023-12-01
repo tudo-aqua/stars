@@ -21,18 +21,19 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.data.av.Actor
-import tools.aqua.stars.data.av.Block
-import tools.aqua.stars.data.av.Segment
-import tools.aqua.stars.data.av.TickData
+import tools.aqua.stars.data.av.dataclasses.Actor
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Segment
+import tools.aqua.stars.data.av.dataclasses.TickData
 
 /**
  * This class is an implementation of [SegmentMetricProvider] which provides the metric "average
- * vehicles in ego's block"
+ * vehicles in ego's block".
  */
 class AverageVehiclesInEgosBlockMetric(
     override val logger: Logger = Loggable.getLogger("average-vehicles-in-egos-block")
 ) : SegmentMetricProvider<Actor, TickData, Segment>, Loggable {
+
   /**
    * Evaluates the average count of [Actor]s in the [Block] of the ego vehicle.
    *

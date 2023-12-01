@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-plugins { `kotlin-dsl`.version("3.1.0") }
+plugins { `kotlin-dsl` }
 
 repositories {
   gradlePluginPortal()

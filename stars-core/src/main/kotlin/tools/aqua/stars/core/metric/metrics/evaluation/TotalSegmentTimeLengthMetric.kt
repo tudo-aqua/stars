@@ -35,6 +35,7 @@ class TotalSegmentTimeLengthMetric<
 ) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
   /** Holds the current time duration for all already analyzed [SegmentType]s. */
   private var totalTimeDuration: Double = 0.0
+
   /**
    * Add the duration of the given [segment] to the total duration. [SegmentType] with no, or only
    * one [TickDataType] are ignores.
@@ -46,21 +47,18 @@ class TotalSegmentTimeLengthMetric<
    * of the [SegmentType] is negative.
    */
   override fun evaluate(segment: SegmentType<E, T, S>): Double {
-    // The Segment does not have any analyzable time duration
-    if (segment.tickData.isEmpty()) {
-      return totalTimeDuration
-    }
-    // The Segment has only one TickData from which no time duration can be calculated.
-    if (segment.tickData.size == 1) {
-      return totalTimeDuration
-    }
+    // The Segment has no or only one TickData from which no time duration can be calculated.
+    if (segment.tickData.size <= 1) return totalTimeDuration
+
     // Calculate the time difference between the last and the first tick in the given segment.
     val segmentTimeDuration =
         segment.tickData.last().currentTick - segment.tickData.first().currentTick
+
     check(segmentTimeDuration >= 0.0) {
       "The duration between the first and last tick of segment '$segment' should be positive! " +
           "Actual duration: $segmentTimeDuration."
     }
+
     totalTimeDuration += segmentTimeDuration
     return totalTimeDuration
   }
@@ -70,11 +68,9 @@ class TotalSegmentTimeLengthMetric<
    *
    * @return The current [totalTimeDuration] for all already analyzed [SegmentType]s as [Double].
    */
-  override fun getState(): Double {
-    return totalTimeDuration
-  }
+  override fun getState(): Double = totalTimeDuration
 
-  /** Prints the current [totalTimeDuration] using [println] */
+  /** Prints the current [totalTimeDuration]. */
   override fun printState() {
     logInfo("The analyzed segments yielded a total of $totalTimeDuration seconds of analysis data.")
   }
