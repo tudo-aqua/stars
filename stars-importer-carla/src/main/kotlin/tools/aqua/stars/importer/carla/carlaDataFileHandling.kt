@@ -300,7 +300,7 @@ private suspend fun startLoadJob(
     minSegmentTickCount: Int,
     segmentChannel: Channel<Segment?>,
     evaluationState: EvaluationState,
-) = coroutineScope {
+): Unit = coroutineScope {
   val simulationsChannel =
       Channel<Triple<CarlaSimulationRunsWrapper, Path, List<JsonTickData>>?>(
           capacity = Channel.UNLIMITED)
@@ -338,7 +338,7 @@ private suspend fun startSliceJob(
     segmentChannel: Channel<Segment?>,
     simulationsChannel: Channel<Triple<CarlaSimulationRunsWrapper, Path, List<JsonTickData>>?>,
     evaluationState: EvaluationState,
-) = coroutineScope {
+): Unit = coroutineScope {
   while (true) {
     val sim = simulationsChannel.receive()
     evaluationState.simulationRunsBuffer.decrementAndGet()
