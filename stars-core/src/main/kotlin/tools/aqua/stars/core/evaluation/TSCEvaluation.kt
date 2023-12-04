@@ -17,9 +17,11 @@
 
 package tools.aqua.stars.core.evaluation
 
+import java.util.concurrent.Executors
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import tools.aqua.stars.core.metric.metrics.EvaluationMetrics
 import tools.aqua.stars.core.metric.metrics.PostEvaluationMetrics
 import tools.aqua.stars.core.metric.providers.*
@@ -39,17 +41,17 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @property numThreads Number of parallel segment executions.
  * @property tsc The [TSC].
- * @property segments Sequence of [SegmentType]s.
  * @property projectionIgnoreList List of projections to ignore.
  * @property logger Logger instance.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val tsc: TSC<E, T, S>,
-    val segments: Sequence<S>,
     val projectionIgnoreList: List<String> = listOf(),
-    override val logger: Logger = Loggable.getLogger("evaluation-time")
+    val numThreads: Int,
+    override val logger: Logger = Loggable.getLogger("evaluation-time"),
 ) : Loggable {
 
   /** Holds the [List] of [TSCProjection] based on the base [tsc]. */
@@ -65,8 +67,14 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
   private val segmentEvaluationJobs: MutableList<Deferred<EvaluationMetrics<E, T, S>>> =
       mutableListOf()
 
+  /** Coroutine dispatcher for segment evaluations. */
+  val dispatcher = Executors.newFixedThreadPool(numThreads).asCoroutineDispatcher()
+
   /** Coroutine scope for segment evaluations. */
-  val scope: CoroutineScope = CoroutineScope(Dispatchers.Unconfined)
+  val scope: CoroutineScope = CoroutineScope(dispatcher)
+
+  /** Coroutine channel for segment evaluations. */
+  val channel = Channel<S>(numThreads)
 
   /**
    * Registers new [MetricProvider]s to the list of metrics that should be called during evaluation.
@@ -109,19 +117,22 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun prepare() {
-    require(evaluationMetrics.any() || postEvaluationMetrics.any()) {
+    check(evaluationMetrics.any() || postEvaluationMetrics.any()) {
       "There needs to be at least one registered MetricProviders."
     }
-    require(tscProjections.isEmpty()) { "TSCEvaluation.prepare() has been called before." }
+    check(tscProjections.isEmpty()) { "TSCEvaluation.prepare() has been called before." }
 
     // Build all projections of the base TSC
     val tscProjectionCalculationTime = measureTime {
       tscProjections.addAll(tsc.buildProjections(projectionIgnoreList))
-      require(tscProjections.isNotEmpty()) { "Found no projections on current TSC." }
+      check(tscProjections.isNotEmpty()) { "Found no projections on current TSC." }
     }
 
     logFine(
         "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
+
+    // Start work jobs
+    repeat(numThreads) { segmentEvaluationJobs.add(scope.async { work() }) }
   }
 
   /**
@@ -133,20 +144,32 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * @throws IllegalArgumentException If [prepare] has not been called.
    */
   fun presentSegment(vararg segments: S) {
-    if (tscProjections.isEmpty()) prepare()
-
-    segmentEvaluationJobs.addAll(
-        segments.map { scope.async { evaluateSegment(it) }.also { it.start() } })
+    runBlocking { segments.forEach { channel.send(it) } }
+    // segmentEvaluationJobs.addAll(segments.map { scope.async { evaluateSegment(it) } })
   }
 
-  private suspend fun evaluateSegment(segment: S): EvaluationMetrics<E, T, S> {
-    val metricHolder = evaluationMetrics.copy()
+  @OptIn(ExperimentalCoroutinesApi::class)
+  private suspend fun work(): EvaluationMetrics<E, T, S> {
+    val result = evaluationMetrics.copy()
+
+    while (!channel.isClosedForReceive) {
+      val next = channel.receiveCatching()
+
+      if (!next.isSuccess) break
+
+      evaluateSegment(next.getOrThrow(), result)
+    }
+
+    return result
+  }
+
+  private suspend fun evaluateSegment(segment: S, metricHolder: EvaluationMetrics<E, T, S>) {
     val segmentEvaluationTime = measureTime {
       // Run the "evaluate" function for all SegmentMetricProviders on the current segment
       metricHolder.evaluateSegmentMetrics(segment)
 
       val projectionsEvaluationTime = measureTime {
-        val evaluatedProjections = runBlocking { evaluateProjections(segment) }
+        val evaluatedProjections = evaluateProjections(segment)
 
         evaluatedProjections.forEach { (projection, tscInstance) ->
           val projectionEvaluationTime = measureTime {
@@ -162,7 +185,8 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
           "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
     }
     logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
-    return metricHolder
+
+    EvaluationState.finishedSegments.incrementAndGet()
   }
 
   private suspend fun evaluateProjections(
@@ -178,10 +202,13 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
 
   /** Closes the [TSCEvaluation] instance printing the results. */
   fun close() {
-    tscProjections.clear()
-
     runBlocking {
+      channel.close()
+
+      EvaluationState.isFinished.set(true)
+
       EvaluationMetrics.merge(segmentEvaluationJobs.awaitAll()).apply {
+        tscProjections.clear()
         printState()
         plotData()
         close()
@@ -193,6 +220,10 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
         close()
       }
     }
+
+    dispatcher.close()
     closeLogger()
+
+    EvaluationState.checkFinished(true)
   }
 }

@@ -29,4 +29,19 @@ const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: String =
 const val DEFAULT_MIN_SEGMENT_TICK_COUNT: Int = 10
 
 /** The default size of the simulation run prefetch buffer. */
-const val DEFAULT_SIMULATION_RUN_PREFETCH_SIZE: Int = 500
+const val DEFAULT_SIMULATION_RUN_PREFETCH_SIZE: Int = 5
+
+/** The default number of slice threads. */
+const val DEFAULT_NUM_SLICE_THREADS: Int = 3
+
+/** The default size of the simulation run prefetch buffer. */
+const val DEFAULT_SEGMENT_PREFETCH_SIZE: Int = 500
+
+// region Terminal colors
+const val RED = "\u001b[31m"
+const val ORANGE = "\u001b[33m"
+const val YELLOW = "\u001b[93m"
+const val LIGHT_GREEN = "\u001b[92m"
+const val GREEN = "\u001b[32m"
+const val RESET = "\u001b[0m"
+// endregion

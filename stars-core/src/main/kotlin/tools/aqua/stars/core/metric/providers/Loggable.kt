@@ -19,6 +19,9 @@ package tools.aqua.stars.core.metric.providers
 
 import java.io.File
 import java.util.logging.*
+import tools.aqua.stars.core.RED
+import tools.aqua.stars.core.RESET
+import tools.aqua.stars.core.YELLOW
 import tools.aqua.stars.core.metric.utils.ApplicationStartTimeHolder
 
 /** This interface can be implemented to be able to log data into the stdout and log files. */
@@ -34,7 +37,7 @@ interface Loggable {
    */
   fun logSevere(message: Any? = "") {
     logger.severe(message.toString())
-    println("\u001B[31m$message\u001B[0m")
+    println("$RED$message$RESET")
   }
 
   /**
@@ -53,7 +56,7 @@ interface Loggable {
    */
   fun logWarning(message: Any? = "") {
     logger.warning(message.toString())
-    println("\u001B[33m$message\u001B[0m")
+    println("$YELLOW$message$RESET")
   }
 
   /**
