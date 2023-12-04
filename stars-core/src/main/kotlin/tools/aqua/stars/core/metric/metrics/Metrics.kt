@@ -17,128 +17,40 @@
 
 package tools.aqua.stars.core.metric.metrics
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import tools.aqua.stars.core.metric.providers.*
-import tools.aqua.stars.core.tsc.instance.TSCInstance
-import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
-class Metrics<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    private val segmentMetrics: MutableList<SegmentMetricProvider<E, T, S>> = mutableListOf(),
-    private val projectionMetrics: MutableList<ProjectionMetricProvider<E, T, S>> = mutableListOf(),
-    private val tscInstanceMetrics: MutableList<TSCInstanceMetricProvider<E, T, S>> =
-        mutableListOf(),
-    private val tscInstanceAndProjectionMetrics:
-        MutableList<TSCInstanceAndProjectionNodeMetricProvider<E, T, S>> =
-        mutableListOf(),
-    private val postEvaluationMetrics: MutableList<PostEvaluationMetricProvider<E, T, S>> =
-        mutableListOf()
-) {
+/** Wrapper class for [MetricProvider]s. */
+sealed class Metrics<
+    K : MetricProvider<E, T, S>,
+    E : EntityType<E, T, S>,
+    T : TickDataType<E, T, S>,
+    S : SegmentType<E, T, S>> {
 
-  /** Returns all registered[MetricProvider]s. */
-  fun all(): List<MetricProvider<E, T, S>> =
-      segmentMetrics +
-          projectionMetrics +
-          tscInstanceMetrics +
-          tscInstanceAndProjectionMetrics +
-          postEvaluationMetrics
+  /** Returns all registered [MetricProvider]s. */
+  abstract fun all(): Map<Class<out K>, K>
 
   /** Returns 'true' if at least one metric has been registered. */
   fun any(): Boolean = all().isNotEmpty()
 
-  /** Registers metric providers. */
-  fun register(vararg metrics: MetricProvider<E, T, S>) {
-    metrics.forEach {
-      when (it) {
-        is SegmentMetricProvider -> segmentMetrics.add(it)
-        is ProjectionMetricProvider -> projectionMetrics.add(it)
-        is TSCInstanceMetricProvider -> tscInstanceMetrics.add(it)
-        is TSCInstanceAndProjectionNodeMetricProvider -> tscInstanceAndProjectionMetrics.add(it)
-        is PostEvaluationMetricProvider -> postEvaluationMetrics.add(it)
-      }
-    }
-  }
-
-  /**
-   * Run the "evaluate" function for all [SegmentMetricProvider]s on the current [segment].
-   *
-   * @param segment The current [SegmentType].
-   */
-  fun evaluateSegmentMetrics(segment: SegmentType<E, T, S>) {
-    segmentMetrics.forEach { it.evaluate(segment) }
-  }
-
-  /**
-   * Run the "evaluate" function for all [ProjectionMetricProvider]s on the current [projection].
-   *
-   * @param projection The current [TSCProjection].
-   */
-  fun evaluateProjectionMetrics(projection: TSCProjection<E, T, S>) {
-    projectionMetrics.forEach { it.evaluate(projection) }
-  }
-
-  /**
-   * Run the "evaluate" function for all [TSCInstanceMetricProvider]s on the current [instance].
-   *
-   * @param instance The current [TSCInstance].
-   */
-  fun evaluateTSCInstanceMetrics(instance: TSCInstance<E, T, S>) {
-    tscInstanceMetrics.forEach { it.evaluate(instance) }
-  }
-
-  /**
-   * Run the "evaluate" function for all [TSCInstanceAndProjectionNodeMetricProvider]s on the
-   * current [instance] and [projection].
-   *
-   * @param instance The current [TSCInstance].
-   * @param projection The current [TSCProjection].
-   */
-  fun evaluateTSCInstanceAndProjectionMetrics(
-      instance: TSCInstance<E, T, S>,
-      projection: TSCProjection<E, T, S>
-  ) {
-    tscInstanceAndProjectionMetrics.forEach { it.evaluate(instance, projection) }
-  }
-
-  /** Run the "evaluate" function for all [PostEvaluationMetricProvider]s. */
-  fun evaluatePostEvaluationMetrics() {
-    postEvaluationMetrics.forEach { it.evaluate() }
-  }
-
   /** Print the results of all Stateful metrics. */
   fun printState() {
-    all().filterIsInstance<Stateful>().forEach { it.printState() }
+    all().values.filterIsInstance<Stateful>().forEach { it.printState() }
   }
 
   /** Plot the results of all Plottable metrics. */
   fun plotData() {
-    all().filterIsInstance<Plottable>().let { plottables ->
-      runBlocking { plottables.forEach { launch { it.plotData() } } }
-    }
+    all().values.filterIsInstance<Plottable>().forEach { runBlocking { launch { it.plotData() } } }
   }
 
   /** Close all logging handlers to prevent .lck files to remain. */
   fun close() {
-    all().filterIsInstance<Loggable>().forEach { it.closeLogger() }
+    all().values.filterIsInstance<Loggable>().forEach { it.closeLogger() }
   }
 
   /** Deeply copies the [Metrics] object resetting all saved instances. */
-  fun copy(): Metrics<E, T, S> =
-      Metrics(
-          segmentMetrics.map { it.copy() }.toMutableList(),
-          projectionMetrics.map { it.copy() }.toMutableList(),
-          tscInstanceMetrics.map { it.copy() }.toMutableList(),
-          tscInstanceAndProjectionMetrics.map { it.copy() }.toMutableList(),
-          postEvaluationMetrics.map { it.copy() }.toMutableList())
-
-  companion object {
-    fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> merge(
-        metrics: List<Metrics<E, T, S>>
-    ): Metrics<E, T, S> {
-      TODO()
-    }
-  }
+  abstract fun copy(): Metrics<K, E, T, S>
 }

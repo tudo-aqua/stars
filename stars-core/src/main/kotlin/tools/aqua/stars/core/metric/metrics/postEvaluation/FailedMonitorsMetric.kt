@@ -43,34 +43,35 @@ class FailedMonitorsMetric<
 
   /** Returns a [Map] of [TSCMonitorResult]s for all [TSCProjection]s. */
   override fun evaluate(): Map<TSCProjection<E, T, S>, List<TSCMonitorResult>> =
-      dependsOn.getState().mapValues { (_, validInstancesMap) ->
-        validInstancesMap.flatMap { (_, validInstances) ->
-          validInstances.map { validInstance ->
-            validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
+      dependsOn
+          .getState()
+          .mapValues { (_, validInstancesMap) ->
+            validInstancesMap.flatMap { (_, validInstances) ->
+              validInstances.map { validInstance ->
+                validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
+              }
+            }
           }
-        }
-      }
+          .also {
+            logInfo("=== Failed monitors ===")
 
-  /** Prints the count of filed monitors for each [TSCProjection]. */
-  override fun print() {
-    var evaluationResult = this.evaluate()
-    // Filter the result, so that only failed monitors are left
-    evaluationResult =
-        evaluationResult.mapValues { (_, monitors) -> monitors.filter { !it.monitorsValid } }
-    // Create output for failed monitors
-    evaluationResult.forEach { (projection, failedMonitors) ->
-      logInfo("Count of failed monitors for projection '$projection': ${failedMonitors.size}")
-      if (failedMonitors.isEmpty()) {
-        return@forEach
-      }
-      logFine("Failed monitors for projection '$projection':")
-      failedMonitors.forEach { failedMonitor ->
-        logFine("Monitor failed in: ${failedMonitor.segmentIdentifier}")
-        logFine("List of edges leading to failed monitor: ${failedMonitor.edgeList}")
-      }
-      logFine()
-    }
-  }
+            // Filter the result, so that only failed monitors are left
+            it.mapValues { (_, monitors) -> monitors.filter { !it.monitorsValid } }
+                // Skip projections without failed monitors
+                .filter { it.value.isNotEmpty() }
+                // Create output for failed monitors
+                .forEach { (projection, failedMonitors) ->
+                  logInfo(" '$projection': ${failedMonitors.size}")
+
+                  logFine("Failed monitors for projection '$projection':")
+                  failedMonitors.forEach { failedMonitor ->
+                    logFine("Monitor failed in: ${failedMonitor.segmentIdentifier}")
+                    logFine("List of edges leading to failed monitor: ${failedMonitor.edgeList}")
+                  }
+                  logFine()
+                }
+            logInfo()
+          }
 
   override fun copy(): FailedMonitorsMetric<E, T, S> =
       FailedMonitorsMetric(dependsOn.copy(), logger)

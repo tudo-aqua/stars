@@ -43,6 +43,5 @@ abstract class TSCInstanceAndProjectionNodeMetricProvider<
    */
   abstract fun evaluate(tscInstance: TSCInstance<E, T, S>, projection: TSCProjection<E, T, S>)
 
-  /** Deeply copies Metric instance. */
-  abstract fun copy(): TSCInstanceAndProjectionNodeMetricProvider<E, T, S>
+  abstract override fun copy(): TSCInstanceAndProjectionNodeMetricProvider<E, T, S>
 }

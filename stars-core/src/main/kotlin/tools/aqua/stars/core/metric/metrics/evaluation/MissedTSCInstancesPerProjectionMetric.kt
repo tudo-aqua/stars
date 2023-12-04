@@ -19,8 +19,10 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
+import tools.aqua.stars.core.metric.providers.MetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCInstanceAndProjectionNodeMetricProvider
+import tools.aqua.stars.core.requireIsInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -51,7 +53,6 @@ class MissedTSCInstancesPerProjectionMetric<
    *
    * @param tscInstance The current [TSCInstance] which is removed from the [missedInstancesMap]
    * list.
-   *
    * @param projection The current [TSCProjection] for which the [TSCInstance] should be set to
    * false (not missed).
    */
@@ -90,14 +91,29 @@ class MissedTSCInstancesPerProjectionMetric<
 
   /** Prints the count of missed [TSCInstance]s for each [TSCProjection] using [println]. */
   override fun printState() {
+    logInfo("=== Missed instances for projections ===")
     getState().forEach { (projection, missedInstances) ->
       logInfo(
-          "Count of unique missed instances for projection '$projection': ${missedInstances.size} (of ${projection
-          .possibleTSCInstances.size} possible instances).")
+          " '$projection': ${missedInstances.size} of ${projection
+          .possibleTSCInstances.size}")
       missedInstances.forEach { logFine(it) }
     }
+    logInfo()
   }
 
   override fun copy(): MissedTSCInstancesPerProjectionMetric<E, T, S> =
       MissedTSCInstancesPerProjectionMetric(logger)
+
+  override fun merge(other: MetricProvider<E, T, S>) {
+    requireIsInstance<MissedTSCInstancesPerProjectionMetric<E, T, S>>(other) {
+      "Trying to merge different metrics."
+    }
+
+    other.missedInstancesMap.forEach { (projection, missedInstances) ->
+      missedInstances.forEach { (node, missed) ->
+        this.missedInstancesMap[projection]?.put(
+            node, missed && this.missedInstancesMap[projection]?.get(node) ?: true)
+      }
+    }
+  }
 }

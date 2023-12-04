@@ -40,6 +40,5 @@ sealed class ProjectionMetricProvider<
    */
   abstract fun evaluate(projection: TSCProjection<E, T, S>): Any?
 
-  /** Deeply copies Metric instance. */
-  abstract fun copy(): ProjectionMetricProvider<E, T, S>
+  abstract override fun copy(): ProjectionMetricProvider<E, T, S>
 }

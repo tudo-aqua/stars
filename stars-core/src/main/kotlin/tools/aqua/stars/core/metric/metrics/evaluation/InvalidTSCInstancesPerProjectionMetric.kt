@@ -19,8 +19,10 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
+import tools.aqua.stars.core.metric.providers.MetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCInstanceAndProjectionNodeMetricProvider
+import tools.aqua.stars.core.requireIsInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -85,10 +87,10 @@ class InvalidTSCInstancesPerProjectionMetric<
    * of invalid classes and their reasons for invalidity.
    */
   override fun printState() {
-    invalidInstancesMap.forEach { (projection, invalidInstancesMap) ->
+    logInfo("=== Invalid instances for projections ===")
+    getState().forEach { (projection, invalidInstancesMap) ->
       logInfo(
-          "Count of unique invalid instances for projection '$projection': ${invalidInstancesMap.size} (of " +
-              "${projection.possibleTSCInstances.size} possible instances).")
+          " '$projection': ${invalidInstancesMap.size} of ${projection.possibleTSCInstances.size}")
 
       logFine(
           "Count of unique invalid instances for projection '$projection' per instance: " +
@@ -112,8 +114,23 @@ class InvalidTSCInstancesPerProjectionMetric<
         logFiner()
       }
     }
+    logInfo()
   }
 
   override fun copy(): InvalidTSCInstancesPerProjectionMetric<E, T, S> =
       InvalidTSCInstancesPerProjectionMetric(logger)
+
+  override fun merge(other: MetricProvider<E, T, S>) {
+    requireIsInstance<InvalidTSCInstancesPerProjectionMetric<E, T, S>>(other) {
+      "Trying to merge different metrics."
+    }
+
+    other.invalidInstancesMap.forEach { (projection, invalidInstances) ->
+      invalidInstances.forEach { (node, instances) ->
+        this.invalidInstancesMap
+            .getOrPut(projection) { mutableMapOf() }
+            .getOrPut(node) { mutableListOf() } += instances
+      }
+    }
+  }
 }

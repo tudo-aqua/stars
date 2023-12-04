@@ -23,4 +23,11 @@ import tools.aqua.stars.core.types.TickDataType
 
 /** The [MetricProvider] interface is the base interface which all metrics are implementing. */
 sealed class MetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>
+    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> {
+
+  /** Deeply copies Metric instance. */
+  abstract fun copy(): MetricProvider<E, T, S>
+
+  /** Merges state of [other] into own overriding inplace. */
+  abstract fun merge(other: MetricProvider<E, T, S>)
+}

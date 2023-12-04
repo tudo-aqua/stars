@@ -20,7 +20,8 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import kotlinx.coroutines.*
-import tools.aqua.stars.core.metric.metrics.Metrics
+import tools.aqua.stars.core.metric.metrics.EvaluationMetrics
+import tools.aqua.stars.core.metric.metrics.PostEvaluationMetrics
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
@@ -55,22 +56,50 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
   private val tscProjections: MutableList<TSCProjection<E, T, S>> = mutableListOf()
 
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
-  private val metrics: Metrics<E, T, S> = Metrics()
+  private val evaluationMetrics: EvaluationMetrics<E, T, S> = EvaluationMetrics()
+
+  /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
+  private val postEvaluationMetrics: PostEvaluationMetrics<E, T, S> = PostEvaluationMetrics()
 
   /** Hold all [Deferred] instances returned by [evaluateSegment]. */
-  private val segmentEvaluationJobs: MutableList<Deferred<Metrics<E, T, S>>> = mutableListOf()
+  private val segmentEvaluationJobs: MutableList<Deferred<EvaluationMetrics<E, T, S>>> =
+      mutableListOf()
 
   /** Coroutine scope for segment evaluations. */
   val scope: CoroutineScope = CoroutineScope(Dispatchers.Unconfined)
 
   /**
-   * Registers a new [MetricProvider] to the list of metrics that should be called during
-   * evaluation.
+   * Registers new [MetricProvider]s to the list of metrics that should be called during evaluation.
    *
    * @param metricProviders The [MetricProvider]s that should be registered.
    */
   fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, S>) {
-    this.metrics.register(*metricProviders)
+    evaluationMetrics.register(
+        metricProviders.filterIsInstance<EvaluationMetricProvider<E, T, S>>())
+    postEvaluationMetrics.register(
+        metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>())
+  }
+
+  /**
+   * Registers new [EvaluationMetricProvider]s to the list of metrics that should be called during
+   * evaluation.
+   *
+   * @param metricProviders The [EvaluationMetricProvider]s that should be registered.
+   */
+  fun registerEvaluationMetricProviders(vararg metricProviders: EvaluationMetricProvider<E, T, S>) {
+    this.evaluationMetrics.register(metricProviders.toList())
+  }
+
+  /**
+   * Registers new [PostEvaluationMetricProvider]s to the list of metrics that should be called
+   * during evaluation.
+   *
+   * @param metricProviders The [PostEvaluationMetricProvider]s that should be registered.
+   */
+  fun registerPostEvaluationMetricProviders(
+      vararg metricProviders: PostEvaluationMetricProvider<E, T, S>
+  ) {
+    this.postEvaluationMetrics.register(metricProviders.toList())
   }
 
   /**
@@ -80,7 +109,9 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun prepare() {
-    require(metrics.any()) { "There needs to be at least one registered MetricProviders." }
+    require(evaluationMetrics.any() || postEvaluationMetrics.any()) {
+      "There needs to be at least one registered MetricProviders."
+    }
     require(tscProjections.isEmpty()) { "TSCEvaluation.prepare() has been called before." }
 
     // Build all projections of the base TSC
@@ -108,8 +139,8 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
         segments.map { scope.async { evaluateSegment(it) }.also { it.start() } })
   }
 
-  private suspend fun evaluateSegment(segment: S): Metrics<E, T, S> {
-    val metricHolder = metrics.copy()
+  private suspend fun evaluateSegment(segment: S): EvaluationMetrics<E, T, S> {
+    val metricHolder = evaluationMetrics.copy()
     val segmentEvaluationTime = measureTime {
       // Run the "evaluate" function for all SegmentMetricProviders on the current segment
       metricHolder.evaluateSegmentMetrics(segment)
@@ -150,9 +181,14 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
     tscProjections.clear()
 
     runBlocking {
-      Metrics.merge(segmentEvaluationJobs.awaitAll()).apply {
+      EvaluationMetrics.merge(segmentEvaluationJobs.awaitAll()).apply {
         printState()
-        evaluatePostEvaluationMetrics()
+        plotData()
+        close()
+      }
+
+      postEvaluationMetrics.apply {
+        evaluate()
         plotData()
         close()
       }
