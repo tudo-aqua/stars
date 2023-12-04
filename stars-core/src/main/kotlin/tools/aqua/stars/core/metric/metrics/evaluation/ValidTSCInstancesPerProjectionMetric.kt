@@ -18,10 +18,12 @@
 package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
+import tools.aqua.stars.core.VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME
+import tools.aqua.stars.core.VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.Plottable
-import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.providers.TSCInstanceAndProjectionNodeMetricProvider
 import tools.aqua.stars.core.metric.utils.getPlot
 import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
 import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
@@ -33,22 +35,14 @@ import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
-/** Valid instances projection name. */
-const val VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME: String =
-    "valid-tsc-instances-per-projection"
-
-/** Valid instances occurrences name. */
-const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: String =
-    "valid-tsc-instances-occurrences-per-projection"
-
 /**
- * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred
+ * This class implements the [TSCInstanceAndProjectionNodeMetricProvider] and tracks the occurred
  * valid [TSCInstance] for each [TSCProjection].
  */
 class ValidTSCInstancesPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger(VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME)
-) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable, Plottable {
+) : TSCInstanceAndProjectionNodeMetricProvider<E, T, S>(), Stateful, Loggable, Plottable {
   /**
    * Map a [TSCProjection] to a map in which the occurrences of valid [TSCInstanceNode]s are stored:
    * Map<projection,Map<referenceInstance,List<TSCInstance>>>.
@@ -88,10 +82,10 @@ class ValidTSCInstancesPerProjectionMetric<
    * Track the valid [TSCInstance]s for each [TSCProjection] in the [validInstancesMap]. If the
    * current [tscInstance] is invalid it is skipped.
    *
-   * @param projection The current [TSCProjection] for which the validity should be checked
    * @param tscInstance The current [TSCInstance] which is checked for validity
+   * @param projection The current [TSCProjection] for which the validity should be checked
    */
-  override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+  override fun evaluate(tscInstance: TSCInstance<E, T, S>, projection: TSCProjection<E, T, S>) {
     validInstancesMap.putIfAbsent(projection, mutableMapOf())
     // Get current count of unique and valid TSC instance for the current projection
     val projectionValidInstances = validInstancesMap.getValue(projection)
@@ -386,4 +380,7 @@ class ValidTSCInstancesPerProjectionMetric<
         folder = VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME,
         sliceValue = 100)
   }
+
+  override fun copy(): ValidTSCInstancesPerProjectionMetric<E, T, S> =
+      ValidTSCInstancesPerProjectionMetric(logger)
 }

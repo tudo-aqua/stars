@@ -27,30 +27,23 @@ import tools.aqua.stars.core.types.TickDataType
  * function which is called after the evaluation phase. It also may depend on the results of metrics
  * that evaluated during the evaluation phase.
  *
- * @see TSCEvaluation.runEvaluation
+ * @see TSCEvaluation.registerMetricProviders
  */
-interface PostEvaluationMetricProvider<
+abstract class PostEvaluationMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    MetricProvider<E, T, S> {
-  /**
-   * Holds a reference to another metric that is evaluated during the evaluation phase.
-   *
-   * @see TSCEvaluation.runEvaluation
-   */
-  val dependsOn: Any?
+    MetricProvider<E, T, S>() {
+  /** Holds a reference to another metric that is evaluated during the evaluation phase. */
+  abstract val dependsOn: Any?
 
-  /**
-   * Evaluate the metric after the evaluation phase.
-   *
-   * @see TSCEvaluation.runEvaluation
-   */
-  fun evaluate(): Any?
+  /** Evaluate the metric after the evaluation phase. */
+  abstract fun evaluate(): Any?
 
   /**
    * Print the results of the [evaluate] function. This function is called after the evaluation
    * phase.
-   *
-   * @see TSCEvaluation.runEvaluation
    */
-  fun print()
+  abstract fun print()
+
+  /** Deeply copies Metric instance. */
+  abstract fun copy(): PostEvaluationMetricProvider<E, T, S>
 }

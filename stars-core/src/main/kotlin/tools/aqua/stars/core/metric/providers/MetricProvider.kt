@@ -22,5 +22,5 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /** The [MetricProvider] interface is the base interface which all metrics are implementing. */
-interface MetricProvider<
+sealed class MetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>

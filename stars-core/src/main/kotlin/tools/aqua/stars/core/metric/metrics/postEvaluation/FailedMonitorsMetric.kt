@@ -39,7 +39,7 @@ class FailedMonitorsMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
     override val logger: Logger = Loggable.getLogger("failed-monitors")
-) : PostEvaluationMetricProvider<E, T, S>, Loggable {
+) : PostEvaluationMetricProvider<E, T, S>(), Loggable {
 
   /** Returns a [Map] of [TSCMonitorResult]s for all [TSCProjection]s. */
   override fun evaluate(): Map<TSCProjection<E, T, S>, List<TSCMonitorResult>> =
@@ -71,4 +71,7 @@ class FailedMonitorsMetric<
       logFine()
     }
   }
+
+  override fun copy(): FailedMonitorsMetric<E, T, S> =
+      FailedMonitorsMetric(dependsOn.copy(), logger)
 }

@@ -19,8 +19,8 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.providers.TSCInstanceAndProjectionNodeMetricProvider
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -29,14 +29,14 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the missed
+ * This class implements the [TSCInstanceAndProjectionNodeMetricProvider] and tracks the missed
  * [TSCInstance]s for each [TSCProjection].
  */
 @Suppress("unused")
 class MissedTSCInstancesPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("missed-tsc-instances-per-projection")
-) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
+) : TSCInstanceAndProjectionNodeMetricProvider<E, T, S>(), Stateful, Loggable {
   /**
    * Map a [TSCProjection] to a map in which the missed valid [TSCInstanceNode]s are stored:
    * Map<projection,Map<referenceInstance,missed>>.
@@ -49,12 +49,13 @@ class MissedTSCInstancesPerProjectionMetric<
    * Track the missed [TSCInstance]s for each [TSCProjection] in the [missedInstancesMap]. If the
    * current [tscInstance] is invalid it is skipped.
    *
-   * @param projection The current [TSCProjection] for which the [TSCInstance] should be set to
-   * false (not missed).
    * @param tscInstance The current [TSCInstance] which is removed from the [missedInstancesMap]
    * list.
+   *
+   * @param projection The current [TSCProjection] for which the [TSCInstance] should be set to
+   * false (not missed).
    */
-  override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+  override fun evaluate(tscInstance: TSCInstance<E, T, S>, projection: TSCProjection<E, T, S>) {
     // Check if the given tscInstance is invalid. If so, skip
     if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) return
 
@@ -96,4 +97,7 @@ class MissedTSCInstancesPerProjectionMetric<
       missedInstances.forEach { logFine(it) }
     }
   }
+
+  override fun copy(): MissedTSCInstancesPerProjectionMetric<E, T, S> =
+      MissedTSCInstancesPerProjectionMetric(logger)
 }

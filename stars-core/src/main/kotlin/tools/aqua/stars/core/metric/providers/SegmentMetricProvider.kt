@@ -26,16 +26,19 @@ import tools.aqua.stars.core.types.TickDataType
  * The [SegmentMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
  * function which gets a [SegmentType] which is called during the evaluation phase.
  *
- * @see TSCEvaluation.runEvaluation
+ * @see TSCEvaluation.registerMetricProviders
  */
-interface SegmentMetricProvider<
+abstract class SegmentMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
+    EvaluationMetricProvider<E, T, S>() {
 
   /**
    * Evaluate the metric based on the given parameters.
    *
    * @param segment The current [SegmentType]
    */
-  fun evaluate(segment: SegmentType<E, T, S>): Any?
+  abstract fun evaluate(segment: SegmentType<E, T, S>): Any?
+
+  /** Deeply copies Metric instance. */
+  abstract fun copy(): SegmentMetricProvider<E, T, S>
 }
