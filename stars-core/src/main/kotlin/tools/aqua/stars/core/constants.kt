@@ -15,12 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+/** Valid instances projection name. */
+const val VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME: String =
+    "valid-tsc-instances-per-projection"
 
-/** The [MetricProvider] interface is the base interface which all metrics are implementing. */
-sealed class MetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>
+/** Valid instances occurrences name. */
+const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: String =
+    "valid-tsc-instances-occurrences-per-projection"
+
+/** The default minimal tick count per segment to load. */
+const val DEFAULT_MIN_SEGMENT_TICK_COUNT: Int = 10
+
+/** The default size of the simulation run prefetch buffer. */
+const val DEFAULT_SIMULATION_RUN_PREFETCH_SIZE: Int = 500

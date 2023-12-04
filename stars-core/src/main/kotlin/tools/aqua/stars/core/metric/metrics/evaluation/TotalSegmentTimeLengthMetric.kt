@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.TickDataType
 class TotalSegmentTimeLengthMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("total-segment-time-length")
-) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
+) : SegmentMetricProvider<E, T, S>(), Stateful, Loggable {
   /** Holds the current time duration for all already analyzed [SegmentType]s. */
   private var totalTimeDuration: Double = 0.0
 
@@ -74,4 +74,6 @@ class TotalSegmentTimeLengthMetric<
   override fun printState() {
     logInfo("The analyzed segments yielded a total of $totalTimeDuration seconds of analysis data.")
   }
+
+  override fun copy(): TotalSegmentTimeLengthMetric<E, T, S> = TotalSegmentTimeLengthMetric(logger)
 }

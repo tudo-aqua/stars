@@ -27,16 +27,19 @@ import tools.aqua.stars.core.types.TickDataType
  * The [TSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides an
  * [evaluate] function which gets a [TSCInstance] which is called during the evaluation phase.
  *
- * @see TSCEvaluation.runEvaluation
+ * @see TSCEvaluation.registerMetricProviders
  */
-interface TSCInstanceMetricProvider<
+sealed class TSCInstanceMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
+    EvaluationMetricProvider<E, T, S>() {
 
   /**
    * Evaluate the metric based on the given parameters.
    *
    * @param tscInstance The current [TSCInstance]
    */
-  fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
+  abstract fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
+
+  /** Deeply copies Metric instance. */
+  abstract fun copy(): TSCInstanceMetricProvider<E, T, S>
 }

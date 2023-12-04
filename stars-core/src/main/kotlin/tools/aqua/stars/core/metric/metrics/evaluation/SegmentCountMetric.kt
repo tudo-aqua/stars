@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.TickDataType
 class SegmentCountMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("segment-count")
-) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
+) : SegmentMetricProvider<E, T, S>(), Stateful, Loggable {
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
@@ -56,4 +56,6 @@ class SegmentCountMetric<
   override fun printState() {
     logInfo("Analyzed $segmentCount Segments.")
   }
+
+  override fun copy(): SegmentCountMetric<E, T, S> = SegmentCountMetric(logger)
 }

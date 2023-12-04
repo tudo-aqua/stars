@@ -32,7 +32,7 @@ import tools.aqua.stars.data.av.dataclasses.TickData
  */
 class AverageVehiclesInEgosBlockMetric(
     override val logger: Logger = Loggable.getLogger("average-vehicles-in-egos-block")
-) : SegmentMetricProvider<Actor, TickData, Segment>, Loggable {
+) : SegmentMetricProvider<Actor, TickData, Segment>(), Loggable {
 
   /**
    * Evaluates the average count of [Actor]s in the [Block] of the ego vehicle.
@@ -47,4 +47,6 @@ class AverageVehiclesInEgosBlockMetric(
         "The average count of vehicles in Segment '$segment' for ego's block is: $averageVehiclesInEgosBlock")
     return averageVehiclesInEgosBlock
   }
+
+  override fun copy(): AverageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric(logger)
 }

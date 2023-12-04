@@ -25,21 +25,24 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * The [ProjectionAndTSCInstanceNodeMetricProvider] implements the [EvaluationMetricProvider] and
+ * The [TSCInstanceAndProjectionNodeMetricProvider] implements the [EvaluationMetricProvider] and
  * provides an [evaluate] function which gets a [TSCProjection] and a [TSCInstance] which is called
  * during the evaluation phase.
  *
- * @see TSCEvaluation.runEvaluation
+ * @see TSCEvaluation.registerMetricProviders
  */
-interface ProjectionAndTSCInstanceNodeMetricProvider<
+abstract class TSCInstanceAndProjectionNodeMetricProvider<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    EvaluationMetricProvider<E, T, S> {
+    EvaluationMetricProvider<E, T, S>() {
 
   /**
    * Evaluate the metric based on the given parameters.
    *
-   * @param projection The current [TSCProjection]
    * @param tscInstance The current [TSCInstance]
+   * @param projection The current [TSCProjection]
    */
-  fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>)
+  abstract fun evaluate(tscInstance: TSCInstance<E, T, S>, projection: TSCProjection<E, T, S>)
+
+  /** Deeply copies Metric instance. */
+  abstract fun copy(): TSCInstanceAndProjectionNodeMetricProvider<E, T, S>
 }
