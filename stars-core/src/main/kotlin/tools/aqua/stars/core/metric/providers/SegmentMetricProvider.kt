@@ -39,6 +39,5 @@ abstract class SegmentMetricProvider<
    */
   abstract fun evaluate(segment: SegmentType<E, T, S>): Any?
 
-  /** Deeply copies Metric instance. */
-  abstract fun copy(): SegmentMetricProvider<E, T, S>
+  abstract override fun copy(): SegmentMetricProvider<E, T, S>
 }

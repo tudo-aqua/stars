@@ -19,6 +19,9 @@
 
 package tools.aqua.stars.core
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 /** Creates TxT cross product. */
 fun <T> List<T>.x2(): List<Pair<T, T>> = this.flatMap { a -> this.map { b -> a to b } }
 
@@ -73,4 +76,14 @@ fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
   // val monitorFunction: (PredicateContext, Segment) -> Boolean = { _, _ -> true }
 
   return if (size == 2) nextLevelList else (listOf(nextLevelList) + subList(2, size)).crossProduct()
+}
+
+/**
+ * Throws an [IllegalArgumentException] with the result of calling [lazyMessage] if the [obj] is not
+ * of type [T]. Contracts type [T] on successful return.
+ */
+@OptIn(ExperimentalContracts::class)
+inline fun <reified T> requireIsInstance(obj: Any, lazyMessage: () -> Any) {
+  contract { returns() implies (obj is T) }
+  require(obj is T, lazyMessage)
 }

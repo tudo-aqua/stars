@@ -20,14 +20,12 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 import java.util.logging.Logger
 import tools.aqua.stars.core.VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME
 import tools.aqua.stars.core.VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME
-import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.Plottable
-import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.metric.providers.TSCInstanceAndProjectionNodeMetricProvider
+import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.utils.getPlot
 import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
 import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
 import tools.aqua.stars.core.metric.utils.saveAsCSVFile
+import tools.aqua.stars.core.requireIsInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -86,13 +84,12 @@ class ValidTSCInstancesPerProjectionMetric<
    * @param projection The current [TSCProjection] for which the validity should be checked
    */
   override fun evaluate(tscInstance: TSCInstance<E, T, S>, projection: TSCProjection<E, T, S>) {
-    validInstancesMap.putIfAbsent(projection, mutableMapOf())
     // Get current count of unique and valid TSC instance for the current projection
-    val projectionValidInstances = validInstancesMap.getValue(projection)
+    val projectionValidInstances = validInstancesMap.getOrPut(projection) { mutableMapOf() }
 
     // Track current TSC projection
-    uniqueTimedInstances.putIfAbsent(projection, mutableListOf())
-    val projectionValidInstancesCount = uniqueTimedInstances.getValue(projection)
+    val projectionValidInstancesCount =
+        uniqueTimedInstances.getOrPut(projection) { mutableListOf() }
 
     // Check if given tscInstance is valid
     if (!projection.possibleTSCInstances.contains(tscInstance.rootNode)) {
@@ -100,9 +97,10 @@ class ValidTSCInstancesPerProjectionMetric<
       projectionValidInstancesCount.add(projectionValidInstances.size)
       return
     }
-    projectionValidInstances.putIfAbsent(tscInstance.rootNode, mutableListOf())
+
     // Get already observed instances for current projection
-    val projectionValidInstanceList = projectionValidInstances.getValue(tscInstance.rootNode)
+    val projectionValidInstanceList =
+        projectionValidInstances.getOrPut(tscInstance.rootNode) { mutableListOf() }
     // Add current instance to list of observed instances
     projectionValidInstanceList.add(tscInstance)
     // Add current count of observed instances to list of timed instance counts
@@ -121,10 +119,10 @@ class ValidTSCInstancesPerProjectionMetric<
 
   /** Prints the number of valid [TSCInstance] for each [TSCProjection] using [println]. */
   override fun printState() {
-    validInstancesMap.forEach { (projection, validInstancesMap) ->
+    logInfo("=== Valid instances for projections ===")
+    getState().forEach { (projection, validInstancesMap) ->
       logInfo(
-          "Count of unique valid instances for projection '$projection' is: ${validInstancesMap.size} (of " +
-              "${projection.possibleTSCInstances.size} possible instances)")
+          " '$projection': ${validInstancesMap.size} of ${projection.possibleTSCInstances.size}")
 
       logFine("Count of valid instances per instance: " + validInstancesMap.map { it.value.size })
       logFine()
@@ -137,6 +135,7 @@ class ValidTSCInstancesPerProjectionMetric<
         logFine("----------------")
       }
     }
+    logInfo()
   }
 
   /**
@@ -383,4 +382,18 @@ class ValidTSCInstancesPerProjectionMetric<
 
   override fun copy(): ValidTSCInstancesPerProjectionMetric<E, T, S> =
       ValidTSCInstancesPerProjectionMetric(logger)
+
+  override fun merge(other: MetricProvider<E, T, S>) {
+    requireIsInstance<ValidTSCInstancesPerProjectionMetric<E, T, S>>(other) {
+      "Trying to merge different metrics."
+    }
+
+    other.validInstancesMap.forEach { (projection, validInstances) ->
+      validInstances.forEach { (node, instances) ->
+        this.validInstancesMap
+            .getOrPut(projection) { mutableMapOf() }
+            .getOrPut(node) { mutableListOf() } += instances
+      }
+    }
+  }
 }

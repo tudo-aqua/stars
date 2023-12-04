@@ -38,12 +38,9 @@ abstract class PostEvaluationMetricProvider<
   /** Evaluate the metric after the evaluation phase. */
   abstract fun evaluate(): Any?
 
-  /**
-   * Print the results of the [evaluate] function. This function is called after the evaluation
-   * phase.
-   */
-  abstract fun print()
+  abstract override fun copy(): PostEvaluationMetricProvider<E, T, S>
 
-  /** Deeply copies Metric instance. */
-  abstract fun copy(): PostEvaluationMetricProvider<E, T, S>
+  override fun merge(other: MetricProvider<E, T, S>) {
+    error("")
+  }
 }

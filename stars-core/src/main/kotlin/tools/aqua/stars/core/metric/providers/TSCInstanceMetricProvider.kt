@@ -40,6 +40,5 @@ sealed class TSCInstanceMetricProvider<
    */
   abstract fun evaluate(tscInstance: TSCInstance<E, T, S>): Any?
 
-  /** Deeply copies Metric instance. */
-  abstract fun copy(): TSCInstanceMetricProvider<E, T, S>
+  abstract override fun copy(): TSCInstanceMetricProvider<E, T, S>
 }

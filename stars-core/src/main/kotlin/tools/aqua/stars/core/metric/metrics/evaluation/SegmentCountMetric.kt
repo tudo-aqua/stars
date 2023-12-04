@@ -19,8 +19,10 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
+import tools.aqua.stars.core.metric.providers.MetricProvider
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.requireIsInstance
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -54,8 +56,15 @@ class SegmentCountMetric<
 
   /** Prints the current state using [println]. */
   override fun printState() {
-    logInfo("Analyzed $segmentCount Segments.")
+    logInfo("=== Segment count ===")
+    logInfo(" $segmentCount\n")
   }
 
   override fun copy(): SegmentCountMetric<E, T, S> = SegmentCountMetric(logger)
+
+  override fun merge(other: MetricProvider<E, T, S>) {
+    requireIsInstance<SegmentCountMetric<E, T, S>>(other) { "Trying to merge different metrics." }
+
+    this.segmentCount += other.segmentCount
+  }
 }
