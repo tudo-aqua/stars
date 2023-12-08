@@ -38,10 +38,21 @@ const val DEFAULT_NUM_SLICE_THREADS: Int = 3
 const val DEFAULT_SEGMENT_PREFETCH_SIZE: Int = 500
 
 // region Terminal colors
+/** Terminal color red. */
 const val RED = "\u001b[31m"
+
+/** Terminal color orange. */
 const val ORANGE = "\u001b[33m"
+
+/** Terminal color yellow. */
 const val YELLOW = "\u001b[93m"
+
+/** Terminal color light green. */
 const val LIGHT_GREEN = "\u001b[92m"
+
+/** Terminal color green. */
 const val GREEN = "\u001b[32m"
+
+/** Terminal reset command. */
 const val RESET = "\u001b[0m"
 // endregion

@@ -45,16 +45,16 @@ import tools.aqua.stars.importer.carla.dataclasses.*
 /**
  * Data loader for Carla experiments.
  *
- * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
+ * @property useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  * vehicle as the "ego" vehicle. This will multiply the size of the resulting sequence of [Segment]s
  * by the number of vehicles.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- * the map.
- * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
- * .
+ * @property orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead
+ * of the map.
+ * @property minSegmentTickCount The amount of ticks there should be at minimum to generate a
+ * [Segment] .
  * @param simulationRunPrefetchSize Size of the simulation run prefetch buffer.
  * @param segmentPrefetchSize Size of the segment prefetch buffer.
- * @param numSliceThreads Number of the segment slice threads.
+ * @property numSliceThreads Number of the segment slice threads.
  */
 class CarlaDataLoader(
     private val useEveryVehicleAsEgo: Boolean = false,
