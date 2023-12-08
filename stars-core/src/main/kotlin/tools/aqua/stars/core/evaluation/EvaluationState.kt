@@ -107,8 +107,8 @@ object EvaluationState {
     val finished = finishedSegments.get()
 
     println(
-        "Total simulations runs read: ${if(readFinished) GREEN else ""}$read$RESET / $total; " +
-            "Sliced: ${if(sliceFinished) GREEN else ""}$sliced$RESET / $total;   " +
+        "Total simulations runs read: ${if(readFinished) LIGHT_GREEN else ""}$read$RESET / $total; " +
+            "Sliced: ${if(sliceFinished) LIGHT_GREEN else ""}$sliced$RESET / $total;   " +
             "BUFFER HEALTH: Reads: ${getColor(simBuff, simBuffSize)}$simBuff$RESET / $simBuffSize; " +
             "Slices: ${getColor(segBuff, segBuffSize)}$segBuff$RESET / $segBuffSize; " +
             "Finished: $finished")
