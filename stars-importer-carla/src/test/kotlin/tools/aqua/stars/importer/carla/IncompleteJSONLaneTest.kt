@@ -23,6 +23,7 @@ import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.importer.carla.dataclasses.*
 
+/** Tests behaviour on incomplete data from json. */
 class IncompleteJSONLaneTest {
 
   private lateinit var incompleteBlock: Block
@@ -32,6 +33,7 @@ class IncompleteJSONLaneTest {
   private lateinit var jsonLanes: List<JsonLane>
   private lateinit var lanes: List<Lane>
 
+  /** Creates block, road and lane. */
   @BeforeTest
   fun setupData() {
     incompleteBlock = Block(id = "1", fileName = "", roads = listOf())
@@ -93,6 +95,7 @@ class IncompleteJSONLaneTest {
     lanes = listOf(incompleteLane)
   }
 
+  /** Tests [updateLanes] for incomplete [JsonLane] and [Lane]. */
   @Test
   fun checkUpdatingOfContactLaneInfos() {
     assertFailsWith<NoSuchElementException> { updateLanes(jsonLanes, lanes) }
@@ -103,6 +106,10 @@ class IncompleteJSONLaneTest {
     assertEquals(incompleteLane.yieldLanes.size, 0)
   }
 
+  /**
+   * Tests that primitive attributes are equal on [JsonLane] [incompleteJsonLane] and [Lane]
+   * [incompleteLane].
+   */
   @Test
   fun checkSettingOfPrimitiveAttributes() {
     assertEquals(incompleteJsonLane.laneId, incompleteLane.laneId)
@@ -112,6 +119,7 @@ class IncompleteJSONLaneTest {
     assertEquals(incompleteJsonLane.laneWidth, incompleteLane.laneWidth)
   }
 
+  /** Checks that missing intersection points are correctly recognized. */
   @Test
   fun checkSettingOfIntersectingLanes() {
     incompleteJsonLane.intersectingLanes.forEach { jsonContactInfo ->
@@ -123,6 +131,7 @@ class IncompleteJSONLaneTest {
     }
   }
 
+  /** Checks that missing contact points are correctly recognized. */
   @Test
   fun checkMissingLanes() {
     incompleteJsonLane.contactAreas.forEach { jsonContactArea ->
