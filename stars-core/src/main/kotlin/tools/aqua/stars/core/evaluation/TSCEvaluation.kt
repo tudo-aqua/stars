@@ -41,9 +41,9 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @property numThreads Number of parallel segment executions.
  * @property tsc The [TSC].
  * @property projectionIgnoreList List of projections to ignore.
+ * @property numThreads Number of parallel segment executions.
  * @property logger Logger instance.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
