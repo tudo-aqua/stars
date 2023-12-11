@@ -23,13 +23,19 @@ import kotlin.test.assertEquals
 import tools.aqua.stars.data.av.dataclasses.Landmark
 import tools.aqua.stars.importer.carla.dataclasses.*
 
+/** Tests converter from [JsonLandmark] to [Landmark]. */
 class JSONLandmarkTest {
 
+  /** The [JsonLandmark] instance. */
   private lateinit var completeJsonLandmark: JsonLandmark
-  private lateinit var completeLandmark: Landmark
-  // private lateinit var jsonSpeedLimit: JsonLandmark
-  // private lateinit var speedLimit: Landmark
 
+  /** The [Landmark] instance. */
+  private lateinit var completeLandmark: Landmark
+
+  /**
+   * Creates a [JsonLandmark] [completeJsonLandmark] and converts it to a [Landmark]
+   * [completeLandmark].
+   */
   @BeforeTest
   fun setup() {
     completeJsonLandmark =
@@ -58,6 +64,7 @@ class JSONLandmarkTest {
     completeLandmark = completeJsonLandmark.toLandmark()
   }
 
+  /** Asserts that all attributes in [completeJsonLandmark] equal those in [completeLandmark]. */
   @Test
   fun checkAttributeSetter() {
     assertEquals(completeJsonLandmark.id, completeLandmark.id)
