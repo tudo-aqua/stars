@@ -212,6 +212,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
 
       EvaluationMetrics.merge(segmentEvaluationJobs.awaitAll()).apply {
         tscProjections.clear()
+        println()
         printState()
         plotData()
         close()
