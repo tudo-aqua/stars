@@ -80,12 +80,13 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * Registers new [MetricProvider]s to the list of metrics that should be called during evaluation.
    *
    * @param metricProviders The [MetricProvider]s that should be registered.
+   * @throws IllegalArgumentException If [prepare] has already been called.
    */
   fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, S>) {
-    evaluationMetrics.register(
-        metricProviders.filterIsInstance<EvaluationMetricProvider<E, T, S>>())
-    postEvaluationMetrics.register(
-        metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>())
+    registerEvaluationMetricProviders(
+        metricProviders.filterIsInstance<EvaluationMetricProvider<E, T, S>>().toList())
+    registerPostEvaluationMetricProviders(
+        metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>().toList())
   }
 
   /**
@@ -93,9 +94,11 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * evaluation.
    *
    * @param metricProviders The [EvaluationMetricProvider]s that should be registered.
+   * @throws IllegalArgumentException If [prepare] has already been called.
    */
-  fun registerEvaluationMetricProviders(vararg metricProviders: EvaluationMetricProvider<E, T, S>) {
-    this.evaluationMetrics.register(metricProviders.toList())
+  fun registerEvaluationMetricProviders(metricProviders: List<EvaluationMetricProvider<E, T, S>>) {
+    check(tscProjections.isEmpty()) { "TSCEvaluation.prepare() has already been called." }
+    this.evaluationMetrics.register(metricProviders)
   }
 
   /**
@@ -105,9 +108,9 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    * @param metricProviders The [PostEvaluationMetricProvider]s that should be registered.
    */
   fun registerPostEvaluationMetricProviders(
-      vararg metricProviders: PostEvaluationMetricProvider<E, T, S>
+      metricProviders: List<PostEvaluationMetricProvider<E, T, S>>
   ) {
-    this.postEvaluationMetrics.register(metricProviders.toList())
+    this.postEvaluationMetrics.register(metricProviders)
   }
 
   /**
