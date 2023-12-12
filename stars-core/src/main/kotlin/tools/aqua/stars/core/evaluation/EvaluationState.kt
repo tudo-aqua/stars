@@ -57,7 +57,7 @@ object EvaluationState {
   /** Coroutine scope for simulation file IO. */
   private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 
-  private const val DELAY: Long = 250
+  private const val DELAY: Long = 100
 
   init {
     scope.launch {
@@ -76,8 +76,9 @@ object EvaluationState {
    */
   fun checkFinished(print: Boolean) {
     if (print) {
-      print("Final BUFFER state: ")
+      println("Final BUFFER state: ")
       printState()
+      println()
     }
 
     check(readSimulationRuns.get() == totalSimulationBlocks.get()) {
@@ -106,12 +107,12 @@ object EvaluationState {
     val segBuffSize = segmentsBufferSize.get()
     val finished = finishedSegments.get()
 
-    println(
-        "Total simulations runs read: ${if(readFinished) LIGHT_GREEN else ""}$read$RESET / $total; " +
+    print(
+        "\rTotal simulations runs read: ${if(readFinished) LIGHT_GREEN else ""}$read$RESET / $total; " +
             "Sliced: ${if(sliceFinished) LIGHT_GREEN else ""}$sliced$RESET / $total;   " +
             "BUFFER HEALTH: Reads: ${getColor(simBuff, simBuffSize)}$simBuff$RESET / $simBuffSize; " +
             "Slices: ${getColor(segBuff, segBuffSize)}$segBuff$RESET / $segBuffSize; " +
-            "Finished: $finished")
+            "Finished: $finished                         ")
   }
 
   private fun getColor(value: Int, limit: Int): String =
