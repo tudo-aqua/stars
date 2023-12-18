@@ -31,8 +31,8 @@ implementation("tools.aqua:stars-core:0.2.1")
 </dependency>
 ``` 
 
-#### Git Hooks
-To use our proposed Git Hooks you can execute the following command:
+#### (Optional) Git Hooks
+If you want to use our proposed Git Hooks you can execute the following command:
 ```shell
 git config --local core.hooksPath .githooks
 ```
