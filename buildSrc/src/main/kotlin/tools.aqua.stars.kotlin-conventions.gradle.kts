@@ -66,7 +66,7 @@ val libs = the<LibrariesForLibs>()
 
 dependencies {
   dokkaGfmPlugin(libs.dokka.javadoc)
-
+  implementation(libs.kotlinx.coroutines.core)
   testImplementation(platform(libs.junit.bom))
   testImplementation(libs.bundles.test)
 }
@@ -78,7 +78,7 @@ tasks.test {
 
 kotlin.target.compilations.all {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
     // allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }

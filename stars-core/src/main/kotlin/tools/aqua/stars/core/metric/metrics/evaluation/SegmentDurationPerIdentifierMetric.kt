@@ -19,8 +19,10 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
+import tools.aqua.stars.core.metric.providers.MetricProvider
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.requireIsInstance
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -34,7 +36,7 @@ import tools.aqua.stars.core.types.TickDataType
 class SegmentDurationPerIdentifierMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("segment-duration-per-identifier")
-) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
+) : SegmentMetricProvider<E, T, S>(), Stateful, Loggable {
   /**
    * Holds the Map of [SegmentType.segmentSource] to total time length of all [SegmentType]s for the
    * [SegmentType.segmentSource] in seconds ([Double]).
@@ -85,9 +87,24 @@ class SegmentDurationPerIdentifierMetric<
    * seconds ([Double]).
    */
   override fun printState() {
+    logInfo("=== Total analysis data per identifier ===")
     segmentIdentifierToTotalSegmentDurationMap.forEach { (identifier, totalTimeLength) ->
-      logInfo(
-          "The analyzed segments with source '$identifier' yielded a total of $totalTimeLength seconds of analysis data.")
+      logInfo(" '$identifier': $totalTimeLength seconds")
+    }
+    logInfo()
+  }
+
+  override fun copy(): SegmentDurationPerIdentifierMetric<E, T, S> =
+      SegmentDurationPerIdentifierMetric(logger)
+
+  override fun merge(other: MetricProvider<E, T, S>) {
+    requireIsInstance<SegmentDurationPerIdentifierMetric<E, T, S>>(other) {
+      "Trying to merge different metrics."
+    }
+
+    other.segmentIdentifierToTotalSegmentDurationMap.forEach { (k, v) ->
+      this.segmentIdentifierToTotalSegmentDurationMap[k] =
+          this.segmentIdentifierToTotalSegmentDurationMap.getOrPut(k) { 0.0 } + v
     }
   }
 }

@@ -24,7 +24,7 @@ import tools.aqua.stars.data.av.dataclasses.Block
  * Contains the information for all simulation runs for one specific map. Each
  * [CarlaSimulationRunsWrapper] contains a [Path] to the [mapDataFile] and a list of [Path]s for the
  * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [Path]s as an
- * [ArrayDeque] in [dynamicDataFilesArrayDeque]
+ * [ArrayDeque] in [dynamicDataFiles]
  *
  * @property mapDataFile The [Path] to map data file containing all static information
  * @property dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state
@@ -33,6 +33,4 @@ import tools.aqua.stars.data.av.dataclasses.Block
 data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
   /** Holds a [List] of [Block]s. */
   var blocks: List<Block> = listOf()
-  /** Holds an [ArrayDeque] of [Path]s. */
-  val dynamicDataFilesArrayDeque: ArrayDeque<Path> = ArrayDeque(dynamicDataFiles)
 }

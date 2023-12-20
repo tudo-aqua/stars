@@ -42,32 +42,30 @@ class MissingPredicateCombinationsPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
     override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
-) : PostEvaluationMetricProvider<E, T, S>, Loggable {
+) : PostEvaluationMetricProvider<E, T, S>(), Loggable {
 
   /**
    * Returns a [Set] of all missing [PredicateCombination]s for all [TSCProjection]s that are
    * calculated by the [ValidTSCInstancesPerProjectionMetric].
    */
   override fun evaluate(): Map<TSCProjection<E, T, S>, Set<PredicateCombination>> =
-      dependsOn.getState().mapValues {
-        getAllMissingPredicateCombinationsForProjection(it.key, it.value.map { t -> t.key })
-      }
-
-  /**
-   * Prints the count of missed [PredicateCombination]s for each [TSCProjection] and then the actual
-   * list of the missed predicates.
-   */
-  override fun print() {
-    val evaluationResult = evaluate()
-    evaluationResult.forEach { (projection, missedPredicates) ->
-      logInfo(
-          "Count of missing predicate combinations for projection '$projection': ${missedPredicates.size}.")
-      missedPredicates
-          .sortedWith(compareBy<PredicateCombination> { it.predicate1 }.thenBy { it.predicate2 })
-          .forEach { logFine(it) }
-      logFine()
-    }
-  }
+      dependsOn
+          .getState()
+          .mapValues {
+            getAllMissingPredicateCombinationsForProjection(it.key, it.value.map { t -> t.key })
+          }
+          .also { res ->
+            logInfo("=== Count of missing predicate combinations ===")
+            res.forEach { (projection, missedPredicates) ->
+              logInfo(" '$projection': ${missedPredicates.size}")
+              missedPredicates
+                  .sortedWith(
+                      compareBy<PredicateCombination> { it.predicate1 }.thenBy { it.predicate2 })
+                  .forEach { logFine(it) }
+              logFine()
+            }
+            logInfo()
+          }
 
   /**
    * Calculate the [Set] of [PredicateCombination]s that are missing.
@@ -121,4 +119,7 @@ class MissingPredicateCombinationsPerProjectionMetric<
     }
     return predicateCombinations
   }
+
+  override fun copy(): MissingPredicateCombinationsPerProjectionMetric<E, T, S> =
+      MissingPredicateCombinationsPerProjectionMetric(dependsOn.copy(), logger)
 }
