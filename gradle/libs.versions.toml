@@ -51,8 +51,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 ktor-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 
-letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.4.3" }
-letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.0.1" }
+letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.5.0" }
+letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.2.0" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.6"}
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.6"}
 
