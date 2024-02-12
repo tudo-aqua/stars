@@ -53,8 +53,7 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
 /**
  * CMFTBL implementation of the previous operator.
  *
- * @param E1 [EntityType]
- * 1.
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -75,3 +74,43 @@ fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType
           if (entity::class.isInstance(previousEntity)) phi(entity::class.cast(previousEntity))
           else false
         })
+
+/**
+ * CMFTBL implementation of the previous operator for two entities.
+ *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param entity1 Current [EntityType]
+ * @param entity2 Current [EntityType]
+ * @param interval Observation interval.
+ * @param phi Predicate.
+ */
+fun <
+    E1 : E,
+    E2 : E,
+    E : EntityType<E, T, S>,
+    T : TickDataType<E, T, S>,
+    S : SegmentType<E, T, S>> previous(
+    entity1: E1,
+    entity2: E2,
+    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    phi: (E1, E2) -> Boolean
+): Boolean {
+  require(entity1.tickData == entity2.tickData) {
+    "the two entities provided as argument are not from same tick"
+  }
+  return previous(
+      entity1.tickData,
+      interval,
+      phi = { td ->
+        val previousEntity1 = td.entity(entity1.id)
+        val previousEntity2 = td.entity(entity2.id)
+        if (entity1::class.isInstance(previousEntity1) &&
+            entity2::class.isInstance(previousEntity2))
+            phi(entity1::class.cast(previousEntity1), entity2::class.cast(previousEntity2))
+        else false
+      })
+}
