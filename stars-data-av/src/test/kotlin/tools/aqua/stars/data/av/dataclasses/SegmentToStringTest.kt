@@ -1,0 +1,88 @@
+/*
+ * Copyright 2024 The STARS Project Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package tools.aqua.stars.data.av.dataclasses
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import tools.aqua.stars.data.av.emptyTickData
+import tools.aqua.stars.data.av.emptyVehicle
+
+class SegmentToStringTest {
+  /**
+   * This test checks that an exception is thrown, when there is no primary entity in a [Segment].
+   */
+  @Test
+  fun testNoEgoVehicle() {
+    val vehicle1 = emptyVehicle(id = 0, egoVehicle = false)
+    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+    val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
+    val segment =
+        Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
+    assertFailsWith<IllegalStateException> { segment.primaryEntityId }
+  }
+
+  /**
+   * This test checks that there is no exception when exactly one primary entity is present in a
+   * [Segment].
+   */
+  @Test
+  fun testHasEgoVehicle() {
+    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
+    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+    val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
+    val segment =
+        Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
+    assertEquals(segment.primaryEntityId, vehicle1.id)
+  }
+
+  /**
+   * This test checks that an exception is thrown when there are multiple primary entities in a
+   * [Segment].
+   */
+  @Test
+  fun testHasMultipleEgoVehicles() {
+    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
+    val vehicle2 = emptyVehicle(id = 1, egoVehicle = true)
+    val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
+    val segment =
+        Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
+    assertFailsWith<IllegalStateException> { segment.primaryEntityId }
+  }
+
+  /**
+   * This test checks that an exception is thrown when the primary entity changed during a [Segment]
+   * .
+   */
+  @Test
+  fun testChangingEgoVehicles() {
+    val vehicle1_1 = emptyVehicle(id = 0, egoVehicle = true)
+    val vehicle2_1 = emptyVehicle(id = 1, egoVehicle = false)
+    val tickData = emptyTickData(actors = listOf(vehicle1_1, vehicle2_1))
+    // Change egoVehicle flag
+    val vehicle1_2 = emptyVehicle(id = 0, egoVehicle = false)
+    val vehicle2_2 = emptyVehicle(id = 1, egoVehicle = true)
+    val tickData2 = emptyTickData(actors = listOf(vehicle1_2, vehicle2_2))
+
+    val segment =
+        Segment(
+            segmentSource = "", mainInitList = listOf(tickData, tickData2), simulationRunId = "1")
+
+    assertFailsWith<IllegalStateException> { segment.primaryEntityId }
+  }
+}

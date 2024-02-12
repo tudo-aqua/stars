@@ -42,9 +42,16 @@ data class Segment(
 
   override val primaryEntityId: Int
     get() {
-      val firstEgo = tickData.first().egoVehicle
+      val firstTick = tickData.first()
+      check(firstTick.entities.filterIsInstance<Vehicle>().any { it.egoVehicle }) {
+        "There is no primary entity for tick $firstTick"
+      }
+      val firstEgo = firstTick.egoVehicle
+      check(tickData.any { it.entities.filterIsInstance<Vehicle>().count { it.egoVehicle } == 1 }) {
+        "There is at least one tick with multiple primary entities in segment ${this.toString(firstEgo.id)}"
+      }
       if (tickData.any { it.egoVehicle.id != firstEgo.id })
-          error("inconsistent ego ids in segment $this")
+          error("The ego id changes in Segment ${this.toString(firstEgo.id)}")
       return firstEgo.id
     }
 
@@ -81,9 +88,11 @@ data class Segment(
       return pedestrianIdsCache
     }
 
-  override fun toString(): String =
+  override fun toString(): String = toString(this.primaryEntityId)
+
+  fun toString(egoId: Int): String =
       "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $simulationRunId " +
-          "with ego ${this.primaryEntityId}"
+          "with ego $egoId"
 
   override fun equals(other: Any?): Boolean {
     if (other is Segment) {
