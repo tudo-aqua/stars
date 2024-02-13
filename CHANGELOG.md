@@ -1,3 +1,4 @@
+[0.2.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.2
 [0.2.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.1
 [0.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2
 [0.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.1
@@ -11,6 +12,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 13.02.2024
+### Added
+- Add missing documentation
+- Add missing `previous` CMFTBL operator using two entities
+- Add additional sanity checks for the `primaryEntityId` in `Segments`
+- Add support for plotting and saving specific `x` and `y` values
+
+### Changed
+- Change Kotlin version from `1.7.10` to `1.9.10`
+- Introduce new subpackages and move files accordingly
+- Use `jvmToolchains`
+- Split plotting and writing of CSV files into two separate functions
+
+### Fixed
+- When using `useEveryVehicleAsEgo` the existing flags are now correctly reset
+- Add missing `evaluate` function call of `PostEvaluationMetricProvider`
+
+### Security
+- Update project to Java 17
+- Update lets-plot library to fix security issue
+
 ## [0.2.1] - 17.11.2023
 ### Added
 - Add git pre-commit hook for `spotlessCheck`
@@ -18,17 +40,17 @@ All notable changes to this project will be documented in this file.
 - Add logging for `AverageVehiclesInEgoBlockMetric`
 - Add additional scaled plots `validTSCInstanceOccurrencesPerProjection_scaled` and `validTSCInstancesProgressionPerProjection_combined_percentage_scaled`
 
-## Changed
+### Changed
 - Ignore empty data sets when creating plots (i.e. do not create plot)
 - Update legend entry for `validTscInstancesOccurrences` to also include (occurred/total) instances
 
-## Fixed
+### Fixed
 - Set `egoVehicle` value according to actual value of given Actor
 - Fix `sliceRunIntoSegments()` by correctly using the `minSegmentTickCount` attribute
 - The logger with level `FINEST` is now using the correct formatter
 - Fix differing analysis result directories for plots, CSV files and logs 
 
-## Removed
+### Removed
 - Remove `AverageVehiclesInEgoBlockMetric` `println()` statement
 
 ## [0.2] - 03.11.2023
@@ -39,14 +61,14 @@ All notable changes to this project will be documented in this file.
 - Add plot export to `ValidTSCInstancesPerProjectionMetric`
 - Add CSV export to `ValidTSCInstancesPerProjectionMetric`
 
-## Changed
+### Changed
 - Update `lets-plot` dependency version
 
-## Fixed
+### Fixed
 - Fix failing pipeline by introducing `codecov.yml` specification
 - Rename package and Maven artifact `tools.aqua.stars.import.carla` to `tools.aqua.stars.importer.carla` due to Java naming conventions
 
-## Removed
+### Removed
 - Remove old `DataPlotter`
 
 ## [0.1] - 01.09.2023
