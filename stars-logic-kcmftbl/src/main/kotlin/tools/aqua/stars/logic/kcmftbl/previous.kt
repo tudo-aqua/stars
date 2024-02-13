@@ -53,7 +53,8 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
 /**
  * CMFTBL implementation of the previous operator.
  *
- * @param E1 [EntityType].
+ * @param E1 [EntityType]
+ * 1.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -78,13 +79,17 @@ fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType
 /**
  * CMFTBL implementation of the previous operator for two entities.
  *
- * @param E1 [EntityType].
- * @param E2 [EntityType].
+ * @param E1 [EntityType]
+ * 1.
+ * @param E2 [EntityType]
+ * 2.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param entity1 Current [EntityType]
+ * 1.
  * @param entity2 Current [EntityType]
+ * 2.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
