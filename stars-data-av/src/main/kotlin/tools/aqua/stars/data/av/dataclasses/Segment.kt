@@ -88,11 +88,16 @@ data class Segment(
       return pedestrianIdsCache
     }
 
-  override fun toString(): String = toString(this.primaryEntityId)
-
+  /**
+   * Converts segment to String representation including [tickData] range and given [egoId].
+   *
+   * @param egoId Identifier of the ego vehicle to be included.
+   */
   fun toString(egoId: Int): String =
       "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $simulationRunId " +
           "with ego $egoId"
+
+  override fun toString(): String = toString(this.primaryEntityId)
 
   override fun equals(other: Any?): Boolean {
     if (other is Segment) {
