@@ -31,4 +31,12 @@ interface Plottable {
    * @see TSCEvaluation.runEvaluation
    */
   fun plotData()
+
+  /**
+   * This function is called after the evaluation phase and writes the plot data collected during
+   * the evaluation into CSV files.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
+  fun writePlotData()
 }

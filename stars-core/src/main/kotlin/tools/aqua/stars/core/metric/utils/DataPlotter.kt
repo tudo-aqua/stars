@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("StringLiteralDuplication")
+
 package tools.aqua.stars.core.metric.utils
 
 import java.io.File
@@ -117,55 +119,120 @@ fun plotDataAsBarChart(
  *
  * Creates a new [Map] with [legendEntry] and [yValues] and calls [getPlot] with it.
  *
- * @param T [Number].
+ * @param T1 [Number].
+ * @param T2 [Number].
  * @param legendEntry The name that is displayed in the legend for this data set
+ * @param xValues The x-values that should be used for the y-values
  * @param yValues The y-values that should be displayed
- * @param xAxisName The name that is displayed below the x-axis of the plot
- * @param yAxisName The name that is displayed besides the y-axis of the plot
- * @param legendHeader The name that is displayed above the legend list
+ * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot
+ * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot
+ * @param legendHeader (Default 'Legend') The name that is displayed above the legend list
  * @return The initialized [Plot] object
  */
-@Suppress("unused")
-fun <T : Number> getPlot(
+fun <T1 : Number, T2 : Number> getPlot(
     legendEntry: String,
-    yValues: List<T>,
-    xAxisName: String,
-    yAxisName: String,
-    legendHeader: String
-): Plot? = getPlot(mapOf(legendEntry to yValues), xAxisName, yAxisName, legendHeader)
+    xValues: List<T1>,
+    yValues: List<T2>,
+    xAxisName: String = "x",
+    yAxisName: String = "y",
+    legendHeader: String = "Legend"
+): Plot? = getPlot(mapOf(legendEntry to (xValues to yValues)), xAxisName, yAxisName, legendHeader)
 
 /**
  * Creates a [Plot] object with the given values, so that it can be given to the lets-plot library
  * for plotting.
  *
+ * Creates a new [Map] with [legendEntry] and [yValues] and calls [getPlot] with it.
+ *
  * @param T [Number].
- * @param nameToValuesMap The [Map] that contains the column values and its related header entry
+ * @param legendEntry The name that is displayed in the legend for this data set
+ * @param yValues The y-values that should be displayed
+ * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot
+ * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot
+ * @param legendHeader (Default 'Legend') The name that is displayed above the legend list
+ * @return The initialized [Plot] object
+ */
+fun <T : Number> getPlot(
+    legendEntry: String,
+    yValues: List<T>,
+    xAxisName: String = "x",
+    yAxisName: String = "y",
+    legendHeader: String = "Legend"
+): Plot? =
+    getPlot(
+        mapOf(legendEntry to (List(yValues.size) { it } to yValues)),
+        xAxisName,
+        yAxisName,
+        legendHeader)
+
+/**
+ * Creates a [Plot] object with the given values, so that it can be given to the lets-plot library
+ * for plotting.
+ *
+ * @param T1 [Number].
+ * @param T2 [Number].
+ * @param legendEntries The names that are displayed in the legend for the data sets
+ * @param xAndYValues A [List] of x- and y-value [List]s. Each [List] item corresponds to one item
+ * of [legendEntries]
+ * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot
+ * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot
+ * @param legendHeader (Default 'Legend') The name that is displayed above the legend list
+ * @return The initialized [Plot] object
+ */
+fun <T1 : Number, T2 : Number> getPlot(
+    legendEntries: List<String>,
+    xAndYValues: List<Pair<List<T1>, List<T2>>>,
+    xAxisName: String = "x",
+    yAxisName: String = "y",
+    legendHeader: String = "Legend"
+): Plot? {
+  require(legendEntries.size == xAndYValues.size) {
+    "The amount of given legend entries should equal the size of the given value pairs."
+  }
+  val legendEntryToValueMap = mutableMapOf<String, Pair<List<T1>, List<T2>>>()
+  legendEntries.forEachIndexed { index, legendEntry ->
+    legendEntryToValueMap[legendEntry] = xAndYValues[index]
+  }
+  return getPlot(legendEntryToValueMap, xAxisName, yAxisName, legendHeader)
+}
+
+/**
+ * Creates a [Plot] object with the given values, so that it can be given to the lets-plot library
+ * for plotting.
+ *
+ * @param T1 [Number].
+ * @param T2 [Number].
+ * @param nameToValuesMap The [Map] that contains the x- and y-values in relation to their legend
+ * entry
  * @param xAxisName The name that is displayed below the x-axis of the plot
  * @param yAxisName The name that is displayed besides the y-axis of the plot
  * @param legendHeader The name that is displayed above the legend list
  * @return The initialized [Plot] object
  */
-fun <T : Number> getPlot(
-    nameToValuesMap: Map<String, List<T>>,
+fun <T1 : Number, T2 : Number> getPlot(
+    nameToValuesMap: Map<String, Pair<List<T1>, List<T2>>>,
     xAxisName: String,
     yAxisName: String,
     legendHeader: String
 ): Plot? {
-  if (nameToValuesMap.values.any { it.isEmpty() }) {
+  if (nameToValuesMap.isEmpty()) {
+    return null
+  }
+  if (nameToValuesMap.values.any { it.second.isEmpty() }) {
     return null
   }
   // Check that every value list has the exact same amount of elements
-  check(nameToValuesMap.values.map { it.size }.distinct().count() == 1)
+  check(nameToValuesMap.values.map { it.first.size + it.second.size }.distinct().count() == 1)
 
-  val xValues = mutableListOf<Int>()
-  val yValues = mutableListOf<T>()
+  val xValues = mutableListOf<T1>()
+  val yValues = mutableListOf<T2>()
   val legendEntries = mutableListOf<String>()
 
   // Bring data into correct form for lets-plot
   nameToValuesMap.forEach { (name, values) ->
-    xValues += List(values.size) { it }
-    yValues += values
-    legendEntries += List(values.size) { name }
+    xValues += values.first
+    yValues += values.second
+    legendEntries += List(values.first.size) { name }
   }
 
   // Create Map with all necessary data points
@@ -185,8 +252,8 @@ fun <T : Number> getPlot(
  * will be created.
  *
  * @param folder The name of the top-level folder.
- * @param subFolder (Default: "") The name of the subfolder under [folder] in which the file will be
- * saved.
+ * @param subFolder (Default: "") The name of the sub-folder under [folder] in which the file will
+ * be saved.
  * @return The path to the created folder.
  */
 private fun getAndCreatePlotFolder(folder: String, subFolder: String): String =
