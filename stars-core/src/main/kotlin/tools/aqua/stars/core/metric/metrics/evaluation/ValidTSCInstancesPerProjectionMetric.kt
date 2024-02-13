@@ -32,11 +32,11 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /** Valid instances projection name. */
-const val VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME: String =
+private const val VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME: String =
     "valid-tsc-instances-per-projection"
 
 /** Valid instances occurrences name. */
-const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: String =
+private const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: String =
     "valid-tsc-instances-occurrences-per-projection"
 
 /**
@@ -79,6 +79,9 @@ class ValidTSCInstancesPerProjectionMetric<
    */
   private val combinedProjectionToOccurredInstancesPercentagesMap =
       mutableMapOf<String, Pair<List<Int>, List<Float>>>()
+
+  /** This metric does not depend on another metric. */
+  override val dependsOn: Any? = null
 
   private val xAxisName = "unique and valid TSC instances"
   private val yAxisName = "instance count"
@@ -148,9 +151,6 @@ class ValidTSCInstancesPerProjectionMetric<
       }
     }
   }
-
-  /** This metric does not depend on another metric. */
-  override val dependsOn: Any? = null
 
   /**
    * Calculates the combined [Map]s that contain the occurrences and their percentages combined for
