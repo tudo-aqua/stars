@@ -208,11 +208,10 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
     runBlocking {
       channel.close()
 
-      EvaluationState.isFinished.set(true)
+      EvaluationState.isFinished.set(true).also { println() }
 
       EvaluationMetrics.merge(segmentEvaluationJobs.awaitAll()).apply {
         tscProjections.clear()
-        println()
         printState()
         plotData()
         close()
@@ -220,6 +219,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
 
       postEvaluationMetrics.apply {
         evaluate()
+        printState()
         plotData()
         close()
       }
