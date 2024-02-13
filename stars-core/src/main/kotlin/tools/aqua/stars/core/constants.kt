@@ -29,10 +29,10 @@ const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: String =
 const val DEFAULT_MIN_SEGMENT_TICK_COUNT: Int = 10
 
 /** The default size of the simulation run prefetch buffer. */
-const val DEFAULT_SIMULATION_RUN_PREFETCH_SIZE: Int = 5
+const val DEFAULT_SIMULATION_RUN_PREFETCH_SIZE: Int = 1
 
 /** The default number of slice threads. */
-const val DEFAULT_NUM_SLICE_THREADS: Int = 3
+const val DEFAULT_NUM_SLICE_THREADS: Int = 1
 
 /** The default size of the simulation run prefetch buffer. */
 const val DEFAULT_SEGMENT_PREFETCH_SIZE: Int = 500

@@ -50,7 +50,7 @@ import tools.aqua.stars.core.types.TickDataType
 class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     val tsc: TSC<E, T, S>,
     val projectionIgnoreList: List<String> = listOf(),
-    val numThreads: Int,
+    val numThreads: Int = 1,
     override val logger: Logger = Loggable.getLogger("evaluation-time"),
 ) : Loggable {
 
