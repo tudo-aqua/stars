@@ -131,6 +131,13 @@ fun convertJsonData(
     }
     val egoTickData = checkNotNull(referenceTickData).map { it.clone() }
 
+    // Remove all existing ego flags when useEveryVehicleAsEgo is set
+    if (useEveryVehicleAsEgo) {
+      egoTickData.forEach { tickData ->
+        tickData.actors.filterIsInstance<Vehicle>().forEach { it.egoVehicle = false }
+      }
+    }
+
     // Set egoVehicle flag for each TickData
     var isTickWithoutEgo = false
     egoTickData.forEach { tickData ->
