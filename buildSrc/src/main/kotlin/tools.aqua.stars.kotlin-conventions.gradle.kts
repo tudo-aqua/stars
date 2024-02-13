@@ -76,10 +76,4 @@ tasks.test {
   testLogging { events(FAILED, PASSED, SKIPPED) }
 }
 
-kotlin.target.compilations.all {
-  kotlinOptions {
-    jvmTarget = "17"
-    // allWarningsAsErrors = true
-    freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
-  }
-}
+kotlin { jvmToolchain(17) }

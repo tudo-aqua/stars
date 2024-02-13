@@ -22,17 +22,19 @@ import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProje
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.TSCMonitorResult
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * This metric implements the [PostEvaluationMetricProvider] and tracks the number of failed
- * monitors.
+ * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as
+ * [TSCNode.monitorFunction]s that evaluate to 'false'.
  *
- * This class implements the [Loggable] interface. It logs and prints the count of missing Monitors
- * for each [TSCProjection]. It logs the missing [TSCMonitorResult]s for each [TSCProjection].
+ * This class implements the [Loggable] interface. It logs and prints the count and names of all
+ * failing [TSCNode.monitorFunction]s for each [TSCProjection]. It logs the failing
+ * [TSCMonitorResult]s for each [TSCProjection].
  */
 @Suppress("unused")
 class FailedMonitorsMetric<
