@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("StringLiteralDuplication")
+
 package tools.aqua.stars.core.metric.utils
 
 import java.io.File
