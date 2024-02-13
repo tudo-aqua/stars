@@ -23,7 +23,12 @@ import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.emptyTickData
 import tools.aqua.stars.data.av.emptyVehicle
 
-class SegmentToStringTest {
+/**
+ * This class tests the correctness of the [Segment.primaryEntityId] for [Segment]s. The primary
+ * entity has constraints, such as 'in each tick there should be exactly one primary entity' and
+ * 'the primary entity should be consistent in the whole segment'.
+ */
+class SegmentPrimaryEntityTest {
   /**
    * This test checks that an exception is thrown, when there is no primary entity in a [Segment].
    */
