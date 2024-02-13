@@ -71,13 +71,14 @@ class SegmentToStringTest {
    */
   @Test
   fun testChangingEgoVehicles() {
-    val vehicle1_1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2_1 = emptyVehicle(id = 1, egoVehicle = false)
-    val tickData = emptyTickData(actors = listOf(vehicle1_1, vehicle2_1))
+    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
+    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+    val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
+
     // Change egoVehicle flag
-    val vehicle1_2 = emptyVehicle(id = 0, egoVehicle = false)
-    val vehicle2_2 = emptyVehicle(id = 1, egoVehicle = true)
-    val tickData2 = emptyTickData(actors = listOf(vehicle1_2, vehicle2_2))
+    val changedVehicle1 = emptyVehicle(id = 0, egoVehicle = false)
+    val changedVehicle2 = emptyVehicle(id = 1, egoVehicle = true)
+    val tickData2 = emptyTickData(actors = listOf(changedVehicle1, changedVehicle2))
 
     val segment =
         Segment(
