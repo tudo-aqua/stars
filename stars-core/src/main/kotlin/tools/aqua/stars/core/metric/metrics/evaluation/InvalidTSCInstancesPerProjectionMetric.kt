@@ -19,8 +19,10 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.providers.MetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.providers.TSCInstanceAndProjectionNodeMetricProvider
+import tools.aqua.stars.core.requireIsInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -29,7 +31,7 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] interface and tracks the
+ * This class implements the [TSCInstanceAndProjectionNodeMetricProvider] interface and tracks the
  * invalid [TSCInstance]s for each [TSCProjection].
  *
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSCProjection]s
@@ -42,7 +44,7 @@ import tools.aqua.stars.core.types.TickDataType
 class InvalidTSCInstancesPerProjectionMetric<
     E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
     override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-projection")
-) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
+) : TSCInstanceAndProjectionNodeMetricProvider<E, T, S>(), Stateful, Loggable {
   /**
    * Map the [TSCProjection] to a map in which the occurrences of invalid [TSCInstance]s are stored.
    */
@@ -56,10 +58,10 @@ class InvalidTSCInstancesPerProjectionMetric<
    * Track the invalid [TSCInstance]s for each [TSCProjection] in the [invalidInstancesMap]. If the
    * current [tscInstance] is valid it is skipped.
    *
-   * @param projection The current [TSCProjection] for which the invalidity should be checked.
    * @param tscInstance The current [TSCInstance] which is checked for invalidity.
+   * @param projection The current [TSCProjection] for which the invalidity should be checked.
    */
-  override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+  override fun evaluate(tscInstance: TSCInstance<E, T, S>, projection: TSCProjection<E, T, S>) {
     // Check if the given tscInstance is valid. If so, skip
     if (projection.possibleTSCInstances.contains(tscInstance.rootNode)) return
 
@@ -85,10 +87,10 @@ class InvalidTSCInstancesPerProjectionMetric<
    * of invalid classes and their reasons for invalidity.
    */
   override fun printState() {
-    invalidInstancesMap.forEach { (projection, invalidInstancesMap) ->
+    logInfo("=== Invalid instances for projections ===")
+    getState().forEach { (projection, invalidInstancesMap) ->
       logInfo(
-          "Count of unique invalid instances for projection '$projection': ${invalidInstancesMap.size} (of " +
-              "${projection.possibleTSCInstances.size} possible instances).")
+          " '$projection': ${invalidInstancesMap.size} of ${projection.possibleTSCInstances.size}")
 
       logFine(
           "Count of unique invalid instances for projection '$projection' per instance: " +
@@ -110,6 +112,24 @@ class InvalidTSCInstancesPerProjectionMetric<
           logFiner("- $index -  ${instance.sourceSegmentIdentifier}")
         }
         logFiner()
+      }
+    }
+    logInfo()
+  }
+
+  override fun copy(): InvalidTSCInstancesPerProjectionMetric<E, T, S> =
+      InvalidTSCInstancesPerProjectionMetric(logger)
+
+  override fun merge(other: MetricProvider<E, T, S>) {
+    requireIsInstance<InvalidTSCInstancesPerProjectionMetric<E, T, S>>(other) {
+      "Trying to merge different metrics."
+    }
+
+    other.invalidInstancesMap.forEach { (projection, invalidInstances) ->
+      invalidInstances.forEach { (node, instances) ->
+        this.invalidInstancesMap
+            .getOrPut(projection) { mutableMapOf() }
+            .getOrPut(node) { mutableListOf() } += instances
       }
     }
   }

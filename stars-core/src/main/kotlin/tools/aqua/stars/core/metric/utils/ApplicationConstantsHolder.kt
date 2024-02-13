@@ -21,13 +21,20 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /**
- * This singleton holds the current date and time at the start of the application. It is used to
- * persist a consistent folder name for all exported files.
+ * This singleton holds the current date and time at the start of the application and the logging
+ * policy. It is used to persist a consistent folder name for all exported files.
  */
-object ApplicationStartTimeHolder {
+object ApplicationConstantsHolder {
   /** Holds the [LocalDateTime] at the start of the application. */
   private val applicationStartTime: LocalDateTime = LocalDateTime.now()
+
   /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
   val applicationStartTimeString: String =
       applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
+
+  /**
+   * Holds the logging policy. Only affects instances of classes implementing Loggable created after
+   * setting the policy.
+   */
+  var logging: Boolean = true
 }

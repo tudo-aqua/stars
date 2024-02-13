@@ -66,7 +66,7 @@ val libs = the<LibrariesForLibs>()
 
 dependencies {
   dokkaGfmPlugin(libs.dokka.javadoc)
-
+  implementation(libs.kotlinx.coroutines.core)
   testImplementation(platform(libs.junit.bom))
   testImplementation(libs.bundles.test)
 }
