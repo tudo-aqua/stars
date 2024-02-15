@@ -46,31 +46,32 @@ class BinaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tickId The time stamp to evaluate this predicate in. default: first tick in context.
-   * @param actor1 The ID of the first actor to evaluate this predicate for. default: ego vehicle.
-   * @param actor2 The ID of the second actor to evaluate this predicate for.
+   * @param entityId1 The ID of the first entity to evaluate this predicate for. default: ego
+   * vehicle.
+   * @param entityId2 The ID of the second entity to evaluate this predicate for.
    */
   fun holds(
       ctx: PredicateContext<E, T, S>,
       tickId: Double = ctx.segment.firstTickId,
-      actor1: Int = ctx.primaryEntityId,
-      actor2: Int
-  ): Boolean = ctx.holds(this, tickId, actor1, actor2)
+      entityId1: Int = ctx.primaryEntityId,
+      entityId2: Int
+  ): Boolean = ctx.holds(this, tickId, entityId1, entityId2)
 
   /**
    * Checks if this predicate holds (i.e. is true) in the given context on current tick.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param actor1 The ID of the first actor to evaluate this predicate for. default: ego vehicle.
-   * @param actor2 The ID of the second actor to evaluate this predicate for.
+   * @param entity1 The ID of the first entity to evaluate this predicate for. default: ego vehicle.
+   * @param entity2 The ID of the second entity to evaluate this predicate for.
    */
-  fun holds(ctx: PredicateContext<E, T, S>, actor1: E1, actor2: E2): Boolean =
+  fun holds(ctx: PredicateContext<E, T, S>, entity1: E1, entity2: E2): Boolean =
       holds(
           ctx,
-          actor1.tickData.currentTick.apply {
-            if (this != actor2.tickData.currentTick) error("ticks don't match")
+          entity1.tickData.currentTick.apply {
+            if (this != entity2.tickData.currentTick) error("ticks don't match")
           },
-          actor1.id,
-          actor2.id)
+          entity1.id,
+          entity2.id)
 
   companion object {
     /** Creates a binary tick predicate in this context. */
