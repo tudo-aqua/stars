@@ -25,10 +25,8 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * Binary predicate.
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
