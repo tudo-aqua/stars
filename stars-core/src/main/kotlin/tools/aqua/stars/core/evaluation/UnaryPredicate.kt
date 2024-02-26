@@ -55,7 +55,7 @@ class UnaryPredicate<
    * Check if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param entity The entity to evaluate.
+   * @param entity The entity to evaluate this predicate for.
    */
   fun holds(ctx: PredicateContext<E, T, S>, entity: E): Boolean =
       holds(ctx, entity.tickData.currentTick, entity.id)

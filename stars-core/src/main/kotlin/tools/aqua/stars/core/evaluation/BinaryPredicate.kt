@@ -61,8 +61,8 @@ class BinaryPredicate<
    * Checks if this predicate holds (i.e. is true) in the given context on current tick.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param entity1 The ID of the first entity to evaluate this predicate for. default: ego vehicle.
-   * @param entity2 The ID of the second entity to evaluate this predicate for.
+   * @param entity1 The first entity to evaluate this predicate for. default: ego vehicle.
+   * @param entity2 The second entity to evaluate this predicate for.
    */
   fun holds(ctx: PredicateContext<E, T, S>, entity1: E1, entity2: E2): Boolean =
       holds(
