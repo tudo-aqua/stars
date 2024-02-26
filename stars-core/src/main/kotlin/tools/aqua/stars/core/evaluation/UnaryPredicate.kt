@@ -25,8 +25,7 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * Unary predicate.
  *
- * @param E1 [EntityType]
- * 1.
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -43,19 +42,19 @@ class UnaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tickId The time stamp to evaluate this predicate in. default: first tick in context.
-   * @param actorId The ID of the actor to evaluate this predicate for. default: ego vehicle.
+   * @param entityId The ID of the entity to evaluate this predicate for. default: ego vehicle.
    */
   fun holds(
       ctx: PredicateContext<E, T, S>,
       tickId: Double = ctx.segment.firstTickId,
-      actorId: Int = ctx.primaryEntityId
-  ): Boolean = ctx.holds(this, tickId, actorId)
+      entityId: Int = ctx.primaryEntityId
+  ): Boolean = ctx.holds(this, tickId, entityId)
 
   /**
    * Check if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param entity The entity to evaluate.
+   * @param entity The entity to evaluate this predicate for.
    */
   fun holds(ctx: PredicateContext<E, T, S>, entity: E): Boolean =
       holds(ctx, entity.tickData.currentTick, entity.id)
