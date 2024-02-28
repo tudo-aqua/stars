@@ -100,7 +100,10 @@ data class Segment(
 
   override fun equals(other: Any?): Boolean {
     if (other is Segment) {
-      return other.toString() == this.toString()
+      return simulationRunId == other.simulationRunId &&
+          segmentSource == other.segmentSource &&
+          primaryEntityId == other.primaryEntityId &&
+          tickData == other.tickData
     }
     return super.equals(other)
   }

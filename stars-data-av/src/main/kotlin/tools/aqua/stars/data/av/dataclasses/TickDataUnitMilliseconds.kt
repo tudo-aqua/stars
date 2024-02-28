@@ -37,4 +37,15 @@ data class TickDataUnitMilliseconds(val tickMillis: Long) :
 
   override fun plus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
       TickDataUnitMilliseconds(tickMillis + other.differenceMillis)
+
+  override fun toString(): String {
+    return "TickDataUnitMilliseconds(milliSeconds: $tickMillis)"
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other is TickDataUnitMilliseconds) {
+      return tickMillis == other.tickMillis
+    }
+    return super.equals(other)
+  }
 }
