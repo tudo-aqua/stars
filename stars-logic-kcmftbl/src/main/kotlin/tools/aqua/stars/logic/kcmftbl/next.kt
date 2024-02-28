@@ -100,15 +100,17 @@ fun <
  * @param phi Predicate.
  */
 fun <
+    E1 : E,
+    E2 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> next(
-    entity1: E,
-    entity2: E,
+    entity1: E1,
+    entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E, E) -> Boolean
+    phi: (E1, E2) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
     "The two entities provided as argument are not from same tick."
@@ -121,6 +123,6 @@ fun <
         val futureEntity2 = td.getEntityById(entity2.id)
 
         if (futureEntity1 == null || futureEntity2 == null) false
-        else phi(futureEntity1, futureEntity2)
+        else phi(futureEntity1 as E1, futureEntity2 as E2)
       })
 }
