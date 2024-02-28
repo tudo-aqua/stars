@@ -19,9 +19,7 @@ package tools.aqua.stars.core.tsc.edge
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.node.TSCNode
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Baseclass for TSC edges.
@@ -33,14 +31,19 @@ import tools.aqua.stars.core.types.TickDataType
  * @property condition Predicate for the edge condition.
  * @property destination Destination [TSCNode].
  */
-open class TSCEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+open class TSCEdge<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     val label: String,
-    val condition: (PredicateContext<E, T, S>) -> Boolean = { true },
-    val destination: TSCNode<E, T, S>,
+    val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
+    val destination: TSCNode<E, T, S, U, D>,
 ) {
 
   override fun equals(other: Any?): Boolean =
-      other is TSCEdge<*, *, *> &&
+      other is TSCEdge<*, *, *, *, *> &&
           label == other.label &&
           condition == other.condition &&
           destination == other.destination

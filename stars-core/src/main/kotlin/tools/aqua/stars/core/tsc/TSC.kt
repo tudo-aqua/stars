@@ -21,9 +21,7 @@ import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * TSC graph.
@@ -34,15 +32,18 @@ import tools.aqua.stars.core.types.TickDataType
  *
  * @property rootNode The root node of the [TSC].
  */
-class TSC<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val rootNode: TSCNode<E, T, S>
-) {
+class TSC<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(val rootNode: TSCNode<E, T, S, U, D>) {
   /**
    * Evaluates [PredicateContext] on [TSC].
    *
    * @param context The [PredicateContext].
    */
-  fun evaluate(context: PredicateContext<E, T, S>): TSCInstance<E, T, S> =
+  fun evaluate(context: PredicateContext<E, T, S, U, D>): TSCInstance<E, T, S, U, D> =
       TSCInstance(rootNode.evaluate(context), context.segment.getSegmentIdentifier())
 
   /**
@@ -50,8 +51,9 @@ class TSC<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E,
    *
    * @param projectionIgnoreList Projections to ignore.
    */
-  fun buildProjections(projectionIgnoreList: List<Any> = listOf()): List<TSCProjection<E, T, S>> =
-      rootNode.buildProjections(projectionIgnoreList)
+  fun buildProjections(
+      projectionIgnoreList: List<Any> = listOf()
+  ): List<TSCProjection<E, T, S, U, D>> = rootNode.buildProjections(projectionIgnoreList)
 
   override fun toString(): String = this.rootNode.toString()
 }

@@ -30,15 +30,14 @@ data class Segment(
     val mainInitList: List<TickData>,
     val simulationRunId: String = "",
     override val segmentSource: String,
-) : SegmentType<Actor, TickData, Segment> {
+) :
+    SegmentType<
+        Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
 
   override val tickData: List<TickData> = mainInitList.onEach { it.segment = this }
 
-  override val ticks: Map<Double, TickData> = tickData.associateBy { it.currentTick }
-
-  override val tickIDs: List<Double> = tickData.map { it.currentTick }
-
-  override val firstTickId: Double = this.tickIDs.first()
+  override val ticks: Map<TickDataUnitMilliseconds, TickData> =
+      tickData.associateBy { it.currentTick }
 
   override val primaryEntityId: Int
     get() {

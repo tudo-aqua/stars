@@ -19,6 +19,7 @@ package tools.aqua.stars.data.av.metrics
 
 import kotlin.test.Test
 import tools.aqua.stars.data.av.dataclasses.Segment
+import tools.aqua.stars.data.av.dataclasses.TickDataUnitMilliseconds
 import tools.aqua.stars.data.av.emptyBlock
 import tools.aqua.stars.data.av.emptyTickData
 import tools.aqua.stars.data.av.emptyVehicle
@@ -34,7 +35,7 @@ class AverageVehiclesInEgosBlockMetricTest {
   fun testOnlyEgoInBlock() {
     val block = emptyBlock()
     val actor = emptyVehicle(egoVehicle = true)
-    val tickData = emptyTickData(blocks = listOf(block), currentTick = 0.0, actors = listOf(actor))
+    val tickData = emptyTickData(blocks = listOf(block), actors = listOf(actor))
     val segment = Segment(listOf(tickData), "", "")
 
     val averageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric()
@@ -50,11 +51,20 @@ class AverageVehiclesInEgosBlockMetricTest {
     val actor = emptyVehicle(egoVehicle = true)
     val actor2 = emptyVehicle(egoVehicle = false)
     val tickData =
-        emptyTickData(blocks = listOf(block), currentTick = 0.0, actors = listOf(actor, actor2))
+        emptyTickData(
+            blocks = listOf(block),
+            currentTick = TickDataUnitMilliseconds(0),
+            actors = listOf(actor, actor2))
     val tickData2 =
-        emptyTickData(blocks = listOf(block), currentTick = 1.0, actors = listOf(actor, actor2))
+        emptyTickData(
+            blocks = listOf(block),
+            currentTick = TickDataUnitMilliseconds(1),
+            actors = listOf(actor, actor2))
     val tickData3 =
-        emptyTickData(blocks = listOf(block), currentTick = 2.0, actors = listOf(actor, actor2))
+        emptyTickData(
+            blocks = listOf(block),
+            currentTick = TickDataUnitMilliseconds(2),
+            actors = listOf(actor, actor2))
     val segment = Segment(listOf(tickData, tickData2, tickData3), "", "")
 
     val averageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric()
@@ -70,10 +80,20 @@ class AverageVehiclesInEgosBlockMetricTest {
     val actor = emptyVehicle(egoVehicle = true)
     val actor2 = emptyVehicle(egoVehicle = false)
     val tickData =
-        emptyTickData(blocks = listOf(block), currentTick = 0.0, actors = listOf(actor, actor2))
+        emptyTickData(
+            blocks = listOf(block),
+            currentTick = TickDataUnitMilliseconds(0),
+            actors = listOf(actor, actor2))
     val tickData2 =
-        emptyTickData(blocks = listOf(block), currentTick = 1.0, actors = listOf(actor, actor2))
-    val tickData3 = emptyTickData(blocks = listOf(block), currentTick = 2.0, actors = listOf(actor))
+        emptyTickData(
+            blocks = listOf(block),
+            currentTick = TickDataUnitMilliseconds(1),
+            actors = listOf(actor, actor2))
+    val tickData3 =
+        emptyTickData(
+            blocks = listOf(block),
+            currentTick = TickDataUnitMilliseconds(2),
+            actors = listOf(actor))
     val segment = Segment(listOf(tickData, tickData2, tickData3), "", "")
 
     val averageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric()

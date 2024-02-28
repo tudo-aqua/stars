@@ -18,37 +18,41 @@
 package tools.aqua.stars.core.evaluation
 
 import kotlin.reflect.KClass
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Unary predicate.
  *
- * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property eval The evaluation function on the [PredicateContext].
  * @property kClass The actor.
  */
 class UnaryPredicate<
-    E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val eval: (PredicateContext<E, T, S>, E1) -> Boolean,
+    E1 : E,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    val eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
     val kClass: KClass<E1>
 ) {
   /**
    * Check if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tickId The time stamp to evaluate this predicate in. default: first tick in context.
+   * @param tick The tick to evaluate this predicate in. default: first tick in context.
    * @param entityId The ID of the entity to evaluate this predicate for. default: ego vehicle.
    */
   fun holds(
-      ctx: PredicateContext<E, T, S>,
-      tickId: Double = ctx.segment.firstTickId,
+      ctx: PredicateContext<E, T, S, U, D>,
+      tick: U = ctx.segment.ticks.keys.first(),
       entityId: Int = ctx.primaryEntityId
-  ): Boolean = ctx.holds(this, tickId, entityId)
+  ): Boolean = ctx.holds(this, tick, entityId)
 
   /**
    * Check if this predicate holds (i.e. is true) in the given context.
@@ -56,7 +60,7 @@ class UnaryPredicate<
    * @param ctx The context this predicate is evaluated in.
    * @param entity The entity to evaluate this predicate for.
    */
-  fun holds(ctx: PredicateContext<E, T, S>, entity: E): Boolean =
+  fun holds(ctx: PredicateContext<E, T, S, U, D>, entity: E): Boolean =
       holds(ctx, entity.tickData.currentTick, entity.id)
 
   /**
@@ -64,18 +68,20 @@ class UnaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    */
-  fun holds(ctx: PredicateContext<E, T, S>): Boolean =
-      holds(ctx, ctx.segment.firstTickId, ctx.primaryEntityId)
+  fun holds(ctx: PredicateContext<E, T, S, U, D>): Boolean =
+      holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId)
 
   companion object {
     /** Creates a unary tick predicate. */
     fun <
         E1 : E,
-        E : EntityType<E, T, S>,
-        T : TickDataType<E, T, S>,
-        S : SegmentType<E, T, S>> predicate(
+        E : EntityType<E, T, S, U, D>,
+        T : TickDataType<E, T, S, U, D>,
+        S : SegmentType<E, T, S, U, D>,
+        U : TickUnit<U, D>,
+        D : TickDifference<D>> predicate(
         klass: KClass<E1>,
-        eval: (PredicateContext<E, T, S>, E1) -> Boolean
-    ): UnaryPredicate<E1, E, T, S> = UnaryPredicate(eval, klass)
+        eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean
+    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(eval, klass)
   }
 }

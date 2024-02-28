@@ -18,9 +18,7 @@
 package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
-import tools.aqua.stars.core.SimpleEntity
-import tools.aqua.stars.core.SimpleSegment
-import tools.aqua.stars.core.SimpleTickData
+import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.all
 import tools.aqua.stars.core.tsc.builder.root
 import tools.aqua.stars.core.tsc.projection.proj
@@ -37,7 +35,12 @@ class TSCProjectionTests {
     val projection1 = "projection1"
     val projection2 = "projection2"
     val tsc =
-        root<SimpleEntity, SimpleTickData, SimpleSegment> {
+        root<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference> {
           all("root") { projectionIDs = mapOf(proj(projection1), proj(projection2)) }
         }
 
@@ -58,7 +61,12 @@ class TSCProjectionTests {
     val projection1 = "projection1"
     val projection2 = "projection2"
     val tsc =
-        root<SimpleEntity, SimpleTickData, SimpleSegment> {
+        root<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference> {
           all("root") { projectionIDs = mapOf(proj(projection1), proj(projection2)) }
         }
 
@@ -108,7 +116,13 @@ class TSCProjectionTests {
    */
   @Test
   fun testNoExistingProjections() {
-    val tsc = root<SimpleEntity, SimpleTickData, SimpleSegment> { all("root") }
+    val tsc =
+        root<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference> { all("root") }
 
     val projections = tsc.buildProjections()
     // Check that exactly two projections are produced

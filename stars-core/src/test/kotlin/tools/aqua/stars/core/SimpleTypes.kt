@@ -17,36 +17,65 @@
 
 package tools.aqua.stars.core
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /** Simple entity. */
 class SimpleEntity(
     override val id: Int = 0,
     override val tickData: SimpleTickData = SimpleTickData()
-) : EntityType<SimpleEntity, SimpleTickData, SimpleSegment> {
+) :
+    EntityType<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
   override fun toString(): String = "Entity[$id] in Tick[${tickData}]"
 }
 
 /** Simple segment. */
 class SimpleSegment(
     override val tickData: List<SimpleTickData> = listOf(),
-    override val ticks: Map<Double, SimpleTickData> = mapOf(),
-    override val tickIDs: List<Double> = listOf(),
+    override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = mapOf(),
     override val segmentSource: String = "",
-    override val firstTickId: Double = 0.0,
     override val primaryEntityId: Int = 0
-) : SegmentType<SimpleEntity, SimpleTickData, SimpleSegment> {
+) :
+    SegmentType<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
   override fun toString(): String =
       "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentSource'"
 }
 
 /** Simple tick data. */
 class SimpleTickData(
-    override val currentTick: Double = 0.0,
+    override val currentTick: SimpleTickDataUnit = SimpleTickDataUnit(0),
     override var entities: List<SimpleEntity> = listOf(),
     override var segment: SimpleSegment = SimpleSegment()
-) : TickDataType<SimpleEntity, SimpleTickData, SimpleSegment> {
+) :
+    TickDataType<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
   override fun toString(): String = "$currentTick"
+}
+
+/** Simple tick data unit. */
+class SimpleTickDataUnit(val tickValue: Long) :
+    TickUnit<SimpleTickDataUnit, SimpleTickDataDifference> {
+  override fun compareTo(other: SimpleTickDataUnit): Int = tickValue.compareTo(other.tickValue)
+
+  override fun minus(other: SimpleTickDataDifference): SimpleTickDataUnit =
+      SimpleTickDataUnit(tickValue - other.tickDifference)
+
+  override fun minus(other: SimpleTickDataUnit): SimpleTickDataDifference =
+      SimpleTickDataDifference(tickValue - other.tickValue)
+
+  override fun plus(other: SimpleTickDataDifference): SimpleTickDataUnit =
+      SimpleTickDataUnit(tickValue + other.tickDifference)
+}
+
+/** Simple tick data difference. */
+class SimpleTickDataDifference(val tickDifference: Long) :
+    TickDifference<SimpleTickDataDifference> {
+  override fun compareTo(other: SimpleTickDataDifference): Int =
+      tickDifference.compareTo(other.tickDifference)
+  override fun plus(other: SimpleTickDataDifference): SimpleTickDataDifference =
+      SimpleTickDataDifference(tickDifference + other.tickDifference)
+
+  override fun minus(other: SimpleTickDataDifference): SimpleTickDataDifference =
+      SimpleTickDataDifference(tickDifference - other.tickDifference)
 }

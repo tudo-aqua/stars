@@ -24,9 +24,7 @@ import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * This class holds every important data to evaluate a given TSC. The [TSCEvaluation.runEvaluation]
@@ -42,14 +40,19 @@ import tools.aqua.stars.core.types.TickDataType
  * @property logger Logger instance.
  */
 @OptIn(ExperimentalTime::class)
-class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val tsc: TSC<E, T, S>,
+class TSCEvaluation<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    val tsc: TSC<E, T, S, U, D>,
     val segments: Sequence<S>,
     val projectionIgnoreList: List<String> = listOf(),
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProvider]. */
-  private val metricProviders: MutableList<MetricProvider<E, T, S>> = mutableListOf()
+  private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 
   /**
    * Registers a new [MetricProvider] to the list of metrics that should be called during
@@ -57,7 +60,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
    *
    * @param metricProvider The [MetricProvider] that should be registered.
    */
-  fun registerMetricProvider(metricProvider: MetricProvider<E, T, S>) {
+  fun registerMetricProvider(metricProvider: MetricProvider<E, T, S, U, D>) {
     metricProviders.add(metricProvider)
   }
 
@@ -73,7 +76,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
 
     val totalEvaluationTime = measureTime {
       /** Holds the [List] of [TSCProjection] based on the base [tsc]. */
-      var tscProjections: List<TSCProjection<E, T, S>>
+      var tscProjections: List<TSCProjection<E, T, S, U, D>>
 
       // Build all projections of the base TSC
       val tscProjectionCalculationTime = measureTime {
@@ -87,7 +90,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
         segments.forEach { segment ->
           val segmentEvaluationTime = measureTime {
             // Run the "evaluate" function for all SegmentMetricProviders on the current segment
-            metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S>>().forEach {
+            metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
               it.evaluate(segment)
             }
             val projectionsEvaluationTime = measureTime {
@@ -95,9 +98,9 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
                 val projectionEvaluationTime = measureTime {
                   // Run the "evaluate" function for all ProjectionMetricProviders on the current
                   // segment
-                  metricProviders.filterIsInstance<ProjectionMetricProvider<E, T, S>>().forEach {
-                    it.evaluate(projection)
-                  }
+                  metricProviders
+                      .filterIsInstance<ProjectionMetricProvider<E, T, S, U, D>>()
+                      .forEach { it.evaluate(projection) }
                   // Holds the PredicateContext for the current segment
                   val context = PredicateContext(segment)
 
@@ -107,15 +110,15 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
 
                   // Run the "evaluate" function for all TSCInstanceMetricProviders on the current
                   // segment
-                  metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S>>().forEach {
-                    it.evaluate(segmentProjectionTSCInstance)
-                  }
+                  metricProviders
+                      .filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>()
+                      .forEach { it.evaluate(segmentProjectionTSCInstance) }
 
                   // Run the "evaluate" function for all
                   // ProjectionAndTSCInstanceNodeMetricProviders on the current  projection and
                   // instance
                   metricProviders
-                      .filterIsInstance<ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>>()
+                      .filterIsInstance<ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
                       .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
                 }
                 logFine(
@@ -136,7 +139,7 @@ class TSCEvaluation<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segm
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
 
     // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S>>().forEach {
+    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
       it.evaluate()
       it.print()
     }

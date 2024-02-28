@@ -21,18 +21,19 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * This class is an implementation of [SegmentMetricProvider] which provides the count of evaluated
  * segments. This Metric is stateful as it has to track the count of observed [SegmentType]s.
  */
 class SegmentCountMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    override val logger: Logger = Loggable.getLogger("segment-count")
-) : SegmentMetricProvider<E, T, S>, Stateful, Loggable {
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(override val logger: Logger = Loggable.getLogger("segment-count")) :
+    SegmentMetricProvider<E, T, S, U, D>, Stateful, Loggable {
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
@@ -42,7 +43,7 @@ class SegmentCountMetric<
    * @param segment The current [SegmentType] that is evaluated
    * @return The number of analyzed [SegmentType]s so far
    */
-  override fun evaluate(segment: SegmentType<E, T, S>): Int =
+  override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int =
       (++segmentCount).also { logFiner("==== Segment $segmentCount: $segment ====") }
 
   /**

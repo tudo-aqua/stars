@@ -29,9 +29,7 @@ import tools.aqua.stars.core.metric.utils.saveAsCSVFile
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /** Valid instances projection name. */
 private const val VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME: String =
@@ -46,11 +44,15 @@ private const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: St
  * valid [TSCInstance] for each [TSCProjection].
  */
 class ValidTSCInstancesPerProjectionMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     override val logger: Logger = Loggable.getLogger(VALID_TSC_INSTANCES_PER_PROJECTION_METRIC_NAME)
 ) :
-    ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>,
-    PostEvaluationMetricProvider<E, T, S>,
+    ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>,
+    PostEvaluationMetricProvider<E, T, S, U, D>,
     Stateful,
     Loggable,
     Plottable {
@@ -60,15 +62,15 @@ class ValidTSCInstancesPerProjectionMetric<
    */
   private val validInstancesMap:
       MutableMap<
-          TSCProjection<E, T, S>,
-          MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
+          TSCProjection<E, T, S, U, D>,
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
       mutableMapOf()
 
   /**
    * Map a [TSCProjection] to a list of increasing counts of occurrences of valid [TSCInstanceNode]
    * s. Map<projection,List<increasing count>>
    */
-  private val uniqueTimedInstances: MutableMap<TSCProjection<E, T, S>, MutableList<Int>> =
+  private val uniqueTimedInstances: MutableMap<TSCProjection<E, T, S, U, D>, MutableList<Int>> =
       mutableMapOf()
 
   /** Maps the name of a [TSCProjection] the a list of timed [TSCInstance] occurrences. */
@@ -100,7 +102,10 @@ class ValidTSCInstancesPerProjectionMetric<
    * @param projection The current [TSCProjection] for which the validity should be checked
    * @param tscInstance The current [TSCInstance] which is checked for validity
    */
-  override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+  override fun evaluate(
+      projection: TSCProjection<E, T, S, U, D>,
+      tscInstance: TSCInstance<E, T, S, U, D>
+  ) {
     validInstancesMap.putIfAbsent(projection, mutableMapOf())
     // Get current count of unique and valid TSC instance for the current projection
     val projectionValidInstances = validInstancesMap.getValue(projection)
@@ -130,8 +135,8 @@ class ValidTSCInstancesPerProjectionMetric<
    */
   override fun getState():
       MutableMap<
-          TSCProjection<E, T, S>,
-          MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
+          TSCProjection<E, T, S, U, D>,
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
       validInstancesMap
 
   /** Prints the number of valid [TSCInstance] for each [TSCProjection] using [println]. */

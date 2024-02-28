@@ -32,7 +32,8 @@ fun convertJsonTickDataToTickData(jsonTickData: JsonTickData, blocks: List<Block
   // Create new empty TickData
   val tickData =
       TickData(
-          currentTick = jsonTickData.currentTick,
+          currentTick =
+              TickDataUnitMilliseconds(jsonTickData.currentTick.toLong()), // FIXME: Long conversion
           trafficLights =
               jsonTickData.actorPositions.mapNotNull { convertJsonActorPositionToTrafficLight(it) },
           blocks = blocks,

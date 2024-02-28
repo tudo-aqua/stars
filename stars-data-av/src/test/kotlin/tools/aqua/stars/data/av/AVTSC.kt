@@ -49,12 +49,12 @@ class AVTSC {
           globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
         }
 
-    root<Actor, TickData, Segment> {
+    root<Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
       all("TSC Root") {
         leaf("someone between") {
           condition = { ctx ->
             ctx.segment.vehicleIds.any { v1 ->
-              soBetween.holds(ctx, ctx.segment.firstTickId, ctx.primaryEntityId, v1)
+              soBetween.holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId, v1)
             }
           }
         }

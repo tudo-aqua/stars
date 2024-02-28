@@ -19,70 +19,79 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the once operator.
+ * CMFTBL implementation of the once operator i.e. "In a past timeframe in the interval phi holds at
+ * least once".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> once(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> once(
     tickData: T,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean = since(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
- * CMFTBL implementation of the once operator.
+ * CMFTBL implementation of the once operator i.e. "In a past timeframe in the interval phi holds at
+ * least once".
  *
- * @param E1 [EntityType]
- * 1.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> once(
-    entity: E1,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
-    phi: (E1) -> Boolean
-): Boolean = since(entity, interval, phi1 = { _ -> true }, phi2 = { a -> phi(a) })
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> once(
+    entity: E,
+    interval: Pair<D, D>? = null,
+    phi: (E) -> Boolean
+): Boolean = since(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
- * CMFTBL implementation of the once operator for two entities.
+ * CMFTBL implementation of the once operator for two entities i.e. "In a past timeframe in the
+ * interval phi holds at least once".
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
 fun <
-    E1 : E,
-    E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> once(
-    entity1: E1,
-    entity2: E2,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
-    phi: (E1, E2) -> Boolean
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> once(
+    entity1: E,
+    entity2: E,
+    interval: Pair<D, D>? = null,
+    phi: (E, E) -> Boolean
 ): Boolean =
-    since(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { a1, a2 -> phi(a1, a2) })
+    since(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { e1, e2 -> phi(e1, e2) })

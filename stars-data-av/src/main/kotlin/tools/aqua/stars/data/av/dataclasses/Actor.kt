@@ -20,7 +20,8 @@ package tools.aqua.stars.data.av.dataclasses
 import tools.aqua.stars.core.types.EntityType
 
 /** Abstract actor data class. */
-sealed class Actor : EntityType<Actor, TickData, Segment> {
+sealed class Actor :
+    EntityType<Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
 
   /**
    * Clones the actor.

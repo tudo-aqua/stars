@@ -19,9 +19,7 @@ package tools.aqua.stars.core.metric.metrics
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import tools.aqua.stars.core.SimpleEntity
-import tools.aqua.stars.core.SimpleSegment
-import tools.aqua.stars.core.SimpleTickData
+import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 
 /** Test for [SegmentCountMetric]. */
@@ -35,7 +33,13 @@ class SegmentCountMetricTest {
   fun testOneEmptySegment() {
     val simpleSegment1 = SimpleSegment()
 
-    val segmentCountMetric = SegmentCountMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
+    val segmentCountMetric =
+        SegmentCountMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
   }
@@ -50,7 +54,13 @@ class SegmentCountMetricTest {
     val simpleSegment1 = SimpleSegment()
     val simpleSegment2 = SimpleSegment()
 
-    val segmentCountMetric = SegmentCountMetric<SimpleEntity, SimpleTickData, SimpleSegment>()
+    val segmentCountMetric =
+        SegmentCountMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
     assertEquals(segmentCountMetric.evaluate(simpleSegment2), 2)

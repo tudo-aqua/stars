@@ -24,9 +24,7 @@ import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.TSCMonitorResult
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as
@@ -38,13 +36,17 @@ import tools.aqua.stars.core.types.TickDataType
  */
 @Suppress("unused")
 class FailedMonitorsMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S>,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S, U, D>,
     override val logger: Logger = Loggable.getLogger("failed-monitors")
-) : PostEvaluationMetricProvider<E, T, S>, Loggable {
+) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /** Returns a [Map] of [TSCMonitorResult]s for all [TSCProjection]s. */
-  override fun evaluate(): Map<TSCProjection<E, T, S>, List<TSCMonitorResult>> =
+  override fun evaluate(): Map<TSCProjection<E, T, S, U, D>, List<TSCMonitorResult>> =
       dependsOn.getState().mapValues { (_, validInstancesMap) ->
         validInstancesMap.flatMap { (_, validInstances) ->
           validInstances.map { validInstance ->

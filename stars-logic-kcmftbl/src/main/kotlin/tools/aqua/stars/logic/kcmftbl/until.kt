@@ -17,25 +17,30 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import kotlin.reflect.cast
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the until operator.
+ * CMFTBL implementation of the until operator i.e. "Phi 1 holds for all timestamps in the future in
+ * the interval, until phi2 holds".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param interval Observation interval.
- * @param phi1 Predicate 1.
- * @param phi2 Predicate 2.
+ * @param phi1 First predicate.
+ * @param phi2 Second predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> until(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> until(
     tickData: T,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
     phi2: (T) -> Boolean
 ): Boolean {
@@ -43,79 +48,86 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
   val segment = tickData.segment
   val now = tickData.currentTick
   val nowIndex = segment.tickData.indexOf(tickData)
-  val range: IntRange = nowIndex..segment.tickData.lastIndex
-  for (searchIndex in range) {
+
+  for (searchIndex in nowIndex..segment.tickData.lastIndex) {
     val searchTickData = segment.tickData[searchIndex]
 
-    if (phi2(searchTickData) &&
-        searchTickData.currentTick in now + interval.first..now + interval.second)
-        return true
-    else if (!phi1(searchTickData)) return false
+    if (interval != null) {
+      // Interval not reached yet, continue iteration
+      if (searchTickData.currentTick < now + interval.first) continue
+
+      // Interval left, no phi2 held
+      if (searchTickData.currentTick > now + interval.second) return true
+    }
+
+    // Phi2 held and phi1 held until now (default)
+    if (phi2(searchTickData) && !phi1(searchTickData)) return true
+
+    // Phi1 did not hold until phi1
+    if (!phi1(searchTickData)) return false
   }
   return false
 }
 
 /**
- * CMFTBL implementation of the until operator.
+ * CMFTBL implementation of the until operator i.e. "Phi 1 holds for all timestamps in the future in
+ * the interval, until phi2 holds".
  *
- * @param E1 [EntityType]
- * 1.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param interval Observation interval.
- * @param phi1 Predicate 1.
- * @param phi2 Predicate 2.
+ * @param phi1 First predicate.
+ * @param phi2 Second predicate.
  */
-fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> until(
+fun <
+    E1 : E,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> until(
     entity: E1,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi1: (E1) -> Boolean,
     phi2: (E1) -> Boolean
 ): Boolean =
     until(
         entity.tickData,
         interval,
-        phi1 = { td ->
-          val futureEntity = td.entity(entity.id)
-          if (entity::class.isInstance(futureEntity)) phi1(entity::class.cast(futureEntity))
-          else false
-        },
-        phi2 = { td ->
-          val futureEntity = td.entity(entity.id)
-          if (entity::class.isInstance(futureEntity)) phi2(entity::class.cast(futureEntity))
-          else false
-        })
+        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } ?: false },
+        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the until operator for two entities.
+ * CMFTBL implementation of the until operator for two entities i.e. "Phi 1 holds for all timestamps
+ * in the future in the interval, until phi2 holds".
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
  * @param interval Observation interval.
- * @param phi1 Predicate 1.
- * @param phi2 Predicate 2.
+ * @param phi1 First predicate.
+ * @param phi2 Second predicate.
  */
 @Suppress("DuplicatedCode")
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> until(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> until(
     entity1: E1,
     entity2: E2,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi1: (E1, E2) -> Boolean,
     phi2: (E1, E2) -> Boolean
 ): Boolean {
@@ -127,17 +139,15 @@ fun <
       entity1.tickData,
       interval,
       phi1 = { td ->
-        val futureEntity1 = td.entity(entity1.id)
-        val futureEntity2 = td.entity(entity2.id)
-        if (entity1::class.isInstance(futureEntity1) && entity2::class.isInstance(futureEntity2))
-            phi1(entity1::class.cast(futureEntity1), entity2::class.cast(futureEntity2))
-        else false
+        val futureEntity1 = td.getEntityById(entity1.id)
+        val futureEntity2 = td.getEntityById(entity2.id)
+        if (futureEntity1 == null || futureEntity2 == null) false
+        else phi1(futureEntity1 as E1, futureEntity2 as E2)
       },
       phi2 = { td ->
-        val futureEntity1 = td.entity(entity1.id)
-        val futureEntity2 = td.entity(entity2.id)
-        if (entity1::class.isInstance(futureEntity1) && entity2::class.isInstance(futureEntity2))
-            phi2(entity1::class.cast(futureEntity1), entity2::class.cast(futureEntity2))
-        else false
+        val futureEntity1 = td.getEntityById(entity1.id)
+        val futureEntity2 = td.getEntityById(entity2.id)
+        if (futureEntity1 == null || futureEntity2 == null) false
+        else phi2(futureEntity1 as E1, futureEntity2 as E2)
       })
 }

@@ -24,9 +24,7 @@ import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] interface and tracks the
@@ -40,16 +38,20 @@ import tools.aqua.stars.core.types.TickDataType
  */
 @Suppress("unused")
 class InvalidTSCInstancesPerProjectionMetric<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-projection")
-) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S>, Stateful, Loggable {
+) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Loggable {
   /**
    * Map the [TSCProjection] to a map in which the occurrences of invalid [TSCInstance]s are stored.
    */
   private val invalidInstancesMap:
       MutableMap<
-          TSCProjection<E, T, S>,
-          MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
+          TSCProjection<E, T, S, U, D>,
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
       mutableMapOf()
 
   /**
@@ -59,7 +61,10 @@ class InvalidTSCInstancesPerProjectionMetric<
    * @param projection The current [TSCProjection] for which the invalidity should be checked.
    * @param tscInstance The current [TSCInstance] which is checked for invalidity.
    */
-  override fun evaluate(projection: TSCProjection<E, T, S>, tscInstance: TSCInstance<E, T, S>) {
+  override fun evaluate(
+      projection: TSCProjection<E, T, S, U, D>,
+      tscInstance: TSCInstance<E, T, S, U, D>
+  ) {
     invalidInstancesMap.putIfAbsent(projection, mutableMapOf())
     // Check if the given tscInstance is valid. If so, skip
     if (projection.possibleTSCInstances.contains(tscInstance.rootNode)) return
@@ -77,8 +82,8 @@ class InvalidTSCInstancesPerProjectionMetric<
    */
   override fun getState():
       MutableMap<
-          TSCProjection<E, T, S>,
-          MutableMap<TSCInstanceNode<E, T, S>, MutableList<TSCInstance<E, T, S>>>> =
+          TSCProjection<E, T, S, U, D>,
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
       invalidInstancesMap
 
   /**

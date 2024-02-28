@@ -19,24 +19,29 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import kotlin.reflect.cast
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the previous operator.
+ * CMFTBL implementation of the previous operator i.e. "In the previous timeframe phi holds and the
+ * timestamp is in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> previous(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> previous(
     tickData: T,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean {
   val segment = tickData.segment
@@ -44,78 +49,77 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
   if (nowIndex - 1 < 0) return false
   val previousTick = segment.tickData[nowIndex - 1]
 
-  return if (previousTick.currentTick in
-      (tickData.currentTick - interval.second)..(tickData.currentTick - interval.first))
+  return if (interval == null ||
+      previousTick.currentTick in
+          (tickData.currentTick - interval.second)..(tickData.currentTick - interval.first))
       phi(previousTick)
   else false
 }
 
 /**
- * CMFTBL implementation of the previous operator.
+ * CMFTBL implementation of the previous operator i.e. "In the previous timeframe phi holds and the
+ * timestamp is in the interval".
  *
- * @param E1 [EntityType]
- * 1.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> previous(
-    entity: E1,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
-    phi: (entity: E1) -> Boolean
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> previous(
+    entity: E,
+    interval: Pair<D, D>? = null,
+    phi: (entity: E) -> Boolean
 ): Boolean =
     previous(
         entity.tickData,
         interval,
-        phi = { td ->
-          val previousEntity = td.entity(entity.id)
-          if (entity::class.isInstance(previousEntity)) phi(entity::class.cast(previousEntity))
-          else false
-        })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it) } ?: false })
 
 /**
- * CMFTBL implementation of the previous operator for two entities.
+ * CMFTBL implementation of the previous operator for two entities i.e. "In the previous timeframe
+ * phi holds and the timestamp is in the interval".
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
 fun <
-    E1 : E,
-    E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> previous(
-    entity1: E1,
-    entity2: E2,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
-    phi: (E1, E2) -> Boolean
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> previous(
+    entity1: E,
+    entity2: E,
+    interval: Pair<D, D>? = null,
+    phi: (E, E) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
-    "the two entities provided as argument are not from same tick"
+    "The two entities provided as argument are not from same tick."
   }
   return previous(
       entity1.tickData,
       interval,
       phi = { td ->
-        val previousEntity1 = td.entity(entity1.id)
-        val previousEntity2 = td.entity(entity2.id)
-        if (entity1::class.isInstance(previousEntity1) &&
-            entity2::class.isInstance(previousEntity2))
-            phi(entity1::class.cast(previousEntity1), entity2::class.cast(previousEntity2))
-        else false
+        val previousEntity1 = td.getEntityById(entity1.id)
+        val previousEntity2 = td.getEntityById(entity2.id)
+
+        if (previousEntity1 == null || previousEntity2 == null) false
+        else phi(previousEntity1, previousEntity2)
       })
 }

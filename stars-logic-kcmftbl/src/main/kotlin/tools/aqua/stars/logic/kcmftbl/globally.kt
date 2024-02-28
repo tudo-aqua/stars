@@ -19,69 +19,81 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the globally operator.
+ * CMFTBL implementation of the globally operator i.e. "In all future timeframes in the interval phi
+ * holds".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> globally(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> globally(
     tickData: T,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean = !eventually(tickData, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the globally operator.
+ * CMFTBL implementation of the globally operator i.e. "In all future timeframes in the interval phi
+ * holds".
  *
- * @param E1 [EntityType]
- * 1.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> globally(
+fun <
+    E1 : E,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> globally(
     entity: E1,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean = !eventually(entity, interval, phi = { a -> !phi(a) })
+): Boolean = !eventually(entity, interval, phi = { e -> !phi(e as E1) })
 
 /**
- * CMFTBL implementation of the globally operator for two entities.
+ * CMFTBL implementation of the globally operator for two entities i.e. "In all future timeframes in
+ * the interval phi holds".
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> globally(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> globally(
     entity1: E1,
     entity2: E2,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
-): Boolean = !eventually(entity1, entity2, interval, phi = { a1, a2 -> !phi(a1, a2) })
+): Boolean = !eventually(entity1, entity2, interval, phi = { e1, e2 -> !phi(e1, e2) })

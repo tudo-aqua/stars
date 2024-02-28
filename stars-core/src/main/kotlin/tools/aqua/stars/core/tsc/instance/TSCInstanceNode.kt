@@ -21,9 +21,7 @@ import tools.aqua.stars.core.tsc.TSCMonitorResult
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCNode
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Evaluated TSC node.
@@ -35,17 +33,22 @@ import tools.aqua.stars.core.types.TickDataType
  * @property monitorResult Monitor result of this node.
  * @property tscNode Associated [TSCNode].
  */
-class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+class TSCInstanceNode<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     val value: Any,
     val monitorResult: Boolean,
-    val tscNode: TSCNode<E, T, S>
+    val tscNode: TSCNode<E, T, S, U, D>
 ) {
 
   /** Edges of this [TSCInstanceNode]. */
-  val edges: MutableList<TSCInstanceEdge<E, T, S>> = mutableListOf()
+  val edges: MutableList<TSCInstanceEdge<E, T, S, U, D>> = mutableListOf()
 
   /** Returns all edges. */
-  fun getAllEdges(): List<TSCEdge<E, T, S>> =
+  fun getAllEdges(): List<TSCEdge<E, T, S, U, D>> =
       this.edges.map { it.tscEdge } + this.edges.flatMap { it.destination.getAllEdges() }
 
   /**
@@ -58,8 +61,8 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
    * @return non-validating nodes; first element of pair is the node that failed to validate; second
    * element is a human-readable explanation for the failure
    */
-  fun validate(label: String = "RootNode"): List<Pair<TSCInstanceNode<E, T, S>, String>> {
-    val returnList = mutableListOf<Pair<TSCInstanceNode<E, T, S>, String>>()
+  fun validate(label: String = "RootNode"): List<Pair<TSCInstanceNode<E, T, S, U, D>, String>> {
+    val returnList = mutableListOf<Pair<TSCInstanceNode<E, T, S, U, D>, String>>()
     when (this.tscNode) {
       is TSCBoundedNode ->
           if (edges.size !in tscNode.bounds.first..tscNode.bounds.second)
@@ -127,7 +130,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
   override fun toString(): String = toString(0)
 
   override fun equals(other: Any?): Boolean =
-      other is TSCInstanceNode<*, *, *> &&
+      other is TSCInstanceNode<*, *, *, *, *> &&
           edges.size == other.edges.size &&
           edges.withIndex().all { iv -> iv.value == other.edges[iv.index] }
 

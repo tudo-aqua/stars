@@ -18,9 +18,7 @@
 package tools.aqua.stars.core.evaluation
 
 import kotlin.reflect.cast
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Predicate context.
@@ -28,10 +26,16 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property segment The current [SegmentType].
  */
 class PredicateContext<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(val segment: S) {
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(val segment: S) {
 
   /** Identifier of the primary entity. */
   var primaryEntityId: Int = segment.primaryEntityId
@@ -50,22 +54,17 @@ class PredicateContext<
       return entityIdsCache
     }
 
-  /** All tick IDs of the current context state. */
-  @Suppress("unused")
-  val tIDs: List<Double>
-    get() = segment.tickIDs
-
-  private val nullaryPredicateCache: MutableMap<NullaryPredicate<E, T, S>, List<Double>> =
+  private val nullaryPredicateCache: MutableMap<NullaryPredicate<E, T, S, U, D>, List<U>> =
       mutableMapOf()
   private val tp1holdsCache:
-      MutableMap<Pair<UnaryPredicate<*, E, T, S>, Pair<Double, Int>>, Boolean> =
+      MutableMap<Pair<UnaryPredicate<*, E, T, S, U, D>, Pair<U, Int>>, Boolean> =
       mutableMapOf()
   private val tp2holdsCache:
-      MutableMap<Pair<BinaryPredicate<*, *, E, T, S>, Triple<Double, Int, Int>>, Boolean> =
+      MutableMap<Pair<BinaryPredicate<*, *, E, T, S, U, D>, Triple<U, Int, Int>>, Boolean> =
       mutableMapOf()
 
   /** Evaluates [NullaryPredicate] on this [PredicateContext]. */
-  fun evaluate(p: NullaryPredicate<E, T, S>): List<Double> {
+  fun evaluate(p: NullaryPredicate<E, T, S, U, D>): List<U> {
     var evaluation = nullaryPredicateCache[p]
 
     if (evaluation == null) {
@@ -79,46 +78,41 @@ class PredicateContext<
   /**
    * Evaluates whether [UnaryPredicate] [p] hold on current [PredicateContext].
    *
-   * @param E1 [EntityType].
    * @param p The predicate.
-   * @param tid The tick identifier.
+   * @param tick The tick.
    * @param vid1 Value 1.
    */
-  fun <E1 : E> holds(p: UnaryPredicate<E1, E, T, S>, tid: Double, vid1: Int): Boolean =
-      tp1holdsCache.getOrPut(p to (tid to vid1)) {
-        val tick = segment.ticks[tid]
-        val actor = tick?.run { entities.firstOrNull { it.id == vid1 } }
+  fun <E1 : E> holds(p: UnaryPredicate<E1, E, T, S, U, D>, tick: U, vid1: Int): Boolean =
+      tp1holdsCache.getOrPut(p to (tick to vid1)) {
+        val currentTick = segment.ticks[tick]
+        val entity = currentTick?.getEntityById(vid1)
 
-        tick != null && p.kClass.isInstance(actor) && p.eval(this, p.kClass.cast(actor))
+        currentTick != null && p.kClass.isInstance(entity) && p.eval(this, p.kClass.cast(entity))
       }
 
   /**
    * Evaluates whether [BinaryPredicate] [p] hold on current [PredicateContext].
    *
-   * @param E1 [EntityType]
-   * 1.
-   * @param E2 [EntityType]
-   * 2.
    * @param p The predicate.
-   * @param tid The tick identifier.
+   * @param tick The tick.
    * @param vid1 Value 1.
    * @param vid2 Value 2.
    */
   fun <E1 : E, E2 : E> holds(
-      p: BinaryPredicate<E1, E2, E, T, S>,
-      tid: Double,
+      p: BinaryPredicate<E1, E2, E, T, S, U, D>,
+      tick: U,
       vid1: Int,
       vid2: Int
   ): Boolean =
-      tp2holdsCache.getOrPut(p to (Triple(tid, vid1, vid2))) {
-        val tick = segment.ticks[tid]
-        val actor1 = tick?.run { entities.firstOrNull { it.id == vid1 } }
-        val actor2 = tick?.run { entities.firstOrNull { it.id == vid2 } }
+      tp2holdsCache.getOrPut(p to (Triple(tick, vid1, vid2))) {
+        val currentTick = segment.ticks[tick]
+        val entity1 = currentTick?.getEntityById(vid1)
+        val entity2 = currentTick?.getEntityById(vid2)
 
         vid1 != vid2 &&
-            tick != null &&
-            p.kClasses.first.isInstance(actor1) &&
-            p.kClasses.second.isInstance(actor2) &&
-            p.eval(this, p.kClasses.first.cast(actor1), p.kClasses.second.cast(actor2))
+            currentTick != null &&
+            p.kClasses.first.isInstance(entity1) &&
+            p.kClasses.second.isInstance(entity2) &&
+            p.eval(this, p.kClasses.first.cast(entity1), p.kClasses.second.cast(entity2))
       }
 }

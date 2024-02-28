@@ -18,9 +18,7 @@
 package tools.aqua.stars.core.metric.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * The [PostEvaluationMetricProvider] implements the [MetricProvider] and provides an [evaluate]
@@ -30,8 +28,11 @@ import tools.aqua.stars.core.types.TickDataType
  * @see TSCEvaluation.runEvaluation
  */
 interface PostEvaluationMetricProvider<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> :
-    MetricProvider<E, T, S> {
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> : MetricProvider<E, T, S, U, D> {
   /**
    * Holds a reference to another metric that is evaluated during the evaluation phase.
    *
