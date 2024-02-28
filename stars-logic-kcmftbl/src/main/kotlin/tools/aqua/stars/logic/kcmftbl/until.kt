@@ -61,7 +61,7 @@ fun <
     }
 
     // Phi2 held and phi1 held until now (default)
-    if (phi2(searchTickData) && !phi1(searchTickData)) return true
+    if (phi2(searchTickData)) return true
 
     // Phi1 did not hold until phi1
     if (!phi1(searchTickData)) return false
