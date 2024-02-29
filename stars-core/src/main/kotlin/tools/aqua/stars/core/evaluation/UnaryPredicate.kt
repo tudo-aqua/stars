@@ -29,8 +29,8 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property eval The evaluation function on the [PredicateContext].
  * @property kClass The actor.
+ * @property eval The evaluation function on the [PredicateContext].
  */
 class UnaryPredicate<
     E1 : E,
@@ -39,8 +39,8 @@ class UnaryPredicate<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    val kClass: KClass<E1>,
     val eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-    val kClass: KClass<E1>
 ) {
   /**
    * Check if this predicate holds (i.e. is true) in the given context.
@@ -91,8 +91,8 @@ class UnaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
+        kClass: KClass<E1>,
         eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-        kClass: KClass<E1>
-    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(eval, kClass)
+    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(kClass, eval)
   }
 }

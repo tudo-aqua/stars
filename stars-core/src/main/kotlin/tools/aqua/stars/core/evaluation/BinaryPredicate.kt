@@ -30,8 +30,8 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property eval The evaluation function on the [PredicateContext].
  * @property kClasses The actors.
+ * @property eval The evaluation function on the [PredicateContext].
  */
 class BinaryPredicate<
     E1 : E,
@@ -41,8 +41,8 @@ class BinaryPredicate<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    val kClasses: Pair<KClass<E1>, KClass<E2>>,
     val eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-    val kClasses: Pair<KClass<E1>, KClass<E2>>
 ) {
 
   /**
@@ -99,8 +99,8 @@ class BinaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
+        kClasses: Pair<KClass<E1>, KClass<E2>>,
         eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-        kClasses: Pair<KClass<E1>, KClass<E2>>
-    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(eval, kClasses)
+    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(kClasses,eval)
   }
 }
