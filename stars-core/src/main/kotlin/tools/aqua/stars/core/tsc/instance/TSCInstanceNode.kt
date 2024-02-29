@@ -29,6 +29,8 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property value Value of this node.
  * @property monitorResult Monitor result of this node.
  * @property tscNode Associated [TSCNode].

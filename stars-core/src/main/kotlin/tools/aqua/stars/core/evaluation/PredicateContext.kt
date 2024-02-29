@@ -78,6 +78,7 @@ class PredicateContext<
   /**
    * Evaluates whether [UnaryPredicate] [p] hold on current [PredicateContext].
    *
+   * @param E1 [EntityType].
    * @param p The predicate.
    * @param tick The tick.
    * @param vid1 Value 1.
@@ -93,6 +94,8 @@ class PredicateContext<
   /**
    * Evaluates whether [BinaryPredicate] [p] hold on current [PredicateContext].
    *
+   * @param E1 [EntityType].
+   * @param E2 [EntityType].
    * @param p The predicate.
    * @param tick The tick.
    * @param vid1 Value 1.

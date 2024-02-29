@@ -27,6 +27,8 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property label Edge label.
  * @property condition Predicate for the edge condition.
  * @property destination Destination [TSCNode].

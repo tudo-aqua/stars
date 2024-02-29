@@ -29,6 +29,8 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param init The init function. Must add exactly one edge.
  */
 fun <
@@ -62,6 +64,8 @@ fun <
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param label Name of the edge.
  * @param bounds Defines lower and upper limit of the BoundedNode.
  * @param init The init function.
@@ -90,6 +94,8 @@ fun <
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
  */
@@ -109,6 +115,8 @@ fun <
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
  */
@@ -135,6 +143,8 @@ fun <
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
  */
@@ -161,6 +171,8 @@ fun <
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
  */

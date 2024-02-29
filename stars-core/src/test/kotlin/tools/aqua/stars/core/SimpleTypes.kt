@@ -53,7 +53,11 @@ class SimpleTickData(
   override fun toString(): String = "$currentTick"
 }
 
-/** Simple tick data unit. */
+/**
+ * Simple tick data unit.
+ *
+ * @property tickValue The tick value in milliseconds.
+ */
 class SimpleTickDataUnit(val tickValue: Long) :
     TickUnit<SimpleTickDataUnit, SimpleTickDataDifference> {
   override fun compareTo(other: SimpleTickDataUnit): Int = tickValue.compareTo(other.tickValue)
@@ -68,7 +72,11 @@ class SimpleTickDataUnit(val tickValue: Long) :
       SimpleTickDataUnit(tickValue + other.tickDifference)
 }
 
-/** Simple tick data difference. */
+/**
+ * Simple tick data difference.
+ *
+ * @property tickDifference The tick difference in milliseconds.
+ */
 class SimpleTickDataDifference(val tickDifference: Long) :
     TickDifference<SimpleTickDataDifference> {
   override fun compareTo(other: SimpleTickDataDifference): Int =

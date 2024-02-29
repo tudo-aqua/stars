@@ -47,9 +47,11 @@ class AVTSC {
             Vehicle::class to Vehicle::class)
 
     val obeyedSpeedLimit =
-        predicate(Vehicle::class) { _, v ->
-          globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
-        }
+        predicate(
+            { _, v ->
+              globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
+            },
+            Vehicle::class)
 
     root<Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
       all("TSC Root") {

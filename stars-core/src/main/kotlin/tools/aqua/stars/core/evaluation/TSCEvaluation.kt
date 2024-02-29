@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.evaluation
 
 import java.util.logging.Logger
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
@@ -34,12 +33,13 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property tsc The [TSC].
  * @property segments Sequence of [SegmentType]s.
  * @property projectionIgnoreList List of projections to ignore.
  * @property logger Logger instance.
  */
-@OptIn(ExperimentalTime::class)
 class TSCEvaluation<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,

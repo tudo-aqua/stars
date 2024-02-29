@@ -25,7 +25,8 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param U [Comparable] tick type.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property eval The evaluation function on the [PredicateContext].
  */
 class NullaryPredicate<
@@ -49,7 +50,16 @@ class NullaryPredicate<
   fun holds(ctx: PredicateContext<E, T, S, U, D>, tick: U): Boolean = evaluate(ctx).contains(tick)
 
   companion object {
-    /** Creates a nullary tick predicate. */
+    /**
+     * Creates a nullary tick predicate.
+     *
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param eval The evaluation function on the [PredicateContext].
+     */
     fun <
         E : EntityType<E, T, S, U, D>,
         T : TickDataType<E, T, S, U, D>,

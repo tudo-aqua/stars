@@ -23,6 +23,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Unary predicate.
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -72,7 +73,17 @@ class UnaryPredicate<
       holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId)
 
   companion object {
-    /** Creates a unary tick predicate. */
+    /**
+     * Creates a unary tick predicate.
+     * @param E1 [EntityType].
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param eval The evaluation function on the [PredicateContext].
+     * @param kClass The actor.
+     */
     fun <
         E1 : E,
         E : EntityType<E, T, S, U, D>,
@@ -80,8 +91,8 @@ class UnaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
-        klass: KClass<E1>,
-        eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean
-    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(eval, klass)
+        eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
+        kClass: KClass<E1>
+    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(eval, kClass)
   }
 }

@@ -31,6 +31,8 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param valueFunction Value function predicate of the node.
  * @param monitorFunction Monitor function predicate of the node.
  * @param projectionIDMapper Mapper for projection identifiers.

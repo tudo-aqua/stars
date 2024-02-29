@@ -29,7 +29,8 @@ import tools.aqua.stars.core.types.*
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- *
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property rootNode The root node of the [TSC].
  */
 class TSC<
