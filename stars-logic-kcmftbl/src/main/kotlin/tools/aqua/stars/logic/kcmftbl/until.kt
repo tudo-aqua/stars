@@ -21,7 +21,7 @@ import tools.aqua.stars.core.types.*
 
 /**
  * CMFTBL implementation of the until operator i.e. "Phi 1 holds for all timestamps in the future in
- * the interval, until phi2 holds".
+ * the interval, at least until phi2 holds".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -63,7 +63,7 @@ fun <
     // Phi2 held and phi1 held until now (default)
     if (phi2(searchTickData)) return true
 
-    // Phi1 did not hold until phi1
+    // Phi1 did not hold until phi2
     if (!phi1(searchTickData)) return false
   }
   return false
