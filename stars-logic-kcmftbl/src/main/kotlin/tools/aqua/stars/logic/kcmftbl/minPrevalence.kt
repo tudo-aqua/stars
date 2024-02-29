@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "DuplicatedCode")
 
 package tools.aqua.stars.logic.kcmftbl
 
@@ -70,6 +70,7 @@ fun <
  * CMFTBL implementation of the minPrevalence operator i.e. phi holds for at least ([percentage]
  * *100)% of the ticks in the interval.
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -80,16 +81,18 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
+    E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> minPrevalence(
-    entity: E,
+    entity: E1,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (E) -> Boolean
+    phi: (E1) -> Boolean
 ): Boolean {
   val segment = entity.tickData.segment
   val now = entity.tickData.currentTick
@@ -107,7 +110,7 @@ fun <
         tickCount++
 
         val currentEntity = currentTickData.getEntityById(entity.id) ?: return@count false
-        phi(currentEntity)
+        phi(currentEntity as E1)
       }
 
   return trueCount >= tickCount * percentage
@@ -117,6 +120,8 @@ fun <
  * CMFTBL implementation of the minPrevalence operator for two entities i.e. phi holds for at least
  * ([percentage]*100)% of the ticks in the interval.
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -128,17 +133,20 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
+    E1 : E,
+    E2 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> minPrevalence(
-    entity1: E,
-    entity2: E,
+    entity1: E1,
+    entity2: E2,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (E, E) -> Boolean
+    phi: (E1, E2) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
     "the two actors provided as argument are not from same tick"
@@ -160,7 +168,7 @@ fun <
 
         val firstEntity = currentTickData.getEntityById(entity1.id) ?: return@count false
         val secondEntity = currentTickData.getEntityById(entity2.id) ?: return@count false
-        phi(firstEntity, secondEntity)
+        phi(firstEntity as E1, secondEntity as E2)
       }
 
   return trueCount >= tickCount * percentage

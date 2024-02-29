@@ -60,6 +60,7 @@ fun <
  * CMFTBL implementation of the previous operator i.e. "In the previous timeframe phi holds and the
  * timestamp is in the interval".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -69,25 +70,29 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
+    E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> previous(
-    entity: E,
+    entity: E1,
     interval: Pair<D, D>? = null,
-    phi: (entity: E) -> Boolean
+    phi: (E1) -> Boolean
 ): Boolean =
     previous(
         entity.tickData,
         interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it) } ?: false })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
  * CMFTBL implementation of the previous operator for two entities i.e. "In the previous timeframe
  * phi holds and the timestamp is in the interval".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -98,16 +103,19 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
+    E1 : E,
+    E2 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> previous(
-    entity1: E,
-    entity2: E,
+    entity1: E1,
+    entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E, E) -> Boolean
+    phi: (E1, E2) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
     "The two entities provided as argument are not from same tick."
@@ -120,6 +128,6 @@ fun <
         val previousEntity2 = td.getEntityById(entity2.id)
 
         if (previousEntity1 == null || previousEntity2 == null) false
-        else phi(previousEntity1, previousEntity2)
+        else phi(previousEntity1 as E1, previousEntity2 as E2)
       })
 }

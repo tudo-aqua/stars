@@ -49,6 +49,7 @@ fun <
  * CMFTBL implementation of the once operator i.e. "In a past timeframe in the interval phi holds at
  * least once".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -59,20 +60,23 @@ fun <
  * @param phi Predicate.
  */
 fun <
+    E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> once(
-    entity: E,
+    entity: E1,
     interval: Pair<D, D>? = null,
-    phi: (E) -> Boolean
+    phi: (E1) -> Boolean
 ): Boolean = since(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
  * CMFTBL implementation of the once operator for two entities i.e. "In a past timeframe in the
  * interval phi holds at least once".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -84,14 +88,16 @@ fun <
  * @param phi Predicate.
  */
 fun <
+    E1 : E,
+    E2 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> once(
-    entity1: E,
-    entity2: E,
+    entity1: E1,
+    entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E, E) -> Boolean
+    phi: (E1, E2) -> Boolean
 ): Boolean =
     since(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { e1, e2 -> phi(e1, e2) })

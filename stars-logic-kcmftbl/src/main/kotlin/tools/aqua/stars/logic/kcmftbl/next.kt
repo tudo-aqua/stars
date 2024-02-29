@@ -71,6 +71,7 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E : EntityType<E, T, S, U, D>,
@@ -91,6 +92,8 @@ fun <
  * CMFTBL implementation of the next operator for two entities i.e. "In the next timeframe phi holds
  * and the timestamp is in the interval".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -101,6 +104,7 @@ fun <
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,

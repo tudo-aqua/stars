@@ -47,6 +47,7 @@ fun <
  * CMFTBL implementation of the eventually operator i.e. "In a future timeframe in the interval phi
  * holds at least once".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -72,6 +73,8 @@ fun <
  * CMFTBL implementation of the eventually operator for two entities i.e. "In a future timeframe in
  * the interval phi holds at least once".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].

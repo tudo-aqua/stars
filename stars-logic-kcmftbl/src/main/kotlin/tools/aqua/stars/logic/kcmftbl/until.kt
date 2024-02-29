@@ -73,6 +73,7 @@ fun <
  * CMFTBL implementation of the until operator i.e. "Phi 1 holds for all timestamps in the future in
  * the interval, until phi2 holds".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -83,6 +84,7 @@ fun <
  * @param phi1 First predicate.
  * @param phi2 Second predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E : EntityType<E, T, S, U, D>,
@@ -105,6 +107,8 @@ fun <
  * CMFTBL implementation of the until operator for two entities i.e. "Phi 1 holds for all timestamps
  * in the future in the interval, until phi2 holds".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -116,7 +120,7 @@ fun <
  * @param phi1 First predicate.
  * @param phi2 Second predicate.
  */
-@Suppress("DuplicatedCode")
+@Suppress("DuplicatedCode", "UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,

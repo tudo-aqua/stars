@@ -75,6 +75,7 @@ fun <
  * CMFTBL implementation of the since operator i.e. "If phi 2 held at any timestamp in the past in
  * the interval, then phi 1 must hold for all timestamps since then until the end of the interval".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -85,28 +86,32 @@ fun <
  * @param phi1 First predicate.
  * @param phi2 Second predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
+    E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> since(
-    entity: E,
+    entity: E1,
     interval: Pair<D, D>? = null,
-    phi1: (E) -> Boolean,
-    phi2: (E) -> Boolean
+    phi1: (E1) -> Boolean,
+    phi2: (E1) -> Boolean
 ): Boolean =
     since(
         entity.tickData,
         interval,
-        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it) } ?: false },
-        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it) } ?: false })
+        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } ?: false },
+        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
 
 /**
  * CMFTBL implementation of the since operator for two entities i.e. "If phi 2 held at any timestamp
  * in the past in the interval, then phi 1 must hold for all timestamps since then until the end of
  * the interval".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -118,17 +123,20 @@ fun <
  * @param phi1 First predicate.
  * @param phi2 Second predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
+    E1 : E,
+    E2 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> since(
-    entity1: E,
-    entity2: E,
+    entity1: E1,
+    entity2: E2,
     interval: Pair<D, D>? = null,
-    phi1: (E, E) -> Boolean,
-    phi2: (E, E) -> Boolean
+    phi1: (E1, E2) -> Boolean,
+    phi2: (E1, E2) -> Boolean
 ): Boolean {
 
   require(entity1.tickData == entity2.tickData) {
@@ -140,11 +148,13 @@ fun <
       phi1 = { td ->
         val pastEntity1 = td.getEntityById(entity1.id)
         val pastEntity2 = td.getEntityById(entity2.id)
-        if (pastEntity1 == null || pastEntity2 == null) false else phi1(pastEntity1, pastEntity2)
+        if (pastEntity1 == null || pastEntity2 == null) false
+        else phi1(pastEntity1 as E1, pastEntity2 as E2)
       },
       phi2 = { td ->
         val pastEntity1 = td.getEntityById(entity1.id)
         val pastEntity2 = td.getEntityById(entity2.id)
-        if (pastEntity1 == null || pastEntity2 == null) false else phi2(pastEntity1, pastEntity2)
+        if (pastEntity1 == null || pastEntity2 == null) false
+        else phi2(pastEntity1 as E1, pastEntity2 as E2)
       })
 }

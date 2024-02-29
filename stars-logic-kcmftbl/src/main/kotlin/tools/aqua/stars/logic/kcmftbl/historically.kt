@@ -49,6 +49,7 @@ fun <
  * CMFTBL implementation of the historically operator i.e. "In all past timeframes in the interval
  * phi holds".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -59,20 +60,23 @@ fun <
  * @param phi Predicate.
  */
 fun <
+    E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> historically(
-    entity: E,
+    entity: E1,
     interval: Pair<D, D>? = null,
-    phi: (E) -> Boolean
+    phi: (E1) -> Boolean
 ): Boolean = !once(entity, interval, phi = { e -> !phi(e) })
 
 /**
  * CMFTBL implementation of the historically operator for two entities i.e. "In all past timeframes
  * in the interval phi holds".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -84,13 +88,15 @@ fun <
  * @param phi Predicate.
  */
 fun <
+    E1 : E,
+    E2 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> historically(
-    entity1: E,
-    entity2: E,
+    entity1: E1,
+    entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E, E) -> Boolean
+    phi: (E1, E2) -> Boolean
 ): Boolean = !once(entity1, entity2, interval, phi = { e1, e2 -> !phi(e1, e2) })

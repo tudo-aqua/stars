@@ -23,6 +23,8 @@ import tools.aqua.stars.core.types.*
 /**
  * Binary predicate.
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -63,7 +65,7 @@ class BinaryPredicate<
    * Checks if this predicate holds (i.e. is true) in the given context on current tick.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param entity1 The first entity to evaluate this predicate for. default: ego vehicle.
+   * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>, entity1: E1, entity2: E2): Boolean =
@@ -76,7 +78,19 @@ class BinaryPredicate<
           entity2.id)
 
   companion object {
-    /** Creates a binary tick predicate in this context. */
+    /**
+     * Creates a binary tick predicate in this context.
+     *
+     * @param E1 [EntityType].
+     * @param E2 [EntityType].
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param eval The evaluation function on the [PredicateContext].
+     * @param kClasses The actors.
+     */
     fun <
         E1 : E,
         E2 : E,
@@ -85,8 +99,8 @@ class BinaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
-        kClasses: Pair<KClass<E1>, KClass<E2>>,
-        eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean
+        eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
+        kClasses: Pair<KClass<E1>, KClass<E2>>
     ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(eval, kClasses)
   }
 }

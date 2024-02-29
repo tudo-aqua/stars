@@ -49,6 +49,7 @@ fun <
  * CMFTBL implementation of the globally operator i.e. "In all future timeframes in the interval phi
  * holds".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -68,12 +69,14 @@ fun <
     entity: E1,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean = !eventually(entity, interval, phi = { e -> !phi(e as E1) })
+): Boolean = !eventually(entity, interval, phi = { e -> !phi(e) })
 
 /**
  * CMFTBL implementation of the globally operator for two entities i.e. "In all future timeframes in
  * the interval phi holds".
  *
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
