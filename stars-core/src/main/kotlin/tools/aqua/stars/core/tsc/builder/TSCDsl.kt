@@ -138,6 +138,34 @@ fun <
         .also { this.addEdge(it) }
 
 /**
+ * DSL function for an edge with BoundedNode with the limits of (1,#Edges).
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param label name of the edge.
+ * @param init The init function.
+ */
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.any(
+  label: String,
+  init: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+): TSCEdge<E, T, S, U, D> =
+  TSCBuilder<E, T, S, U, D>(label)
+    .apply {
+      init()
+      bounds = 1 to edgesCount()
+    }
+    .buildBounded()
+    .also { this.addEdge(it) }
+
+/**
  * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges).
  *
  * @param E [EntityType].
