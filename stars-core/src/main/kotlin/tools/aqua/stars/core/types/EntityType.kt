@@ -20,10 +20,11 @@ package tools.aqua.stars.core.types
 /**
  * Interface for entity types.
  *
- * @param E Entity type.
- * @param T Tick data type.
- * @param S Segment type.
- * @param U Tick type.
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  */
 interface EntityType<
     E : EntityType<E, T, S, U, D>,
