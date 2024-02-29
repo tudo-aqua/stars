@@ -35,14 +35,11 @@ data class TickDataDifferenceMilliseconds(val differenceMillis: Long) :
   override fun minus(other: TickDataDifferenceMilliseconds): TickDataDifferenceMilliseconds =
       TickDataDifferenceMilliseconds(differenceMillis - other.differenceMillis)
 
-  override fun toString(): String {
-    return "TickDataDifferenceMilliseconds(difference: $differenceMillis)"
-  }
+  override fun toString(): String = "TickDataDifferenceMilliseconds(difference: $differenceMillis)"
 
-  override fun equals(other: Any?): Boolean {
-    if (other is TickDataDifferenceMilliseconds) {
-      return differenceMillis == other.differenceMillis
-    }
-    return super.equals(other)
-  }
+  override fun equals(other: Any?): Boolean =
+      if (other is TickDataDifferenceMilliseconds) differenceMillis == other.differenceMillis
+      else super.equals(other)
+
+  override fun hashCode(): Int = differenceMillis.hashCode()
 }
