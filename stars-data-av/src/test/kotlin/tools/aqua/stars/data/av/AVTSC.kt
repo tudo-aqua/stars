@@ -34,24 +34,20 @@ class AVTSC {
   fun testTSCConstruction() {
 
     val soBetween =
-        predicate(
-            { _, v0, v1 ->
-              v1.tickData.vehicles
-                  .filter { it.id != v0.id && it.id != v1.id }
-                  .any { vx ->
-                    (v0.lane.uid == vx.lane.uid || v1.lane.uid == vx.lane.uid) &&
-                        (v0.lane.uid != vx.lane.uid || (v0.positionOnLane < vx.positionOnLane)) &&
-                        (v1.lane.uid != vx.lane.uid || (v1.positionOnLane > vx.positionOnLane))
-                  }
-            },
-            Vehicle::class to Vehicle::class)
+        predicate(Vehicle::class to Vehicle::class) { _, v0, v1 ->
+          v1.tickData.vehicles
+              .filter { it.id != v0.id && it.id != v1.id }
+              .any { vx ->
+                (v0.lane.uid == vx.lane.uid || v1.lane.uid == vx.lane.uid) &&
+                    (v0.lane.uid != vx.lane.uid || (v0.positionOnLane < vx.positionOnLane)) &&
+                    (v1.lane.uid != vx.lane.uid || (v1.positionOnLane > vx.positionOnLane))
+              }
+        }
 
     val obeyedSpeedLimit =
-        predicate(
-            { _, v ->
-              globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
-            },
-            Vehicle::class)
+        predicate(Vehicle::class) { _, v ->
+          globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
+        }
 
     root<Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
       all("TSC Root") {
