@@ -61,6 +61,7 @@ fun <
  * CMFTBL implementation of the next operator i.e. "In the next timeframe phi holds and the
  * timestamp is in the interval".
  *
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
@@ -71,19 +72,20 @@ fun <
  * @param phi Predicate.
  */
 fun <
+    E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> next(
-    entity: E,
+    entity: E1,
     interval: Pair<D, D>? = null,
-    phi: (E) -> Boolean
+    phi: (E1) -> Boolean
 ): Boolean =
     next(
         entity.tickData,
         interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it) } ?: false })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
  * CMFTBL implementation of the next operator for two entities i.e. "In the next timeframe phi holds
