@@ -154,16 +154,16 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.any(
-  label: String,
-  init: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    label: String,
+    init: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCEdge<E, T, S, U, D> =
-  TSCBuilder<E, T, S, U, D>(label)
-    .apply {
-      init()
-      bounds = 1 to edgesCount()
-    }
-    .buildBounded()
-    .also { this.addEdge(it) }
+    TSCBuilder<E, T, S, U, D>(label)
+        .apply {
+          init()
+          bounds = 1 to edgesCount()
+        }
+        .buildBounded()
+        .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges).

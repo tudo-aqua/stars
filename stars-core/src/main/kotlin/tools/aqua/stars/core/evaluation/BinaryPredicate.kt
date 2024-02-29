@@ -101,6 +101,6 @@ class BinaryPredicate<
         D : TickDifference<D>> predicate(
         kClasses: Pair<KClass<E1>, KClass<E2>>,
         eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(kClasses,eval)
+    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(kClasses, eval)
   }
 }
