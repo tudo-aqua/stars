@@ -88,8 +88,8 @@ class BinaryPredicate<
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @param eval The evaluation function on the [PredicateContext].
      * @param kClasses The actors.
+     * @param eval The evaluation function on the [PredicateContext].
      */
     fun <
         E1 : E,

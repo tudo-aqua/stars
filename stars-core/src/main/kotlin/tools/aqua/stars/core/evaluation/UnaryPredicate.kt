@@ -81,8 +81,8 @@ class UnaryPredicate<
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @param eval The evaluation function on the [PredicateContext].
      * @param kClass The actor.
+     * @param eval The evaluation function on the [PredicateContext].
      */
     fun <
         E1 : E,
