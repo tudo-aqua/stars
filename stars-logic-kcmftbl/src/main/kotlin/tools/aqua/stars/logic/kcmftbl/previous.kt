@@ -46,14 +46,17 @@ fun <
 ): Boolean {
   val segment = tickData.segment
   val nowIndex = segment.tickData.indexOf(tickData)
-  if (nowIndex - 1 < 0) return false
+
+  // There needs to be a previous tick
+  if (nowIndex == 0) return false
   val previousTick = segment.tickData[nowIndex - 1]
 
-  return if (interval == null ||
-      previousTick.currentTick in
-          (tickData.currentTick - interval.second)..(tickData.currentTick - interval.first))
-      phi(previousTick)
-  else false
+  if (interval != null &&
+      previousTick.currentTick !in
+          tickData.currentTick - interval.second..tickData.currentTick - interval.first)
+      return false
+
+  return phi(previousTick)
 }
 
 /**
