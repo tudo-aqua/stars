@@ -46,12 +46,9 @@ fun <
 ): Boolean {
   val segment = tickData.segment
   val nowIndex = segment.tickData.indexOf(tickData)
-
-  // There needs to be a next tick
-  if (nowIndex == segment.tickData.lastIndex) return false
+  if (segment.tickData.lastIndex < nowIndex + 1) return false
   val nextTick = segment.tickData[nowIndex + 1]
 
-  // The next tick has to be in the interval
   if (interval != null &&
       nextTick.currentTick !in
           tickData.currentTick + interval.first..tickData.currentTick + interval.second)

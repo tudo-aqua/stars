@@ -52,19 +52,18 @@ fun <
   for (searchIndex in nowIndex..segment.tickData.lastIndex) {
     val searchTickData = segment.tickData[searchIndex]
 
-    // Interval not reached yet, phi1 must hold
-    if (interval != null &&
-        searchTickData.currentTick < now + interval.first &&
-        !phi1(searchTickData))
-        return false
+    if (interval != null) {
+      // Interval not reached yet, continue iteration
+      if (searchTickData.currentTick < now + interval.first) continue
 
-    // Interval left, but phi2 did not hold
-    if (interval != null && searchTickData.currentTick > now + interval.second) return false
+      // Interval left, no phi2 held
+      if (searchTickData.currentTick > now + interval.second) return true
+    }
 
-    // In interval: if phi2 holds, return true
+    // Phi2 held and phi1 held until now (default)
     if (phi2(searchTickData)) return true
 
-    // In interval: phi2 did not hold, phi1 must hold
+    // Phi1 did not hold until phi2
     if (!phi1(searchTickData)) return false
   }
   return false
