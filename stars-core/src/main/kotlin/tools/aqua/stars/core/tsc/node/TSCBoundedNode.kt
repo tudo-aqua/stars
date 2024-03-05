@@ -65,7 +65,7 @@ class TSCBoundedNode<
     val returnList = mutableListOf<TSCInstanceNode<E, T, S, U, D>>()
 
     // build all subsets of allSuccessorsList and filter to subsets.size in
-    // bounds.first..bounds.second
+    // (bounds.first...bounds.second)
     val boundedSuccessors =
         allSuccessorsList
             .powerlist()

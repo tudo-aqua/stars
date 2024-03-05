@@ -121,13 +121,13 @@ fun plotDataAsBarChart(
  *
  * @param T1 [Number].
  * @param T2 [Number].
- * @param legendEntry The name that is displayed in the legend for this data set
- * @param xValues The x-values that should be used for the y-values
- * @param yValues The y-values that should be displayed
- * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot
- * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot
- * @param legendHeader (Default 'Legend') The name that is displayed above the legend list
- * @return The initialized [Plot] object
+ * @param legendEntry The name that is displayed in the legend for this data set.
+ * @param xValues The x-values that should be used for the y-values.
+ * @param yValues The y-values that should be displayed.
+ * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot.
+ * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot.
+ * @param legendHeader (Default 'Legend') The name that is displayed above the legend list.
+ * @return The initialized [Plot] object.
  */
 fun <T1 : Number, T2 : Number> getPlot(
     legendEntry: String,
@@ -145,12 +145,12 @@ fun <T1 : Number, T2 : Number> getPlot(
  * Creates a new [Map] with [legendEntry] and [yValues] and calls [getPlot] with it.
  *
  * @param T [Number].
- * @param legendEntry The name that is displayed in the legend for this data set
- * @param yValues The y-values that should be displayed
- * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot
- * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot
- * @param legendHeader (Default 'Legend') The name that is displayed above the legend list
- * @return The initialized [Plot] object
+ * @param legendEntry The name that is displayed in the legend for this data set.
+ * @param yValues The y-values that should be displayed.
+ * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot.
+ * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot.
+ * @param legendHeader (Default 'Legend') The name that is displayed above the legend list.
+ * @return The initialized [Plot] object.
  */
 fun <T : Number> getPlot(
     legendEntry: String,
@@ -171,13 +171,13 @@ fun <T : Number> getPlot(
  *
  * @param T1 [Number].
  * @param T2 [Number].
- * @param legendEntries The names that are displayed in the legend for the data sets
+ * @param legendEntries The names that are displayed in the legend for the data sets.
  * @param xAndYValues A [List] of x- and y-value [List]s. Each [List] item corresponds to one item
- * of [legendEntries]
- * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot
- * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot
- * @param legendHeader (Default 'Legend') The name that is displayed above the legend list
- * @return The initialized [Plot] object
+ * of [legendEntries].
+ * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot.
+ * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot.
+ * @param legendHeader (Default 'Legend') The name that is displayed above the legend list.
+ * @return The initialized [Plot] object.
  */
 fun <T1 : Number, T2 : Number> getPlot(
     legendEntries: List<String>,
@@ -203,11 +203,11 @@ fun <T1 : Number, T2 : Number> getPlot(
  * @param T1 [Number].
  * @param T2 [Number].
  * @param nameToValuesMap The [Map] that contains the x- and y-values in relation to their legend
- * entry
- * @param xAxisName The name that is displayed below the x-axis of the plot
- * @param yAxisName The name that is displayed besides the y-axis of the plot
- * @param legendHeader The name that is displayed above the legend list
- * @return The initialized [Plot] object
+ * entry.
+ * @param xAxisName The name that is displayed below the x-axis of the plot.
+ * @param yAxisName The name that is displayed besides the y-axis of the plot.
+ * @param legendHeader The name that is displayed above the legend list.
+ * @return The initialized [Plot] object.
  */
 fun <T1 : Number, T2 : Number> getPlot(
     nameToValuesMap: Map<String, Pair<List<T1>, List<T2>>>,

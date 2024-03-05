@@ -35,6 +35,13 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for
  * [TSCProjection]s.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property logger [Logger] instance.
  */
 @Suppress("unused")
 class InvalidTSCInstancesPerProjectionMetric<

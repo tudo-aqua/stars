@@ -19,10 +19,18 @@
 
 package tools.aqua.stars.core
 
-/** Creates TxT cross product. */
+/**
+ * Creates TxT cross product.
+ *
+ * @return The TxT cross product of the current [List].
+ */
 fun <T> List<T>.x2(): List<Pair<T, T>> = this.flatMap { a -> this.map { b -> a to b } }
 
-/** Creates TxTxT cross product. */
+/**
+ * Creates TxTxT cross product.
+ *
+ * @return The TxTxT cross product of the current [List].
+ */
 fun <T> List<T>.x3(): List<Triple<T, T, T>> =
     this.flatMap { a -> this.flatMap { b -> this.map { c -> Triple(a, b, c) } } }
 
@@ -30,6 +38,8 @@ fun <T> List<T>.x3(): List<Triple<T, T, T>> =
  * Adaption of com.marcinmoskala.math.powerset for lists while preserving the order of the original
  * list, going from small to big subsets see
  * https://github.com/MarcinMoskala/KotlinDiscreteMathToolkit/blob/master/src/main/java/com/marcinmoskala/math/PowersetExt.kt
+ *
+ * @return The power list of the current [List].
  */
 fun <T> List<T>.powerlist(): List<List<T>> =
     when {
@@ -56,6 +66,8 @@ fun <T> List<T>.powerlist(): List<List<T>> =
  *        listOf(listOf("a", "x", "1"), listOf("a", "x", "2"), /*...*/ listOf("c", "y", "4"))
  *    )
  * ```
+ *
+ * @return The cross product of the current [List].
  */
 fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
   require(size >= 2) { "List for cross-product building must at least contain two elements." }
@@ -69,8 +81,6 @@ fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
       nextLevelList += nextEntry
     }
   }
-
-  // val monitorFunction: (PredicateContext, Segment) -> Boolean = { _, _ -> true }
 
   return if (size == 2) nextLevelList else (listOf(nextLevelList) + subList(2, size)).crossProduct()
 }

@@ -42,6 +42,7 @@ class NullaryPredicate<
    * Evaluates predicate on the given [PredicateContext].
    *
    * @param ctx The context this predicate is evaluated in.
+   *
    * @return Whether the predicate holds in the given [PredicateContext].
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>): List<U> = ctx.holds(this)
@@ -51,6 +52,7 @@ class NullaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick The tick to evaluate this predicate in. default: first tick in context.
+   *
    * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>, tick: U): Boolean = holds(ctx).contains(tick)
@@ -65,6 +67,7 @@ class NullaryPredicate<
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param eval The evaluation function on the [PredicateContext].
+     *
      * @return The created [NullaryPredicate] with the given [eval] function.
      */
     fun <

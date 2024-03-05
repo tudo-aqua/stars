@@ -19,10 +19,11 @@ package tools.aqua.stars.core.tsc.projection
 
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Holds the [tsc] in form of the root TSCNode for a projection [id].
+ * Holds the [tsc] in form of the root [TSCNode] for a projection [id].
  *
  * @param E [EntityType].
  * @param T [TickDataType].

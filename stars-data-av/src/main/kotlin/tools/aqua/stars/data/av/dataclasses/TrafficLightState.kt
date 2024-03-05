@@ -31,6 +31,6 @@ enum class TrafficLightState(val value: Int) {
 
   companion object {
     /** Retrieves [TrafficLightState] by internal value. */
-    fun getByValue(value: Int): TrafficLightState = values().first { it.value == value }
+    fun getByValue(value: Int): TrafficLightState = entries.first { it.value == value }
   }
 }

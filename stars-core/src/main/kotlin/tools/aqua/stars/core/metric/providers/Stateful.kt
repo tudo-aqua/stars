@@ -20,9 +20,9 @@ package tools.aqua.stars.core.metric.providers
 /** This interface should be implemented when a metric has a running state. */
 interface Stateful {
   /**
-   * This function return the current state of the implementing class.
+   * This function returns the current state of the implementing class.
    *
-   * @return The current state
+   * @return The current state.
    */
   fun getState(): Any?
 

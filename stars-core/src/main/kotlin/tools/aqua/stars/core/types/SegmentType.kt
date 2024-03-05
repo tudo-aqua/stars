@@ -45,7 +45,11 @@ interface SegmentType<
   /** Identifier of primary entity. */
   val primaryEntityId: Int
 
-  /** Returns an Identifier for this segment. */
+  /**
+   * Returns an Identifier for this segment.
+   *
+   * @return The readable [String] representation of this [SegmentType].
+   */
   fun getSegmentIdentifier(): String =
       "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $segmentSource " +
           "with primary entity ${this.primaryEntityId}"

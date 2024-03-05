@@ -196,7 +196,7 @@ fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane =
                   else -> LaneDirection.UNKNOWN
                 }
           } else {
-            // road is not junction (i.e. multilane road)
+            // road is not junction (i.e. multi-lane road)
             laneDirection = LaneDirection.STRAIGHT
           }
         }
@@ -338,7 +338,8 @@ private fun Lane.update() {
             .map { ContactLaneInfo(it) }
   } else if (this.predecessorLanes.any { it.lane.hasTrafficLight }) {
     // this lane's predecessor had a traffic light
-    // => need to yield to all intersecting lanes of the same ampelphase that are straight/right
+    // => need to yield to all intersecting lanes of the same traffic light cycle that are
+    // straight/right
     this.yieldLanes =
         this.intersectingLanes
             .map { it.lane }

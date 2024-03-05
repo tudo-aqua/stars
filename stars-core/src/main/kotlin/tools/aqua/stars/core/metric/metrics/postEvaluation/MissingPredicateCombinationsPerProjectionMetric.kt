@@ -34,6 +34,15 @@ import tools.aqua.stars.core.types.*
  * This class implements the [Loggable] interface. It logs and prints the count of missing
  * [PredicateCombination]s for each [TSCProjection]. It logs the missing [PredicateCombination]s for
  * each [TSCProjection].
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
+ * depends on and needs for its calculation.
+ * @property logger [Logger] instance.
  */
 @Suppress("unused")
 class MissingPredicateCombinationsPerProjectionMetric<
@@ -47,10 +56,12 @@ class MissingPredicateCombinationsPerProjectionMetric<
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /**
-   * Returns a [Set] of all missing [PredicateCombination]s for all [TSCProjection]s that are
+   * Returns a [Map] of all missing [PredicateCombination]s for all [TSCProjection]s that are
    * calculated by the [ValidTSCInstancesPerProjectionMetric].
+   *
+   * @return The [Map] of all missing [PredicateCombination]s to its associated [TSCProjection].
    */
-  override fun evaluate(): Map<TSCProjection<E, T, S, U, D>, Set<PredicateCombination>> =
+  override fun postEvaluate(): Map<TSCProjection<E, T, S, U, D>, Set<PredicateCombination>> =
       dependsOn.getState().mapValues {
         getAllMissingPredicateCombinationsForProjection(it.key, it.value.map { t -> t.key })
       }
@@ -59,8 +70,8 @@ class MissingPredicateCombinationsPerProjectionMetric<
    * Prints the count of missed [PredicateCombination]s for each [TSCProjection] and then the actual
    * list of the missed predicates.
    */
-  override fun print() {
-    val evaluationResult = evaluate()
+  override fun printPostEvaluationResult() {
+    val evaluationResult = postEvaluate()
     evaluationResult.forEach { (projection, missedPredicates) ->
       logInfo(
           "Count of missing predicate combinations for projection '$projection': ${missedPredicates.size}.")
@@ -75,11 +86,11 @@ class MissingPredicateCombinationsPerProjectionMetric<
    * Calculate the [Set] of [PredicateCombination]s that are missing.
    *
    * @param tscProjection The [TSCProjection] for which the missing [PredicateCombination]s should
-   * be calculated
-   * @param tscInstances The occurred [List] of [TSCInstanceNode]s
+   * be calculated.
+   * @param tscInstances The occurred [List] of [TSCInstanceNode]s.
    *
    * @return A [Set] of [PredicateCombination]s that can occur based on the given [tscProjection]
-   * but are not present in the given [tscInstances]
+   * but are not present in the given [tscInstances].
    */
   private fun getAllMissingPredicateCombinationsForProjection(
       tscProjection: TSCProjection<E, T, S, U, D>,

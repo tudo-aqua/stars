@@ -25,6 +25,11 @@ import tools.aqua.stars.core.types.*
  * metrics that should be called during the evaluation phase.
  *
  * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  */
 interface EvaluationMetricProvider<
     E : EntityType<E, T, S, U, D>,

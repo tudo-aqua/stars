@@ -22,7 +22,7 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the since operator i.e. "If phi 2 held at any timestamp in the past in
+ * CMFTBL implementation of the 'since' operator i.e. "If phi 2 held at any timestamp in the past in
  * the interval, then phi 1 must hold for all timestamps since then until the end of the interval".
  *
  * @param E [EntityType].
@@ -72,7 +72,7 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the since operator i.e. "If phi 2 held at any timestamp in the past in
+ * CMFTBL implementation of the 'since' operator i.e. "If phi 2 held at any timestamp in the past in
  * the interval, then phi 1 must hold for all timestamps since then until the end of the interval".
  *
  * @param E1 [EntityType].
@@ -106,9 +106,9 @@ fun <
         phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the since operator for two entities i.e. "If phi 2 held at any timestamp
- * in the past in the interval, then phi 1 must hold for all timestamps since then until the end of
- * the interval".
+ * CMFTBL implementation of the 'since' operator for two entities i.e. "If phi 2 held at any
+ * timestamp in the past in the interval, then phi 1 must hold for all timestamps since then until
+ * the end of the interval".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

@@ -22,6 +22,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProje
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.TSCMonitorResult
+import tools.aqua.stars.core.tsc.instance.*
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.*
@@ -33,6 +34,15 @@ import tools.aqua.stars.core.types.*
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
  * failing [TSCNode.monitorFunction]s for each [TSCProjection]. It logs the failing
  * [TSCMonitorResult]s for each [TSCProjection].
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
+ * depends on and needs for its calculation.
+ * @property logger [Logger] instance.
  */
 @Suppress("unused")
 class FailedMonitorsMetric<
@@ -45,8 +55,13 @@ class FailedMonitorsMetric<
     override val logger: Logger = Loggable.getLogger("failed-monitors")
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
-  /** Returns a [Map] of [TSCMonitorResult]s for all [TSCProjection]s. */
-  override fun evaluate(): Map<TSCProjection<E, T, S, U, D>, List<TSCMonitorResult>> =
+  /**
+   * Calculates a [Map] of [TSCMonitorResult]s for all [TSCProjection]s by validating all monitors
+   * for all valid [TSCInstance]s.
+   *
+   * @return A [Map] of [TSCMonitorResult]s for all [TSCProjection]s.
+   */
+  override fun postEvaluate(): Map<TSCProjection<E, T, S, U, D>, List<TSCMonitorResult>> =
       dependsOn.getState().mapValues { (_, validInstancesMap) ->
         validInstancesMap.flatMap { (_, validInstances) ->
           validInstances.map { validInstance ->
@@ -56,8 +71,8 @@ class FailedMonitorsMetric<
       }
 
   /** Prints the count of filed monitors for each [TSCProjection]. */
-  override fun print() {
-    var evaluationResult = this.evaluate()
+  override fun printPostEvaluationResult() {
+    var evaluationResult = this.postEvaluate()
     // Filter the result, so that only failed monitors are left
     evaluationResult =
         evaluationResult.mapValues { (_, monitors) -> monitors.filter { !it.monitorsValid } }

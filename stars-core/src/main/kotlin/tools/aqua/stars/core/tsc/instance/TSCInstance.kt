@@ -28,7 +28,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property rootNode The root node.
- * @property sourceSegmentIdentifier Segment identifier
+ * @property sourceSegmentIdentifier Segment identifier.
  */
 data class TSCInstance<
     E : EntityType<E, T, S, U, D>,

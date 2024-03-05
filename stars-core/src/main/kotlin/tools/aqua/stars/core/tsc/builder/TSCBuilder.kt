@@ -53,10 +53,14 @@ class TSCBuilder<
     var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null,
 ) {
 
-  /** All edges of the node. */
+  /** Holds all edges of the node. */
   private val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
 
-  /** Creates an Edge with a BoundedNode. Only function where [bounds] is relevant. */
+  /**
+   * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
+   *
+   * @return The created [TSCEdge].
+   */
   fun buildBounded(): TSCEdge<E, T, S, U, D> {
     val node = TSCBoundedNode(valueFunction, monitorFunction, projectionIDs, bounds, edges.toList())
     return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
@@ -72,6 +76,10 @@ class TSCBuilder<
     edges.add(edge)
   }
 
-  /** Returns the amount of elements in [edges]. */
+  /**
+   * Returns the amount of elements in [edges].
+   *
+   * @return The amount of [TSCEdge]s.
+   */
   fun edgesCount(): Int = edges.size
 }

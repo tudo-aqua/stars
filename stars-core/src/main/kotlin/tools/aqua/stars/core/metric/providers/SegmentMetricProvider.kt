@@ -25,6 +25,11 @@ import tools.aqua.stars.core.types.*
  * function which gets a [SegmentType] which is called during the evaluation phase.
  *
  * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  */
 interface SegmentMetricProvider<
     E : EntityType<E, T, S, U, D>,
@@ -34,9 +39,10 @@ interface SegmentMetricProvider<
     D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
 
   /**
-   * Evaluate the metric based on the given parameters.
+   * Evaluate the metric based on the given parameter.
    *
-   * @param segment The current [SegmentType]
+   * @param segment The current [SegmentType].
+   * @return The evaluation result.
    */
   fun evaluate(segment: SegmentType<E, T, S, U, D>): Any?
 }

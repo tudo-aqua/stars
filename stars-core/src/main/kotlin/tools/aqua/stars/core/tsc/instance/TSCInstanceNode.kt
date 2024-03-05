@@ -56,12 +56,12 @@ class TSCInstanceNode<
   /**
    * Validates own (and recursively all children's) successor constraints imposed by the
    * [TSCNode<E,T,S>] types the instances were built from (e.g. exactly one for 'TSCXorNode' or
-   * correct range for [TSCBoundedNode])
+   * correct range for [TSCBoundedNode]).
    *
    * @param label the label used to build the human-readable string; uses [TSCEdge.label] in
-   * recursive call
+   * recursive call.
    * @return non-validating nodes; first element of pair is the node that failed to validate; second
-   * element is a human-readable explanation for the failure
+   * element is a human-readable explanation for the failure.
    */
   fun validate(label: String = "RootNode"): List<Pair<TSCInstanceNode<E, T, S, U, D>, String>> {
     val returnList = mutableListOf<Pair<TSCInstanceNode<E, T, S, U, D>, String>>()
@@ -82,7 +82,7 @@ class TSCInstanceNode<
    *
    * @param segmentIdentifier Identifier of the segment.
    * @param label the label added to the return list if [monitorResult] == `false`; uses
-   * [TSCEdge.label] in recursive call
+   * [TSCEdge.label] in recursive call.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
   fun validateMonitors(segmentIdentifier: String, label: String = "RootNode"): TSCMonitorResult {
@@ -101,7 +101,7 @@ class TSCInstanceNode<
    * results and collects incoming edge labels for results != true.
    *
    * @param label the label added to the return list if [monitorResult] == `false`; uses
-   * [TSCEdge.label] in recursive call
+   * [TSCEdge.label] in recursive call.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
   private fun validateMonitorsRec(label: String): List<String> {

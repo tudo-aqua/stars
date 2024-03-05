@@ -28,6 +28,11 @@ import tools.aqua.stars.core.types.*
  * during the evaluation phase.
  *
  * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  */
 interface ProjectionAndTSCInstanceNodeMetricProvider<
     E : EntityType<E, T, S, U, D>,
@@ -39,8 +44,8 @@ interface ProjectionAndTSCInstanceNodeMetricProvider<
   /**
    * Evaluate the metric based on the given parameters.
    *
-   * @param projection The current [TSCProjection]
-   * @param tscInstance The current [TSCInstance]
+   * @param projection The current [TSCProjection].
+   * @param tscInstance The current [TSCInstance].
    */
   fun evaluate(projection: TSCProjection<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>)
 }

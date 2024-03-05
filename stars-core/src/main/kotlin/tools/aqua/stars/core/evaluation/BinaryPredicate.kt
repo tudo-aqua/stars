@@ -53,6 +53,7 @@ class BinaryPredicate<
    * @param entityId1 The ID of the first entity to evaluate this predicate for. default: primary
    * entity.
    * @param entityId2 The ID of the second entity to evaluate this predicate for.
+   *
    * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
    * given [entityId1] and [entityId2].
    */
@@ -69,6 +70,7 @@ class BinaryPredicate<
    * @param ctx The context this predicate is evaluated in.
    * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
+   *
    * @return Whether the predicate holds in the given [PredicateContext] for the given [entity1] and
    * [entity2].
    */
@@ -92,8 +94,9 @@ class BinaryPredicate<
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @property kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
+     * @param kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
      * @param eval The evaluation function on the [PredicateContext].
+     *
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass]es of the
      * entities for which the predicate should be evaluated.
      */

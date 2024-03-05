@@ -42,6 +42,25 @@ private const val VALID_TSC_INSTANCES_OCCURRENCES_PER_PROJECTION_METRIC_NAME: St
 /**
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the occurred
  * valid [TSCInstance] for each [TSCProjection].
+ *
+ * This class implements the [PostEvaluationMetricProvider] which evaluates the combined results of
+ * valid [TSCInstance]s for all [TSCProjection]s.
+ *
+ * This class implements the [Stateful] interface. Its state contains the [Map] of [TSCProjection]s
+ * to a [List] of valid [TSCInstance]s.
+ *
+ * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for
+ * [TSCProjection]s.
+ *
+ * This class implements [Plottable] and plots the distribution and temporal change of valid
+ * [TSCInstance]s.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property logger [Logger] instance.
  */
 class ValidTSCInstancesPerProjectionMetric<
     E : EntityType<E, T, S, U, D>,
@@ -58,7 +77,7 @@ class ValidTSCInstancesPerProjectionMetric<
     Plottable {
   /**
    * Map a [TSCProjection] to a map in which the occurrences of valid [TSCInstanceNode]s are stored:
-   * Map<projection,Map<referenceInstance,List<TSCInstance>>>.
+   * - Map<projection,Map<referenceInstance,List<TSCInstance>>>.
    */
   private val validInstancesMap:
       MutableMap<
@@ -67,8 +86,8 @@ class ValidTSCInstancesPerProjectionMetric<
       mutableMapOf()
 
   /**
-   * Map a [TSCProjection] to a list of increasing counts of occurrences of valid [TSCInstanceNode]
-   * s. Map<projection,List<increasing count>>
+   * Maps [TSCProjection] to a list of increasing counts of occurrences of valid [TSCInstanceNode]s:
+   * - Map<projection,List<increasing count>>.
    */
   private val uniqueTimedInstances: MutableMap<TSCProjection<E, T, S, U, D>, MutableList<Int>> =
       mutableMapOf()
@@ -99,8 +118,8 @@ class ValidTSCInstancesPerProjectionMetric<
    * Track the valid [TSCInstance]s for each [TSCProjection] in the [validInstancesMap]. If the
    * current [tscInstance] is invalid it is skipped.
    *
-   * @param projection The current [TSCProjection] for which the validity should be checked
-   * @param tscInstance The current [TSCInstance] which is checked for validity
+   * @param projection The current [TSCProjection] for which the validity should be checked.
+   * @param tscInstance The current [TSCInstance] which is checked for validity.
    */
   override fun evaluate(
       projection: TSCProjection<E, T, S, U, D>,
@@ -130,8 +149,10 @@ class ValidTSCInstancesPerProjectionMetric<
   }
 
   /**
-   * Returns the full [validInstancesMap] containing the list of valid [TSCInstance]s for each
+   * Returns the full [validInstancesMap] containing the [List] of valid [TSCInstance]s for each
    * [TSCProjection].
+   *
+   * @return A [Map] containing the [List] of valid [TSCInstance]s for each [TSCProjection].
    */
   override fun getState():
       MutableMap<
@@ -166,7 +187,7 @@ class ValidTSCInstancesPerProjectionMetric<
    * As these maps are required for both [plotData] and [writePlotData] they have to be calculated
    * beforehand.
    */
-  override fun evaluate() {
+  override fun postEvaluate() {
     uniqueTimedInstances.forEach { (projection, instances) ->
       // Get the count of all possible TSC instances for the current projection
       val possibleTscInstancesForProjection = projection.possibleTSCInstances.size
@@ -192,7 +213,7 @@ class ValidTSCInstancesPerProjectionMetric<
    * Prints the collected data in the [combinedProjectionToOccurredInstancesMap] and
    * [combinedProjectionToOccurredInstancesPercentagesMap].
    */
-  override fun print() {
+  override fun printPostEvaluationResult() {
     logFine("Combined projections to occurred instances: $combinedProjectionToOccurredInstancesMap")
     logFine(
         "Combined projections to occurred instances in percentages: $combinedProjectionToOccurredInstancesPercentagesMap")
@@ -204,8 +225,8 @@ class ValidTSCInstancesPerProjectionMetric<
    * Plot the data collected with this metric.
    *
    * For each analyzed [TSCProjection] there will be two plots that are generated.
-   * 1. A progress graph which shows the count of unique [TSCInstance]s depicted as a line chart
-   * 2. A bar chart showing the distribution of occurrences of the [TSCInstance]s
+   * 1. A progress graph which shows the count of unique [TSCInstance]s depicted as a line chart.
+   * 2. A bar chart showing the distribution of occurrences of the [TSCInstance]s.
    *
    * A combined line chart is generated that depicts the combined [TSCInstance] progress for all
    * projections in one chart.
@@ -369,8 +390,8 @@ class ValidTSCInstancesPerProjectionMetric<
    * Save the data collected with this metric.
    *
    * For each analyzed [TSCProjection] there will be two files that are generated.
-   * 1. A progress file which contains the count of unique [TSCInstance]s
-   * 2. A file containing the distribution of occurrences of the [TSCInstance]s
+   * 1. A progress file which contains the count of unique [TSCInstance]s.
+   * 2. A file containing the distribution of occurrences of the [TSCInstance]s.
    *
    * A combined file is generated that contains the combined [TSCInstance] progress for all
    * projections in one file.

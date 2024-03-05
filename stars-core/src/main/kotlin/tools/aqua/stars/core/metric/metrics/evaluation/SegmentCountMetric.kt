@@ -26,6 +26,17 @@ import tools.aqua.stars.core.types.*
 /**
  * This class is an implementation of [SegmentMetricProvider] which provides the count of evaluated
  * segments. This Metric is stateful as it has to track the count of observed [SegmentType]s.
+ *
+ * This class implements the [Stateful] interface. Its state contains the [segmentCount].
+ *
+ * This class implements [Loggable] and logs the final [segmentCount].
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property logger [Logger] instance.
  */
 class SegmentCountMetric<
     E : EntityType<E, T, S, U, D>,
@@ -40,8 +51,9 @@ class SegmentCountMetric<
   /**
    * Increases the count of evaluated [SegmentType]s.
    *
-   * @param segment The current [SegmentType] that is evaluated
-   * @return The number of analyzed [SegmentType]s so far
+   * @param segment The current [SegmentType] that is evaluated.
+   *
+   * @return The number of analyzed [SegmentType]s so far.
    */
   override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int =
       (++segmentCount).also { logFiner("==== Segment $segmentCount: $segment ====") }
@@ -49,7 +61,7 @@ class SegmentCountMetric<
   /**
    * Returns the current [segmentCount].
    *
-   * @return Returns the current [segmentCount]
+   * @return Returns the current [segmentCount].
    */
   override fun getState(): Int = segmentCount
 

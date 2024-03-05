@@ -142,8 +142,8 @@ class TSCEvaluation<
 
     // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
     metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
-      it.evaluate()
-      it.print()
+      it.postEvaluate()
+      it.printPostEvaluationResult()
     }
 
     // Plot the results of all Plottable metrics

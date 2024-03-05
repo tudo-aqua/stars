@@ -29,6 +29,19 @@ import tools.aqua.stars.core.types.*
 /**
  * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] and tracks the missed
  * [TSCInstance]s for each [TSCProjection].
+ *
+ * This class implements the [Stateful] interface. Its state contains the [Map] of [TSCProjection]s
+ * to a [List] of missed [TSCInstance]s.
+ *
+ * This class implements [Loggable] and logs the final [Map] of missed [TSCInstance]s for
+ * [TSCProjection]s.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property logger [Logger] instance.
  */
 @Suppress("unused")
 class MissedTSCInstancesPerProjectionMetric<

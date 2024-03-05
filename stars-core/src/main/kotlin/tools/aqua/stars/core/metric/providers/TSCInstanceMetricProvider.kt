@@ -26,6 +26,11 @@ import tools.aqua.stars.core.types.*
  * [evaluate] function which gets a [TSCInstance] which is called during the evaluation phase.
  *
  * @see TSCEvaluation.runEvaluation
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  */
 interface TSCInstanceMetricProvider<
     E : EntityType<E, T, S, U, D>,
@@ -35,9 +40,10 @@ interface TSCInstanceMetricProvider<
     D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
 
   /**
-   * Evaluate the metric based on the given parameters.
+   * Evaluate the metric based on the given parameter.
    *
-   * @param tscInstance The current [TSCInstance]
+   * @param tscInstance The current [TSCInstance].
+   * @return The evaluation result.
    */
   fun evaluate(tscInstance: TSCInstance<E, T, S, U, D>): Any?
 }

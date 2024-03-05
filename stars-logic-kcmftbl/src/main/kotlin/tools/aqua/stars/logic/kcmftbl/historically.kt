@@ -22,7 +22,7 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the historically operator i.e. "In all past timeframes in the interval
+ * CMFTBL implementation of the 'historically' operator i.e. "In all past timeframes in the interval
  * phi holds".
  *
  * @param E [EntityType].
@@ -46,7 +46,7 @@ fun <
 ): Boolean = !once(tickData, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the historically operator i.e. "In all past timeframes in the interval
+ * CMFTBL implementation of the 'historically' operator i.e. "In all past timeframes in the interval
  * phi holds".
  *
  * @param E1 [EntityType].
@@ -72,8 +72,8 @@ fun <
 ): Boolean = !once(entity, interval, phi = { e -> !phi(e) })
 
 /**
- * CMFTBL implementation of the historically operator for two entities i.e. "In all past timeframes
- * in the interval phi holds".
+ * CMFTBL implementation of the 'historically' operator for two entities i.e. "In all past
+ * timeframes in the interval phi holds".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

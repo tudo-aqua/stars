@@ -32,6 +32,8 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param init The init function. Must add exactly one edge.
+ *
+ * @return The [TSCNode] at the root level of the TSC.
  */
 fun <
     E : EntityType<E, T, S, U, D>,
@@ -69,6 +71,8 @@ fun <
  * @param label Name of the edge.
  * @param bounds Defines lower and upper limit of the BoundedNode.
  * @param init The init function.
+ *
+ * @return The [TSCEdge] with the given bounds.
  */
 fun <
     E : EntityType<E, T, S, U, D>,
@@ -98,6 +102,8 @@ fun <
  * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
+ *
+ * @return The [TSCEdge] with the specific bounds (1,1).
  */
 fun <
     E : EntityType<E, T, S, U, D>,
@@ -119,6 +125,8 @@ fun <
  * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
+ *
+ * @return The [TSCEdge] with the specific bounds (0,1#Edges).
  */
 fun <
     E : EntityType<E, T, S, U, D>,
@@ -147,6 +155,8 @@ fun <
  * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
+ *
+ * @return The [TSCEdge] with the specific bounds (1,#Edges).
  */
 fun <
     E : EntityType<E, T, S, U, D>,
@@ -175,6 +185,8 @@ fun <
  * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
+ *
+ * @return The [TSCEdge] with the specific bounds (#Edges,#Edges).
  */
 fun <
     E : EntityType<E, T, S, U, D>,
@@ -203,6 +215,8 @@ fun <
  * @param D [TickDifference].
  * @param label name of the edge.
  * @param init The init function.
+ *
+ * @return The [TSCEdge] that is connected to a leaf node.
  */
 fun <
     E : EntityType<E, T, S, U, D>,
