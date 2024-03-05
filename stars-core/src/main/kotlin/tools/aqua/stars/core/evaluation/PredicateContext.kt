@@ -21,7 +21,7 @@ import kotlin.reflect.cast
 import tools.aqua.stars.core.types.*
 
 /**
- * Predicate context.
+ * Predicate context which holds the evaluations of predicates for each evaluated entity.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -54,68 +54,92 @@ class PredicateContext<
       return entityIdsCache
     }
 
+  /** Holds the evaluations of all previously calculated [NullaryPredicate]s */
   private val nullaryPredicateCache: MutableMap<NullaryPredicate<E, T, S, U, D>, List<U>> =
       mutableMapOf()
-  private val tp1holdsCache:
+  /** Holds the evaluations of all previously calculated [UnaryPredicate]s */
+  private val unaryPredicateCache:
       MutableMap<Pair<UnaryPredicate<*, E, T, S, U, D>, Pair<U, Int>>, Boolean> =
       mutableMapOf()
-  private val tp2holdsCache:
+  /** Holds the evaluations of all previously calculated [BinaryPredicate]s */
+  private val binaryPredicateCache:
       MutableMap<Pair<BinaryPredicate<*, *, E, T, S, U, D>, Triple<U, Int, Int>>, Boolean> =
       mutableMapOf()
 
-  /** Evaluates [NullaryPredicate] on this [PredicateContext]. */
-  fun evaluate(p: NullaryPredicate<E, T, S, U, D>): List<U> {
-    var evaluation = nullaryPredicateCache[p]
+  /**
+   * Evaluates whether [NullaryPredicate] [predicate] holds for current [PredicateContext].
+   *
+   * @param predicate The [NullaryPredicate] that is to be evaluated.
+   * @return The [List] of [TickUnit]s in which the predicate holds.
+   */
+  fun holds(predicate: NullaryPredicate<E, T, S, U, D>): List<U> {
+    var evaluation = nullaryPredicateCache[predicate]
 
+    // There exists no previous evaluation for the current predicate
     if (evaluation == null) {
-      evaluation = segment.tickData.filter { p.eval(this, it) }.map { it.currentTick }
-      nullaryPredicateCache += p to evaluation
+      // Evaluate predicate
+      evaluation = segment.tickData.filter { predicate.eval(this, it) }.map { it.currentTick }
+      // Store evaluation result of predicate in cache
+      nullaryPredicateCache += predicate to evaluation
     }
 
     return evaluation
   }
 
   /**
-   * Evaluates whether [UnaryPredicate] [p] hold on current [PredicateContext].
+   * Evaluates whether [UnaryPredicate] [predicate] holds for current [PredicateContext], at [tick]
+   * and for [entityId].
    *
    * @param E1 [EntityType].
-   * @param p The predicate.
-   * @param tick The tick.
-   * @param vid1 Value 1.
+   * @param predicate The predicate that is evaluated.
+   * @param tick The [TickUnit] at which the [predicate] is evaluated.
+   * @param entityId The ID of the [EntityType] for which the [predicate] is evaluated.
+   * @return Whether the [predicate] holds at the given [tick] for the given [entityId].
    */
-  fun <E1 : E> holds(p: UnaryPredicate<E1, E, T, S, U, D>, tick: U, vid1: Int): Boolean =
-      tp1holdsCache.getOrPut(p to (tick to vid1)) {
+  fun <E1 : E> holds(
+      predicate: UnaryPredicate<E1, E, T, S, U, D>,
+      tick: U,
+      entityId: Int
+  ): Boolean =
+      unaryPredicateCache.getOrPut(predicate to (tick to entityId)) {
         val currentTick = segment.ticks[tick]
-        val entity = currentTick?.getEntityById(vid1)
+        val entity = currentTick?.getEntityById(entityId)
 
-        currentTick != null && p.kClass.isInstance(entity) && p.eval(this, p.kClass.cast(entity))
+        currentTick != null &&
+            predicate.kClass.isInstance(entity) &&
+            predicate.eval(this, predicate.kClass.cast(entity))
       }
 
   /**
-   * Evaluates whether [BinaryPredicate] [p] hold on current [PredicateContext].
+   * Evaluates whether [UnaryPredicate] [predicate] holds for current [PredicateContext], at [tick]
+   * and for both [entityId1] and [entityId2].
    *
    * @param E1 [EntityType].
    * @param E2 [EntityType].
-   * @param p The predicate.
-   * @param tick The tick.
-   * @param vid1 Value 1.
-   * @param vid2 Value 2.
+   * @param predicate The predicate that is evaluated.
+   * @param tick The [TickUnit] at which the [predicate] is evaluated.
+   * @param entityId1 The first ID of the [EntityType] for which the [predicate] is evaluated.
+   * @param entityId1 The second ID of the [EntityType] for which the [predicate] is evaluated.
+   * @return Whether the [predicate] holds at the given [tick] for both [entityId1] and [entityId2].
    */
   fun <E1 : E, E2 : E> holds(
-      p: BinaryPredicate<E1, E2, E, T, S, U, D>,
+      predicate: BinaryPredicate<E1, E2, E, T, S, U, D>,
       tick: U,
-      vid1: Int,
-      vid2: Int
+      entityId1: Int,
+      entityId2: Int
   ): Boolean =
-      tp2holdsCache.getOrPut(p to (Triple(tick, vid1, vid2))) {
+      binaryPredicateCache.getOrPut(predicate to (Triple(tick, entityId1, entityId2))) {
         val currentTick = segment.ticks[tick]
-        val entity1 = currentTick?.getEntityById(vid1)
-        val entity2 = currentTick?.getEntityById(vid2)
+        val entity1 = currentTick?.getEntityById(entityId1)
+        val entity2 = currentTick?.getEntityById(entityId2)
 
-        vid1 != vid2 &&
+        entityId1 != entityId2 &&
             currentTick != null &&
-            p.kClasses.first.isInstance(entity1) &&
-            p.kClasses.second.isInstance(entity2) &&
-            p.eval(this, p.kClasses.first.cast(entity1), p.kClasses.second.cast(entity2))
+            predicate.kClasses.first.isInstance(entity1) &&
+            predicate.kClasses.second.isInstance(entity2) &&
+            predicate.eval(
+                this,
+                predicate.kClasses.first.cast(entity1),
+                predicate.kClasses.second.cast(entity2))
       }
 }

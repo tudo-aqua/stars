@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package tools.aqua.stars.core.evaluation
 
 import java.util.logging.Logger
@@ -35,10 +37,10 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property tsc The [TSC].
- * @property segments Sequence of [SegmentType]s.
- * @property projectionIgnoreList List of projections to ignore.
- * @property logger Logger instance.
+ * @property tsc The [TSC] to evaluate.
+ * @property segments [Sequence] of [SegmentType]s.
+ * @property projectionIgnoreList [List] of projections to ignore.
+ * @property logger [Logger] instance.
  */
 class TSCEvaluation<
     E : EntityType<E, T, S, U, D>,

@@ -1,4 +1,6 @@
 # tools.aqua.stars.core.evaluation Package Info
 
-- Statistics Generator for TSCs
+- Evaluation of TSCs
 - Predicate Context
+- Unary, binary and nullary predicate
+- Predicate combination

@@ -29,7 +29,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property kClass The actor.
+ * @property kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
  * @property eval The evaluation function on the [PredicateContext].
  */
 class UnaryPredicate<
@@ -47,7 +47,9 @@ class UnaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick The tick to evaluate this predicate in. default: first tick in context.
-   * @param entityId The ID of the entity to evaluate this predicate for. default: ego vehicle.
+   * @param entityId The ID of the entity to evaluate this predicate for. default: primary entity.
+   * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
+   * given [entityId].
    */
   fun holds(
       ctx: PredicateContext<E, T, S, U, D>,
@@ -60,6 +62,7 @@ class UnaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param entity The entity to evaluate this predicate for.
+   * @return Whether the predicate holds in the given [PredicateContext] for the given [entity].
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>, entity: E): Boolean =
       holds(ctx, entity.tickData.currentTick, entity.id)
@@ -68,6 +71,7 @@ class UnaryPredicate<
    * Check if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
+   * @return Whether the predicate holds in the given [PredicateContext].
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>): Boolean =
       holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId)
@@ -75,14 +79,17 @@ class UnaryPredicate<
   companion object {
     /**
      * Creates a unary tick predicate.
+     *
      * @param E1 [EntityType].
      * @param E [EntityType].
      * @param T [TickDataType].
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @param kClass The actor.
+     * @property kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
      * @param eval The evaluation function on the [PredicateContext].
+     * @return The created [UnaryPredicate] with the given [eval] function and the [KClass] of the
+     * entity for which the predicate should be evaluated.
      */
     fun <
         E1 : E,
