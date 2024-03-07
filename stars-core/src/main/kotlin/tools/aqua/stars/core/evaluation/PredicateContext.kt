@@ -99,6 +99,7 @@ class PredicateContext<
    *
    * @return Whether the [predicate] holds at the given [tick] for the given [entityId].
    */
+  @Suppress("UNCHECKED_CAST")
   fun <E1 : E> holds(
       predicate: UnaryPredicate<E1, E, T, S, U, D>,
       tick: U,
@@ -110,7 +111,7 @@ class PredicateContext<
 
         currentTick != null &&
             predicate.kClass.isInstance(entity) &&
-            predicate.eval(this, predicate.kClass.cast(entity))
+            predicate.eval(this, entity as E1)
       }
 
   /**
