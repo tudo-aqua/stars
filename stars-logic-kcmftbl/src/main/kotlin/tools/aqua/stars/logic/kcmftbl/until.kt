@@ -20,8 +20,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the until operator i.e. "Phi 1 holds for all timestamps in the future in
- * the interval, at least until phi2 holds".
+ * CMFTBL implementation of the 'until' operator i.e. "Phi 1 holds for all timestamps in the future
+ * in the interval, at least until phi2 holds".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -44,6 +44,7 @@ fun <
     phi1: (T) -> Boolean,
     phi2: (T) -> Boolean
 ): Boolean {
+  checkInterval(interval)
 
   val segment = tickData.segment
   val now = tickData.currentTick
@@ -52,26 +53,25 @@ fun <
   for (searchIndex in nowIndex..segment.tickData.lastIndex) {
     val searchTickData = segment.tickData[searchIndex]
 
-    if (interval != null) {
-      // Interval not reached yet, continue iteration
-      if (searchTickData.currentTick < now + interval.first) continue
+    // Interval not reached yet, phi1 must hold
+    if (interval != null && searchTickData.currentTick < now + interval.first)
+        if (phi1(searchTickData)) continue else return false
 
-      // Interval left, no phi2 held
-      if (searchTickData.currentTick > now + interval.second) return true
-    }
+    // Interval left, but phi2 did not hold
+    if (interval != null && searchTickData.currentTick >= now + interval.second) return false
 
-    // Phi2 held and phi1 held until now (default)
+    // In interval: if phi2 holds, return true
     if (phi2(searchTickData)) return true
 
-    // Phi1 did not hold until phi2
+    // In interval: phi2 did not hold, phi1 must hold
     if (!phi1(searchTickData)) return false
   }
   return false
 }
 
 /**
- * CMFTBL implementation of the until operator i.e. "Phi 1 holds for all timestamps in the future in
- * the interval, until phi2 holds".
+ * CMFTBL implementation of the 'until' operator i.e. "Phi 1 holds for all timestamps in the future
+ * in the interval, until phi2 holds".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -104,8 +104,8 @@ fun <
         phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the until operator for two entities i.e. "Phi 1 holds for all timestamps
- * in the future in the interval, until phi2 holds".
+ * CMFTBL implementation of the 'until' operator for two entities i.e. "Phi 1 holds for all
+ * timestamps in the future in the interval, until phi2 holds".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

@@ -22,7 +22,7 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the next operator i.e. "In the next timeframe phi holds and the
+ * CMFTBL implementation of the 'next' operator i.e. "In the next timeframe phi holds and the
  * timestamp is in the interval".
  *
  * @param E [EntityType].
@@ -44,21 +44,26 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean {
+  checkInterval(interval)
+
   val segment = tickData.segment
   val nowIndex = segment.tickData.indexOf(tickData)
-  if (segment.tickData.lastIndex < nowIndex + 1) return false
+
+  // There needs to be a next tick
+  if (nowIndex == segment.tickData.lastIndex) return false
   val nextTick = segment.tickData[nowIndex + 1]
 
+  // The next tick has to be in the interval
   if (interval != null &&
-      nextTick.currentTick !in
-          tickData.currentTick + interval.first..tickData.currentTick + interval.second)
+      (nextTick.currentTick < tickData.currentTick + interval.first ||
+          nextTick.currentTick >= tickData.currentTick + interval.second))
       return false
 
   return phi(nextTick)
 }
 
 /**
- * CMFTBL implementation of the next operator i.e. "In the next timeframe phi holds and the
+ * CMFTBL implementation of the 'next' operator i.e. "In the next timeframe phi holds and the
  * timestamp is in the interval".
  *
  * @param E1 [EntityType].
@@ -89,8 +94,8 @@ fun <
         phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the next operator for two entities i.e. "In the next timeframe phi holds
- * and the timestamp is in the interval".
+ * CMFTBL implementation of the 'next' operator for two entities i.e. "In the next timeframe phi
+ * holds and the timestamp is in the interval".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the previous operator i.e. "In the previous timeframe phi holds and the
- * timestamp is in the interval".
+ * CMFTBL implementation of the 'previous' operator i.e. "In the previous timeframe phi holds and
+ * the timestamp is in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -44,21 +44,26 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean {
+  checkInterval(interval)
+
   val segment = tickData.segment
   val nowIndex = segment.tickData.indexOf(tickData)
-  if (nowIndex - 1 < 0) return false
+
+  // There needs to be a previous tick
+  if (nowIndex == 0) return false
   val previousTick = segment.tickData[nowIndex - 1]
 
-  return if (interval == null ||
-      previousTick.currentTick in
-          (tickData.currentTick - interval.second)..(tickData.currentTick - interval.first))
-      phi(previousTick)
-  else false
+  if (interval != null &&
+      (previousTick.currentTick <= tickData.currentTick - interval.second ||
+          previousTick.currentTick > tickData.currentTick - interval.first))
+      return false
+
+  return phi(previousTick)
 }
 
 /**
- * CMFTBL implementation of the previous operator i.e. "In the previous timeframe phi holds and the
- * timestamp is in the interval".
+ * CMFTBL implementation of the 'previous' operator i.e. "In the previous timeframe phi holds and
+ * the timestamp is in the interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -88,7 +93,7 @@ fun <
         phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the previous operator for two entities i.e. "In the previous timeframe
+ * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous timeframe
  * phi holds and the timestamp is in the interval".
  *
  * @param E1 [EntityType].

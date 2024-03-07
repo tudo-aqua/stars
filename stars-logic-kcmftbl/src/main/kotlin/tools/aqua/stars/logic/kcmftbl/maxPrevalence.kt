@@ -22,7 +22,7 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the maxPrevalence operator i.e. phi holds for at most ([percentage]
+ * CMFTBL implementation of the 'maxPrevalence' operator i.e. phi holds for at most ([percentage]
  * *100)% of the ticks in the interval.
  *
  * @param E [EntityType].
@@ -48,7 +48,7 @@ fun <
 ): Boolean = minPrevalence(tickData, 1 - percentage, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the maxPrevalence operator i.e. phi holds for at most ([percentage]
+ * CMFTBL implementation of the 'maxPrevalence' operator i.e. phi holds for at most ([percentage]
  * *100)% of the ticks in the interval.
  *
  * @param E1 [EntityType].
@@ -76,8 +76,8 @@ fun <
 ): Boolean = minPrevalence(entity, 1 - percentage, interval, phi = { e -> !phi(e) })
 
 /**
- * CMFTBL implementation of the maxPrevalence operator for two entities i.e. phi holds for at most (
- * [percentage]*100)% of the ticks in the interval.
+ * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. phi holds for at most
+ * ( [percentage]*100)% of the ticks in the interval.
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].
