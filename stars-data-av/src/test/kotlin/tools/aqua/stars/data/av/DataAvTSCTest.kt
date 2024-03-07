@@ -26,8 +26,8 @@ import tools.aqua.stars.core.tsc.builder.root
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.logic.kcmftbl.*
 
-/** Data AV test. */
-class DataAvTest {
+/** Data AV TSC test. */
+class DataAvTSCTest {
 
   /** Tests construction of the TSC. */
   @Test
