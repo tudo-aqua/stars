@@ -129,6 +129,7 @@ class TestMinPrevalence {
    * Test when phi is true for 8 of 10 ticks and percentage is 80, and 4 of 5 in interval are true.
    * - phi: true
    * - percentage: 0.8
+   * - interval: (0, 5)
    * - Expected: true
    */
   @Test
@@ -146,6 +147,7 @@ class TestMinPrevalence {
    * Test when phi is true for 8 of 10 ticks and percentage is 80, and 3 of 5 in interval are true.
    * - phi: true
    * - percentage: 0.8
+   * - interval: (0, 5)
    * - Expected: false
    */
   @Test
@@ -163,6 +165,7 @@ class TestMinPrevalence {
    * Test when phi is true and percentage is 100, but no tick is in the interval.
    * - phi: true
    * - percentage: 1.0
+   * - interval: (1, 2)
    * - Expected: true
    */
   @Test

@@ -227,7 +227,7 @@ class TestUntil {
    * Test when phi1 is true and phi2 holds is true in the middle of the interval starting at zero.
    * - phi1: true until phi2 gets true
    * - phi2: true at end false before
-   * - interval: (0, 2)
+   * - interval: (0, 3)
    * - Expected: true
    */
   @Test
@@ -271,7 +271,7 @@ class TestUntil {
    * Test when phi1 is true and phi2 holds is true in the middle of the interval starting at zero.
    * - phi1: true until phi2 gets true
    * - phi2: true at end false before
-   * - interval: (1, 2)
+   * - interval: (1, 3)
    * - Expected: true
    */
   @Test
@@ -293,7 +293,7 @@ class TestUntil {
    * Test when phi1 is true and phi2 is true after the interval starting at zero.
    * - phi1: true until phi2 gets true
    * - phi2: true directly after the interval
-   * - interval: (1, 1)
+   * - interval: (1, 2)
    * - Expected: false
    */
   @Test
@@ -315,7 +315,7 @@ class TestUntil {
    * Test when phi1 is true and phi2 holds is true in the middle of the interval starting at zero.
    * - phi1: true until phi2 gets true
    * - phi2: true at end false before
-   * - interval: (1, 2)
+   * - interval: (1, 3)
    * - Expected: true
    */
   @Test
@@ -337,7 +337,7 @@ class TestUntil {
    * Test when phi1 is true and phi2 is true after the interval starting at zero.
    * - phi1: true until phi2 gets true
    * - phi2: true directly after the interval
-   * - interval: (1, 1)
+   * - interval: (1, 2)
    * - Expected: false
    */
   @Test

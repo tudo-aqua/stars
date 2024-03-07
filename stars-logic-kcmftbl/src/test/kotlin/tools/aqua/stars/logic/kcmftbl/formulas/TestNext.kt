@@ -116,6 +116,7 @@ class TestNext {
   /**
    * Test when phi holds at the next tick and the tick is in the interval.
    * - phi: true
+   * - interval: (1, 2)
    * - Expected: false
    */
   @Test
@@ -129,6 +130,7 @@ class TestNext {
   /**
    * Test when phi holds at the next tick, but the tick is before the interval starts.
    * - phi: true
+   * - interval: (1, 2)
    * - Expected: false
    */
   @Test
@@ -146,6 +148,7 @@ class TestNext {
   /**
    * Test when phi holds at the next tick, but the tick is after the interval ends.
    * - phi: true
+   * - interval: (2, 3)
    * - Expected: false
    */
   @Test
