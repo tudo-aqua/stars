@@ -354,4 +354,48 @@ class TestUntil {
           phi2 = { it.phi2 })
     }
   }
+
+  /**
+   * Test when phi1 is true and phi2 is true at the end.
+   * - phi1: true until phi2 gets true
+   * - phi2: true at end
+   * - interval: (0, 4)
+   * - Expected: true
+   */
+  @Test
+  fun `Test when phi1 is true and phi2 is true at the end`() {
+    val phi1 = listOf(1, 1, 1, 1)
+    val phi2 = listOf(0, 0, 0, 1)
+    val interval = 0 to 4
+
+    assertTrue {
+      until(
+          createTicks(phi1, phi2)[0],
+          createInterval(interval),
+          phi1 = { it.phi1 },
+          phi2 = { it.phi2 })
+    }
+  }
+
+  /**
+   * Test when phi1 is false before the interval and phi2 is true in the interval starting at zero.
+   * - phi1: one time false before the interval
+   * - phi2: true directly after the interval
+   * - interval: (1, 2)
+   * - Expected: false
+   */
+  @Test
+  fun `Test when phi1 is false before interval and phi2 is true before and after the interval starting at one`() {
+    val phi1 = listOf(0, 1, 1, 1)
+    val phi2 = listOf(0, 0, 0, 1)
+    val interval = 1 to 2
+
+    assertFalse {
+      until(
+          createTicks(phi1, phi2)[0],
+          createInterval(interval),
+          phi1 = { it.phi1 },
+          phi2 = { it.phi2 })
+    }
+  }
 }
