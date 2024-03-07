@@ -24,9 +24,7 @@ import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Abstract baseclass for TSC nodes.
@@ -34,23 +32,33 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property valueFunction Value function predicate of the node.
  * @property monitorFunction Monitor function predicate of the node.
  * @property projectionIDMapper Mapper for projection identifiers.
  * @property edges [TSCEdge]s of the TSC.
  */
-sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val valueFunction: (PredicateContext<E, T, S>) -> Any,
-    val monitorFunction: (PredicateContext<E, T, S>) -> Boolean,
+sealed class TSCNode<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
+    val monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean,
     val projectionIDMapper: Map<Any, Boolean>,
-    val edges: List<TSCEdge<E, T, S>>,
+    val edges: List<TSCEdge<E, T, S, U, D>>,
 ) {
 
   /** Generates all TSC instances. */
-  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S>>
+  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
 
   /** Evaluates this TSC in the given context. */
-  fun evaluate(ctx: PredicateContext<E, T, S>, depth: Int = 0): TSCInstanceNode<E, T, S> =
+  fun evaluate(
+      ctx: PredicateContext<E, T, S, U, D>,
+      depth: Int = 0
+  ): TSCInstanceNode<E, T, S, U, D> =
       TSCInstanceNode(this.valueFunction(ctx), this.monitorFunction(ctx), this).also {
         this.edges.forEach { tscEdge ->
           if (tscEdge.condition(ctx))
@@ -67,7 +75,9 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
    *
    * @param projectionIgnoreList Projections to ignore.
    */
-  fun buildProjections(projectionIgnoreList: List<Any> = listOf()): List<TSCProjection<E, T, S>> =
+  fun buildProjections(
+      projectionIgnoreList: List<Any> = listOf()
+  ): List<TSCProjection<E, T, S, U, D>> =
       projectionIDMapper
           .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
           .mapNotNull {
@@ -81,7 +91,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
    *
    * @param projectionId The projection identifier as in [projectionIDMapper].
    */
-  private fun buildProjection(projectionId: Any): TSCNode<E, T, S>? =
+  private fun buildProjection(projectionId: Any): TSCNode<E, T, S, U, D>? =
       when (projectionIDMapper[projectionId]) {
         // this projection id is not found, don't project, return null
         null -> null
@@ -106,8 +116,8 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
                   }
                   .toList()
 
-          val alwaysEdgesBefore = edges.filterIsInstance<TSCAlwaysEdge<E, T, S>>().size
-          val alwaysEdgesAfter = outgoingEdges.filterIsInstance<TSCAlwaysEdge<E, T, S>>().size
+          val alwaysEdgesBefore = edges.filterIsInstance<TSCAlwaysEdge<E, T, S, U, D>>().size
+          val alwaysEdgesAfter = outgoingEdges.filterIsInstance<TSCAlwaysEdge<E, T, S, U, D>>().size
           val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
 
           when (this) {
@@ -123,13 +133,13 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
       }
 
   /** Deeply clones [TSCNode]. */
-  private fun deepClone(): TSCNode<E, T, S> {
+  private fun deepClone(): TSCNode<E, T, S, U, D> {
     val outgoingEdges =
         edges
             .map { it to it.destination.deepClone() }
             .map {
               when (it.first) {
-                is TSCAlwaysEdge<E, T, S> -> TSCAlwaysEdge(it.first.label, it.second)
+                is TSCAlwaysEdge<E, T, S, U, D> -> TSCAlwaysEdge(it.first.label, it.second)
                 else -> TSCEdge(it.first.label, it.first.condition, it.second)
               }
             }
@@ -167,12 +177,16 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
           }
           .toString()
 
-  /** same output as toString, but with labels on the edges provided by [labels]. */
+  /**
+   * Outputs the same output as [toString], but with labels on the edges provided by [labels].
+   *
+   * @return The [String] representation of the [TSCNode] with labels on the edges.
+   */
   @Suppress("unused")
-  fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, S>, Int>): String =
+  fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, S, U, D>, Int>): String =
       toStringWithEdgeLabels(0, labels)
 
-  private fun toStringWithEdgeLabels(depth: Int, labels: Map<TSCEdge<E, T, S>, Any>): String {
+  private fun toStringWithEdgeLabels(depth: Int, labels: Map<TSCEdge<E, T, S, U, D>, Any>): String {
     val builder = StringBuilder()
     when (this) {
       is TSCBoundedNode -> builder.append("(${this.bounds.first}..${this.bounds.second})\n")
@@ -192,7 +206,7 @@ sealed class TSCNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
   override fun toString(): String = toString(0)
 
   override fun equals(other: Any?): Boolean =
-      other is TSCNode<*, *, *> &&
+      other is TSCNode<*, *, *, *, *> &&
           javaClass == other.javaClass &&
           valueFunction == other.valueFunction &&
           monitorFunction == other.monitorFunction &&

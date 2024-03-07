@@ -30,15 +30,14 @@ data class Segment(
     val mainInitList: List<TickData>,
     val simulationRunId: String = "",
     override val segmentSource: String,
-) : SegmentType<Actor, TickData, Segment> {
+) :
+    SegmentType<
+        Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
 
   override val tickData: List<TickData> = mainInitList.onEach { it.segment = this }
 
-  override val ticks: Map<Double, TickData> = tickData.associateBy { it.currentTick }
-
-  override val tickIDs: List<Double> = tickData.map { it.currentTick }
-
-  override val firstTickId: Double = this.tickIDs.first()
+  override val ticks: Map<TickDataUnitMilliseconds, TickData> =
+      tickData.associateBy { it.currentTick }
 
   override val primaryEntityId: Int
     get() {
@@ -47,7 +46,10 @@ data class Segment(
         "There is no primary entity for tick $firstTick"
       }
       val firstEgo = firstTick.egoVehicle
-      check(tickData.any { it.entities.filterIsInstance<Vehicle>().count { it.egoVehicle } == 1 }) {
+      check(
+          tickData.any {
+            it.entities.filterIsInstance<Vehicle>().count { v -> v.egoVehicle } == 1
+          }) {
         "There is at least one tick with multiple primary entities in segment ${this.toString(firstEgo.id)}"
       }
       if (tickData.any { it.egoVehicle.id != firstEgo.id })
@@ -101,7 +103,10 @@ data class Segment(
 
   override fun equals(other: Any?): Boolean {
     if (other is Segment) {
-      return other.toString() == this.toString()
+      return simulationRunId == other.simulationRunId &&
+          segmentSource == other.segmentSource &&
+          primaryEntityId == other.primaryEntityId &&
+          tickData == other.tickData
     }
     return super.equals(other)
   }

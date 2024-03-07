@@ -18,9 +18,7 @@
 package tools.aqua.stars.core.tsc.edge
 
 import tools.aqua.stars.core.tsc.node.TSCNode
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * TSC edge with condition 'true'.
@@ -28,10 +26,15 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param label Edge label.
  * @param destination Destination [TSCNode].
  */
-class TSCAlwaysEdge<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    label: String,
-    destination: TSCNode<E, T, S>
-) : TSCEdge<E, T, S>(label, { true }, destination)
+class TSCAlwaysEdge<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(label: String, destination: TSCNode<E, T, S, U, D>) :
+    TSCEdge<E, T, S, U, D>(label, { true }, destination)

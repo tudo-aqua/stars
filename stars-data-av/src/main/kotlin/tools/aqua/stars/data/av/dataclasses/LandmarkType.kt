@@ -62,6 +62,6 @@ enum class LandmarkType(val value: Int) {
 
   companion object {
     /** Retrieves [LandmarkType] by internal value. */
-    fun getByValue(value: Int): LandmarkType = values().first { it.value == value }
+    fun getByValue(value: Int): LandmarkType = entries.first { it.value == value }
   }
 }

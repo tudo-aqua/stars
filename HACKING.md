@@ -43,7 +43,7 @@ perform additional quality checks on Kotlin files, but will not fail the build o
 
 ### `publish-conventions`
 
-The publish conventions handle publication of artifacts via Maven Central. Most of the process is automated, but each
+The publish-conventions handle publication of artifacts via Maven Central. Most of the process is automated, but each
 module must provide a name and description for the generated POM file. This is done using the (custom) `MavenMetadata`
 extension:
 

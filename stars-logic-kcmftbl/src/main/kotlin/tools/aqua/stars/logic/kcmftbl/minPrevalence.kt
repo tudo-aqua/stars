@@ -15,58 +15,67 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "DuplicatedCode")
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the minPrevalence operator.
+ * CMFTBL implementation of the minPrevalence operator i.e. phi holds for at least ([percentage]
+ * *100)% of the ticks in the interval.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> minPrevalence(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> minPrevalence(
     tickData: T,
     percentage: Double,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean {
   val segment = tickData.segment
   val now = tickData.currentTick
   val nowIndex = segment.tickData.indexOf(tickData)
 
-  val tickDataLength = segment.tickData.takeLast(segment.tickData.size - nowIndex).size
-
+  var tickCount = 0
   val trueCount =
-      (nowIndex..segment.tickData.lastIndex)
-          .map { currentIndex ->
-            val currentTickData = segment.tickData[currentIndex]
-            if (currentTickData.currentTick < (now + interval.first) ||
-                currentTickData.currentTick > (now + interval.second))
-                true
-            else phi(currentTickData)
-          }
-          .count { it }
-  return trueCount >= tickDataLength * percentage
+      (nowIndex..segment.tickData.lastIndex).count { currentIndex ->
+        val currentTickData = segment.tickData[currentIndex]
+
+        if (interval != null &&
+            currentTickData.currentTick !in now + interval.first..now + interval.second)
+            return@count false
+
+        tickCount++
+        phi(currentTickData)
+      }
+
+  return trueCount >= tickCount * percentage
 }
 
 /**
- * CMFTBL implementation of the minPrevalence operator.
+ * CMFTBL implementation of the minPrevalence operator i.e. phi holds for at least ([percentage]
+ * *100)% of the ticks in the interval.
  *
- * @param E1 [EntityType]
- * 1.
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param percentage Threshold value.
  * @param interval Observation interval.
@@ -75,51 +84,51 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
 @Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> minPrevalence(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> minPrevalence(
     entity: E1,
     percentage: Double,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
 ): Boolean {
   val segment = entity.tickData.segment
   val now = entity.tickData.currentTick
   val nowIndex = segment.tickData.indexOf(entity.tickData)
 
-  val tickDataLength = segment.tickData.takeLast(segment.tickData.size - nowIndex).size
-
+  var tickCount = 0
   val trueCount =
-      (nowIndex..segment.tickData.lastIndex)
-          .map { currentIndex ->
-            val currentTickData = segment.tickData[currentIndex]
-            if (currentTickData.currentTick < (now + interval.first) ||
-                currentTickData.currentTick > (now + interval.second))
-                true
-            else
-                currentTickData.entities
-                    .firstOrNull { it.id == entity.id }
-                    ?.let { ac -> phi(ac as E1) }
-                    ?: false
-          }
-          .count { it }
-  return trueCount >= tickDataLength * percentage
+      (nowIndex..segment.tickData.lastIndex).count { currentIndex ->
+        val currentTickData = segment.tickData[currentIndex]
+
+        if (interval != null &&
+            currentTickData.currentTick !in now + interval.first..now + interval.second)
+            return@count false
+
+        tickCount++
+
+        val currentEntity = currentTickData.getEntityById(entity.id) ?: return@count false
+        phi(currentEntity as E1)
+      }
+
+  return trueCount >= tickCount * percentage
 }
 
 /**
- * CMFTBL implementation of the minPrevalence operator for two entities.
+ * CMFTBL implementation of the minPrevalence operator for two entities i.e. phi holds for at least
+ * ([percentage]*100)% of the ticks in the interval.
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
  * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
@@ -128,13 +137,15 @@ fun <
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> minPrevalence(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> minPrevalence(
     entity1: E1,
     entity2: E2,
     percentage: Double,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
@@ -145,25 +156,20 @@ fun <
   val now = entity1.tickData.currentTick
   val nowIndex = segment.tickData.indexOf(entity1.tickData)
 
-  val tickDataLength = segment.tickData.takeLast(segment.tickData.size - nowIndex).size
-
+  var tickCount = 0
   val trueCount =
-      (nowIndex..segment.tickData.lastIndex)
-          .map { currentIndex ->
-            val currentTickData = segment.tickData[currentIndex]
-            if (currentTickData.currentTick < (now + interval.first) ||
-                currentTickData.currentTick > (now + interval.second))
-                true
-            else
-                currentTickData.entities
-                    .firstOrNull { it.id == entity1.id }
-                    ?.let { nextEntity1 ->
-                      currentTickData.entities
-                          .firstOrNull { it.id == entity2.id }
-                          ?.let { nextEntity2 -> phi(nextEntity1 as E1, nextEntity2 as E2) }
-                    }
-                    ?: false
-          }
-          .count { it }
-  return trueCount >= tickDataLength * percentage
+      (nowIndex..segment.tickData.lastIndex).count { currentIndex ->
+        val currentTickData = segment.tickData[currentIndex]
+        if (interval != null &&
+            currentTickData.currentTick !in now + interval.first..now + interval.second)
+            return@count false
+
+        tickCount++
+
+        val firstEntity = currentTickData.getEntityById(entity1.id) ?: return@count false
+        val secondEntity = currentTickData.getEntityById(entity2.id) ?: return@count false
+        phi(firstEntity as E1, secondEntity as E2)
+      }
+
+  return trueCount >= tickCount * percentage
 }

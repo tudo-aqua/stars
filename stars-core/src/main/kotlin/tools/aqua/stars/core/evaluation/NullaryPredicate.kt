@@ -17,9 +17,7 @@
 
 package tools.aqua.stars.core.evaluation
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Nullary predicate.
@@ -27,29 +25,58 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property eval The evaluation function on the [PredicateContext].
  */
 class NullaryPredicate<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val eval: (PredicateContext<E, T, S>, T) -> Boolean,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    val eval: (PredicateContext<E, T, S, U, D>, T) -> Boolean,
 ) {
 
-  /** Evaluates predicate on [PredicateContext]. */
-  fun evaluate(ctx: PredicateContext<E, T, S>): List<Double> = ctx.evaluate(this)
+  /**
+   * Evaluates predicate on the given [PredicateContext].
+   *
+   * @param ctx The context this predicate is evaluated in.
+   *
+   * @return Whether the predicate holds in the given [PredicateContext].
+   */
+  fun holds(ctx: PredicateContext<E, T, S, U, D>): List<U> = ctx.holds(this)
 
   /**
    * Checks if this predicate holds (i.e. is true) in the given context and tick identifier.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tickId The time stamp to evaluate this predicate in. default: first tick in context.
+   * @param tick The tick to evaluate this predicate in. default: first tick in context.
+   *
+   * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
    */
-  fun holds(ctx: PredicateContext<E, T, S>, tickId: Double): Boolean =
-      evaluate(ctx).contains(tickId)
+  fun holds(ctx: PredicateContext<E, T, S, U, D>, tick: U): Boolean = holds(ctx).contains(tick)
 
   companion object {
-    /** Creates a nullary tick predicate. */
-    fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> predicate(
-        eval: (PredicateContext<E, T, S>, T) -> Boolean
-    ): NullaryPredicate<E, T, S> = NullaryPredicate(eval)
+    /**
+     * Creates a nullary tick predicate.
+     *
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param eval The evaluation function on the [PredicateContext].
+     *
+     * @return The created [NullaryPredicate] with the given [eval] function.
+     */
+    fun <
+        E : EntityType<E, T, S, U, D>,
+        T : TickDataType<E, T, S, U, D>,
+        S : SegmentType<E, T, S, U, D>,
+        U : TickUnit<U, D>,
+        D : TickDifference<D>> predicate(
+        eval: (PredicateContext<E, T, S, U, D>, T) -> Boolean
+    ): NullaryPredicate<E, T, S, U, D> = NullaryPredicate(eval)
   }
 }

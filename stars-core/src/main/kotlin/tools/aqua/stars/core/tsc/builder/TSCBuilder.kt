@@ -21,9 +21,7 @@ import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCAlwaysEdge
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Class to assist in creating objects in the dsl. always contains one edge and the node that
@@ -32,6 +30,8 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property label name of the edge.
  * @property valueFunction Value function predicate of the node.
  * @property monitorFunction Monitor function predicate of the node.
@@ -39,20 +39,29 @@ import tools.aqua.stars.core.types.TickDataType
  * @property bounds Bounds of the node, only relevant for bounded nodes.
  * @property condition Condition predicate of the edge.
  */
-class TSCBuilder<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+class TSCBuilder<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     val label: String = "",
-    var valueFunction: (PredicateContext<E, T, S>) -> Any = {},
-    var monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
+    var valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+    var monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
     var projectionIDs: Map<Any, Boolean> = mapOf(),
     var bounds: Pair<Int, Int> = Pair(0, 0),
-    var condition: ((PredicateContext<E, T, S>) -> Boolean)? = null,
+    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null,
 ) {
 
-  /** All edges of the node. */
-  private val edges: MutableList<TSCEdge<E, T, S>> = mutableListOf()
+  /** Holds all edges of the node. */
+  private val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
 
-  /** Creates an Edge with a BoundedNode. Only function where [bounds] is relevant. */
-  fun buildBounded(): TSCEdge<E, T, S> {
+  /**
+   * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
+   *
+   * @return The created [TSCEdge].
+   */
+  fun buildBounded(): TSCEdge<E, T, S, U, D> {
     val node = TSCBoundedNode(valueFunction, monitorFunction, projectionIDs, bounds, edges.toList())
     return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
   }
@@ -63,10 +72,14 @@ class TSCBuilder<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Segment
    *
    * @param edge [TSCEdge] to be added.
    */
-  fun addEdge(edge: TSCEdge<E, T, S>) {
+  fun addEdge(edge: TSCEdge<E, T, S, U, D>) {
     edges.add(edge)
   }
 
-  /** Returns the amount of elements in [edges]. */
+  /**
+   * Returns the amount of elements in [edges].
+   *
+   * @return The amount of [TSCEdge]s.
+   */
   fun edgesCount(): Int = edges.size
 }

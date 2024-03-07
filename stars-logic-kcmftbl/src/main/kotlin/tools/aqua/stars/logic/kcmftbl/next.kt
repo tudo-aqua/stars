@@ -19,24 +19,29 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import kotlin.reflect.cast
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the next operator.
+ * CMFTBL implementation of the next operator i.e. "In the next timeframe phi holds and the
+ * timestamp is in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> next(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> next(
     tickData: T,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean {
   val segment = tickData.segment
@@ -44,76 +49,86 @@ fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S
   if (segment.tickData.lastIndex < nowIndex + 1) return false
   val nextTick = segment.tickData[nowIndex + 1]
 
-  return if (nextTick.currentTick in
-      (tickData.currentTick + interval.first)..(tickData.currentTick + interval.second))
-      phi(nextTick)
-  else false
+  if (interval != null &&
+      nextTick.currentTick !in
+          tickData.currentTick + interval.first..tickData.currentTick + interval.second)
+      return false
+
+  return phi(nextTick)
 }
 
 /**
- * CMFTBL implementation of the next operator.
+ * CMFTBL implementation of the next operator i.e. "In the next timeframe phi holds and the
+ * timestamp is in the interval".
  *
- * @param E1 [EntityType]
- * 1.
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E1 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> next(
+@Suppress("UNCHECKED_CAST")
+fun <
+    E1 : E,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> next(
     entity: E1,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
 ): Boolean =
     next(
         entity.tickData,
         interval,
-        phi = { td ->
-          val nextEntity = td.entity(entity.id)
-          if (entity::class.isInstance(nextEntity)) phi(entity::class.cast(nextEntity)) else false
-        })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the next operator for two entities.
+ * CMFTBL implementation of the next operator for two entities i.e. "In the next timeframe phi holds
+ * and the timestamp is in the interval".
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType]
+ * @param entity2 Second [EntityType]
  * @param interval Observation interval.
  * @param phi Predicate.
  */
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> next(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> next(
     entity1: E1,
     entity2: E2,
-    interval: Pair<Double, Double> = 0.0 to Double.MAX_VALUE,
+    interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
-    "the two entities provided as argument are not from same tick"
+    "The two entities provided as argument are not from same tick."
   }
   return next(
       entity1.tickData,
       interval,
       phi = { td ->
-        val futureEntity1 = td.entity(entity1.id)
-        val futureEntity2 = td.entity(entity2.id)
-        if (entity1::class.isInstance(futureEntity1) && entity2::class.isInstance(futureEntity2))
-            phi(entity1::class.cast(futureEntity1), entity2::class.cast(futureEntity2))
-        else false
+        val futureEntity1 = td.getEntityById(entity1.id)
+        val futureEntity2 = td.getEntityById(entity2.id)
+
+        if (futureEntity1 == null || futureEntity2 == null) false
+        else phi(futureEntity1 as E1, futureEntity2 as E2)
       })
 }

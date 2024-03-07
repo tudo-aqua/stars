@@ -92,5 +92,16 @@ data class Vehicle(
           angularVelocity)
 
   override fun toString(): String =
-      "Vehicle(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+      "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+
+  override fun equals(other: Any?): Boolean {
+    if (other is Vehicle) {
+      return id == other.id &&
+          tickData.currentTick == other.tickData.currentTick &&
+          positionOnLane == other.positionOnLane &&
+          lane.laneId == other.lane.laneId &&
+          lane.road.id == other.lane.road.id
+    }
+    return super.equals(other)
+  }
 }

@@ -18,9 +18,7 @@
 package tools.aqua.stars.core.evaluation
 
 import kotlin.reflect.KClass
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Binary predicate.
@@ -30,39 +28,53 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
  * @property eval The evaluation function on the [PredicateContext].
- * @property kClasses The actors.
  */
 class BinaryPredicate<
-    E1 : E, E2 : E, E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val eval: (PredicateContext<E, T, S>, E1, E2) -> Boolean,
-    val kClasses: Pair<KClass<E1>, KClass<E2>>
+    E1 : E,
+    E2 : E,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    val kClasses: Pair<KClass<E1>, KClass<E2>>,
+    val eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
 ) {
 
   /**
    * Checks if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tickId The time stamp to evaluate this predicate in. default: first tick in context.
-   * @param entityId1 The ID of the first entity to evaluate this predicate for. default: ego
-   * vehicle.
+   * @param tick The time stamp to evaluate this predicate in. default: first tick in context.
+   * @param entityId1 The ID of the first entity to evaluate this predicate for. default: primary
+   * entity.
    * @param entityId2 The ID of the second entity to evaluate this predicate for.
+   *
+   * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
+   * given [entityId1] and [entityId2].
    */
   fun holds(
-      ctx: PredicateContext<E, T, S>,
-      tickId: Double = ctx.segment.firstTickId,
+      ctx: PredicateContext<E, T, S, U, D>,
+      tick: U = ctx.segment.ticks.keys.first(),
       entityId1: Int = ctx.primaryEntityId,
       entityId2: Int
-  ): Boolean = ctx.holds(this, tickId, entityId1, entityId2)
+  ): Boolean = ctx.holds(this, tick, entityId1, entityId2)
 
   /**
    * Checks if this predicate holds (i.e. is true) in the given context on current tick.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param entity1 The first entity to evaluate this predicate for. default: ego vehicle.
+   * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
+   *
+   * @return Whether the predicate holds in the given [PredicateContext] for the given [entity1] and
+   * [entity2].
    */
-  fun holds(ctx: PredicateContext<E, T, S>, entity1: E1, entity2: E2): Boolean =
+  fun holds(ctx: PredicateContext<E, T, S, U, D>, entity1: E1, entity2: E2): Boolean =
       holds(
           ctx,
           entity1.tickData.currentTick.apply {
@@ -72,15 +84,32 @@ class BinaryPredicate<
           entity2.id)
 
   companion object {
-    /** Creates a binary tick predicate in this context. */
+    /**
+     * Creates a binary tick predicate in this context.
+     *
+     * @param E1 [EntityType].
+     * @param E2 [EntityType].
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
+     * @param eval The evaluation function on the [PredicateContext].
+     *
+     * @return The created [UnaryPredicate] with the given [eval] function and the [KClass]es of the
+     * entities for which the predicate should be evaluated.
+     */
     fun <
         E1 : E,
         E2 : E,
-        E : EntityType<E, T, S>,
-        T : TickDataType<E, T, S>,
-        S : SegmentType<E, T, S>> predicate(
+        E : EntityType<E, T, S, U, D>,
+        T : TickDataType<E, T, S, U, D>,
+        S : SegmentType<E, T, S, U, D>,
+        U : TickUnit<U, D>,
+        D : TickDifference<D>> predicate(
         kClasses: Pair<KClass<E1>, KClass<E2>>,
-        eval: (PredicateContext<E, T, S>, E1, E2) -> Boolean
-    ): BinaryPredicate<E1, E2, E, T, S> = BinaryPredicate(eval, kClasses)
+        eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
+    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(kClasses, eval)
   }
 }

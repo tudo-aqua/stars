@@ -36,5 +36,15 @@ data class Pedestrian(
       Pedestrian(id, newTickData, positionOnLane, lane)
 
   override fun toString(): String =
-      "Pedestrian(id=$id, tickData=${tickData.currentTick}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+      "Pedestrian(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+
+  override fun equals(other: Any?): Boolean = super.equals(other)
+
+  override fun hashCode(): Int {
+    var result = id
+    result = 31 * result + tickData.hashCode()
+    result = 31 * result + positionOnLane.hashCode()
+    result = 31 * result + lane.hashCode()
+    return result
+  }
 }

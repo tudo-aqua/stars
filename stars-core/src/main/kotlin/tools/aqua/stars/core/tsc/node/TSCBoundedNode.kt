@@ -23,9 +23,7 @@ import tools.aqua.stars.core.powerlist
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Bounded TSC node.
@@ -33,34 +31,41 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param valueFunction Value function predicate of the node.
  * @param monitorFunction Monitor function predicate of the node.
  * @param projectionIDMapper Mapper for projection identifiers.
  * @property bounds [Pair] of bounds.
  * @param edges [TSCEdge]s of the TSC.
  */
-class TSCBoundedNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    valueFunction: (PredicateContext<E, T, S>) -> Any = {},
-    monitorFunction: (PredicateContext<E, T, S>) -> Boolean = { true },
+class TSCBoundedNode<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+    monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
     projectionIDMapper: Map<Any, Boolean> = mapOf(),
     val bounds: Pair<Int, Int>,
-    edges: List<TSCEdge<E, T, S>>
-) : TSCNode<E, T, S>(valueFunction, monitorFunction, projectionIDMapper, edges) {
+    edges: List<TSCEdge<E, T, S, U, D>>
+) : TSCNode<E, T, S, U, D>(valueFunction, monitorFunction, projectionIDMapper, edges) {
 
-  override fun generateAllInstances(): List<TSCInstanceNode<E, T, S>> {
-    val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S>>>>()
+  override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
+    val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()
     edges.forEach { edge ->
-      val successorList = mutableListOf<List<TSCInstanceEdge<E, T, S>>>()
+      val successorList = mutableListOf<List<TSCInstanceEdge<E, T, S, U, D>>>()
       edge.destination.generateAllInstances().forEach { generatedChild ->
         successorList += listOf(TSCInstanceEdge(edge.label, generatedChild, edge))
       }
       allSuccessorsList += successorList
     }
 
-    val returnList = mutableListOf<TSCInstanceNode<E, T, S>>()
+    val returnList = mutableListOf<TSCInstanceNode<E, T, S, U, D>>()
 
     // build all subsets of allSuccessorsList and filter to subsets.size in
-    // bounds.first..bounds.second
+    // (bounds.first...bounds.second)
     val boundedSuccessors =
         allSuccessorsList
             .powerlist()
@@ -89,7 +94,7 @@ class TSCBoundedNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Seg
   }
 
   override fun equals(other: Any?): Boolean =
-      other is TSCBoundedNode<*, *, *> &&
+      other is TSCBoundedNode<*, *, *, *, *> &&
           valueFunction == other.valueFunction &&
           monitorFunction == other.monitorFunction &&
           projectionIDMapper == other.projectionIDMapper &&

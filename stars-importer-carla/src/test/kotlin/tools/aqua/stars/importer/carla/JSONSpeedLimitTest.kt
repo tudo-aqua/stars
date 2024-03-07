@@ -108,7 +108,7 @@ class JSONSpeedLimitTest {
   @Test
   fun testNonSpeedLimitLandmarks() {
     val invalidLandmarks: List<JsonLandmark> =
-        JsonLandmarkType.values()
+        JsonLandmarkType.entries
             .filter { it != JsonLandmarkType.MaximumSpeed }
             .map {
               val landmark = emptyJsonLandmark()

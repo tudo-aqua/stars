@@ -18,9 +18,7 @@
 package tools.aqua.stars.core.tsc.instance
 
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Evaluated TSC edge.
@@ -28,21 +26,29 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property label Label of this edge.
  * @property destination Destination [TSCInstanceNode].
  * @property tscEdge Associated [TSCEdge].
  */
 data class TSCInstanceEdge<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     val label: String,
-    val destination: TSCInstanceNode<E, T, S>,
-    val tscEdge: TSCEdge<E, T, S>,
+    val destination: TSCInstanceNode<E, T, S, U, D>,
+    val tscEdge: TSCEdge<E, T, S, U, D>,
 ) {
 
   override fun toString(): String = "--${label}->"
 
   override fun equals(other: Any?): Boolean =
-      other is TSCInstanceEdge<*, *, *> && label == other.label && destination == other.destination
+      other is TSCInstanceEdge<*, *, *, *, *> &&
+          label == other.label &&
+          destination == other.destination
 
   override fun hashCode(): Int = label.hashCode() + destination.hashCode()
 }

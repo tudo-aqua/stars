@@ -17,8 +17,22 @@
 
 package tools.aqua.stars.core.types
 
-/** Interface for entity types. */
-interface EntityType<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> {
+/**
+ * Interface for entity types.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ */
+interface EntityType<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>,
+> {
 
   /** Entity identifier. */
   val id: Int

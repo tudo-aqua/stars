@@ -18,36 +18,37 @@
 package tools.aqua.stars.core.types
 
 /**
- * Interface for tick data types.
+ * Interface for absolute tick units. Implements the [Comparable] interface.
  *
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
-interface TickDataType<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>> {
-
-  /** The current tick. */
-  val currentTick: U
-
-  /** List of [EntityType]s in tick data. */
-  var entities: List<E>
-
-  /** Current [SegmentType]. */
-  var segment: S
+interface TickUnit<U : TickUnit<U, D>, D : TickDifference<D>> : Comparable<U> {
 
   /**
-   * Retrieves [EntityType] from [entities] by given [entityID].
+   * Adds a [TickDifference] to this [TickUnit].
    *
-   * @param entityID Entity identifier.
+   * @param other The [TickDifference] to add.
    *
-   * @return The [EntityType] with the ID [entityID] if existing. Null otherwise.
+   * @return A new [TickUnit] object.
    */
-  fun getEntityById(entityID: Int): E? = entities.firstOrNull { it.id == entityID }
+  operator fun plus(other: D): U
+
+  /**
+   * Subtracts a [TickDifference] from this [TickUnit].
+   *
+   * @param other The [TickDifference] to subtract.
+   *
+   * @return A new [TickUnit] object.
+   */
+  operator fun minus(other: D): U
+
+  /**
+   * Creates a [TickDifference] between the given and this [TickUnit].
+   *
+   * @param other The other [TickUnit].
+   *
+   * @return A new [TickDifference] object.
+   */
+  operator fun minus(other: U): D
 }

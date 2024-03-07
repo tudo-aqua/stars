@@ -17,74 +17,85 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the eventually operator.
+ * CMFTBL implementation of the 'eventually' operator i.e. "In a future timeframe in the interval
+ * phi holds at least once".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param tickData Current [TickDataType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-fun <E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>> eventually(
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> eventually(
     tickData: T,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean = until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
- * CMFTBL implementation of the eventually operator.
+ * CMFTBL implementation of the 'eventually' operator i.e. "In a future timeframe in the interval
+ * phi holds at least once".
  *
- * @param E1 [EntityType]
- * 1.
+ * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
 fun <
     E1 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> eventually(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> eventually(
     entity: E1,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean = until(entity, interval, phi1 = { _ -> true }, phi2 = { a -> phi(a) })
+): Boolean = until(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
- * CMFTBL implementation of the eventually operator for two entities.
+ * CMFTBL implementation of the 'eventually' operator for two entities i.e. "In a future timeframe
+ * in the interval phi holds at least once".
  *
- * @param E1 [EntityType]
- * 1.
- * @param E2 [EntityType]
- * 2.
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
- * @param entity1 Current [EntityType]
- * 1.
- * @param entity2 Current [EntityType]
- * 2.
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
  * @param interval Observation interval.
  * @param phi Predicate.
  */
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S>,
-    T : TickDataType<E, T, S>,
-    S : SegmentType<E, T, S>> eventually(
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> eventually(
     entity1: E1,
     entity2: E2,
-    interval: Pair<Double, Double> = Pair(0.0, Double.MAX_VALUE),
+    interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean =
-    until(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { a1, a2 -> phi(a1, a2) })
+    until(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { e1, e2 -> phi(e1, e2) })

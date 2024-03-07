@@ -17,9 +17,7 @@
 
 package tools.aqua.stars.core.tsc.instance
 
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Instance of a TSC.
@@ -27,11 +25,17 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property rootNode The root node.
- * @property sourceSegmentIdentifier Segment identifier
+ * @property sourceSegmentIdentifier Segment identifier.
  */
 data class TSCInstance<
-    E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
-    val rootNode: TSCInstanceNode<E, T, S>,
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
+    val rootNode: TSCInstanceNode<E, T, S, U, D>,
     val sourceSegmentIdentifier: String
 )

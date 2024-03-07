@@ -15,9 +15,30 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package tools.aqua.stars.core.types
 
-/** Interface for formular types. */
-interface FormulaType
+/**
+ * Interface for the relative difference between ticks. Implements the [Comparable] interface.
+ *
+ * @param U [TickUnit].
+ */
+interface TickDifference<U : TickDifference<U>> : Comparable<U> {
+
+  /**
+   * Adds a [TickDifference] to this [TickDifference].
+   *
+   * @param other The [TickDifference] to add.
+   *
+   * @return A new [TickDifference] object.
+   */
+  operator fun plus(other: U): U
+
+  /**
+   * Subtracts a [TickDifference] from this [TickDifference].
+   *
+   * @param other The [TickDifference] to subtract.
+   *
+   * @return A new [TickDifference] object.
+   */
+  operator fun minus(other: U): U
+}

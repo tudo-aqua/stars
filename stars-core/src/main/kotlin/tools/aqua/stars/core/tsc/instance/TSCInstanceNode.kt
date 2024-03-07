@@ -21,9 +21,7 @@ import tools.aqua.stars.core.tsc.TSCMonitorResult
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCNode
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.*
 
 /**
  * Evaluated TSC node.
@@ -31,35 +29,42 @@ import tools.aqua.stars.core.types.TickDataType
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @property value Value of this node.
  * @property monitorResult Monitor result of this node.
  * @property tscNode Associated [TSCNode].
  */
-class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : SegmentType<E, T, S>>(
+class TSCInstanceNode<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     val value: Any,
     val monitorResult: Boolean,
-    val tscNode: TSCNode<E, T, S>
+    val tscNode: TSCNode<E, T, S, U, D>
 ) {
 
   /** Edges of this [TSCInstanceNode]. */
-  val edges: MutableList<TSCInstanceEdge<E, T, S>> = mutableListOf()
+  val edges: MutableList<TSCInstanceEdge<E, T, S, U, D>> = mutableListOf()
 
   /** Returns all edges. */
-  fun getAllEdges(): List<TSCEdge<E, T, S>> =
+  fun getAllEdges(): List<TSCEdge<E, T, S, U, D>> =
       this.edges.map { it.tscEdge } + this.edges.flatMap { it.destination.getAllEdges() }
 
   /**
    * Validates own (and recursively all children's) successor constraints imposed by the
    * [TSCNode<E,T,S>] types the instances were built from (e.g. exactly one for 'TSCXorNode' or
-   * correct range for [TSCBoundedNode])
+   * correct range for [TSCBoundedNode]).
    *
    * @param label the label used to build the human-readable string; uses [TSCEdge.label] in
-   * recursive call
+   * recursive call.
    * @return non-validating nodes; first element of pair is the node that failed to validate; second
-   * element is a human-readable explanation for the failure
+   * element is a human-readable explanation for the failure.
    */
-  fun validate(label: String = "RootNode"): List<Pair<TSCInstanceNode<E, T, S>, String>> {
-    val returnList = mutableListOf<Pair<TSCInstanceNode<E, T, S>, String>>()
+  fun validate(label: String = "RootNode"): List<Pair<TSCInstanceNode<E, T, S, U, D>, String>> {
+    val returnList = mutableListOf<Pair<TSCInstanceNode<E, T, S, U, D>, String>>()
     when (this.tscNode) {
       is TSCBoundedNode ->
           if (edges.size !in tscNode.bounds.first..tscNode.bounds.second)
@@ -77,7 +82,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
    *
    * @param segmentIdentifier Identifier of the segment.
    * @param label the label added to the return list if [monitorResult] == `false`; uses
-   * [TSCEdge.label] in recursive call
+   * [TSCEdge.label] in recursive call.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
   fun validateMonitors(segmentIdentifier: String, label: String = "RootNode"): TSCMonitorResult {
@@ -96,7 +101,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
    * results and collects incoming edge labels for results != true.
    *
    * @param label the label added to the return list if [monitorResult] == `false`; uses
-   * [TSCEdge.label] in recursive call
+   * [TSCEdge.label] in recursive call.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
   private fun validateMonitorsRec(label: String): List<String> {
@@ -127,7 +132,7 @@ class TSCInstanceNode<E : EntityType<E, T, S>, T : TickDataType<E, T, S>, S : Se
   override fun toString(): String = toString(0)
 
   override fun equals(other: Any?): Boolean =
-      other is TSCInstanceNode<*, *, *> &&
+      other is TSCInstanceNode<*, *, *, *, *> &&
           edges.size == other.edges.size &&
           edges.withIndex().all { iv -> iv.value == other.edges[iv.index] }
 

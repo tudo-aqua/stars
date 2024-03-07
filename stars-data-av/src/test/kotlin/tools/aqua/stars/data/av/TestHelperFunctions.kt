@@ -88,7 +88,7 @@ fun emptyWeatherParameters(weatherType: WeatherType = WeatherType.Clear): Weathe
 
 /** Empty [TickData]. */
 fun emptyTickData(
-    currentTick: Double = 0.0,
+    currentTick: TickDataUnitMilliseconds = TickDataUnitMilliseconds(0),
     blocks: List<Block> = listOf(),
     trafficLights: List<TrafficLight> = listOf(),
     weatherParameters: WeatherParameters = emptyWeatherParameters(),
