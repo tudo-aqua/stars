@@ -25,6 +25,7 @@ import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
 import tools.aqua.stars.logic.kcmftbl.until
 
+/** This class tests the CMFTBL operator [until]. */
 class TestUntil {
 
   /**

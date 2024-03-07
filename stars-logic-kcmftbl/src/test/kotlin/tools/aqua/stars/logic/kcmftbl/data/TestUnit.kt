@@ -19,6 +19,12 @@ package tools.aqua.stars.logic.kcmftbl.data
 
 import tools.aqua.stars.core.types.TickUnit
 
+/**
+ * This class is used for test cases and implements the [TickUnit] interface with an [Int] tick
+ * property.
+ *
+ * @property tick Stores a tick as an [Int].
+ */
 class TestUnit(val tick: Int) : TickUnit<TestUnit, TestDifference> {
   override fun compareTo(other: TestUnit): Int = tick.compareTo(other.tick)
 

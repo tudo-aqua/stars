@@ -26,6 +26,7 @@ import tools.aqua.stars.logic.kcmftbl.createTicks
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 import tools.aqua.stars.logic.kcmftbl.previous
 
+/** This class tests the CMFTBL operator [previous]. */
 class TestPrevious {
 
   /**

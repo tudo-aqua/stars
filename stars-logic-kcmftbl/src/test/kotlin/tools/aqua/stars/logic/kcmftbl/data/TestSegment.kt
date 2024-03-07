@@ -19,6 +19,14 @@ package tools.aqua.stars.logic.kcmftbl.data
 
 import tools.aqua.stars.core.types.SegmentType
 
+/**
+ * This class is used for tests and implements the [SegmentType] interface.
+ *
+ * @property tickData The [List] of [BooleanTick]s belonging to this [TestSegment].
+ * @property ticks A [Map] that maps the actual tick value to its [BooleanTick] object.
+ * @property segmentSource The identifier from which source this [TestSegment] was created.
+ * @property primaryEntityId The ID of the primary entity in this [TestSegment].
+ */
 class TestSegment(
     override val tickData: List<BooleanTick>,
     override val ticks: Map<TestUnit, BooleanTick>,

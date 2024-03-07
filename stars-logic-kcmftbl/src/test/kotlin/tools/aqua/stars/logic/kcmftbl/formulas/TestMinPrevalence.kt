@@ -24,6 +24,7 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.logic.kcmftbl.*
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 
+/** This class tests the CMFTBL operator [minPrevalence]. */
 class TestMinPrevalence {
 
   /**

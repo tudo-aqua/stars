@@ -25,6 +25,7 @@ import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
 import tools.aqua.stars.logic.kcmftbl.since
 
+/** This class tests the CMFTBL operator [since]. */
 class TestSince {
 
   /**

@@ -19,6 +19,12 @@ package tools.aqua.stars.logic.kcmftbl.data
 
 import tools.aqua.stars.core.types.TickDifference
 
+/**
+ * This class is used for tests and implements the [TickDifference] interface. It holds a single
+ * [Int] value representing the difference between two [TestUnit]s.
+ *
+ * @property diff The [Int] difference between two [TestUnit]s.
+ */
 class TestDifference(val diff: Int) : TickDifference<TestDifference> {
   override fun compareTo(other: TestDifference): Int = diff.compareTo(other.diff)
 
