@@ -12,6 +12,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.3 - tba
+### Added
+- Generic `TickUnit` and `TickDifference` instead of `Double` identifier.
+
 ## [0.2.2] - 13.02.2024
 ### Added
 - Add missing documentation
