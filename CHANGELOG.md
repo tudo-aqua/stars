@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Clarify documentation and added missing documentation at various instances.
 - Replace domain keywords (i.e. ``actor``, ``egoVehicle``, etc.) with generic variants at several places.
 - Correct order of parameters for ``BinaryPredicate`` constructor to match other predicates.
+- Updated detekt config for _FunctionNaming_. New checked rule is: ``([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,.-]+\`)``.
 
 ### Removed
 - Remove field ``SegmentType.tickIDs``. Use ``SegmentType.ticks.keys`` call instead.
