@@ -22,7 +22,7 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the minPrevalence operator i.e. phi holds for at least ([percentage]
+ * CMFTBL implementation of the 'minPrevalence' operator i.e. phi holds for at least ([percentage]
  * *100)% of the ticks in the interval.
  *
  * @param E [EntityType].
@@ -46,6 +46,9 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
 ): Boolean {
+  checkInterval(interval)
+  checkPercentage(percentage)
+
   val segment = tickData.segment
   val now = tickData.currentTick
   val nowIndex = segment.tickData.indexOf(tickData)
@@ -56,7 +59,8 @@ fun <
         val currentTickData = segment.tickData[currentIndex]
 
         if (interval != null &&
-            currentTickData.currentTick !in now + interval.first..now + interval.second)
+            (currentTickData.currentTick < now + interval.first ||
+                currentTickData.currentTick >= now + interval.second))
             return@count false
 
         tickCount++
@@ -67,7 +71,7 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the minPrevalence operator i.e. phi holds for at least ([percentage]
+ * CMFTBL implementation of the 'minPrevalence' operator i.e. phi holds for at least ([percentage]
  * *100)% of the ticks in the interval.
  *
  * @param E1 [EntityType].
@@ -117,8 +121,8 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the minPrevalence operator for two entities i.e. phi holds for at least
- * ([percentage]*100)% of the ticks in the interval.
+ * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. phi holds for at
+ * least ([percentage]*100)% of the ticks in the interval.
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

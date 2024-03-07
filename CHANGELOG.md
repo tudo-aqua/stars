@@ -27,6 +27,9 @@ All notable changes to this project will be documented in this file.
 - Replace ``SegmentDurationPerIdentifierMetric`` with ``TotalSegmentTickDifferencePerIdentifierMetric``.
 - Replace ``TotalSegmentTimeLengthMetric`` with ``TotalSegmentTickDifferenceMetric``.
 
+### Fixed
+- Range checks in CMFTBL operators
+
 ### Updated
 - Clarify documentation and added missing documentation at various instances.
 - Replace domain keywords (i.e. ``actor``, ``egoVehicle``, etc.) with generic variants at several places.

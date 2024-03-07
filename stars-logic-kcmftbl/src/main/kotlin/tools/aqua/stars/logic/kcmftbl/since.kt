@@ -46,6 +46,7 @@ fun <
     phi1: (T) -> Boolean,
     phi2: (T) -> Boolean
 ): Boolean {
+  checkInterval(interval)
 
   val segment = tickData.segment
   val now = tickData.currentTick
@@ -54,19 +55,18 @@ fun <
   for (searchIndex in nowIndex downTo 0) {
     val searchTickData = segment.tickData[searchIndex]
 
-    if (interval != null) {
-      // Interval not reached yet, continue iteration
-      if (searchTickData.currentTick > now - interval.second) continue
+    // Interval not reached yet, phi1 must hold
+    if (interval != null && searchTickData.currentTick > now - interval.first)
+        if (phi1(searchTickData)) continue else return false
 
-      // Interval left, no phi2 held
-      if (searchTickData.currentTick < now - interval.first) return false
-    }
+    // Interval left, but phi2 did not hold
+    if (interval != null && searchTickData.currentTick <= now - interval.second) return false
 
-    // In Interval, check that phi 1 holds until phi2 has been reached
-    if (!phi1(searchTickData)) return false
-
-    // Phi2 holds, return true
+    // In interval: if phi2 holds, return true
     if (phi2(searchTickData)) return true
+
+    // In interval: phi2 did not hold, phi1 must hold
+    if (!phi1(searchTickData)) return false
   }
   return false
 }
