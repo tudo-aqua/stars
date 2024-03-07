@@ -14,7 +14,18 @@ All notable changes to this project will be documented in this file.
 
 ## 0.3 - tba
 ### Added
-- Generic `TickUnit` and `TickDifference` instead of `Double` identifier.
+- Generic `TickUnit` and `TickDifference` instead of `Double` identifier. **Note**: These two types add to the three existing base types (``SegmentType``, `EntityType` and `TickDataType`) and are now required to use the STARS framework.
+
+### Changed
+- Rename ``NullaryPredicate.evaluate()`` function to ``holds()`` to match naming conventions of other predicates.
+- Rename ``PredicateContext.evaluate()`` function to ``holds()`` to match naming conventions of other predicates.
+- Rename ``PostEvaluationMetricProvider.evaluate()`` function to ``postEvaluate()`` to distinguish it from functions from `EvaluationMetricProvider`.
+- Rename ``PostEvaluationMetricProvider.print()`` function to ``printPostEvaluationResult()`` to distinguish it from functions from `EvaluationMetricProvider`.
+
+### Updated
+- Clarified documentation and added missing documentation at various instances.
+- Replaced domain keywords (i.e. ``actor``, ``egoVehicle``, etc.) with generic variants at several places.
+
 
 ## [0.2.2] - 13.02.2024
 ### Added
