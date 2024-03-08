@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
   - **Note**: These two types add to the three existing base types (``SegmentType``, `EntityType` and `TickDataType`) and are now required to use the STARS framework.
 - Add ``TickDataUnitMilliseconds`` class which implements the newly introduced `TickUnit` interface.
 - Add ``TickDataDifferenceMilliseconds`` class which implements the newly introduced `TickDifference` interface.
+- Add ``registerMetricProviders`` in ``TSCEvaluation``.
 
 ### Changed
 - Rename ``NullaryPredicate.evaluate()`` function to ``holds()`` to match naming conventions of other predicates.
