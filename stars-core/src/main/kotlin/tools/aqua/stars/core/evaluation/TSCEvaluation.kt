@@ -63,7 +63,16 @@ class TSCEvaluation<
    * @param metricProvider The [MetricProvider] that should be registered.
    */
   fun registerMetricProvider(metricProvider: MetricProvider<E, T, S, U, D>) {
-    metricProviders.add(metricProvider)
+    this.metricProviders.add(metricProvider)
+  }
+
+  /**
+   * Registers all [MetricProvider]s to the list of metrics that should be called during evaluation.
+   *
+   * @param metricProviders The [MetricProvider]s that should be registered.
+   */
+  fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, S, U, D>) {
+    this.metricProviders.addAll(metricProviders)
   }
 
   /**
