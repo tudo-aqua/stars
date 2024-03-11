@@ -19,7 +19,7 @@ package tools.aqua.stars.data.av.metrics
 
 import kotlin.test.Test
 import tools.aqua.stars.data.av.dataclasses.Segment
-import tools.aqua.stars.data.av.dataclasses.TickDataUnitMilliseconds
+import tools.aqua.stars.data.av.dataclasses.TickDataUnitSeconds
 import tools.aqua.stars.data.av.emptyBlock
 import tools.aqua.stars.data.av.emptyTickData
 import tools.aqua.stars.data.av.emptyVehicle
@@ -53,17 +53,17 @@ class AverageVehiclesInEgosBlockMetricTest {
     val tickData =
         emptyTickData(
             blocks = listOf(block),
-            currentTick = TickDataUnitMilliseconds(0),
+            currentTick = TickDataUnitSeconds(0.0),
             actors = listOf(actor, actor2))
     val tickData2 =
         emptyTickData(
             blocks = listOf(block),
-            currentTick = TickDataUnitMilliseconds(1),
+            currentTick = TickDataUnitSeconds(1.0),
             actors = listOf(actor, actor2))
     val tickData3 =
         emptyTickData(
             blocks = listOf(block),
-            currentTick = TickDataUnitMilliseconds(2),
+            currentTick = TickDataUnitSeconds(2.0),
             actors = listOf(actor, actor2))
     val segment = Segment(listOf(tickData, tickData2, tickData3), "", "")
 
@@ -82,18 +82,16 @@ class AverageVehiclesInEgosBlockMetricTest {
     val tickData =
         emptyTickData(
             blocks = listOf(block),
-            currentTick = TickDataUnitMilliseconds(0),
+            currentTick = TickDataUnitSeconds(0.0),
             actors = listOf(actor, actor2))
     val tickData2 =
         emptyTickData(
             blocks = listOf(block),
-            currentTick = TickDataUnitMilliseconds(1),
+            currentTick = TickDataUnitSeconds(1.0),
             actors = listOf(actor, actor2))
     val tickData3 =
         emptyTickData(
-            blocks = listOf(block),
-            currentTick = TickDataUnitMilliseconds(2),
-            actors = listOf(actor))
+            blocks = listOf(block), currentTick = TickDataUnitSeconds(2.0), actors = listOf(actor))
     val segment = Segment(listOf(tickData, tickData2, tickData3), "", "")
 
     val averageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric()

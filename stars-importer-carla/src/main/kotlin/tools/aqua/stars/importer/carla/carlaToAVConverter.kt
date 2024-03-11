@@ -18,7 +18,6 @@
 package tools.aqua.stars.importer.carla
 
 import kotlin.math.abs
-import kotlin.math.roundToLong
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.importer.carla.dataclasses.*
 
@@ -33,7 +32,7 @@ fun convertJsonTickDataToTickData(jsonTickData: JsonTickData, blocks: List<Block
   // Create new empty TickData
   val tickData =
       TickData(
-          currentTick = TickDataUnitMilliseconds(jsonTickData.currentTick.roundToLong()),
+          currentTick = TickDataUnitSeconds(jsonTickData.currentTick),
           trafficLights =
               jsonTickData.actorPositions.mapNotNull { convertJsonActorPositionToTrafficLight(it) },
           blocks = blocks,

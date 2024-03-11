@@ -49,7 +49,7 @@ class DataAvTSCTest {
           globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
         }
 
-    root<Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
+    root<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
       all("TSC Root") {
         leaf("someone between") {
           condition = { ctx ->
