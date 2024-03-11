@@ -80,9 +80,12 @@ class TSCEvaluation<
    * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called. It requires at
    * least one [MetricProvider].
    *
+   * @param writeCSV Whether to write CSV files after the analysis.
+   * @param writePlots Whether to write plots after the analysis.
+   *
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
-  fun runEvaluation() {
+  fun runEvaluation(writeCSV: Boolean = true, writePlots: Boolean = true) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProviders." }
 
     val totalEvaluationTime = measureTime {
@@ -150,18 +153,26 @@ class TSCEvaluation<
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
 
     // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
+    println("Running post evaluation metrics")
     metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
       it.postEvaluate()
       it.printPostEvaluationResult()
     }
 
+    // Write CSV of the results of all Plottable metrics
+    if (writeCSV) {
+      println("Writing CSVs")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotData() }
+    }
+
     // Plot the results of all Plottable metrics
-    metricProviders.filterIsInstance<Plottable>().forEach {
-      it.plotData()
-      it.writePlotData()
+    if (writePlots) {
+      println("Creating Plots")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.plotData() }
     }
 
     // Close all logging handlers to prevent .lck files to remain
+    println("Closing Loggers")
     metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
 
     closeLogger()
