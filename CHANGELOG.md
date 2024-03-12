@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Add ``TickDataUnitMilliseconds`` class which implements the newly introduced `TickUnit` interface.
 - Add ``TickDataDifferenceMilliseconds`` class which implements the newly introduced `TickDifference` interface.
 - Add ``registerMetricProviders`` in ``TSCEvaluation``.
+- Add ``TickDataUnitSeconds`` and ``TickDataDifferenceSeconds`` classes for `tools.aqua.stars.data.av.dataclasses` package.
 - Add options to skip creation of CSVs and plots via ``writeCSV`` and ``writePlots`` parameters in ``TSCEvaluation.runEvaluation()``.
 
 ### Changed

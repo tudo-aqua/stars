@@ -20,28 +20,29 @@ package tools.aqua.stars.data.av.dataclasses
 import tools.aqua.stars.core.types.TickUnit
 
 /**
- * Json format containing tick data in milliseconds.
+ * Implementation of the [TickUnit] interface for 'milliseconds' units.
  *
  * @property tickMillis Current tick value in milliseconds.
  */
 data class TickDataUnitMilliseconds(val tickMillis: Long) :
     TickUnit<TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
   override fun compareTo(other: TickDataUnitMilliseconds): Int =
-      tickMillis.compareTo(other.tickMillis)
+      this.tickMillis.compareTo(other.tickMillis)
 
   override fun minus(other: TickDataUnitMilliseconds): TickDataDifferenceMilliseconds =
-      TickDataDifferenceMilliseconds(tickMillis - other.tickMillis)
+      TickDataDifferenceMilliseconds(this.tickMillis - other.tickMillis)
 
   override fun minus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
-      TickDataUnitMilliseconds(tickMillis - other.differenceMillis)
+      TickDataUnitMilliseconds(this.tickMillis - other.differenceMillis)
 
   override fun plus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
-      TickDataUnitMilliseconds(tickMillis + other.differenceMillis)
+      TickDataUnitMilliseconds(this.tickMillis + other.differenceMillis)
 
-  override fun toString(): String = "TickDataUnitMilliseconds(milliSeconds: $tickMillis)"
+  override fun toString(): String = "TickDataUnitMilliseconds(milliSeconds: ${this.tickMillis})"
 
   override fun equals(other: Any?): Boolean =
-      if (other is TickDataUnitMilliseconds) tickMillis == other.tickMillis else super.equals(other)
+      if (other is TickDataUnitMilliseconds) this.tickMillis == other.tickMillis
+      else super.equals(other)
 
-  override fun hashCode(): Int = tickMillis.hashCode()
+  override fun hashCode(): Int = this.tickMillis.hashCode()
 }

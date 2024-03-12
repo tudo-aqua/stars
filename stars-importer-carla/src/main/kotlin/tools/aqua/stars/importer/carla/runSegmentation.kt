@@ -203,15 +203,15 @@ fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) 
   }
 
   // Calculate the time difference
-  val timeDelta =
-      (vehicle.tickData.currentTick - previousActor.tickData.currentTick).differenceMillis
+  val timeDelta: Double =
+      (vehicle.tickData.currentTick - previousActor.tickData.currentTick).differenceSeconds
 
   check(timeDelta >= 0) {
     "The time delta between the vehicles is less than 0. Maybe you have switched the vehicles? " +
         "Tick of current vehicle: ${vehicle.tickData.currentTick} vs. previous vehicle: ${previousActor.tickData.currentTick}"
   }
 
-  if (timeDelta == 0L) {
+  if (timeDelta == 0.0) {
     // If the time difference is exactly 0.0 set default values, as division by 0.0 is not allowed
     vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
     vehicle.acceleration = Vector3D(0.0, 0.0, 0.0)
@@ -246,7 +246,7 @@ fun sliceRunIntoSegments(
   val segments = mutableListOf<Segment>()
 
   simulationRuns.forEach { (simulationRunId, simulationRun) ->
-    val blockRanges = mutableListOf<Pair<TickDataUnitMilliseconds, TickDataUnitMilliseconds>>()
+    val blockRanges = mutableListOf<Pair<TickDataUnitSeconds, TickDataUnitSeconds>>()
     var prevBlockID = simulationRun.first().egoVehicle.lane.road.block.id
     var firstTickInBlock = simulationRun.first().currentTick
 
