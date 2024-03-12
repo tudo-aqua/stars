@@ -30,7 +30,7 @@ interface Plottable {
    *
    * @see TSCEvaluation.runEvaluation
    */
-  fun plotData()
+  fun writePlots()
 
   /**
    * This function is called after the evaluation phase and writes the plot data collected during
@@ -38,5 +38,5 @@ interface Plottable {
    *
    * @see TSCEvaluation.runEvaluation
    */
-  fun writePlotData()
+  fun writePlotDataCSV()
 }
