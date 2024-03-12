@@ -35,6 +35,7 @@ interface SegmentType<
 
   /** List of Tick data. */
   val tickData: List<T>
+    get() = ticks.values.toList()
 
   /** Ticks in this [SegmentType]. */
   val ticks: Map<U, T>
