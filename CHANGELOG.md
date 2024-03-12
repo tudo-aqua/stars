@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Rename ``PostEvaluationMetricProvider.print()`` function to ``printPostEvaluationResult()`` to distinguish it from functions from `EvaluationMetricProvider`.
 - Replace ``SegmentDurationPerIdentifierMetric`` with ``TotalSegmentTickDifferencePerIdentifierMetric``.
 - Replace ``TotalSegmentTimeLengthMetric`` with ``TotalSegmentTickDifferenceMetric``.
+- Replace ``tickData`` field in SegmentType with by getter on ``ticks``.
 
 ### Fixed
 - Range checks in CMFTBL operators
