@@ -55,37 +55,39 @@ class FailedMonitorsMetric<
     override val logger: Logger = Loggable.getLogger("failed-monitors")
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
+  private val failedMonitors:
+      MutableMap<TSCProjection<E, T, S, U, D>, List<TSCMonitorResult<E, T, S, U, D>>> =
+      mutableMapOf()
   /**
    * Calculates a [Map] of [TSCMonitorResult]s for all [TSCProjection]s by validating all monitors
    * for all valid [TSCInstance]s.
-   *
-   * @return A [Map] of [TSCMonitorResult]s for all [TSCProjection]s.
    */
-  override fun postEvaluate(): Map<TSCProjection<E, T, S, U, D>, List<TSCMonitorResult>> =
-      dependsOn.getState().mapValues { (_, validInstancesMap) ->
-        validInstancesMap.flatMap { (_, validInstances) ->
-          validInstances.map { validInstance ->
-            validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
+  override fun postEvaluate() {
+    failedMonitors.clear()
+    failedMonitors.putAll(
+        dependsOn.getState().mapValues { (_, validInstancesMap) ->
+          validInstancesMap.flatMap { (_, validInstances) ->
+            validInstances.mapNotNull { validInstance ->
+              val monitorResult =
+                  validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
+              if (monitorResult.monitorsValid) null else monitorResult
+            }
           }
-        }
-      }
+        })
+  }
 
   /** Prints the count of filed monitors for each [TSCProjection]. */
   override fun printPostEvaluationResult() {
-    var evaluationResult = this.postEvaluate()
-    // Filter the result, so that only failed monitors are left
-    evaluationResult =
-        evaluationResult.mapValues { (_, monitors) -> monitors.filter { !it.monitorsValid } }
-    // Create output for failed monitors
-    evaluationResult.forEach { (projection, failedMonitors) ->
+    failedMonitors.forEach { (projection, failedMonitors) ->
       logInfo("Count of failed monitors for projection '$projection': ${failedMonitors.size}")
-      if (failedMonitors.isEmpty()) {
-        return@forEach
-      }
+
+      if (failedMonitors.isEmpty()) return@forEach
+
       logFine("Failed monitors for projection '$projection':")
       failedMonitors.forEach { failedMonitor ->
         logFine("Monitor failed in: ${failedMonitor.segmentIdentifier}")
         logFine("List of edges leading to failed monitor: ${failedMonitor.edgeList}")
+        logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }
       logFine()
     }

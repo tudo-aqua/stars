@@ -17,7 +17,8 @@
 
 package tools.aqua.stars.core.tsc
 
-import tools.aqua.stars.core.types.SegmentType
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.types.*
 
 /**
  * This class contains the validation result of all monitors for one TSCInstanceNode.
@@ -28,8 +29,14 @@ import tools.aqua.stars.core.types.SegmentType
  * @property edgeList Default: null. When there is an invalid monitor, it contains the [List] of
  * edge labels leading to the invalid monitor.
  */
-class TSCMonitorResult(
+class TSCMonitorResult<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(
     val segmentIdentifier: String,
+    var tscInstance: TSCInstanceNode<E, T, S, U, D>,
+    var edgeList: List<String>? = null,
     var monitorsValid: Boolean,
-    var edgeList: List<String>? = null
 )
