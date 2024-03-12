@@ -22,7 +22,7 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.*
 import tools.aqua.stars.data.av.dataclasses.Location
-import tools.aqua.stars.data.av.dataclasses.TickDataUnitMilliseconds
+import tools.aqua.stars.data.av.dataclasses.TickDataUnitSeconds
 
 /** Tests the velocity and acceleration calculations. */
 class VelocityAndAccelerationTest {
@@ -30,9 +30,9 @@ class VelocityAndAccelerationTest {
   /** Tests the velocity and acceleration calculations on pre-defined values. */
   @Test
   fun testVelocityCalculation() {
-    val tick0 = emptyTickData(currentTick = TickDataUnitMilliseconds(0))
-    val tick1 = emptyTickData(currentTick = TickDataUnitMilliseconds(1))
-    val tick2 = emptyTickData(currentTick = TickDataUnitMilliseconds(2))
+    val tick0 = emptyTickData(currentTick = TickDataUnitSeconds(0.0))
+    val tick1 = emptyTickData(currentTick = TickDataUnitSeconds(1.0))
+    val tick2 = emptyTickData(currentTick = TickDataUnitSeconds(2.0))
 
     val vehicle0 = emptyVehicle(id = 0, location = Location(0.0, 0.0, 0.0), tickData = tick0)
     val vehicle1 = emptyVehicle(id = 0, location = Location(3.0, 4.0, 5.0), tickData = tick1)
@@ -119,8 +119,8 @@ class VelocityAndAccelerationTest {
    */
   @Test
   fun testNegativeTimeDifference() {
-    val tick1 = emptyTickData(currentTick = TickDataUnitMilliseconds(0))
-    val tick2 = emptyTickData(currentTick = TickDataUnitMilliseconds(-1))
+    val tick1 = emptyTickData(currentTick = TickDataUnitSeconds(0.0))
+    val tick2 = emptyTickData(currentTick = TickDataUnitSeconds(-1.0))
 
     val vehicle1 = emptyVehicle(id = 0, location = Location(0.0, 0.0, 0.0), tickData = tick1)
     val vehicle2 = emptyVehicle(id = 0, location = Location(0.0, 0.0, 0.0), tickData = tick2)

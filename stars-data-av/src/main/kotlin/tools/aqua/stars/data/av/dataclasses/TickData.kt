@@ -30,15 +30,13 @@ import tools.aqua.stars.core.types.TickDataType
  * @property daytime The current [Daytime].
  */
 data class TickData(
-    override val currentTick: TickDataUnitMilliseconds,
+    override val currentTick: TickDataUnitSeconds,
     override var entities: List<Actor>,
     val trafficLights: List<TrafficLight>,
     val blocks: List<Block>,
     val weather: WeatherParameters,
     val daytime: Daytime
-) :
-    TickDataType<
-        Actor, TickData, Segment, TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
+) : TickDataType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
 
   override lateinit var segment: Segment
 

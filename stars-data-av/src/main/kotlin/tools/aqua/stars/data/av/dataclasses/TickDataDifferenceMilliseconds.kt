@@ -20,26 +20,27 @@ package tools.aqua.stars.data.av.dataclasses
 import tools.aqua.stars.core.types.TickDifference
 
 /**
- * Json format containing tick data difference in milliseconds.
+ * Implementation of the [TickDifference] interface for 'milliseconds' units.
  *
  * @property differenceMillis Difference in milliseconds.
  */
 data class TickDataDifferenceMilliseconds(val differenceMillis: Long) :
     TickDifference<TickDataDifferenceMilliseconds> {
   override fun compareTo(other: TickDataDifferenceMilliseconds): Int =
-      differenceMillis.compareTo(other.differenceMillis)
+      this.differenceMillis.compareTo(other.differenceMillis)
 
   override fun plus(other: TickDataDifferenceMilliseconds): TickDataDifferenceMilliseconds =
-      TickDataDifferenceMilliseconds(differenceMillis + other.differenceMillis)
+      TickDataDifferenceMilliseconds(this.differenceMillis + other.differenceMillis)
 
   override fun minus(other: TickDataDifferenceMilliseconds): TickDataDifferenceMilliseconds =
-      TickDataDifferenceMilliseconds(differenceMillis - other.differenceMillis)
+      TickDataDifferenceMilliseconds(this.differenceMillis - other.differenceMillis)
 
-  override fun toString(): String = "TickDataDifferenceMilliseconds(difference: $differenceMillis)"
+  override fun toString(): String =
+      "TickDataDifferenceMilliseconds(difference: ${this.differenceMillis})"
 
   override fun equals(other: Any?): Boolean =
-      if (other is TickDataDifferenceMilliseconds) differenceMillis == other.differenceMillis
+      if (other is TickDataDifferenceMilliseconds) this.differenceMillis == other.differenceMillis
       else super.equals(other)
 
-  override fun hashCode(): Int = differenceMillis.hashCode()
+  override fun hashCode(): Int = this.differenceMillis.hashCode()
 }
