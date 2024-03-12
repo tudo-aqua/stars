@@ -184,8 +184,8 @@ class ValidTSCInstancesPerProjectionMetric<
    * Calculates the combined [Map]s that contain the occurrences and their percentages combined for
    * all projections.
    *
-   * As these maps are required for both [plotData] and [writePlotData] they have to be calculated
-   * beforehand.
+   * As these maps are required for both [writePlots] and [writePlotDataCSV] they have to be
+   * calculated beforehand.
    */
   override fun postEvaluate() {
     uniqueTimedInstances.forEach { (projection, instances) ->
@@ -234,7 +234,7 @@ class ValidTSCInstancesPerProjectionMetric<
    * For each generated chart a CSV file with the same data and additional sliced values are
    * exported as well.
    */
-  override fun plotData() {
+  override fun writePlots() {
     plotOccurrencesProgressionPerProjection()
     plotOccurrencesPerProjection()
     plotCombinedOccurrencesProgression()
@@ -398,7 +398,7 @@ class ValidTSCInstancesPerProjectionMetric<
    *
    * For each generated file additional sliced values are exported as well.
    */
-  override fun writePlotData() {
+  override fun writePlotDataCSV() {
     saveOccurrencesProgressionPerProjection()
     saveOccurrencesPerProjection()
     saveCombinedOccurrencesProgression()

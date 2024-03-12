@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Add ``TickDataUnitMilliseconds`` class which implements the newly introduced `TickUnit` interface.
 - Add ``TickDataDifferenceMilliseconds`` class which implements the newly introduced `TickDifference` interface.
 - Add ``registerMetricProviders`` in ``TSCEvaluation``.
+- Add options to skip creation of CSVs and plots via ``writeCSV`` and ``writePlots`` parameters in ``TSCEvaluation.runEvaluation()``.
 
 ### Changed
 - Rename ``NullaryPredicate.evaluate()`` function to ``holds()`` to match naming conventions of other predicates.
