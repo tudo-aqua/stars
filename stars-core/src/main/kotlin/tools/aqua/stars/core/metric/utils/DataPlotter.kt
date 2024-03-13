@@ -68,8 +68,7 @@ fun plotDataAsLineChart(
 
   innerPlot += geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE))
 
-  if (size != null)
-      innerPlot += ggsize(size.first, size.second)
+  if (size != null) innerPlot += ggsize(size.first, size.second)
 
   if (yAxisScaleMaxValue != null)
       innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
