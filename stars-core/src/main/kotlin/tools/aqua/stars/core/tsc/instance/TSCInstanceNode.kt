@@ -70,7 +70,8 @@ class TSCInstanceNode<
           if (edges.size !in tscNode.bounds.first..tscNode.bounds.second)
               returnList +=
                   this to
-                      "[$label] TSCBoundedNode successor count must be within [${tscNode.bounds.first},${tscNode.bounds.second}], but ${edges.size} successor(s) found."
+                      "[$label] TSCBoundedNode successor count must be within " +
+                          "[${tscNode.bounds.first},${tscNode.bounds.second}], but ${edges.size} successor(s) found."
     }
     returnList += edges.flatMap { it.destination.validate(it.label) }
     return returnList
@@ -85,9 +86,13 @@ class TSCInstanceNode<
    * [TSCEdge.label] in recursive call.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
-  fun validateMonitors(segmentIdentifier: String, label: String = "RootNode"): TSCMonitorResult {
+  fun validateMonitors(
+      segmentIdentifier: String,
+      label: String = "RootNode"
+  ): TSCMonitorResult<E, T, S, U, D> {
     val monitorResult =
-        TSCMonitorResult(segmentIdentifier = segmentIdentifier, monitorsValid = true)
+        TSCMonitorResult(
+            segmentIdentifier = segmentIdentifier, tscInstance = this, monitorsValid = true)
     val edgeLabelListLeadingToFalseMonitor = validateMonitorsRec(label)
     if (edgeLabelListLeadingToFalseMonitor.any()) {
       monitorResult.monitorsValid = false
