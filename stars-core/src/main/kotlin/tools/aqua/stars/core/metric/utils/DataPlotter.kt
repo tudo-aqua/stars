@@ -87,6 +87,7 @@ fun plotDataAsLineChart(
  * @param folder The name of the top-level folder for this file.
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
  * resulting path.
+ * @param size (Default: null) The size of the resulting PNG file.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
  * accordingly.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
@@ -97,6 +98,7 @@ fun plotDataAsBarChart(
     fileName: String,
     folder: String,
     subFolder: String = "",
+    size: Pair<Number, Number>? = null,
     yAxisScaleMaxValue: Number? = null,
     xAxisScaleMaxValue: Number? = null
 ) {
@@ -107,6 +109,8 @@ fun plotDataAsBarChart(
 
   var innerPlot = plot
   val plotFolder = getAndCreatePlotFolder(folder, subFolder)
+
+  if (size != null) innerPlot += ggsize(size.first, size.second)
 
   if (yAxisScaleMaxValue != null)
       innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
