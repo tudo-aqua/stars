@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Add ``TickDataUnitSeconds`` and ``TickDataDifferenceSeconds`` classes for `tools.aqua.stars.data.av.dataclasses` package.
 - Add options to skip creation of CSVs and plots via ``writeCSV`` and ``writePlots`` parameters in ``TSCEvaluation.runEvaluation()``.
 - Add TSC instance of failing monitor to ``TSCMonitorResult``.
+- Add ``size`` parameter to ``plotDataAsLineChart()`` and ``plotDataAsBarChart()`` functions in ``DataPlotter``.
 
 ### Changed
 - Rename ``NullaryPredicate.evaluate()`` function to ``holds()`` to match naming conventions of other predicates.

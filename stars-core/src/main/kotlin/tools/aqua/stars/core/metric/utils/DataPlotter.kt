@@ -24,6 +24,7 @@ import org.jetbrains.letsPlot.Stat
 import org.jetbrains.letsPlot.export.ggsave
 import org.jetbrains.letsPlot.geom.geomBar
 import org.jetbrains.letsPlot.geom.geomLine
+import org.jetbrains.letsPlot.ggsize
 import org.jetbrains.letsPlot.intern.Plot
 import org.jetbrains.letsPlot.letsPlot
 import org.jetbrains.letsPlot.pos.positionDodge
@@ -43,6 +44,7 @@ private const val POSITION_DODGE = 0.3
  * located under the metrics names folder.
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
  * resulting path.
+ * @param size (Default: null) The size of the resulting PNG file.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
  * accordingly.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
@@ -53,6 +55,7 @@ fun plotDataAsLineChart(
     fileName: String,
     folder: String,
     subFolder: String = "",
+    size: Pair<Number, Number>? = null,
     yAxisScaleMaxValue: Number? = null,
     xAxisScaleMaxValue: Number? = null
 ) {
@@ -64,6 +67,8 @@ fun plotDataAsLineChart(
   val plotFolder = getAndCreatePlotFolder(folder, subFolder)
 
   innerPlot += geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE))
+
+  if (size != null) innerPlot += ggsize(size.first, size.second)
 
   if (yAxisScaleMaxValue != null)
       innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
@@ -82,6 +87,7 @@ fun plotDataAsLineChart(
  * @param folder The name of the top-level folder for this file.
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
  * resulting path.
+ * @param size (Default: null) The size of the resulting PNG file.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
  * accordingly.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
@@ -92,6 +98,7 @@ fun plotDataAsBarChart(
     fileName: String,
     folder: String,
     subFolder: String = "",
+    size: Pair<Number, Number>? = null,
     yAxisScaleMaxValue: Number? = null,
     xAxisScaleMaxValue: Number? = null
 ) {
@@ -102,6 +109,8 @@ fun plotDataAsBarChart(
 
   var innerPlot = plot
   val plotFolder = getAndCreatePlotFolder(folder, subFolder)
+
+  if (size != null) innerPlot += ggsize(size.first, size.second)
 
   if (yAxisScaleMaxValue != null)
       innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
