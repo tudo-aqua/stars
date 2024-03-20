@@ -23,6 +23,7 @@ import java.io.File
 import org.jetbrains.letsPlot.Stat
 import org.jetbrains.letsPlot.export.ggsave
 import org.jetbrains.letsPlot.geom.geomBar
+import org.jetbrains.letsPlot.geom.geomHistogram
 import org.jetbrains.letsPlot.geom.geomLine
 import org.jetbrains.letsPlot.ggsize
 import org.jetbrains.letsPlot.intern.Plot
@@ -30,7 +31,9 @@ import org.jetbrains.letsPlot.letsPlot
 import org.jetbrains.letsPlot.pos.positionDodge
 import org.jetbrains.letsPlot.sampling.samplingNone
 import org.jetbrains.letsPlot.scale.scaleXContinuous
+import org.jetbrains.letsPlot.scale.scaleXLog10
 import org.jetbrains.letsPlot.scale.scaleYContinuous
+import org.jetbrains.letsPlot.scale.scaleYLog10
 
 /** Sets the offset to distinguish lines with equal trajectory. */
 private const val POSITION_DODGE = 0.3
@@ -45,10 +48,12 @@ private const val POSITION_DODGE = 0.3
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
  * resulting path.
  * @param size (Default: null) The size of the resulting PNG file.
- * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
- * accordingly.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
  * accordingly.
+ * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
+ * accordingly.
+ * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
+ * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
  */
 fun plotDataAsLineChart(
     plot: Plot?,
@@ -56,27 +61,25 @@ fun plotDataAsLineChart(
     folder: String,
     subFolder: String = "",
     size: Pair<Number, Number>? = null,
+    xAxisScaleMaxValue: Number? = null,
     yAxisScaleMaxValue: Number? = null,
-    xAxisScaleMaxValue: Number? = null
+    logScaleX: Boolean = false,
+    logScaleY: Boolean = false
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
     return
   }
-  var innerPlot = plot
-  val plotFolder = getAndCreatePlotFolder(folder, subFolder)
 
-  innerPlot += geomLine(stat = Stat.identity, position = positionDodge(POSITION_DODGE))
-
-  if (size != null) innerPlot += ggsize(size.first, size.second)
-
-  if (yAxisScaleMaxValue != null)
-      innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
-
-  if (xAxisScaleMaxValue != null)
-      innerPlot += scaleXContinuous(limits = -0.001 to xAxisScaleMaxValue, expand = listOf(0, 0))
-
-  ggsave(innerPlot, "$fileName.png", path = plotFolder)
+  ggsave(
+      plot =
+          applyStyle(plot, size, xAxisScaleMaxValue, yAxisScaleMaxValue, logScaleX, logScaleY) +
+              geomLine(
+                  stat = Stat.identity,
+                  position = positionDodge(POSITION_DODGE),
+                  sampling = samplingNone),
+      filename = "$fileName.png",
+      path = getAndCreatePlotFolder(folder, subFolder))
 }
 
 /**
@@ -88,10 +91,12 @@ fun plotDataAsLineChart(
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
  * resulting path.
  * @param size (Default: null) The size of the resulting PNG file.
- * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
- * accordingly.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
  * accordingly.
+ * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
+ * accordingly.
+ * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
+ * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
  */
 fun plotDataAsBarChart(
     plot: Plot?,
@@ -99,27 +104,112 @@ fun plotDataAsBarChart(
     folder: String,
     subFolder: String = "",
     size: Pair<Number, Number>? = null,
+    xAxisScaleMaxValue: Number? = null,
     yAxisScaleMaxValue: Number? = null,
-    xAxisScaleMaxValue: Number? = null
+    logScaleX: Boolean = false,
+    logScaleY: Boolean = false
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
     return
   }
 
-  var innerPlot = plot
-  val plotFolder = getAndCreatePlotFolder(folder, subFolder)
+  ggsave(
+      plot =
+          applyStyle(plot, size, xAxisScaleMaxValue, yAxisScaleMaxValue, logScaleX, logScaleY) +
+              geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone),
+      filename = "$fileName.png",
+      path = getAndCreatePlotFolder(folder, subFolder))
+}
 
+/**
+ * Saves a PNG file with a histogram based on the given values.
+ *
+ * @param plot Contains all necessary data points for the histogram.
+ * @param fileName The name of the resulting PNG file.
+ * @param folder The name of the top-level folder for this file.
+ * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
+ * resulting path.
+ * @param size (Default: null) The size of the resulting PNG file.
+ * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
+ * accordingly.
+ * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
+ * accordingly.
+ * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
+ * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
+ */
+fun plotDataAsHistogram(
+    plot: Plot?,
+    fileName: String,
+    folder: String,
+    subFolder: String = "",
+    size: Pair<Number, Number>? = null,
+    xAxisScaleMaxValue: Number? = null,
+    yAxisScaleMaxValue: Number? = null,
+    logScaleX: Boolean = false,
+    logScaleY: Boolean = false
+) {
+  if (plot == null) {
+    println("Skip plotting, as there was no data provided.")
+    return
+  }
+
+  ggsave(
+      plot =
+          applyStyle(plot, size, xAxisScaleMaxValue, yAxisScaleMaxValue, logScaleX, logScaleY) +
+              geomHistogram(stat = Stat.bin(), position = positionDodge(), sampling = samplingNone),
+      filename = "$fileName.png",
+      path = getAndCreatePlotFolder(folder, subFolder))
+}
+
+/**
+ * Creates a [Plot] object from [plot] containing features for plot size and x-y-axis scale and
+ * ranges.
+ * @param plot Contains all necessary data points for the histogram.
+ * @param size (Default: null) The size of the resulting PNG file.
+ * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
+ * accordingly.
+ * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
+ * accordingly.
+ * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
+ * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
+ */
+private fun applyStyle(
+    plot: Plot,
+    size: Pair<Number, Number>?,
+    xAxisScaleMaxValue: Number?,
+    yAxisScaleMaxValue: Number?,
+    logScaleX: Boolean,
+    logScaleY: Boolean
+): Plot {
+  var innerPlot = plot
+
+  // Set size
   if (size != null) innerPlot += ggsize(size.first, size.second)
 
-  if (yAxisScaleMaxValue != null)
-      innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
+  // Set x axis
+  if (logScaleX) {
+    innerPlot +=
+        if (xAxisScaleMaxValue != null)
+            scaleXLog10(limits = -0.001 to xAxisScaleMaxValue, expand = listOf(0, 0))
+        else scaleXLog10(expand = listOf(0, 0))
+  } else {
+    if (xAxisScaleMaxValue != null)
+        innerPlot += scaleXContinuous(limits = -0.001 to xAxisScaleMaxValue, expand = listOf(0, 0))
+  }
 
-  if (xAxisScaleMaxValue != null)
-      innerPlot += scaleXContinuous(limits = -0.001 to xAxisScaleMaxValue, expand = listOf(0, 0))
+  // Set y axis
+  if (logScaleY) {
+    innerPlot +=
+        if (yAxisScaleMaxValue != null)
+            scaleYLog10(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
+        else scaleYLog10(expand = listOf(0, 0))
+  } else {
+    if (yAxisScaleMaxValue != null)
+        innerPlot += scaleYContinuous(limits = -0.001 to yAxisScaleMaxValue, expand = listOf(0, 0))
+  }
 
-  innerPlot += geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone)
-  ggsave(innerPlot, "$fileName.png", path = plotFolder)
+  return innerPlot
 }
 
 /**
