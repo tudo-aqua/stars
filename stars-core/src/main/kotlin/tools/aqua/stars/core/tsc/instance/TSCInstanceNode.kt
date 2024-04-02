@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.tsc.instance
 
-import tools.aqua.stars.core.tsc.TSCMonitorResult
+import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCNode
@@ -78,32 +78,31 @@ class TSCInstanceNode<
   }
 
   /**
-   * Validates own (and recursively all children's) results of the [TSCNode<E,T,S>.monitorFunction]
-   * results and collects incoming edge labels for results != true.
+   * Validates own (and recursively all children's) results of the
+   * [TSCNode<E,T,S,U,D>.monitorFunction] results and returns a [TSCFailedMonitorInstance] for each
+   * incoming edge label with results != true.
    *
    * @param segmentIdentifier Identifier of the segment.
-   * @param label the label added to the return list if [monitorResult] == `false`; uses
-   * [TSCEdge.label] in recursive call.
+   * @param label specifies the starting point in the TSC for the search.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
   fun validateMonitors(
       segmentIdentifier: String,
       label: String = "RootNode"
-  ): TSCMonitorResult<E, T, S, U, D> {
-    val monitorResult =
-        TSCMonitorResult(
-            segmentIdentifier = segmentIdentifier, tscInstance = this, monitorsValid = true)
-    val edgeLabelListLeadingToFalseMonitor = validateMonitorsRec(label)
-    if (edgeLabelListLeadingToFalseMonitor.any()) {
-      monitorResult.monitorsValid = false
-      monitorResult.edgeList = edgeLabelListLeadingToFalseMonitor
-    }
-    return monitorResult
+  ): List<TSCFailedMonitorInstance<E, T, S, U, D>> {
+    val edgeLabelListLWithFalseMonitor = validateMonitorsRec(label)
+    return if (edgeLabelListLWithFalseMonitor.any()) {
+      edgeLabelListLWithFalseMonitor.map {
+        TSCFailedMonitorInstance(
+            segmentIdentifier = segmentIdentifier, tscInstance = this, nodeLabel = it)
+      }
+    } else listOf()
   }
 
   /**
-   * Validates own (and recursively all children's) results of the [TSCNode<E,T,S>.monitorFunction]
-   * results and collects incoming edge labels for results != true.
+   * Validates own (and recursively all children's) results of the
+   * [TSCNode<E,T,S,U,D>.monitorFunction] results and collects incoming edge labels for results !=
+   * true.
    *
    * @param label the label added to the return list if [monitorResult] == `false`; uses
    * [TSCEdge.label] in recursive call.
@@ -111,7 +110,7 @@ class TSCInstanceNode<
    */
   private fun validateMonitorsRec(label: String): List<String> {
     val returnList = mutableListOf<String>()
-    if (!monitorResult) returnList += label
+    if (!this.monitorResult) returnList += label
     returnList += edges.flatMap { it.destination.validateMonitorsRec(it.label) }
     return returnList
   }
