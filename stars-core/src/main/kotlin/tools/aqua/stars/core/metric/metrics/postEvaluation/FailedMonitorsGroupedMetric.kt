@@ -45,7 +45,7 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
-class FailedMonitorsCountMetric<
+class FailedMonitorsGroupedMetric<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
