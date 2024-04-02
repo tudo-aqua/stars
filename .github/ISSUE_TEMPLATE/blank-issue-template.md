@@ -2,7 +2,7 @@
 name: Blank issue template
 about: Create a blank issue
 title: ''
-labels: ''
+labels: feature
 assignees: ''
 
 ---
