@@ -97,11 +97,17 @@ class FailedMonitorsCountMetric<
       logFine("Failed monitors for projection '$projection':")
       failedMonitors.forEach { failedMonitor ->
         logFine(
-            "Monitor ${failedMonitor.key} failed in ${failedMonitor.value.size} unique instances.")
+            "Monitor '${failedMonitor.key}' failed in ${failedMonitor.value.size} unique instances.")
+        logFiner("Count of grouped TSC instances:")
+        logFiner(failedMonitor.value.values.map { it.size }.sorted())
         failedMonitor.value.forEach { tscInstanceNode, tscInstances ->
-          logFiner("The monitor failed ${tscInstances.size} times for the following tsc instance:")
+          logFiner(
+              "Monitor '${failedMonitor.key}' failed ${tscInstances.size} times for the following tsc instance:")
           logFiner(tscInstanceNode)
-          tscInstances.forEach { logFinest("Monitor failed in: ${it.sourceSegmentIdentifier}") }
+          tscInstances.forEach {
+            logFinest("Monitor '${failedMonitor.key}' failed in: ${it.sourceSegmentIdentifier}")
+            logFinest()
+          }
         }
       }
       logFine()
