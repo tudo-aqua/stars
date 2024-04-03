@@ -90,14 +90,12 @@ class FailedMonitorsGroupedMetric<
   /** Prints the count of failed monitors for each [TSCProjection]. */
   override fun printPostEvaluationResult() {
     failedMonitors.forEach { (projection, failedMonitors) ->
-      logInfo("Count of failed monitors for projection '$projection': ${failedMonitors.size}")
-
       if (failedMonitors.isEmpty()) return@forEach
 
       logFine("Failed monitors for projection '$projection':")
       failedMonitors.forEach { failedMonitor ->
-        logFine(
-            "Monitor '${failedMonitor.key}' failed in ${failedMonitor.value.size} unique instances.")
+        logInfo(
+            "Monitor '${failedMonitor.key}' failed in ${failedMonitor.value.size} unique TSC instances.")
         logFiner("Count of grouped TSC instances:")
         logFiner(failedMonitor.value.values.map { it.size }.sortedDescending())
         failedMonitor.value.forEach { tscInstanceNode, tscInstances ->

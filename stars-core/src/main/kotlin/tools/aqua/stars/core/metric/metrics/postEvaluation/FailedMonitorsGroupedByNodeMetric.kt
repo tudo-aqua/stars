@@ -52,7 +52,8 @@ class FailedMonitorsGroupedByNodeMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-node")
+    override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-node"),
+    val onlyLeafNodes: Boolean = false
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /**
@@ -85,11 +86,22 @@ class FailedMonitorsGroupedByNodeMetric<
               .groupBy({ it.first.nodeLabel }, { it.second })
               .mapValues {
                 it.value
-                    .map { it.rootNode.getAllEdges().map { edge -> edge.label to it } }
+                    .map {
+                      it.rootNode.getAllEdges().mapNotNull { edge ->
+                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty() ||
+                            edge.destination.onlyMonitor)
+                            null
+                        else edge.label to it
+                      }
+                    }
                     .flatten()
               }
               .mapValues { (_, values) ->
-                values.groupBy(keySelector = { it.first }, valueTransform = { it.second })
+                values
+                    .groupBy(keySelector = { it.first }, valueTransform = { it.second })
+                    .toList()
+                    .sortedByDescending { it.second.size }
+                    .toMap()
               }
         })
   }
@@ -97,26 +109,26 @@ class FailedMonitorsGroupedByNodeMetric<
   /** Prints the count of failed monitors for each [TSCProjection]. */
   override fun printPostEvaluationResult() {
     failedMonitors.forEach { (projection, failedMonitors) ->
-      logInfo("Count of failed monitors for projection '$projection': ${failedMonitors.size}")
-
       if (failedMonitors.isEmpty()) return@forEach
-
-      logFine("Failed monitors for projection '$projection':")
+      logInfo("Failed monitors for projection '$projection':")
       failedMonitors.forEach { failedMonitor ->
-        logFine(
-            "Monitor '${failedMonitor.key}' failed in ${failedMonitor.value.size} unique nodes.")
-        logFiner("Count of grouped TSC nodes:")
-        logFiner(failedMonitor.value.values.map { it.size }.sortedDescending())
-        failedMonitor.value.forEach { nodeLabel, tscInstances ->
+        logInfo(
+            "Monitor '${failedMonitor.key}' failed in ${failedMonitor.value.size} unique TSC nodes.")
+        logFiner(
+            "Count of grouped TSC nodes: ${failedMonitor.value.values.map { it.size }.sortedDescending()}")
+        logFine()
+        failedMonitor.value.forEach { (nodeLabel, tscInstances) ->
           logFiner(
-              "Monitor '${failedMonitor.key}' failed ${tscInstances.size} times for the following tsc node:")
-          logFiner(nodeLabel)
+              "Monitor '${failedMonitor.key}' failed ${"%04d".format(tscInstances.size)} times for the following TSC node: '$nodeLabel'")
           logFinest("Monitor '${failedMonitor.key}' failed in:")
-          tscInstances.forEach { logFinest(it.sourceSegmentIdentifier) }
-          logFinest()
+          tscInstances.forEach {
+            logFinest("'${it.sourceSegmentIdentifier}'")
+            logFinest(it.rootNode)
+          }
         }
+        logFine()
       }
-      logFine()
+      logInfo()
     }
   }
 }
