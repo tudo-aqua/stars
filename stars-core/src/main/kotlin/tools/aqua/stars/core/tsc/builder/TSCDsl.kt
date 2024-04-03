@@ -19,6 +19,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
@@ -227,3 +228,31 @@ fun <
     label: String,
     init: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCEdge<E, T, S, U, D> = this.bounded(label, 0 to 0) { init() }
+
+/**
+ * DSL function for monitor function nodes.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param label name of the edge.
+ * @param monitorFunction The monitor function.
+ *
+ * @return The [TSCEdge] that is connected to a monitor leaf node.
+ */
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.monitor(
+    label: String,
+    monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean
+): TSCEdge<E, T, S, U, D> =
+    this.bounded(label, 0 to 0) {
+      this.condition = { _ -> true }
+      this.onlyMonitor = true
+      this.monitorFunction = monitorFunction
+    }
