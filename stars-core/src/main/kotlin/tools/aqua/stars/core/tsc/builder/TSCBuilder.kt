@@ -51,6 +51,7 @@ class TSCBuilder<
     var projectionIDs: Map<Any, Boolean> = mapOf(),
     var bounds: Pair<Int, Int> = Pair(0, 0),
     var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null,
+    var onlyMonitor: Boolean = false
 ) {
 
   /** Holds all edges of the node. */
@@ -62,7 +63,9 @@ class TSCBuilder<
    * @return The created [TSCEdge].
    */
   fun buildBounded(): TSCEdge<E, T, S, U, D> {
-    val node = TSCBoundedNode(valueFunction, monitorFunction, projectionIDs, bounds, edges.toList())
+    val node =
+        TSCBoundedNode(
+            valueFunction, monitorFunction, projectionIDs, bounds, edges.toList(), onlyMonitor)
     return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
   }
 
