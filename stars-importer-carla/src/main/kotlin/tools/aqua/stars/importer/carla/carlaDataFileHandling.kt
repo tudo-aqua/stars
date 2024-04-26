@@ -155,7 +155,7 @@ fun loadSegments(
     // Check if static blocks for static map file name are already loaded
     if (!staticBlockCache.containsKey(it.mapDataFile.toString())) {
       // Load blocks and save in cache
-        staticBlockCache[it.mapDataFile.toString()] = loadBlocks(it.mapDataFile).toList()
+      staticBlockCache[it.mapDataFile.toString()] = loadBlocks(it.mapDataFile).toList()
     }
 
     // Set blocks for current simulationRunsWrapper from the 'cache'
