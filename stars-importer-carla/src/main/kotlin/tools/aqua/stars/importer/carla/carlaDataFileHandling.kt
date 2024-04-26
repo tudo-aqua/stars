@@ -147,8 +147,20 @@ fun loadSegments(
     simulationRunsWrapperList = sortedSimulationRunsWrapperList
   }
 
-  // Load Blocks and save in SimulationRunsWrapper
-  simulationRunsWrapperList.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
+  // Holds the static blocks for each map file name
+  val staticBlockCache = mutableMapOf<String, List<Block>>()
+
+  // Load Blocks and save in cache for each map file name
+  simulationRunsWrapperList.forEach {
+    // Check if static blocks for static map file name are already loaded
+    if (!staticBlockCache.containsKey(it.mapDataFile.toString())) {
+      // Load blocks and save in cache
+        staticBlockCache[it.mapDataFile.toString()] = loadBlocks(it.mapDataFile).toList()
+    }
+
+    // Set blocks for current simulationRunsWrapper from the 'cache'
+    it.blocks = staticBlockCache[it.mapDataFile.toString()]!!
+  }
 
   // Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters
   val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrapperList)
