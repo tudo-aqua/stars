@@ -38,6 +38,7 @@ import tools.aqua.stars.core.types.*
  * @property projectionIDs Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
  * @property condition Condition predicate of the edge.
+ * @property onlyMonitor Flag to indicate if this node is only a monitor.
  */
 class TSCBuilder<
     E : EntityType<E, T, S, U, D>,

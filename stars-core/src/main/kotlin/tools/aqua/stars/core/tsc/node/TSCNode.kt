@@ -38,6 +38,7 @@ import tools.aqua.stars.core.types.*
  * @property monitorFunction Monitor function predicate of the node.
  * @property projectionIDMapper Mapper for projection identifiers.
  * @property edges [TSCEdge]s of the TSC.
+ * @property onlyMonitor Flag to indicate if this node is only a monitor.
  */
 sealed class TSCNode<
     E : EntityType<E, T, S, U, D>,
