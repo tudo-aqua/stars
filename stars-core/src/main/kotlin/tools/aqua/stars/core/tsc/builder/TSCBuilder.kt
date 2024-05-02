@@ -38,6 +38,7 @@ import tools.aqua.stars.core.types.*
  * @property projectionIDs Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
  * @property condition Condition predicate of the edge.
+ * @property onlyMonitor Flag to indicate if this node is only a monitor.
  */
 class TSCBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -51,6 +52,7 @@ class TSCBuilder<
     var projectionIDs: Map<Any, Boolean> = mapOf(),
     var bounds: Pair<Int, Int> = Pair(0, 0),
     var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null,
+    var onlyMonitor: Boolean = false
 ) {
 
   /** Holds all edges of the node. */
@@ -62,7 +64,9 @@ class TSCBuilder<
    * @return The created [TSCEdge].
    */
   fun buildBounded(): TSCEdge<E, T, S, U, D> {
-    val node = TSCBoundedNode(valueFunction, monitorFunction, projectionIDs, bounds, edges.toList())
+    val node =
+        TSCBoundedNode(
+            valueFunction, monitorFunction, projectionIDs, bounds, edges.toList(), onlyMonitor)
     return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
   }
 

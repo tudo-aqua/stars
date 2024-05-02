@@ -49,8 +49,9 @@ class TSCBoundedNode<
     monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
     projectionIDMapper: Map<Any, Boolean> = mapOf(),
     val bounds: Pair<Int, Int>,
-    edges: List<TSCEdge<E, T, S, U, D>>
-) : TSCNode<E, T, S, U, D>(valueFunction, monitorFunction, projectionIDMapper, edges) {
+    edges: List<TSCEdge<E, T, S, U, D>>,
+    onlyMonitor: Boolean = false,
+) : TSCNode<E, T, S, U, D>(valueFunction, monitorFunction, projectionIDMapper, edges, onlyMonitor) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()

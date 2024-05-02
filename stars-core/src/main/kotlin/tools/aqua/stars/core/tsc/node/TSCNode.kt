@@ -38,6 +38,7 @@ import tools.aqua.stars.core.types.*
  * @property monitorFunction Monitor function predicate of the node.
  * @property projectionIDMapper Mapper for projection identifiers.
  * @property edges [TSCEdge]s of the TSC.
+ * @property onlyMonitor Flag to indicate if this node is only a monitor.
  */
 sealed class TSCNode<
     E : EntityType<E, T, S, U, D>,
@@ -49,6 +50,7 @@ sealed class TSCNode<
     val monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean,
     val projectionIDMapper: Map<Any, Boolean>,
     val edges: List<TSCEdge<E, T, S, U, D>>,
+    val onlyMonitor: Boolean = false
 ) {
 
   /** Generates all TSC instances. */
@@ -127,7 +129,8 @@ sealed class TSCNode<
                     this.monitorFunction,
                     this.projectionIDMapper,
                     this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
-                    outgoingEdges)
+                    outgoingEdges,
+                    this.onlyMonitor)
           }
         }
       }
@@ -152,7 +155,8 @@ sealed class TSCNode<
               this.monitorFunction,
               this.projectionIDMapper,
               this.bounds,
-              outgoingEdges)
+              outgoingEdges,
+              this.onlyMonitor)
     }
   }
 
@@ -165,7 +169,8 @@ sealed class TSCNode<
       StringBuilder()
           .apply {
             when (this@TSCNode) {
-              is TSCBoundedNode -> append("(${bounds.first}..${bounds.second})\n")
+              is TSCBoundedNode ->
+                  append("(${bounds.first}..${bounds.second}) Is monitor: $onlyMonitor\n")
             }
 
             edges.forEach { instanceEdge ->
