@@ -38,6 +38,8 @@ import tools.aqua.stars.core.types.*
  * @param projectionIDMapper Mapper for projection identifiers.
  * @property bounds [Pair] of bounds.
  * @param edges [TSCEdge]s of the TSC.
+ * @param onlyMonitor (Default: false) Determines, whether this node only evaluates the
+ * [monitorFunction] and not the [valueFunction].
  */
 class TSCBoundedNode<
     E : EntityType<E, T, S, U, D>,
