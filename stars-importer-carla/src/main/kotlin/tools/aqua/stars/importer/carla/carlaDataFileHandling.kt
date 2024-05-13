@@ -152,14 +152,8 @@ fun loadSegments(
 
   // Load Blocks and save in cache for each map file name
   simulationRunsWrapperList.forEach {
-    // Check if static blocks for static map file name are already loaded
-    if (!staticBlockCache.containsKey(it.mapDataFile.toString())) {
-      // Load blocks and save in cache
-      staticBlockCache[it.mapDataFile.toString()] = loadBlocks(it.mapDataFile).toList()
-    }
-
-    // Set blocks for current simulationRunsWrapper from the 'cache'
-    it.blocks = staticBlockCache[it.mapDataFile.toString()]!!
+    it.blocks =
+        staticBlockCache.getOrPut(it.mapDataFile.toString()) { loadBlocks(it.mapDataFile).toList() }
   }
 
   // Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters
