@@ -72,8 +72,9 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the 'since' operator i.e. "If phi 2 held at any timestamp in the past in
- * the interval, then phi 1 must hold for all timestamps since then until the end of the interval".
+ * CMFTBL implementation of the 'since' operator for one entity i.e. "If phi 2 held at any timestamp
+ * in the past in the interval, then phi 1 must hold for all timestamps since then until the end of
+ * the interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].

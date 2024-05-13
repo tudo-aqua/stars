@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'minPrevalence' operator i.e. phi holds for at least ([percentage]
- * *100)% of the ticks in the interval.
+ * CMFTBL implementation of the 'minPrevalence' operator i.e. "In all future timeframes in the
+ * interval phi holds for at least ([percentage]*100)% of the ticks in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -71,8 +71,9 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the 'minPrevalence' operator i.e. phi holds for at least ([percentage]
- * *100)% of the ticks in the interval.
+ * CMFTBL implementation of the 'minPrevalence' operator for one entity i.e. "In all future
+ * timeframes in the interval phi holds for at least ([percentage]*100)% of the ticks in the
+ * interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -121,8 +122,9 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. phi holds for at
- * least ([percentage]*100)% of the ticks in the interval.
+ * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. "In all future
+ * timeframes in the interval phi holds for at least ([percentage]*100)% of the ticks in the
+ * interval".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

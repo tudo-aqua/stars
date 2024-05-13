@@ -44,8 +44,8 @@ fun <
 ): Boolean = until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
- * CMFTBL implementation of the 'eventually' operator i.e. "In a future timeframe in the interval
- * phi holds at least once".
+ * CMFTBL implementation of the 'eventually' operator for one entity i.e. "In a future timeframe in
+ * the interval phi holds at least once".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].

@@ -46,8 +46,8 @@ fun <
 ): Boolean = !once(tickData, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the 'historically' operator i.e. "In all past timeframes in the interval
- * phi holds".
+ * CMFTBL implementation of the 'historically' operator for one entity i.e. "In all past timeframes
+ * in the interval phi holds".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].

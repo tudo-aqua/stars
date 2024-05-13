@@ -63,8 +63,8 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the 'next' operator i.e. "In the next timeframe phi holds and the
- * timestamp is in the interval".
+ * CMFTBL implementation of the 'next' operator one entity i.e. "In the next timeframe phi holds and
+ * the timestamp is in the interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].

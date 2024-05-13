@@ -46,8 +46,8 @@ fun <
 ): Boolean = since(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
- * CMFTBL implementation of the 'once' operator i.e. "In a past timeframe in the interval phi holds
- * at least once".
+ * CMFTBL implementation of the 'once' operator one entity i.e. "In a past timeframe in the interval
+ * phi holds at least once".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].

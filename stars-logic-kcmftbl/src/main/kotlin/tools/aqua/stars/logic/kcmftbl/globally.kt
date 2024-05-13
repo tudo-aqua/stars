@@ -46,8 +46,8 @@ fun <
 ): Boolean = !eventually(tickData, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the 'globally' operator i.e. "In all future timeframes in the interval
- * phi holds".
+ * CMFTBL implementation of the 'globally' operator for one entity i.e. "In all future timeframes in
+ * the interval phi holds".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
