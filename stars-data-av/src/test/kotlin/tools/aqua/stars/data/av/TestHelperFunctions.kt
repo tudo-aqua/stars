@@ -68,7 +68,14 @@ fun emptyLocation(): Location = Location(0.0, 0.0, 0.0)
 /** Empty [Vector3D]. */
 fun emptyVector3D(): Vector3D = Vector3D(0.0, 0.0, 0.0)
 
-/** Empty [WeatherParameters] with given [weatherType] (Default: [WeatherType.Clear]). */
+/**
+ * Empty [WeatherParameters] with given [weatherType].
+ *
+ * @param weatherType (Default: [WeatherType.Clear]) The [WeatherType] to be assigned to the
+ * [WeatherParameters].
+ *
+ * @return An empty [WeatherParameters] object.
+ */
 fun emptyWeatherParameters(weatherType: WeatherType = WeatherType.Clear): WeatherParameters =
     WeatherParameters(
         type = weatherType,

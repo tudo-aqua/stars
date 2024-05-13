@@ -80,8 +80,8 @@ class TSCEvaluation<
    * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called. It requires at
    * least one [MetricProvider].
    *
-   * @param writePlots Whether to write plots after the analysis. Default: ``true``.
-   * @param writePlotDataCSV Whether to write CSV files after the analysis. Default: ``false``.
+   * @param writePlots (Default: ``true``) Whether to write plots after the analysis.
+   * @param writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
    *
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */

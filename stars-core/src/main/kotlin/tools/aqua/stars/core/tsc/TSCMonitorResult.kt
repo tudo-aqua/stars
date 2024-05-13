@@ -30,7 +30,7 @@ import tools.aqua.stars.core.types.*
  * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
  * results.
  * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
- * @property edgeList Default: null. When there is an invalid monitor, it contains the [List] of
+ * @property edgeList (Default: null) When there is an invalid monitor, it contains the [List] of
  * edge labels leading to the invalid monitor.
  * @property monitorsValid Flags whether there is an invalid monitor.
  */
