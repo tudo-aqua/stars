@@ -51,7 +51,7 @@ class NullaryPredicate<
    * Checks if this predicate holds (i.e. is true) in the given context and tick identifier.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tick The tick to evaluate this predicate in. default: first tick in context.
+   * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
    *
    * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
    */
