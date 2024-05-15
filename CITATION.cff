@@ -58,7 +58,6 @@ preferred-citation:
   - given-names: Till
     family-names: Schallau
     email: till.schallau@tu-dortmund.de
-    name-particle: Till
     affiliation: TU Dortmund University
     orcid: 'https://orcid.org/0000-0002-1769-3486'
   - given-names: Dominik
@@ -79,6 +78,4 @@ preferred-citation:
   title: "STARS: A Tool for Measuring Scenario Coverage When Testing Autonomous Robotic Systems"
   type: article
   year: 2024
-  identifiers:
-    - type: doi
-      value: 10.1007/978-3-031-56776-6_6
+  doi: 10.1007/978-3-031-56776-6_6
