@@ -104,50 +104,57 @@ class TSCEvaluation<
             "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
 
         val segmentsEvaluationTime = measureTime {
-          segments.forEach { segment ->
-            val segmentEvaluationTime = measureTime {
-              // Run the "evaluate" function for all SegmentMetricProviders on the current segment
-              metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
-                it.evaluate(segment)
-              }
-              val projectionsEvaluationTime = measureTime {
-                tscProjections.forEach { projection ->
-                  val projectionEvaluationTime = measureTime {
-                    // Run the "evaluate" function for all ProjectionMetricProviders on the current
-                    // segment
-                    metricProviders
-                        .filterIsInstance<ProjectionMetricProvider<E, T, S, U, D>>()
-                        .forEach { it.evaluate(projection) }
-                    // Holds the PredicateContext for the current segment
-                    val context = PredicateContext(segment)
+          segments
+              .forEachIndexed { index, segment ->
+                print("\rCurrently evaluating segment $index")
+                val segmentEvaluationTime = measureTime {
+                  // Run the "evaluate" function for all SegmentMetricProviders on the current
+                  // segment
+                  metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
+                    it.evaluate(segment)
+                  }
+                  val projectionsEvaluationTime = measureTime {
+                    tscProjections.forEach { projection ->
+                      val projectionEvaluationTime = measureTime {
+                        // Run the "evaluate" function for all ProjectionMetricProviders on the
+                        // current
+                        // segment
+                        metricProviders
+                            .filterIsInstance<ProjectionMetricProvider<E, T, S, U, D>>()
+                            .forEach { it.evaluate(projection) }
+                        // Holds the PredicateContext for the current segment
+                        val context = PredicateContext(segment)
 
-                    // Holds the [TSCInstanceNode] of the current [projection] using the
-                    // [PredicateContext], representing a whole TSC.
-                    val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
+                        // Holds the [TSCInstanceNode] of the current [projection] using the
+                        // [PredicateContext], representing a whole TSC.
+                        val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
 
-                    // Run the "evaluate" function for all TSCInstanceMetricProviders on the current
-                    // segment
-                    metricProviders
-                        .filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>()
-                        .forEach { it.evaluate(segmentProjectionTSCInstance) }
+                        // Run the "evaluate" function for all TSCInstanceMetricProviders on the
+                        // current
+                        // segment
+                        metricProviders
+                            .filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>()
+                            .forEach { it.evaluate(segmentProjectionTSCInstance) }
 
-                    // Run the "evaluate" function for all
-                    // ProjectionAndTSCInstanceNodeMetricProviders on the current  projection and
-                    // instance
-                    metricProviders
-                        .filterIsInstance<
-                            ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
-                        .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
+                        // Run the "evaluate" function for all
+                        // ProjectionAndTSCInstanceNodeMetricProviders on the current  projection
+                        // and
+                        // instance
+                        metricProviders
+                            .filterIsInstance<
+                                ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
+                            .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
+                      }
+                      logFine(
+                          "The evaluation of projection '${projection.id}' for segment '$segment' took: $projectionEvaluationTime")
+                    }
                   }
                   logFine(
-                      "The evaluation of projection '${projection.id}' for segment '$segment' took: $projectionEvaluationTime")
+                      "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
                 }
+                logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
               }
-              logFine(
-                  "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
-            }
-            logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
-          }
+              .also { println() }
         }
         logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
       }
