@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'globally' operator i.e. "In all future timeframes in the interval
- * phi holds".
+ * CMFTBL implementation of the 'globally' operator i.e. "In all future ticks in the interval phi
+ * holds".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -46,8 +46,8 @@ fun <
 ): Boolean = !eventually(tickData, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the 'globally' operator i.e. "In all future timeframes in the interval
- * phi holds".
+ * CMFTBL implementation of the 'globally' operator for one entity i.e. "In all future ticks in the
+ * interval phi holds".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -72,8 +72,8 @@ fun <
 ): Boolean = !eventually(entity, interval, phi = { e -> !phi(e) })
 
 /**
- * CMFTBL implementation of the 'globally' operator for two entities i.e. "In all future timeframes
- * in the interval phi holds".
+ * CMFTBL implementation of the 'globally' operator for two entities i.e. "In all future ticks in
+ * the interval phi holds".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

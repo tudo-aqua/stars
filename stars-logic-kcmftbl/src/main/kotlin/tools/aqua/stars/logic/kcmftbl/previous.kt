@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'previous' operator i.e. "In the previous timeframe phi holds and
- * the timestamp is in the interval".
+ * CMFTBL implementation of the 'previous' operator i.e. "In the previous tick phi holds and the
+ * tick is in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -62,8 +62,8 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the 'previous' operator i.e. "In the previous timeframe phi holds and
- * the timestamp is in the interval".
+ * CMFTBL implementation of the 'previous' operator for one entity i.e. "In the previous tick phi
+ * holds and the tick is in the interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -93,8 +93,8 @@ fun <
         phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous timeframe
- * phi holds and the timestamp is in the interval".
+ * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous tick phi
+ * holds and the tick is in the interval".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].

@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'once' operator i.e. "In a past timeframe in the interval phi holds
- * at least once".
+ * CMFTBL implementation of the 'once' operator i.e. "In a past tick in the interval phi holds at
+ * least once".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -46,8 +46,8 @@ fun <
 ): Boolean = since(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
- * CMFTBL implementation of the 'once' operator i.e. "In a past timeframe in the interval phi holds
- * at least once".
+ * CMFTBL implementation of the 'once' operator for one entity i.e. "In a past tick in the interval
+ * phi holds at least once".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -72,7 +72,7 @@ fun <
 ): Boolean = since(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
- * CMFTBL implementation of the 'once' operator for two entities i.e. "In a past timeframe in the
+ * CMFTBL implementation of the 'once' operator for two entities i.e. "In a past tick in the
  * interval phi holds at least once".
  *
  * @param E1 [EntityType].

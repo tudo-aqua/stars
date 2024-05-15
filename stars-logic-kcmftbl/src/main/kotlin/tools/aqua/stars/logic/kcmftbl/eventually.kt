@@ -20,8 +20,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'eventually' operator i.e. "In a future timeframe in the interval
- * phi holds at least once".
+ * CMFTBL implementation of the 'eventually' operator i.e. "In a future tick in the interval phi
+ * holds at least once".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -44,8 +44,8 @@ fun <
 ): Boolean = until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
- * CMFTBL implementation of the 'eventually' operator i.e. "In a future timeframe in the interval
- * phi holds at least once".
+ * CMFTBL implementation of the 'eventually' operator for one entity i.e. "In a future tick in the
+ * interval phi holds at least once".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -70,8 +70,8 @@ fun <
 ): Boolean = until(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
- * CMFTBL implementation of the 'eventually' operator for two entities i.e. "In a future timeframe
- * in the interval phi holds at least once".
+ * CMFTBL implementation of the 'eventually' operator for two entities i.e. "In a future tick in the
+ * interval phi holds at least once".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].
