@@ -65,8 +65,8 @@ preferred-citation:
       email: dominik.maeckel@tu-dortmund.de
       affiliation: TU Dortmund University
       orcid: 'https://orcid.org/0000-0002-7866-7927'
-    - given-names: Naujokat
-      family-names: Stefan
+    - given-names: Stefan
+      family-names: Naujokat
       email: stefan.naujokat@tu-dortmund.de
       affiliation: TU Dortmund University
       orcid: 'https://orcid.org/0000-0002-6265-6641'
@@ -84,6 +84,8 @@ preferred-citation:
   collection-title: "Dependable Computing – EDCC 2024 Workshops"
   publisher:
     name: 'Springer Nature Switzerland'
+  location:
+    name: Cham
   pages: 62-70
   isbn: '9783031567766'
   editors:
@@ -99,3 +101,13 @@ preferred-citation:
       given-names: Alessia
     - family-names: Mancini
       given-names: Adriano
+  abstract: >-
+     Extensive testing and simulation in different environments
+     has been suggested as one piece of evidence for the safety
+     of autonomous systems, e.g., in the automotive domain. To
+     enable statements on the absolute number or fractions of
+     tested scenarios, methods and tools for computing their
+     coverage are needed. In this paper, we present STARS, a
+     tool for specifying semantic environment features and
+     measuring scenario coverage when testing autonomous
+     systems.
