@@ -1,0 +1,101 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  STARS - Scenario-Based Testing of Autonomous Robotic
+  Systems
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Till
+    family-names: Schallau
+    email: till.schallau@tu-dortmund.de
+    affiliation: TU Dortmund University
+    orcid: 'https://orcid.org/0000-0002-1769-3486'
+  - given-names: Dominik
+    family-names: Mäckel
+    email: dominik.maeckel@tu-dortmund.de
+    affiliation: TU Dortmund University
+    orcid: 'https://orcid.org/0000-0002-7866-7927'
+  - given-names: Stefan
+    family-names: Naujokat
+    email: stefan.naujokat@tu-dortmund.de
+    affiliation: TU Dortmund University
+    orcid: 'https://orcid.org/0000-0002-6265-6641'
+  - given-names: Nick
+    family-names: Pawlinorz
+    email: nick.pawlinorz@tu-dortmund.de
+    affiliation: TU Dortmund University
+    orcid: 'https://orcid.org/0009-0003-6614-1252'
+  - given-names: Falk
+    family-names: Howar
+    email: falk.howar@tu-dortmund.de
+    affiliation: 'TU Dortmund University, Fraunhofer ISST'
+    orcid: 'https://orcid.org/0000-0002-9524-4459'
+repository-code: 'https://github.com/tudo-aqua/stars'
+abstract: >-
+  Extensive testing and simulation in different environments
+  has been suggested as one piece of evidence for the safety
+  of autonomous systems, e.g., in the automotive domain. To
+  enable statements on the absolute number or fractions of
+  tested scenarios, methods and tools for computing their
+  coverage are needed. In this paper, we present STARS, a
+  tool for specifying semantic environment features and
+  measuring scenario coverage when testing autonomous
+  systems.
+keywords:
+  - automated driving systems
+  - temporal logic
+  - scenario classification
+  - autonomous-driving
+  - carla
+license: Apache-2.0
+preferred-citation:
+  authors:
+    - given-names: Till
+      family-names: Schallau
+      email: till.schallau@tu-dortmund.de
+      affiliation: TU Dortmund University
+      orcid: 'https://orcid.org/0000-0002-1769-3486'
+    - given-names: Dominik
+      family-names: Mäckel
+      email: dominik.maeckel@tu-dortmund.de
+      affiliation: TU Dortmund University
+      orcid: 'https://orcid.org/0000-0002-7866-7927'
+    - given-names: Stefan
+      family-names: Naujokat
+      email: stefan.naujokat@tu-dortmund.de
+      affiliation: TU Dortmund University
+      orcid: 'https://orcid.org/0000-0002-6265-6641'
+    - given-names: Falk
+      family-names: Howar
+      email: falk.howar@tu-dortmund.de
+      affiliation: 'TU Dortmund University, Fraunhofer ISST'
+      orcid: 'https://orcid.org/0000-0002-9524-4459'
+  title: >-
+    STARS: A Tool for Measuring Scenario Coverage When Testing Autonomous
+    Robotic Systems
+  type: conference-paper
+  year: 2024
+  doi: 10.1007/978-3-031-56776-6_6
+  collection-title: Dependable Computing – EDCC 2024 Workshops
+  publisher:
+    name: Springer Nature Switzerland
+  pages: 62-70
+  isbn: '9783031567766'
+  editors:
+    - family-names: Sangchoolie
+      given-names: Behrooz
+    - family-names: Adler
+      given-names: Rasmus
+    - family-names: Hawkins
+      given-names: Richard
+    - family-names: Schleiss
+      given-names: Philipp
+    - family-names: Arteconi
+      given-names: Alessia
+    - family-names: Mancini
+      given-names: Adriano

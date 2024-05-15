@@ -49,9 +49,9 @@ class BinaryPredicate<
    * Checks if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tick The time stamp to evaluate this predicate in. default: first tick in context.
-   * @param entityId1 The ID of the first entity to evaluate this predicate for. default: primary
-   * entity.
+   * @param tick (Default: first tick in context) The time stamp to evaluate this predicate in.
+   * @param entityId1 (Default: Primary entity) The ID of the first entity to evaluate this
+   * predicate for.
    * @param entityId2 The ID of the second entity to evaluate this predicate for.
    *
    * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the

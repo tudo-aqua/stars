@@ -46,8 +46,8 @@ class UnaryPredicate<
    * Check if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tick The tick to evaluate this predicate in. default: first tick in context.
-   * @param entityId The ID of the entity to evaluate this predicate for. default: primary entity.
+   * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
+   * @param entityId (Default: Primary entity) The ID of the entity to evaluate this predicate for.
    *
    * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
    * given [entityId].
