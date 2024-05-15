@@ -20,8 +20,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'until' operator i.e. "In all future timeframes in the interval phi
- * 1 holds, at least until phi 2 holds".
+ * CMFTBL implementation of the 'until' operator i.e. "In all future ticks in the interval phi 1
+ * holds, at least until phi 2 holds".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -70,7 +70,7 @@ fun <
 }
 
 /**
- * CMFTBL implementation of the 'until' operator one entity i.e. "In all future timeframes in the
+ * CMFTBL implementation of the 'until' operator for one entity i.e. "In all future ticks in the
  * interval phi 1 holds, at least until phi 2 holds".
  *
  * @param E1 [EntityType].
@@ -104,8 +104,8 @@ fun <
         phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
 
 /**
- * CMFTBL implementation of the 'until' operator for two entities i.e. "In all future timeframes in
- * the interval phi 1 holds, at least until phi 2 holds".
+ * CMFTBL implementation of the 'until' operator for two entities i.e. "In all future ticks in the
+ * interval phi 1 holds, at least until phi 2 holds".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].
