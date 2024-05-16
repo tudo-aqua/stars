@@ -1,3 +1,4 @@
+[0.3]: https://github.com/tudo-aqua/stars/releases/tag/v0.3
 [0.2.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.2
 [0.2.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.1
 [0.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2
@@ -12,7 +13,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.3 - tba
+## [0.3] - 16.05.2024
 ### Added
 - Add generic `TickUnit` and `TickDifference` instead of `Double` identifier. 
   - **Note**: These two types add to the three existing base types (``SegmentType``, `EntityType` and `TickDataType`) and are now required to use the STARS framework.
@@ -25,6 +26,8 @@ All notable changes to this project will be documented in this file.
 - Add ``onlyMonitor`` flag to ``TSCNode`` and corresponding DSL function for global monitors.
 - Add ``plotDataAsHistogram()`` function to ``DataPlotter``.
 - Add ``size`` and ``logscale`` parameter to all plotting functions in ``DataPlotter``.
+- Add ``FailedMonitorsGroupedByTSCInstanceMetric`` to track all failed monitors and group the results by TSC instances.
+- Add ``FailedMonitorsGroupedByTSCNodeMetric`` to track all failed monitors and group the results by TSC nodes.
 
 ### Changed
 - Rename ``NullaryPredicate.evaluate()`` function to ``holds()`` to match naming conventions of other predicates.
