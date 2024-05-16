@@ -8,7 +8,7 @@
 
 STARS (Scenario-Based Testing of Autonomous Robotic Systems) is a formal framework for coverage analysis of test data of autonomous robotic systems.
 
-See [stars-carla-experiments](https://github.com/tudo-aqua/stars-carla-experiments) for an example on how to use the 
+See [stars-carla-experiments](https://github.com/tudo-aqua/stars-carla-experiments), or [stars-auna-experiments](https://github.com/tudo-aqua/stars-auna-experiments) for examples on how to use the 
 framework.
 
 ## Getting Started
@@ -19,7 +19,7 @@ Start by adding the latest version of STARS as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:stars-core:0.2.2")
+implementation("tools.aqua:stars-core:0.3")
 ```
 
 #### Maven
@@ -27,7 +27,7 @@ implementation("tools.aqua:stars-core:0.2.2")
 <dependency>
   <groupId>tools.aqua</groupId>
   <artifactId>stars-core</artifactId>
-  <version>0.2.2</version>
+  <version>0.3</version>
 </dependency>
 ``` 
 
