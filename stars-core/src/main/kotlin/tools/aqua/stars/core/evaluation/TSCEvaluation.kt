@@ -130,15 +130,13 @@ class TSCEvaluation<
                         val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
 
                         // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-                        // current
-                        // segment
+                        // current segment
                         metricProviders
                             .filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>()
                             .forEach { it.evaluate(segmentProjectionTSCInstance) }
 
                         // Run the "evaluate" function for all
-                        // ProjectionAndTSCInstanceNodeMetricProviders on the current  projection
-                        // and
+                        // ProjectionAndTSCInstanceNodeMetricProviders on the current projection and
                         // instance
                         metricProviders
                             .filterIsInstance<

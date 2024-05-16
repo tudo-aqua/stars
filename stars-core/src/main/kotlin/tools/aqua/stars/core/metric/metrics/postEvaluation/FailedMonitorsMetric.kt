@@ -21,7 +21,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.tsc.TSCMonitorResult
+import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.instance.*
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
  * failing [TSCNode.monitorFunction]s for each [TSCProjection]. It logs the failing
- * [TSCMonitorResult]s for each [TSCProjection].
+ * [TSCFailedMonitorInstance]s for each [TSCProjection].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -56,27 +56,25 @@ class FailedMonitorsMetric<
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   private val failedMonitors:
-      MutableMap<TSCProjection<E, T, S, U, D>, List<TSCMonitorResult<E, T, S, U, D>>> =
+      MutableMap<TSCProjection<E, T, S, U, D>, List<TSCFailedMonitorInstance<E, T, S, U, D>>> =
       mutableMapOf()
   /**
-   * Calculates a [Map] of [TSCMonitorResult]s for all [TSCProjection]s by validating all monitors
-   * for all valid [TSCInstance]s.
+   * Calculates a [Map] of [TSCFailedMonitorInstance]s for all [TSCProjection]s by validating all
+   * monitors for all valid [TSCInstance]s.
    */
   override fun postEvaluate() {
     failedMonitors.clear()
     failedMonitors.putAll(
         dependsOn.getState().mapValues { (_, validInstancesMap) ->
           validInstancesMap.flatMap { (_, validInstances) ->
-            validInstances.mapNotNull { validInstance ->
-              val monitorResult =
-                  validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
-              if (monitorResult.monitorsValid) null else monitorResult
+            validInstances.flatMap { validInstance ->
+              validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
             }
           }
         })
   }
 
-  /** Prints the count of filed monitors for each [TSCProjection]. */
+  /** Prints the count of failed monitors for each [TSCProjection]. */
   override fun printPostEvaluationResult() {
     failedMonitors.forEach { (projection, failedMonitors) ->
       logInfo("Count of failed monitors for projection '$projection': ${failedMonitors.size}")
@@ -86,7 +84,7 @@ class FailedMonitorsMetric<
       logFine("Failed monitors for projection '$projection':")
       failedMonitors.forEach { failedMonitor ->
         logFine("Monitor failed in: ${failedMonitor.segmentIdentifier}")
-        logFine("List of edges leading to failed monitor: ${failedMonitor.edgeList}")
+        logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }
       logFine()
