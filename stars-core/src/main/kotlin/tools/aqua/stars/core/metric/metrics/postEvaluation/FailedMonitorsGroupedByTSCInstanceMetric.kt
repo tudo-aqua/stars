@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
  * failing [TSCNode.monitorFunction]s for each [TSCProjection]. It logs the failing
- * [TSCFailedMonitorInstance]s for each [TSCProjection].
+ * [TSCFailedMonitorInstance]s for each [TSCProjection] and groups it by the [TSCInstance].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -43,29 +43,27 @@ import tools.aqua.stars.core.types.*
  * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
  * depends on and needs for its calculation.
  * @property logger [Logger] instance.
- * @property onlyLeafNodes Whether the monitor should only be triggered for leaf nodes.
  */
 @Suppress("unused")
-class FailedMonitorsGroupedByNodeMetric<
+class FailedMonitorsGroupedByTSCInstanceMetric<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-node"),
-    val onlyLeafNodes: Boolean = false
+    override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-tsc-instance")
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /**
    * Holds a [Map] from a [TSCProjection] to a [Map] from a node label (as [String], representing
-   * the ID of the monitor) to a [Map] from a node label to a [List] of all occurring
-   * [TSCInstanceNode]s including the node label.
+   * the ID of the monitor) to a [Map] from a [TSCInstanceNode] to a [List] of all occurring
+   * [TSCInstanceNode]s.
    */
   private val failedMonitors:
       MutableMap<
           TSCProjection<E, T, S, U, D>,
-          Map<String, Map<String, List<TSCInstance<E, T, S, U, D>>>>> =
+          Map<String, Map<TSCInstanceNode<E, T, S, U, D>, List<TSCInstance<E, T, S, U, D>>>>> =
       mutableMapOf()
 
   /**
@@ -85,25 +83,7 @@ class FailedMonitorsGroupedByNodeMetric<
                 }
               }
               .groupBy({ it.first.nodeLabel }, { it.second })
-              .mapValues {
-                it.value
-                    .map {
-                      it.rootNode.getAllEdges().mapNotNull { edge ->
-                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty() ||
-                            edge.destination.onlyMonitor)
-                            null
-                        else edge.label to it
-                      }
-                    }
-                    .flatten()
-              }
-              .mapValues { (_, values) ->
-                values
-                    .groupBy(keySelector = { it.first }, valueTransform = { it.second })
-                    .toList()
-                    .sortedByDescending { it.second.size }
-                    .toMap()
-              }
+              .mapValues { it.value.groupBy { t -> t.rootNode } }
         })
   }
 
@@ -111,25 +91,25 @@ class FailedMonitorsGroupedByNodeMetric<
   override fun printPostEvaluationResult() {
     failedMonitors.forEach { (projection, failedMonitors) ->
       if (failedMonitors.isEmpty()) return@forEach
+
       logInfo("Failed monitors for projection '$projection':")
-      failedMonitors.forEach { failedMonitor ->
+
+      failedMonitors.forEach { monitor ->
         logInfo(
-            "Monitor '${failedMonitor.key}' failed in ${failedMonitor.value.size} unique TSC nodes.")
-        logFiner(
-            "Count of grouped TSC nodes: ${failedMonitor.value.values.map { it.size }.sortedDescending()}")
-        logFine()
-        failedMonitor.value.forEach { (nodeLabel, tscInstances) ->
-          logFiner(
-              "Monitor '${failedMonitor.key}' failed ${"%04d".format(tscInstances.size)} times for the following TSC node: '$nodeLabel'")
-          logFinest("Monitor '${failedMonitor.key}' failed in:")
+            "Monitor '${monitor.key}' failed ${monitor.value.values.sumOf { it.size }} times " +
+                "in ${monitor.value.size} unique TSC instances.")
+        logFine(
+            "Count of grouped TSC instances: ${monitor.value.values.map { it.size }.sortedDescending()}")
+
+        monitor.value.forEach { (tscInstanceNode, tscInstances) ->
+          logFine("Failed ${tscInstances.size} times for the following tsc instance:")
           tscInstances.forEach {
-            logFinest("'${it.sourceSegmentIdentifier}'")
-            logFinest(it.rootNode)
+            logFiner()
+            logFiner(it.sourceSegmentIdentifier)
           }
+          logFine(tscInstanceNode)
         }
-        logFine()
       }
-      logInfo()
     }
   }
 }
