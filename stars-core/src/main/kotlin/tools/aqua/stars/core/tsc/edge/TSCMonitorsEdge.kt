@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,24 @@
 
 package tools.aqua.stars.core.tsc.edge
 
-import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
 
 /**
- * TSC edge with condition 'true'.
+ * Baseclass for TSC monitor edges.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Edge label.
- * @param destination Destination [TSCNode].
+ * @property label Monitor label.
+ * @property destination Destination [TSCMonitorsNode].
  */
-class TSCAlwaysEdge<
+open class TSCMonitorsEdge<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(label: String, destination: TSCNode<E, T, S, U, D>) :
-    TSCEdge<E, T, S, U, D>(label, { true }, destination)
+    D : TickDifference<D>>(label: String, destination: TSCMonitorsNode<E, T, S, U, D>) :
+    TSCLeafEdge<E, T, S, U, D>(label, { true }, destination)
