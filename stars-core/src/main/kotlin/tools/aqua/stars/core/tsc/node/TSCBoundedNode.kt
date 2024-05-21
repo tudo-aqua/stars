@@ -34,26 +34,21 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param valueFunction Value function predicate of the node.
- * @param monitorFunction Monitor function predicate of the node.
  * @param projectionIDMapper Mapper for projection identifiers.
  * @property bounds [Pair] of bounds.
  * @param edges [TSCEdge]s of the TSC.
- * @param onlyMonitor (Default: false) Determines, whether this node only evaluates the
- * [monitorFunction] and not the [valueFunction].
  */
-class TSCBoundedNode<
+open class TSCBoundedNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
     projectionIDMapper: Map<Any, Boolean> = mapOf(),
     val bounds: Pair<Int, Int>,
-    edges: List<TSCEdge<E, T, S, U, D>>,
-    onlyMonitor: Boolean = false,
-) : TSCNode<E, T, S, U, D>(valueFunction, monitorFunction, projectionIDMapper, edges, onlyMonitor) {
+    edges: List<TSCEdge<E, T, S, U, D>>
+) : TSCNode<E, T, S, U, D>(valueFunction, projectionIDMapper, edges) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()
@@ -99,7 +94,6 @@ class TSCBoundedNode<
   override fun equals(other: Any?): Boolean =
       other is TSCBoundedNode<*, *, *, *, *> &&
           valueFunction == other.valueFunction &&
-          monitorFunction == other.monitorFunction &&
           projectionIDMapper == other.projectionIDMapper &&
           bounds == other.bounds &&
           edges.containsAll(other.edges) &&
@@ -107,7 +101,6 @@ class TSCBoundedNode<
 
   override fun hashCode(): Int =
       valueFunction.hashCode() +
-          monitorFunction.hashCode() +
           projectionIDMapper.hashCode() +
           bounds.hashCode() +
           edges.sumOf { it.hashCode() }

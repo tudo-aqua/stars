@@ -18,9 +18,9 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCAlwaysEdge
-import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -34,11 +34,9 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property label name of the edge.
  * @property valueFunction Value function predicate of the node.
- * @property monitorFunction Monitor function predicate of the node.
  * @property projectionIDs Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
  * @property condition Condition predicate of the edge.
- * @property onlyMonitor Flag to indicate if this node is only a monitor.
  */
 class TSCBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -48,27 +46,32 @@ class TSCBuilder<
     D : TickDifference<D>>(
     val label: String = "",
     var valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    var monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
     var projectionIDs: Map<Any, Boolean> = mapOf(),
     var bounds: Pair<Int, Int> = Pair(0, 0),
-    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null,
-    var onlyMonitor: Boolean = false
+    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null
 ) {
 
   /** Holds all edges of the node. */
   private val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
+
+  private val monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
 
   /**
    * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
    *
    * @return The created [TSCEdge].
    */
-  fun buildBounded(): TSCEdge<E, T, S, U, D> {
-    val node =
-        TSCBoundedNode(
-            valueFunction, monitorFunction, projectionIDs, bounds, edges.toList(), onlyMonitor)
-    return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
-  }
+  fun buildBounded(): TSCBoundedEdge<E, T, S, U, D> =
+      TSCBoundedEdge(
+          label,
+          condition ?: { true },
+          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList()))
+
+  fun buildLeaf(): TSCLeafEdge<E, T, S, U, D> =
+      TSCLeafEdge(
+          label,
+          condition ?: { true },
+          TSCLeafNode(valueFunction, projectionIDs, listOfNotNull(monitors)))
 
   /**
    * Adds the given [edge] to [edges]. This will become the edges of the node that will be created

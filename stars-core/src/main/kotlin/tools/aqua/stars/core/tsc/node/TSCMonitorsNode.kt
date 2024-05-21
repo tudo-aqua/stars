@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,42 +15,30 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc.edge
+package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.tsc.edge.TSCMonitorEdge
 import tools.aqua.stars.core.types.*
 
 /**
- * Baseclass for TSC edges.
+ * Bounded TSC node.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label Edge label.
- * @property condition Predicate for the edge condition.
- * @property destination Destination [TSCNode].
+ * @param valueFunction Value function predicate of the node.
+ * @param monitorFunction Monitor function predicate of the node. [monitorFunction] and not the
+ * [valueFunction].
  */
-open class TSCEdge<
+open class TSCMonitorsNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val label: String,
-    val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
-    val destination: TSCNode<E, T, S, U, D>,
-) {
-
-  override fun equals(other: Any?): Boolean =
-      other is TSCEdge<*, *, *, *, *> &&
-          label == other.label &&
-          condition == other.condition &&
-          destination == other.destination
-
-  override fun hashCode(): Int = label.hashCode() + condition.hashCode() + destination.hashCode()
-
-  fun conditionAlwaysTrue() = this.condition == { true }
-}
+    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+    val monitorList: List<TSCMonitorEdge<E, T, S, U, D>>
+) : TSCLeafNode<E, T, S, U, D>(valueFunction, emptyMap(), monitorList)
