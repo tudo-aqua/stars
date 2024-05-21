@@ -19,8 +19,9 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.tsc.edge.TSCBoundedEdge
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
+import tools.aqua.stars.core.tsc.edge.TSCLeafEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -84,7 +85,7 @@ fun <
     label: String,
     bounds: Pair<Int, Int> = Pair(1, 1),
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCEdge<E, T, S, U, D> =
+): TSCBoundedEdge<E, T, S, U, D> =
     TSCBuilder<E, T, S, U, D>(label)
         .apply {
           buildSubtree()
@@ -114,7 +115,7 @@ fun <
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.exclusive(
     label: String,
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCEdge<E, T, S, U, D> = this.bounded(label, 1 to 1) { buildSubtree() }
+): TSCBoundedEdge<E, T, S, U, D> = this.bounded(label, 1 to 1) { buildSubtree() }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (0,#Edges).
@@ -137,7 +138,7 @@ fun <
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.optional(
     label: String,
     init: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCEdge<E, T, S, U, D> =
+): TSCBoundedEdge<E, T, S, U, D> =
     TSCBuilder<E, T, S, U, D>(label)
         .apply {
           init()
@@ -167,7 +168,7 @@ fun <
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.any(
     label: String,
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCEdge<E, T, S, U, D> =
+): TSCBoundedEdge<E, T, S, U, D> =
     TSCBuilder<E, T, S, U, D>(label)
         .apply {
           buildSubtree()
@@ -197,7 +198,7 @@ fun <
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.all(
     label: String,
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCEdge<E, T, S, U, D> =
+): TSCBoundedEdge<E, T, S, U, D> =
     TSCBuilder<E, T, S, U, D>(label)
         .apply {
           buildSubtree()
@@ -227,7 +228,13 @@ fun <
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.leaf(
     label: String,
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCEdge<E, T, S, U, D> = this.bounded(label, 0 to 0) { buildSubtree() }
+): TSCLeafEdge<E, T, S, U, D> =
+  TSCBuilder<E, T, S, U, D>(label)
+    .apply {
+      buildSubtree()
+    }
+    .buildLeaf()
+    .also { this.addEdge(it) }
 
 //fun <
 //    E : EntityType<E, T, S, U, D>,
