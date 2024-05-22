@@ -31,6 +31,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label Name of the edge.
+ * @param condition The monitor's condition.
  */
 open class TSCMonitorBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -38,12 +39,14 @@ open class TSCMonitorBuilder<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    label: String
-) :
-    TSCBuilder<E, T, S, U, D, TSCMonitorEdge<E, T, S, U, D>>(label, 0 to 0 ) {
+    label: String,
+    condition: ((PredicateContext<E, T, S, U, D>) -> Boolean),
+) : TSCBuilder<E, T, S, U, D, TSCMonitorEdge<E, T, S, U, D>>(label, 0 to 0) {
+
+  init {
+    this.condition = condition
+  }
 
   override fun build(): TSCMonitorEdge<E, T, S, U, D> =
-      TSCMonitorEdge(
-          label, condition!!, TSCMonitorNode(valueFunction)
-      )
+      TSCMonitorEdge(label, condition!!, TSCMonitorNode(valueFunction))
 }

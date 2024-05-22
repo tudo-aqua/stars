@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
@@ -42,4 +43,28 @@ open class TSCMonitorsBuilder<
 
   override fun build(): TSCMonitorsEdge<E, T, S, U, D> =
       TSCMonitorsEdge(TSCMonitorsNode(valueFunction, edges.toList()))
+
+  /**
+   * DSL function for an edge with MonitorNode.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param label name of the edge.
+   * @param condition The monitor condition.
+   *
+   * @return The [TSCEdge] that is connected to a monitor node.
+   */
+  fun <
+      E : EntityType<E, T, S, U, D>,
+      T : TickDataType<E, T, S, U, D>,
+      S : SegmentType<E, T, S, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>> TSCMonitorsBuilder<E, T, S, U, D>.monitor(
+      label: String,
+      condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+  ): TSCMonitorEdge<E, T, S, U, D> =
+      TSCMonitorBuilder<E, T, S, U, D>(label, condition).build().also { this.addEdge(it) }
 }
