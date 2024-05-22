@@ -21,6 +21,7 @@ import tools.aqua.stars.core.crossProduct
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.powerlist
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -47,8 +48,9 @@ open class TSCBoundedNode<
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
     projectionIDMapper: Map<Any, Boolean> = mapOf(),
     val bounds: Pair<Int, Int>,
-    edges: List<TSCEdge<E, T, S, U, D>>
-) : TSCNode<E, T, S, U, D>(valueFunction, projectionIDMapper, edges) {
+    edges: List<TSCEdge<E, T, S, U, D>>,
+    monitors: TSCMonitorsEdge<E, T, S, U, D>?
+) : TSCNode<E, T, S, U, D>(valueFunction, projectionIDMapper, edges, monitors) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()

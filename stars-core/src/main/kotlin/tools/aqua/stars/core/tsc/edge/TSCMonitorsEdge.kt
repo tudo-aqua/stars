@@ -37,5 +37,5 @@ open class TSCMonitorsEdge<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(label: String, destination: TSCMonitorsNode<E, T, S, U, D>) :
-    TSCLeafEdge<E, T, S, U, D>(label, CONST_TRUE, destination)
+    D : TickDifference<D>>(destination: TSCMonitorsNode<E, T, S, U, D>) :
+    TSCLeafEdge<E, T, S, U, D>("monitors", CONST_TRUE, destination)

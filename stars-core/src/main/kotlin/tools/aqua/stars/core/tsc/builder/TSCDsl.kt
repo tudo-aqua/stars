@@ -20,14 +20,16 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCBoundedEdge
-import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCLeafEdge
+import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
+/**
+ * Constant predicate for always true edges.
+ */
 val CONST_TRUE : ((PredicateContext<*,*,*,*,*>) -> Boolean) = { true }
 
+//region Bounded Builder
 /**
  * Builds root node. Applies [init] function to [TSCNode].
  *
@@ -204,7 +206,9 @@ fun <
     .apply { bounds = edgesCount() to edgesCount() }
     .build()
     .also { this.addEdge(it) }
+// endregion
 
+// region Leaf Builder
 /**
  * DSL function for an edge with LeafNode.
  *
@@ -231,44 +235,84 @@ fun <
     .apply { init() }
     .build()
     .also { this.addEdge(it) }
+// endregion
 
-//fun <
-//    E : EntityType<E, T, S, U, D>,
-//    T : TickDataType<E, T, S, U, D>,
-//    S : SegmentType<E, T, S, U, D>,
-//    U : TickUnit<U, D>,
-//    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitors(
-//    init: TSCMonitorBuilder<E, T, S, U, D>.() -> Unit = {}
-//): TSCMonitorsEdge<E, T, S, U, D> =
-//    TSCMonitorBuilder<E, T, S, U, D>(label)
-//        .apply { init() }
-//        .buildMonitor()
-//        .also { this.addEdge(it) }
+// region Monitors Builder
+/**
+ * DSL function for an edge with MonitorsEdge in the bounded node scope.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param init The init function.
+ *
+ * @return The [TSCEdge] that is connected to a monitors node.
+ */
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitors(
+    init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
+): TSCMonitorsEdge<E, T, S, U, D> =
+    TSCMonitorsBuilder<E, T, S, U, D>()
+        .apply { init() }
+        .build()
+        .also { this.setMonitors(it) }
 
-/// **
-// * DSL function for monitor function nodes.
-// *
-// * @param E [EntityType].
-// * @param T [TickDataType].
-// * @param S [SegmentType].
-// * @param U [TickUnit].
-// * @param D [TickDifference].
-// * @param label name of the edge.
-// * @param monitorFunction The monitor function.
-// *
-// * @return The [TSCEdge] that is connected to a monitor leaf node.
-// */
-// fun <
-//    E : EntityType<E, T, S, U, D>,
-//    T : TickDataType<E, T, S, U, D>,
-//    S : SegmentType<E, T, S, U, D>,
-//    U : TickUnit<U, D>,
-//    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitor(
-//    label: String,
-//    monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean
-// ): TSCEdge<E, T, S, U, D> =
-//    this.bounded(label, 0 to 0) {
-//      this.condition = { _ -> true }
-//      this.onlyMonitor = true
-//      this.monitorFunction = monitorFunction
-//    }
+/**
+ * DSL function for an edge with MonitorsEdge in the leaf node scope.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param init The init function.
+ *
+ * @return The [TSCEdge] that is connected to a monitors node.
+ */
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.monitors(
+  init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
+): TSCMonitorsEdge<E, T, S, U, D> =
+  TSCMonitorsBuilder<E, T, S, U, D>()
+    .apply { init() }
+    .build()
+    .also { this.setMonitors(it) }
+// endregion
+
+// region Monitor Node
+/**
+ * DSL function for an edge with MonitorNode.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param label name of the edge.
+ * @param condition The monitor condition.
+ *
+ * @return The [TSCEdge] that is connected to a monitor node.
+ */
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCMonitorsBuilder<E, T, S, U, D>.monitor(
+  label: String,
+  condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+): TSCMonitorEdge<E, T, S, U, D> =
+  TSCMonitorBuilder(label, condition = condition)
+    .build()
+    .also { this.addEdge(it) }
+// endregion

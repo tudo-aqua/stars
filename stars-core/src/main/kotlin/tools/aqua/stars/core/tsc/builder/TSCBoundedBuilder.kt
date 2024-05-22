@@ -61,5 +61,5 @@ open class TSCBoundedBuilder<
       TSCBoundedEdge(
           label,
           condition ?: CONST_TRUE,
-          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList()))
+          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList(), monitorsEdge))
 }

@@ -17,6 +17,9 @@
 
 package tools.aqua.stars.core.tsc.edge
 
+import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCMonitorNode
 import tools.aqua.stars.core.types.*
 
@@ -25,5 +28,8 @@ open class TSCMonitorEdge<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(label: String, destination: TSCMonitorNode<E, T, S, U, D>) :
-    TSCMonitorsEdge<E, T, S, U, D>(label, destination)
+    D : TickDifference<D>>(
+    override val label: String,
+    override val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
+    destination: TSCMonitorNode<E, T, S, U, D>) :
+    TSCMonitorsEdge<E, T, S, U, D>(destination)

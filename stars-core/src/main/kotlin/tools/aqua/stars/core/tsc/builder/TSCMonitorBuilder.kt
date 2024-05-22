@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The STARS Project Authors
+ * Copyright 2023-2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,30 +15,42 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc.node
+package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCMonitorEdge
+import tools.aqua.stars.core.tsc.node.TSCMonitorNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Bounded TSC node.
+ * Class to assist in creating monitor nodes in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param valueFunction Value function predicate of the node.
- * @param monitorFunction Monitor function predicate of the node. [monitorFunction] and not the
- * [valueFunction].
+ * @param label Name of the edge.
+ * @param valueFunction (Default: empty) Value function predicate of the node.
+ * @param projectionIDs (Default: empty map) Projection identifier of the node.
+ * @param condition (Default: null) Condition predicate of the edge.
  */
-open class TSCMonitorsNode<
+open class TSCMonitorBuilder<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    label: String,
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    val monitorList: List<TSCMonitorEdge<E, T, S, U, D>>
-) : TSCLeafNode<E, T, S, U, D>(valueFunction, emptyMap(), null)
+    projectionIDs: Map<Any, Boolean> = mapOf(),
+    condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)
+) :
+    TSCBuilder<E, T, S, U, D, TSCMonitorEdge<E, T, S, U, D>>(
+        label, valueFunction, projectionIDs, 0 to 0, condition) {
+
+  override fun build(): TSCMonitorEdge<E, T, S, U, D> =
+      TSCMonitorEdge(
+          label, condition!!, TSCMonitorNode(valueFunction)
+      )
+}
