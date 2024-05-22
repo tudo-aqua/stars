@@ -26,14 +26,14 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Builds root node. Applies [buildSubtree] function to [TSCNode].
+ * Builds root node. Applies [init] function to [TSCNode].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param buildSubtree The buildSubtree function. Must add exactly one edge.
+ * @param init The init function. Must add exactly one edge.
  *
  * @return The [TSCNode] at the root level of the TSC.
  */
@@ -43,15 +43,13 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> root(
-    buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+  init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCNode<E, T, S, U, D> {
   val placeholderNode =
-      TSCBuilder<E, T, S, U, D>()
-          .apply {
-            buildSubtree()
-            this.bounds = edgesCount() to edgesCount()
-          }
-          .buildBounded()
+    TSCBoundedBuilder<E, T, S, U, D>("root")
+      .apply { init() }
+      .apply { this.bounds = edgesCount() to edgesCount() }
+      .build()
 
   check(placeholderNode.destination.edges.size < 2) {
     "Too many elements to add - root can only host one."
@@ -72,7 +70,7 @@ fun <
  * @param D [TickDifference].
  * @param label Name of the edge.
  * @param bounds Defines lower and upper limit of the BoundedNode.
- * @param buildSubtree The buildSubtree function.
+ * @param init The init function.
  *
  * @return The [TSCEdge] with the given bounds.
  */
@@ -81,18 +79,16 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.bounded(
-    label: String,
-    bounds: Pair<Int, Int>,
-    buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.bounded(
+  label: String,
+  bounds: Pair<Int, Int>,
+  init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCBoundedEdge<E, T, S, U, D> =
-    TSCBuilder<E, T, S, U, D>(label)
-        .apply {
-          buildSubtree()
-          this.bounds = bounds
-        }
-        .buildBounded()
-        .also { this.addEdge(it) }
+  TSCBoundedBuilder<E, T, S, U, D>(label)
+    .apply { init() }
+    .apply { this.bounds = bounds }
+    .build()
+    .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (1,1).
@@ -103,7 +99,7 @@ fun <
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label name of the edge.
- * @param buildSubtree The buildSubtree function.
+ * @param init The init function.
  *
  * @return The [TSCEdge] with the specific bounds (1,1).
  */
@@ -112,16 +108,14 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.exclusive(
-    label: String,
-    buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.exclusive(
+  label: String,
+  init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCBoundedEdge<E, T, S, U, D> =
-  TSCBuilder<E, T, S, U, D>(label)
-    .apply {
-      buildSubtree()
-      this.bounds = 1 to 1
-    }
-    .buildBounded()
+  TSCBoundedBuilder<E, T, S, U, D>(label)
+    .apply { init() }
+    .apply { bounds = 1 to 1 }
+    .build()
     .also { this.addEdge(it) }
 
 /**
@@ -142,17 +136,15 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.optional(
-    label: String,
-    init: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.optional(
+  label: String,
+  init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCBoundedEdge<E, T, S, U, D> =
-    TSCBuilder<E, T, S, U, D>(label)
-        .apply {
-          init()
-          bounds = 0 to edgesCount()
-        }
-        .buildBounded()
-        .also { this.addEdge(it) }
+  TSCBoundedBuilder<E, T, S, U, D>(label)
+    .apply { init() }
+    .apply { bounds = 0 to edgesCount() }
+    .build()
+    .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (1,#Edges).
@@ -163,7 +155,7 @@ fun <
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label name of the edge.
- * @param buildSubtree The buildSubtree function.
+ * @param init The init function.
  *
  * @return The [TSCEdge] with the specific bounds (1,#Edges).
  */
@@ -172,17 +164,15 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.any(
-    label: String,
-    buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.any(
+  label: String,
+  init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCBoundedEdge<E, T, S, U, D> =
-    TSCBuilder<E, T, S, U, D>(label)
-        .apply {
-          buildSubtree()
-          bounds = 1 to edgesCount()
-        }
-        .buildBounded()
-        .also { this.addEdge(it) }
+  TSCBoundedBuilder<E, T, S, U, D>(label)
+    .apply { init() }
+    .apply { bounds = 1 to edgesCount() }
+    .build()
+    .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges).
@@ -193,7 +183,7 @@ fun <
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label name of the edge.
- * @param buildSubtree The buildSubtree function.
+ * @param init The init function.
  *
  * @return The [TSCEdge] with the specific bounds (#Edges,#Edges).
  */
@@ -202,17 +192,15 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.all(
-    label: String,
-    buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.all(
+  label: String,
+  init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCBoundedEdge<E, T, S, U, D> =
-    TSCBuilder<E, T, S, U, D>(label)
-        .apply {
-          buildSubtree()
-          bounds = edgesCount() to edgesCount()
-        }
-        .buildBounded()
-        .also { this.addEdge(it) }
+  TSCBoundedBuilder<E, T, S, U, D>(label)
+    .apply { init() }
+    .apply { bounds = edgesCount() to edgesCount() }
+    .build()
+    .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with LeafNode.
@@ -223,7 +211,7 @@ fun <
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label name of the edge.
- * @param buildSubtree The buildSubtree function.
+ * @param init The init function.
  *
  * @return The [TSCEdge] that is connected to a leaf node.
  */
@@ -232,16 +220,13 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.leaf(
-    label: String,
-    buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.leaf(
+  label: String,
+  init: TSCLeafBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCLeafEdge<E, T, S, U, D> =
-  TSCBuilder<E, T, S, U, D>(label)
-    .apply {
-      buildSubtree()
-      bounds = 0 to 0
-    }
-    .buildLeaf()
+  TSCLeafBuilder<E, T, S, U, D>(label)
+    .apply { init() }
+    .build()
     .also { this.addEdge(it) }
 
 //fun <
@@ -249,11 +234,11 @@ fun <
 //    T : TickDataType<E, T, S, U, D>,
 //    S : SegmentType<E, T, S, U, D>,
 //    U : TickUnit<U, D>,
-//    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.monitors(
-//    buildSubtree: TSCMonitorBuilder<E, T, S, U, D>.() -> Unit = {}
+//    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitors(
+//    init: TSCMonitorBuilder<E, T, S, U, D>.() -> Unit = {}
 //): TSCMonitorsEdge<E, T, S, U, D> =
 //    TSCMonitorBuilder<E, T, S, U, D>(label)
-//        .apply { buildSubtree() }
+//        .apply { init() }
 //        .buildMonitor()
 //        .also { this.addEdge(it) }
 
@@ -275,7 +260,7 @@ fun <
 //    T : TickDataType<E, T, S, U, D>,
 //    S : SegmentType<E, T, S, U, D>,
 //    U : TickUnit<U, D>,
-//    D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.monitor(
+//    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitor(
 //    label: String,
 //    monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean
 // ): TSCEdge<E, T, S, U, D> =

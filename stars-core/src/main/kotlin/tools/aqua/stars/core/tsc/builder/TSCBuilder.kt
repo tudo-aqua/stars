@@ -18,60 +18,44 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.*
-import tools.aqua.stars.core.tsc.node.TSCBoundedNode
-import tools.aqua.stars.core.tsc.node.TSCLeafNode
+import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating objects in the dsl. always contains one edge and the node that
- * belongs to that edge (edge.destination = node)
+ * Class to assist in creating objects in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label name of the edge.
- * @property valueFunction Value function predicate of the node.
- * @property projectionIDs Projection identifier of the node.
+ * @param B [TSCEdge].
+ * @property label Name of the edge.
+ * @property valueFunction (Default: empty) Value function predicate of the node.
+ * @property projectionIDs (Default: empty map) Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
- * @property condition Condition predicate of the edge.
+ * @property condition (Default: null) Condition predicate of the edge.
  */
-class TSCBuilder<
+@TSCBuilderMarker
+sealed class TSCBuilder<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    val label: String = "",
-    var valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    var projectionIDs: Map<Any, Boolean> = mapOf(),
-    var bounds: Pair<Int, Int> = Pair(0, 0),
-    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null
+    D : TickDifference<D>,
+    B : TSCEdge<E, T, S, U, D>>(
+    val label: String,
+    var valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
+    var projectionIDs: Map<Any, Boolean>,
+    var bounds: Pair<Int, Int>,
+    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)?
 ) {
 
   /** Holds all edges of the node. */
-  private val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
+  protected val edges: MutableList<B> = mutableListOf()
 
-  private val monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
-
-  /**
-   * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
-   *
-   * @return The created [TSCEdge].
-   */
-  fun buildBounded(): TSCBoundedEdge<E, T, S, U, D> =
-      TSCBoundedEdge(
-          label,
-          condition ?: { true },
-          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList()))
-
-  fun buildLeaf(): TSCLeafEdge<E, T, S, U, D> =
-      TSCLeafEdge(
-          label,
-          condition ?: { true },
-          TSCLeafNode(valueFunction, projectionIDs, listOfNotNull(monitors)))
+  /** Builds the [TSCEdge]. */
+  abstract fun build(): B
 
   /**
    * Adds the given [edge] to [edges]. This will become the edges of the node that will be created
@@ -79,7 +63,7 @@ class TSCBuilder<
    *
    * @param edge [TSCEdge] to be added.
    */
-  fun addEdge(edge: TSCEdge<E, T, S, U, D>) {
+  fun addEdge(edge: B) {
     edges.add(edge)
   }
 

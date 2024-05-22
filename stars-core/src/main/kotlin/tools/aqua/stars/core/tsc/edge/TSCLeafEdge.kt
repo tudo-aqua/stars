@@ -30,4 +30,4 @@ open class TSCLeafEdge<
     label: String,
     condition: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
     destination: TSCLeafNode<E, T, S, U, D>
-) : TSCEdge<E, T, S, U, D>(label, condition, destination)
+) : TSCBoundedEdge<E, T, S, U, D>(label, condition, destination)
