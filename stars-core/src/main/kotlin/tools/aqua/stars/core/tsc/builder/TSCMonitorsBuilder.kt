@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.edge.TSCMonitorEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
@@ -30,23 +31,15 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param valueFunction (Default: empty) Value function predicate of the node.
- * @param projectionIDs (Default: empty map) Projection identifier of the node.
- * @param condition (Default: null) Condition predicate of the edge.
  */
 open class TSCMonitorsBuilder<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    projectionIDs: Map<Any, Boolean> = mapOf(),
-    condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null
-) :
-    TSCBuilder<E, T, S, U, D, TSCMonitorsEdge<E, T, S, U, D>>(
-        "monitors", valueFunction, projectionIDs, 0 to 0, condition) {
+    D : TickDifference<D>> :
+    TSCBuilder<E, T, S, U, D, TSCMonitorsEdge<E, T, S, U, D>>("monitors", 0 to 0) {
 
   override fun build(): TSCMonitorsEdge<E, T, S, U, D> =
-      TSCMonitorsEdge(TSCMonitorsNode(valueFunction, emptyList())) //FIXME: emptyList() should be monitors
+      TSCMonitorsEdge(TSCMonitorsNode(valueFunction, edges.toList()))
 }

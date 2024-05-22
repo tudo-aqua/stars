@@ -32,10 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @param B [TSCEdge].
  * @property label Name of the edge.
- * @property valueFunction (Default: empty) Value function predicate of the node.
- * @property projectionIDs (Default: empty map) Projection identifier of the node.
  * @property bounds Bounds of the node, only relevant for bounded nodes.
- * @property condition (Default: null) Condition predicate of the edge.
  */
 @TSCBuilderMarker
 sealed class TSCBuilder<
@@ -46,17 +43,29 @@ sealed class TSCBuilder<
     D : TickDifference<D>,
     B : TSCEdge<E, T, S, U, D>>(
     val label: String,
-    var valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
-    var projectionIDs: Map<Any, Boolean>,
     var bounds: Pair<Int, Int>,
-    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)?
 ) {
 
   /** Holds all edges of the node. */
   protected val edges: MutableList<B> = mutableListOf()
 
   /** Holds the optional monitors edge. */
-  protected  var monitorsEdge: TSCMonitorsEdge<E, T, S, U, D>? = null
+  var monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
+    set(value) {
+      check(monitors == null) { "Monitors node already set." }
+      field = value
+    }
+
+  /**
+   * Condition predicate of the edge. (Default: [CONST_TRUE])
+   */
+  var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
+
+  /** Value function predicate of the node. (Default: empty)  */
+  var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
+
+  /** Projection identifier of the node. (Default: empty map) */
+  var projectionIDs: Map<Any, Boolean> = emptyMap()
 
   /** Builds the [TSCEdge]. */
   abstract fun build(): B
@@ -70,16 +79,6 @@ sealed class TSCBuilder<
   fun addEdge(edge: B) {
     check(edges.none { it.label == edge.label }) { "Edge with label ${edge.label} already exists in this scope." }
     edges.add(edge)
-  }
-
-  /**
-   * Sets the optional monitors edge.
-   *
-   * @throws IllegalStateException If the monitors node is already set.
-   */
-  fun setMonitors(monitors: TSCMonitorsEdge<E, T, S, U, D>) {
-    check(monitorsEdge == null) { "Monitors node already set." }
-    monitorsEdge = monitors
   }
 
   /**

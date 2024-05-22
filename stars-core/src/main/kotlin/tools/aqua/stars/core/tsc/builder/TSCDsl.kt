@@ -261,7 +261,7 @@ fun <
     TSCMonitorsBuilder<E, T, S, U, D>()
         .apply { init() }
         .build()
-        .also { this.setMonitors(it) }
+        .also { this.monitors = it }
 
 /**
  * DSL function for an edge with MonitorsEdge in the leaf node scope.
@@ -286,7 +286,7 @@ fun <
   TSCMonitorsBuilder<E, T, S, U, D>()
     .apply { init() }
     .build()
-    .also { this.setMonitors(it) }
+    .also { this.monitors = it }
 // endregion
 
 // region Monitor Node
@@ -312,7 +312,8 @@ fun <
   label: String,
   condition: (PredicateContext<E, T, S, U, D>) -> Boolean
 ): TSCMonitorEdge<E, T, S, U, D> =
-  TSCMonitorBuilder(label, condition = condition)
+  TSCMonitorBuilder<E, T, S, U, D>(label)
+    .apply { this.condition = condition }
     .build()
     .also { this.addEdge(it) }
 // endregion

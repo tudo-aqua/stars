@@ -18,7 +18,9 @@
 package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorEdge
+import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.types.*
 
 /**
@@ -40,5 +42,5 @@ open class TSCMonitorsNode<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    val monitorList: List<TSCMonitorEdge<E, T, S, U, D>>
+    override val edges: List<TSCEdge<E, T, S, U, D>>,
 ) : TSCLeafNode<E, T, S, U, D>(valueFunction, emptyMap(), null)

@@ -32,10 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label Name of the edge.
- * @param valueFunction (Default: empty) Value function predicate of the node.
- * @param projectionIDs (Default: empty map) Projection identifier of the node.
  * @param bounds (Default: 0 to 0) Bounds of the node.
- * @param condition (Default: null) Condition predicate of the edge.
  */
 open class TSCBoundedBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -44,13 +41,8 @@ open class TSCBoundedBuilder<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    projectionIDs: Map<Any, Boolean> = mapOf(),
     bounds: Pair<Int, Int> = Pair(0, 0),
-    condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null
-) :
-    TSCBuilder<E, T, S, U, D, TSCBoundedEdge<E, T, S, U, D>>(
-        label, valueFunction, projectionIDs, bounds, condition) {
+) : TSCBuilder<E, T, S, U, D, TSCBoundedEdge<E, T, S, U, D>>(label, bounds) {
 
   /**
    * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
@@ -61,5 +53,5 @@ open class TSCBoundedBuilder<
       TSCBoundedEdge(
           label,
           condition ?: CONST_TRUE,
-          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList(), monitorsEdge))
+          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList(), monitors))
 }
