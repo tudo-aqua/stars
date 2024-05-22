@@ -23,7 +23,6 @@ import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.instance.*
-import tools.aqua.stars.core.tsc.node.TSCMonitorNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.*
@@ -90,9 +89,7 @@ class FailedMonitorsGroupedByTSCNodeMetric<
                 it.value
                     .map { t ->
                       t.rootNode.getAllEdges().mapNotNull { edge ->
-                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty() ||
-                            edge.destination is TSCMonitorNode)
-                            null
+                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty()) null
                         else edge.label to t
                       }
                     }

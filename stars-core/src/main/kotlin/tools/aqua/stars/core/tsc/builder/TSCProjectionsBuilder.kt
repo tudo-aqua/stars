@@ -59,7 +59,6 @@ open class TSCProjectionsBuilder<
       D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projection(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = false
-    println(label)
   }
 
   /**

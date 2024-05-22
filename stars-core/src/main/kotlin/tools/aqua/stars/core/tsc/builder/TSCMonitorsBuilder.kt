@@ -19,7 +19,6 @@ package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCMonitorEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
@@ -42,7 +41,7 @@ open class TSCMonitorsBuilder<
     TSCBuilder<E, T, S, U, D, TSCMonitorsEdge<E, T, S, U, D>>("monitors", 0 to 0) {
 
   override fun build(): TSCMonitorsEdge<E, T, S, U, D> =
-      TSCMonitorsEdge(TSCMonitorsNode(valueFunction, edges.toList()))
+      TSCMonitorsEdge(TSCMonitorsNode(valueFunction, monitorMap))
 
   /**
    * DSL function for an edge with MonitorNode.
@@ -65,6 +64,8 @@ open class TSCMonitorsBuilder<
       D : TickDifference<D>> TSCMonitorsBuilder<E, T, S, U, D>.monitor(
       label: String,
       condition: (PredicateContext<E, T, S, U, D>) -> Boolean
-  ): TSCMonitorEdge<E, T, S, U, D> =
-      TSCMonitorBuilder<E, T, S, U, D>(label, condition).build().also { this.addEdge(it) }
+  ) {
+    check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
+    monitorMap[label] = condition
+  }
 }
