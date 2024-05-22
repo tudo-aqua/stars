@@ -68,12 +68,13 @@ sealed class TSCNode<
       depth: Int = 0
   ): TSCInstanceNode<E, T, S, U, D> =
       TSCInstanceNode(this.valueFunction(ctx), true, this).also {
-        this.edges.forEach { tscEdge ->
-          if (tscEdge.condition(ctx))
-              it.edges +=
+        it.edges +=
+            this.edges
+                .filter { t -> t.condition(ctx) }
+                .map { tscEdge ->
                   TSCInstanceEdge(
                       tscEdge.label, tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
-        }
+                }
       }
 
   /**
