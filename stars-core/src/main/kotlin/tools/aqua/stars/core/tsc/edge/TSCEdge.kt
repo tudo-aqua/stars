@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.edge
 
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -40,7 +41,7 @@ open class TSCEdge<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val label: String,
-    val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
+    val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
     val destination: TSCNode<E, T, S, U, D>,
 ) {
 
@@ -51,6 +52,4 @@ open class TSCEdge<
           destination == other.destination
 
   override fun hashCode(): Int = label.hashCode() + condition.hashCode() + destination.hashCode()
-
-  fun conditionAlwaysTrue() = this.condition == { true }
 }

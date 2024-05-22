@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.edge
 
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
 
@@ -37,4 +38,4 @@ open class TSCMonitorsEdge<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(label: String, destination: TSCMonitorsNode<E, T, S, U, D>) :
-    TSCLeafEdge<E, T, S, U, D>(label, { true }, destination)
+    TSCLeafEdge<E, T, S, U, D>(label, CONST_TRUE, destination)
