@@ -115,7 +115,14 @@ fun <
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.exclusive(
     label: String,
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCBoundedEdge<E, T, S, U, D> = this.bounded(label, 1 to 1) { buildSubtree() }
+): TSCBoundedEdge<E, T, S, U, D> =
+  TSCBuilder<E, T, S, U, D>(label)
+    .apply {
+      buildSubtree()
+      this.bounds = 1 to 1
+    }
+    .buildBounded()
+    .also { this.addEdge(it) }
 
 /**
  * DSL function for an edge with BoundedNode with the limits of (0,#Edges).
@@ -232,6 +239,7 @@ fun <
   TSCBuilder<E, T, S, U, D>(label)
     .apply {
       buildSubtree()
+      bounds = 0 to 0
     }
     .buildLeaf()
     .also { this.addEdge(it) }
