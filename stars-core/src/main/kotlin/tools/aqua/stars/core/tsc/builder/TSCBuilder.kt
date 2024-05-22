@@ -53,6 +53,10 @@ sealed class TSCBuilder<
   /** Holds all projections of the node. */
   protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
 
+  /** Holds all monitors of the node. */
+  protected val monitorMap: MutableMap<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
+      mutableMapOf()
+
   /** Holds the optional projections. */
   protected var projections: TSCProjectionsEdge<E, T, S, U, D>? = null
     set(value) {

@@ -47,17 +47,17 @@ sealed class TSCNode<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-  open val edges: List<TSCEdge<E, T, S, U, D>>,
-  private val tscProjectionsEdge: TSCProjectionsEdge<E, T, S, U, D>?,
-  private val tscMonitorsEdge: TSCMonitorsEdge<E, T, S, U, D>?,
-  val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
+    open val edges: List<TSCEdge<E, T, S, U, D>>,
+    private val tscProjectionsEdge: TSCProjectionsEdge<E, T, S, U, D>?,
+    private val tscMonitorsEdge: TSCMonitorsEdge<E, T, S, U, D>?,
+    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
 ) {
 
   private val projections: Map<Any, Boolean> =
       (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap ?: emptyMap()
 
-  val monitors: List<TSCMonitorNode<E,T,S,U,D>> =
-    (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitors ?: emptyList()
+  val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
+      (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitorMap ?: emptyMap()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
@@ -109,8 +109,9 @@ sealed class TSCNode<
 
     // the normal case: projection id is there, but recursive is off
     return when (this) {
-      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, emptyList())
-      is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
+      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitors)
+      is TSCLeafNode ->
+          TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
       is TSCBoundedNode -> {
         val outgoingEdges =
             edges
@@ -139,12 +140,16 @@ sealed class TSCNode<
             .toList()
 
     return when (this) {
-      is TSCMonitorNode -> TSCMonitorNode(this.valueFunction)
-      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, outgoingEdges)
-      is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
+      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitors)
+      is TSCLeafNode ->
+          TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
       is TSCBoundedNode ->
           TSCBoundedNode(
-              this.valueFunction, this.tscProjectionsEdge, this.bounds, outgoingEdges, this.tscMonitorsEdge)
+              this.valueFunction,
+              this.tscProjectionsEdge,
+              this.bounds,
+              outgoingEdges,
+              this.tscMonitorsEdge)
     }
   }
 

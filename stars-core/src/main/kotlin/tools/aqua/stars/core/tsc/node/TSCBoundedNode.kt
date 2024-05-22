@@ -52,7 +52,7 @@ open class TSCBoundedNode<
     val bounds: Pair<Int, Int>,
     edges: List<TSCEdge<E, T, S, U, D>>,
     monitors: TSCMonitorsEdge<E, T, S, U, D>?
-) : TSCNode<E, T, S, U, D>(projections, edges, monitors, valueFunction) {
+) : TSCNode<E, T, S, U, D>(edges, projections, monitors, valueFunction) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()
