@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
@@ -52,10 +54,18 @@ open class TSCBoundedBuilder<
       TSCBoundedEdge(
           label,
           condition ?: CONST_TRUE,
-          TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList(), monitors))
+          TSCBoundedNode(valueFunction, projections, bounds, edges.toList(), monitors))
 
-
-
+  /**
+   * DSL function for edge conditions.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param condition The edge condition.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
@@ -67,6 +77,16 @@ open class TSCBoundedBuilder<
     this.condition = condition
   }
 
+  /**
+   * DSL function for a value function.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param valueFunction The value function.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
@@ -77,6 +97,50 @@ open class TSCBoundedBuilder<
   ) {
     this.valueFunction = valueFunction
   }
+
+  /**
+   * DSL function for the projections block.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param init The init function.
+   *
+   * @return The [TSCEdge] that is connected to a projections node.
+   */
+  fun <
+      E : EntityType<E, T, S, U, D>,
+      T : TickDataType<E, T, S, U, D>,
+      S : SegmentType<E, T, S, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.projections(
+      init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
+  ): TSCProjectionsEdge<E, T, S, U, D> =
+      TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
+
+  /**
+   * DSL function for the monitors block.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param init The init function.
+   *
+   * @return The [TSCEdge] that is connected to a monitors node.
+   */
+  fun <
+      E : EntityType<E, T, S, U, D>,
+      T : TickDataType<E, T, S, U, D>,
+      S : SegmentType<E, T, S, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitors(
+      init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
+  ): TSCMonitorsEdge<E, T, S, U, D> =
+      TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.monitors = it }
 
   /**
    * DSL function for an edge with BoundedNode.
@@ -116,7 +180,7 @@ open class TSCBoundedBuilder<
    * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label name of the edge.
+   * @param label Name of the edge.
    * @param init The init function.
    *
    * @return The [TSCEdge] with the specific bounds (1,1).
@@ -144,7 +208,7 @@ open class TSCBoundedBuilder<
    * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label name of the edge.
+   * @param label Name of the edge.
    * @param init The init function.
    *
    * @return The [TSCEdge] with the specific bounds (0,1#Edges).
@@ -172,7 +236,7 @@ open class TSCBoundedBuilder<
    * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label name of the edge.
+   * @param label Name of the edge.
    * @param init The init function.
    *
    * @return The [TSCEdge] with the specific bounds (1,#Edges).
@@ -200,7 +264,7 @@ open class TSCBoundedBuilder<
    * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label name of the edge.
+   * @param label Name of the edge.
    * @param init The init function.
    *
    * @return The [TSCEdge] with the specific bounds (#Edges,#Edges).
@@ -228,7 +292,7 @@ open class TSCBoundedBuilder<
    * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label name of the edge.
+   * @param label Name of the edge.
    * @param init The init function.
    *
    * @return The [TSCEdge] that is connected to a leaf node.
@@ -243,36 +307,4 @@ open class TSCBoundedBuilder<
       init: TSCLeafBuilder<E, T, S, U, D>.() -> Unit = {}
   ): TSCLeafEdge<E, T, S, U, D> =
       TSCLeafBuilder<E, T, S, U, D>(label).apply { init() }.build().also { this.addEdge(it) }
-
-  fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
-      U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.projections(
-    init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCProjectionsEdge<E, T, S, U, D> =
-    TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
-
-  /**
-   * DSL function for an edge with MonitorsEdge in the bounded node scope.
-   *
-   * @param E [EntityType].
-   * @param T [TickDataType].
-   * @param S [SegmentType].
-   * @param U [TickUnit].
-   * @param D [TickDifference].
-   * @param init The init function.
-   *
-   * @return The [TSCEdge] that is connected to a monitors node.
-   */
-  fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
-      U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitors(
-      init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCMonitorsEdge<E, T, S, U, D> =
-      TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.monitors = it }
 }

@@ -22,6 +22,7 @@ import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.powerlist
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
+import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -35,9 +36,10 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param valueFunction Value function predicate of the node.
- * @param projectionIDMapper Mapper for projection identifiers.
+ * @param projections [TSCProjectionsEdge] of the TSC.
  * @property bounds [Pair] of bounds.
  * @param edges [TSCEdge]s of the TSC.
+ * @param monitors [TSCMonitorsEdge]s of the TSC.
  */
 open class TSCBoundedNode<
     E : EntityType<E, T, S, U, D>,
@@ -46,11 +48,11 @@ open class TSCBoundedNode<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    projectionIDMapper: Map<Any, Boolean> = mapOf(),
+    projections: TSCProjectionsEdge<E, T, S, U, D>?,
     val bounds: Pair<Int, Int>,
     edges: List<TSCEdge<E, T, S, U, D>>,
     monitors: TSCMonitorsEdge<E, T, S, U, D>?
-) : TSCNode<E, T, S, U, D>(valueFunction, projectionIDMapper, edges, monitors) {
+) : TSCNode<E, T, S, U, D>(projections, edges, monitors, valueFunction) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()
@@ -92,18 +94,4 @@ open class TSCBoundedNode<
 
     return returnList
   }
-
-  override fun equals(other: Any?): Boolean =
-      other is TSCBoundedNode<*, *, *, *, *> &&
-          valueFunction == other.valueFunction &&
-          projectionIDMapper == other.projectionIDMapper &&
-          bounds == other.bounds &&
-          edges.containsAll(other.edges) &&
-          other.edges.containsAll(edges)
-
-  override fun hashCode(): Int =
-      valueFunction.hashCode() +
-          projectionIDMapper.hashCode() +
-          bounds.hashCode() +
-          edges.sumOf { it.hashCode() }
 }

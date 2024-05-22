@@ -50,6 +50,9 @@ sealed class TSCBuilder<
   /** Holds all edges of the node. */
   protected val edges: MutableList<B> = mutableListOf()
 
+  /** Holds all projections of the node. */
+  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
+
   /** Holds the optional projections. */
   protected var projections: TSCProjectionsEdge<E, T, S, U, D>? = null
     set(value) {
@@ -82,8 +85,8 @@ sealed class TSCBuilder<
     }
   private var valueFunctionSet = false
 
-  /** Projection identifier of the node. (Default: empty map) */
-  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
+  //  /** Projection identifier of the node. (Default: empty map) */
+  //  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
 
   /** Builds the [TSCEdge]. */
   abstract fun build(): B

@@ -22,6 +22,7 @@ import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
+import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -35,9 +36,10 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property valueFunction Value function predicate of the node.
- * @property projectionIDMapper Mapper for projection identifiers.
  * @property edges [TSCEdge]s of the TSC.
+ * @param tscProjectionsEdge [TSCProjectionsEdge] of the TSC.
+ * @param tscMonitorsEdge [TSCMonitorsEdge] of the TSC.
+ * @property valueFunction Value function predicate of the node.
  */
 sealed class TSCNode<
     E : EntityType<E, T, S, U, D>,
@@ -45,11 +47,17 @@ sealed class TSCNode<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
-    val projectionIDMapper: Map<Any, Boolean>,
-    open val edges: List<TSCEdge<E, T, S, U, D>>,
-    val monitors: TSCMonitorsEdge<E, T, S, U, D>?
+  open val edges: List<TSCEdge<E, T, S, U, D>>,
+  private val tscProjectionsEdge: TSCProjectionsEdge<E, T, S, U, D>?,
+  private val tscMonitorsEdge: TSCMonitorsEdge<E, T, S, U, D>?,
+  val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
 ) {
+
+  private val projections: Map<Any, Boolean> =
+      (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap ?: emptyMap()
+
+  val monitors: List<TSCMonitorNode<E,T,S,U,D>> =
+    (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitors ?: emptyList()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
@@ -78,7 +86,7 @@ sealed class TSCNode<
   fun buildProjections(
       projectionIgnoreList: List<Any> = listOf()
   ): List<TSCProjection<E, T, S, U, D>> =
-      projectionIDMapper
+      projections
           .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
           .mapNotNull {
             buildProjection(it.key)?.let { tsc -> TSCProjection(it.key, TSC(rootNode = tsc)) }
@@ -86,13 +94,12 @@ sealed class TSCNode<
 
   /**
    * Builds the TSC (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
-   * 'null' if the given [projectionId] is not found in [projectionIDMapper] of the current
-   * [TSCNode].
+   * 'null' if the given [projectionId] is not found in [projections] of the current [TSCNode].
    *
-   * @param projectionId The projection identifier as in [projectionIDMapper].
+   * @param projectionId The projection identifier as in [projections].
    */
   private fun buildProjection(projectionId: Any): TSCNode<E, T, S, U, D>? {
-    val mappedId = projectionIDMapper[projectionId]
+    val mappedId = projections[projectionId]
 
     // this projection id is not found, don't project, return null
     if (mappedId == null) return null
@@ -103,7 +110,7 @@ sealed class TSCNode<
     // the normal case: projection id is there, but recursive is off
     return when (this) {
       is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, emptyList())
-      is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.projectionIDMapper, this.monitors)
+      is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
       is TSCBoundedNode -> {
         val outgoingEdges =
             edges
@@ -115,10 +122,10 @@ sealed class TSCNode<
         val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
         TSCBoundedNode(
             this.valueFunction,
-            this.projectionIDMapper,
+            this.tscProjectionsEdge,
             this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
             outgoingEdges,
-            this.monitors)
+            this.tscMonitorsEdge)
       }
     }
   }
@@ -134,14 +141,10 @@ sealed class TSCNode<
     return when (this) {
       is TSCMonitorNode -> TSCMonitorNode(this.valueFunction)
       is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, outgoingEdges)
-      is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.projectionIDMapper, this.monitors)
+      is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
       is TSCBoundedNode ->
           TSCBoundedNode(
-              this.valueFunction,
-              this.projectionIDMapper,
-              this.bounds,
-              outgoingEdges,
-              this.monitors)
+              this.valueFunction, this.tscProjectionsEdge, this.bounds, outgoingEdges, this.tscMonitorsEdge)
     }
   }
 
@@ -189,15 +192,4 @@ sealed class TSCNode<
   }
 
   override fun toString(): String = toString(0)
-
-  override fun equals(other: Any?): Boolean =
-      other is TSCNode<*, *, *, *, *> &&
-          javaClass == other.javaClass &&
-          valueFunction == other.valueFunction &&
-          projectionIDMapper == other.projectionIDMapper &&
-          edges.containsAll(other.edges) &&
-          other.edges.containsAll(edges)
-
-  override fun hashCode(): Int =
-      valueFunction.hashCode() + projectionIDMapper.hashCode() + edges.sumOf { it.hashCode() }
 }

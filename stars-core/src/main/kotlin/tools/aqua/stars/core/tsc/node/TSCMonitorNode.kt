@@ -20,6 +20,16 @@ package tools.aqua.stars.core.tsc.node
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.types.*
 
+/**
+ * Monitor TSC node.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param valueFunction Value function predicate of the node.
+ */
 class TSCMonitorNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,

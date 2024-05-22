@@ -20,7 +20,6 @@ package tools.aqua.stars.core.tsc
 import kotlin.test.Test
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.root
-import tools.aqua.stars.core.tsc.projection.proj
 
 /** Tests for projections. */
 class TSCProjectionTests {
@@ -40,7 +39,12 @@ class TSCProjectionTests {
             SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference> {
-          all("root") { projectionIDs = mapOf(proj(projection1), proj(projection2)) }
+          all("root") {
+            projections {
+              projection(projection1)
+              projection(projection2)
+            }
+          }
         }
 
     val projections = tsc.buildProjections()
@@ -66,7 +70,12 @@ class TSCProjectionTests {
             SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference> {
-          all("root") { projectionIDs = mapOf(proj(projection1), proj(projection2)) }
+          all("root") {
+            projections {
+              projection(projection1)
+              projection(projection2)
+            }
+          }
         }
 
     var projections = tsc.buildProjections()

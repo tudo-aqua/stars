@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.tsc.node.TSCProjectionsNode
 import tools.aqua.stars.core.types.*
@@ -37,27 +36,50 @@ open class TSCProjectionsBuilder<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> :
-    TSCBuilder<E, T, S, U, D, TSCProjectionsEdge<E, T, S, U, D>>("monitors", 0 to 0) {
+    TSCBuilder<E, T, S, U, D, TSCProjectionsEdge<E, T, S, U, D>>("projections", 0 to 0) {
 
   override fun build(): TSCProjectionsEdge<E, T, S, U, D> =
-      TSCProjectionsEdge(TSCProjectionsNode(valueFunction, edges.toList()))
+      TSCProjectionsEdge(TSCProjectionsNode(valueFunction, projectionIDs))
 
+  /**
+   * DSL function to build projections from a label without recursion.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param label Name of the projection.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projection(label: String) {
-        check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
-        projectionIDs[label] = false
+    check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
+    projectionIDs[label] = false
+    println(label)
   }
 
+  /**
+   * DSL function to build projections from a label with recursion.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param label Name of the projection.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projectionRecursive(label: String) {
+      D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projectionRecursive(
+      label: String
+  ) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = true
   }
