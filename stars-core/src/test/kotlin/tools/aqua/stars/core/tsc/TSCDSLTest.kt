@@ -32,12 +32,31 @@ class TSCDSLTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference> {
           all("root") {
-            optional("optional") { leaf("leaf_optional") }
-            all("all") { leaf("leaf_all") }
-            any("any") { leaf("leaf_any") }
-            exclusive("exclusive") { leaf("leaf_exclusive") }
-            bounded("bounded", 2 to 3) { leaf("leaf_bounded") }
-            leaf("leaf_root") { leaf("leaf_leaf") }
+            optional("optional") {
+              leaf("leaf_optional")
+            }
+
+            all("all") {
+              leaf("leaf_all")
+            }
+
+            any("any") {
+              leaf("leaf_any")
+            }
+
+            exclusive("exclusive") {
+              leaf("leaf_exclusive")
+            }
+
+            bounded("bounded", 2 to 3) {
+              leaf("leaf_bounded") {
+                //leaf("Leaf_Wrong") {}
+              }
+            }
+
+            leaf("leaf_root") {
+              //any("any_wrong") { }
+            }
           }
         }
   }
