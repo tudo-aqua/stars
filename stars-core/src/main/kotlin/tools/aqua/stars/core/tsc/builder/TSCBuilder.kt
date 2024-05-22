@@ -50,16 +50,14 @@ sealed class TSCBuilder<
   protected val edges: MutableList<B> = mutableListOf()
 
   /** Holds the optional monitors edge. */
-  var monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
+  protected var monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
     }
 
-  /**
-   * Condition predicate of the edge. (Default: [CONST_TRUE])
-   */
-  var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
+  /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
+  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
     set(value) {
       check(!conditionSet) { "Condition already set." }
       conditionSet = true
@@ -67,8 +65,8 @@ sealed class TSCBuilder<
     }
   private var conditionSet = false
 
-  /** Value function predicate of the node. (Default: empty)  */
-  var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
+  /** Value function predicate of the node. (Default: empty) */
+  protected var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
     set(value) {
       check(!valueFunctionSet) { "Value function already set." }
       valueFunctionSet = true
@@ -89,7 +87,9 @@ sealed class TSCBuilder<
    * @param edge [TSCEdge] to be added.
    */
   fun addEdge(edge: B) {
-    check(edges.none { it.label == edge.label }) { "Edge with label ${edge.label} already exists in this scope." }
+    check(edges.none { it.label == edge.label }) {
+      "Edge with label ${edge.label} already exists in this scope."
+    }
     edges.add(edge)
   }
 
