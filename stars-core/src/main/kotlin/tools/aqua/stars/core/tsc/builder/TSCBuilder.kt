@@ -64,6 +64,7 @@ sealed class TSCBuilder<
    * @param edge [TSCEdge] to be added.
    */
   fun addEdge(edge: B) {
+    check(edges.none { it.label == edge.label }) { "Edge with label ${edge.label} already exists in this scope." }
     edges.add(edge)
   }
 

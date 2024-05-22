@@ -32,7 +32,10 @@ class TSCDSLTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference> {
           all("root") {
-            optional("optional") { leaf("leaf_optional") }
+            optional("optional") {
+              leaf("leaf_optional")
+              leaf("leaf_optional")
+            }
 
             all("all") { leaf("leaf_all") }
 
@@ -43,6 +46,17 @@ class TSCDSLTest {
             bounded("bounded", 2 to 3) {
               leaf("leaf_bounded") {
                 // leaf("Leaf_Wrong") {}
+                monitors{
+
+                }
+//                monitors{
+//
+//                }
+              }
+
+              monitors{
+                //any()
+                //leaf()
               }
             }
 
