@@ -52,7 +52,7 @@ open class TSCMonitorsBuilder<
    * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label name of the edge.
+   * @param label Name of the edge.
    * @param condition The monitor condition.
    *
    * @return The [TSCEdge] that is connected to a monitor node.

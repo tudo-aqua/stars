@@ -18,15 +18,25 @@
 package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.types.*
 
-open class TSCProjectionsNode<
+/**
+ * Projections TSC node.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param valueFunction Value function predicate of the node.
+ * @property projectionMap Map of projections.
+ */
+class TSCProjectionsNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    override val edges: List<TSCEdge<E, T, S, U, D>>,
-) : TSCLeafNode<E, T, S, U, D>(valueFunction, emptyMap(), null)
+    val projectionMap: Map<Any, Boolean>
+) : TSCLeafNode<E, T, S, U, D>(valueFunction, null, null)

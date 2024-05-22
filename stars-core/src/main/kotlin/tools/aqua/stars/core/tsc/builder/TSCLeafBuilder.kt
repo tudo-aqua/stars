@@ -44,9 +44,18 @@ open class TSCLeafBuilder<
     TSCBuilder<E, T, S, U, D, TSCLeafEdge<E, T, S, U, D>>(label, 0 to 0) {
 
   override fun build(): TSCLeafEdge<E, T, S, U, D> =
-      TSCLeafEdge(
-          label, condition ?: CONST_TRUE, TSCLeafNode(valueFunction, projectionIDs, monitors))
+      TSCLeafEdge(label, condition ?: CONST_TRUE, TSCLeafNode(valueFunction, projections, monitors))
 
+  /**
+   * DSL function for edge conditions.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param condition The edge condition.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
@@ -58,6 +67,16 @@ open class TSCLeafBuilder<
     this.condition = condition
   }
 
+  /**
+   * DSL function for a value function.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param valueFunction The value function.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
@@ -69,15 +88,27 @@ open class TSCLeafBuilder<
     this.valueFunction = valueFunction
   }
 
+  /**
+   * DSL function for the projections block.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param init The init function.
+   *
+   * @return The [TSCEdge] that is connected to a projections node.
+   */
   fun <
       E : EntityType<E, T, S, U, D>,
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.projections(
-    init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
+      init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
   ): TSCProjectionsEdge<E, T, S, U, D> =
-    TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
+      TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
 
   /**
    * DSL function for an edge with MonitorsEdge in the leaf node scope.

@@ -30,8 +30,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label Monitor label.
- * @property destination Destination [TSCMonitorsNode].
+ * @param destination Destination [TSCMonitorsNode].
  */
 open class TSCProjectionsEdge<
     E : EntityType<E, T, S, U, D>,
