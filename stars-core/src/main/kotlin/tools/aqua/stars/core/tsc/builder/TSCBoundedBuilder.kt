@@ -60,6 +60,6 @@ open class TSCBoundedBuilder<
   override fun build(): TSCBoundedEdge<E, T, S, U, D> =
       TSCBoundedEdge(
           label,
-          condition ?: { true },
+          condition ?: CONST_TRUE,
           TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList()))
 }

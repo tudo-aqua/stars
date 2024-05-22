@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.edge
 
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.types.*
 
@@ -28,6 +29,6 @@ open class TSCLeafEdge<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
-    condition: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
+    condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
     destination: TSCLeafNode<E, T, S, U, D>
 ) : TSCBoundedEdge<E, T, S, U, D>(label, condition, destination)

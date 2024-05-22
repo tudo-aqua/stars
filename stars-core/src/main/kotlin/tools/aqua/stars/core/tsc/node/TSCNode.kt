@@ -19,6 +19,7 @@ package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -107,8 +108,8 @@ sealed class TSCNode<
                 .map { edge -> edge to edge.destination.buildProjection(projectionId) }
                 .map { TSCEdge(it.first.label, it.first.condition, it.second!!) }
                 .toList()
-        val alwaysEdgesBefore = edges.count { it.conditionAlwaysTrue() }
-        val alwaysEdgesAfter = outgoingEdges.count { it.conditionAlwaysTrue() }
+        val alwaysEdgesBefore = edges.count { it.condition == CONST_TRUE }
+        val alwaysEdgesAfter = outgoingEdges.count { it.condition == CONST_TRUE }
         val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
         TSCBoundedNode(
             this.valueFunction,
@@ -150,7 +151,7 @@ sealed class TSCNode<
 
             edges.forEach { instanceEdge ->
               append("  ".repeat(depth))
-              append(if (instanceEdge.conditionAlwaysTrue()) "-T-> " else "---> ")
+              append(if (instanceEdge.condition == CONST_TRUE) "-T-> " else "---> ")
               append(instanceEdge.label)
               append(instanceEdge.destination.toString(depth + 1))
             }

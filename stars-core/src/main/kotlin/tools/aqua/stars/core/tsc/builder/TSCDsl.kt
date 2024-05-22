@@ -19,11 +19,14 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCBoundedEdge
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCLeafEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
+
+val CONST_TRUE : ((PredicateContext<*,*,*,*,*>) -> Boolean) = { true }
 
 /**
  * Builds root node. Applies [init] function to [TSCNode].
