@@ -20,6 +20,7 @@ package tools.aqua.stars.core.tsc.builder
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
+import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.types.*
 
 /**
@@ -49,6 +50,13 @@ sealed class TSCBuilder<
   /** Holds all edges of the node. */
   protected val edges: MutableList<B> = mutableListOf()
 
+  /** Holds the optional projections. */
+  protected var projections: TSCProjectionsEdge<E, T, S, U, D>? = null
+    set(value) {
+      check(projections == null) { "Projections node already set." }
+      field = value
+    }
+
   /** Holds the optional monitors edge. */
   protected var monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
     set(value) {
@@ -75,7 +83,7 @@ sealed class TSCBuilder<
   private var valueFunctionSet = false
 
   /** Projection identifier of the node. (Default: empty map) */
-  var projectionIDs: Map<Any, Boolean> = emptyMap()
+  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
 
   /** Builds the [TSCEdge]. */
   abstract fun build(): B
