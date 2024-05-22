@@ -83,7 +83,7 @@ fun <
     U : TickUnit<U, D>,
     D : TickDifference<D>> TSCBuilder<E, T, S, U, D>.bounded(
     label: String,
-    bounds: Pair<Int, Int> = Pair(1, 1),
+    bounds: Pair<Int, Int>,
     buildSubtree: TSCBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCBoundedEdge<E, T, S, U, D> =
     TSCBuilder<E, T, S, U, D>(label)
