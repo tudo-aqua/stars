@@ -19,7 +19,7 @@ package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.tsc.builder.*
+import tools.aqua.stars.core.tsc.builder.root
 
 class TSCDSLTest {
   @Test
@@ -31,39 +31,57 @@ class TSCDSLTest {
             SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference> {
-          all("root") {
-            optional("optional") {
-              leaf("leaf_optional")
-              leaf("leaf_optional")
+          bounded("root", 0 to 2) {
+            condition { _ -> true }
+
+            projections {
+              projection("P1")
+              projection("P2")
+              projectionRecursive("PR1")
+              projectionRecursive("PR2")
             }
 
-            all("all") { leaf("leaf_all") }
-
-            any("any") { leaf("leaf_any") }
-
-            exclusive("exclusive") { leaf("leaf_exclusive") }
-
-            bounded("bounded", 2 to 3) {
-              leaf("leaf_bounded") {
-                // leaf("Leaf_Wrong") {}
-                monitors{
-
-                }
-//                monitors{
-//
-//                }
-              }
-
-              monitors{
-                //any()
-                //leaf()
-              }
+            monitors {
+              monitor("monitor1") { _ -> true }
+              monitor("monitor2") { _ -> true }
+              monitor("monitor3") { _ -> true }
+              monitor("monitor4") { _ -> true }
             }
 
-            leaf("leaf_root") {
-              // any("any_wrong") { }
-            }
+            //            optional("optional") {
+            //              leaf("leaf_optional")
+            //              //leaf("leaf_optional")
+            //            }
+            //
+            //            all("all") { leaf("leaf_all") }
+            //
+            //            any("any") { leaf("leaf_any") }
+            //
+            //            exclusive("exclusive") { leaf("leaf_exclusive") }
+            //
+            //            bounded("bounded", 2 to 3) {
+            //              leaf("leaf_bounded") {
+            //                // leaf("Leaf_Wrong") {}
+            //                monitors{
+            //
+            //                }
+            ////                monitors{
+            ////
+            ////                }
+            //              }
+            //
+            //              monitors{
+            //                //any()
+            //                //leaf()
+            //                monitor("monitor") { _ -> true }
+            //              }
+            //            }
+            //
+            //            leaf("leaf_root") {
+            //              // any("any_wrong") { }
+            //            }
           }
         }
+    tsc
   }
 }
