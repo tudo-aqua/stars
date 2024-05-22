@@ -317,3 +317,43 @@ fun <
     .build()
     .also { this.addEdge(it) }
 // endregion
+
+// region condition
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.condition(
+  condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+) { this.condition = condition }
+
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.condition(
+  condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+) { this.condition = condition }
+// endregion
+
+// region condition
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.valueFunction(
+  valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
+) { this.valueFunction = valueFunction }
+
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.valueFunction(
+  valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
+) { this.valueFunction = valueFunction }
+// endregion
