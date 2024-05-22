@@ -18,10 +18,7 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCBoundedEdge
-import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCLeafEdge
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
+import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.types.*
 
@@ -56,6 +53,8 @@ open class TSCBoundedBuilder<
           label,
           condition ?: CONST_TRUE,
           TSCBoundedNode(valueFunction, projectionIDs, bounds, edges.toList(), monitors))
+
+
 
   fun <
       E : EntityType<E, T, S, U, D>,
@@ -244,6 +243,16 @@ open class TSCBoundedBuilder<
       init: TSCLeafBuilder<E, T, S, U, D>.() -> Unit = {}
   ): TSCLeafEdge<E, T, S, U, D> =
       TSCLeafBuilder<E, T, S, U, D>(label).apply { init() }.build().also { this.addEdge(it) }
+
+  fun <
+      E : EntityType<E, T, S, U, D>,
+      T : TickDataType<E, T, S, U, D>,
+      S : SegmentType<E, T, S, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.projections(
+    init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
+  ): TSCProjectionsEdge<E, T, S, U, D> =
+    TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
 
   /**
    * DSL function for an edge with MonitorsEdge in the bounded node scope.

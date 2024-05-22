@@ -15,18 +15,28 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc.node
+package tools.aqua.stars.core.tsc.edge
 
-import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
+import tools.aqua.stars.core.tsc.node.TSCProjectionsNode
 import tools.aqua.stars.core.types.*
 
-open class TSCMonitorsNode<
+/**
+ * Baseclass for TSC monitor edges.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property label Monitor label.
+ * @property destination Destination [TSCMonitorsNode].
+ */
+open class TSCProjectionsEdge<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    override val edges: List<TSCEdge<E, T, S, U, D>>,
-) : TSCLeafNode<E, T, S, U, D>(valueFunction, emptyMap(), null)
+    D : TickDifference<D>>(destination: TSCProjectionsNode<E, T, S, U, D>) :
+    TSCLeafEdge<E, T, S, U, D>("monitors", CONST_TRUE, destination)
