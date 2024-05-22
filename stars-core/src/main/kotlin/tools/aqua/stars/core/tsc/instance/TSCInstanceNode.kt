@@ -42,7 +42,7 @@ class TSCInstanceNode<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val value: Any,
-    val monitorResult: Boolean,
+    val monitorResult: Boolean, // FIXME: Multiple monitors possible now -> Failed monitors List
     val tscNode: TSCNode<E, T, S, U, D>
 ) {
 
