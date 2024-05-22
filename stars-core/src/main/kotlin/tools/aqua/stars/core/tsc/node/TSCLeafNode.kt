@@ -29,5 +29,5 @@ open class TSCLeafNode<
     D : TickDifference<D>>(
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
     projectionIDMapper: Map<Any, Boolean> = mapOf(),
-    val monitors: List<TSCMonitorsEdge<E, T, S, U, D>>
-) : TSCBoundedNode<E, T, S, U, D>(valueFunction, projectionIDMapper, 0 to 0, monitors)
+    monitors: TSCMonitorsEdge<E, T, S, U, D>?
+) : TSCBoundedNode<E, T, S, U, D>(valueFunction, projectionIDMapper, 0 to 0, emptyList(), monitors)

@@ -51,5 +51,5 @@ open class TSCLeafBuilder<
 
   override fun build(): TSCLeafEdge<E, T, S, U, D> =
       TSCLeafEdge(
-          label, condition ?: CONST_TRUE, TSCLeafNode(valueFunction, projectionIDs, emptyList()))
+          label, condition ?: CONST_TRUE, TSCLeafNode(valueFunction, projectionIDs, monitorsEdge))
 }

@@ -40,9 +40,9 @@ open class TSCEdge<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val label: String,
-    val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
-    val destination: TSCNode<E, T, S, U, D>,
+  open val label: String,
+  open val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
+  val destination: TSCNode<E, T, S, U, D>,
 ) {
 
   override fun equals(other: Any?): Boolean =

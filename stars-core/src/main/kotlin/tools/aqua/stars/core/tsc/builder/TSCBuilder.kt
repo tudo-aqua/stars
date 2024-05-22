@@ -19,6 +19,7 @@ package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.types.*
 
 /**
@@ -54,6 +55,9 @@ sealed class TSCBuilder<
   /** Holds all edges of the node. */
   protected val edges: MutableList<B> = mutableListOf()
 
+  /** Holds the optional monitors edge. */
+  protected  var monitorsEdge: TSCMonitorsEdge<E, T, S, U, D>? = null
+
   /** Builds the [TSCEdge]. */
   abstract fun build(): B
 
@@ -66,6 +70,16 @@ sealed class TSCBuilder<
   fun addEdge(edge: B) {
     check(edges.none { it.label == edge.label }) { "Edge with label ${edge.label} already exists in this scope." }
     edges.add(edge)
+  }
+
+  /**
+   * Sets the optional monitors edge.
+   *
+   * @throws IllegalStateException If the monitors node is already set.
+   */
+  fun setMonitors(monitors: TSCMonitorsEdge<E, T, S, U, D>) {
+    check(monitorsEdge == null) { "Monitors node already set." }
+    monitorsEdge = monitors
   }
 
   /**

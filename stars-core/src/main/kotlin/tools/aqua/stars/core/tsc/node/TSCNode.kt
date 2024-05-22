@@ -21,6 +21,7 @@ import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -46,7 +47,8 @@ sealed class TSCNode<
     D : TickDifference<D>>(
     val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
     val projectionIDMapper: Map<Any, Boolean>,
-    val edges: List<TSCEdge<E, T, S, U, D>>
+    val edges: List<TSCEdge<E, T, S, U, D>>,
+    val monitors: TSCMonitorsEdge<E, T, S, U, D>?
 ) {
 
   /** Generates all TSC instances. */
@@ -115,7 +117,8 @@ sealed class TSCNode<
             this.valueFunction,
             this.projectionIDMapper,
             this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
-            outgoingEdges)
+            outgoingEdges,
+            this.monitors)
       }
     }
   }
@@ -133,7 +136,7 @@ sealed class TSCNode<
       is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitorList)
       is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.projectionIDMapper, this.monitors)
       is TSCBoundedNode ->
-          TSCBoundedNode(this.valueFunction, this.projectionIDMapper, this.bounds, outgoingEdges)
+          TSCBoundedNode(this.valueFunction, this.projectionIDMapper, this.bounds, outgoingEdges, this.monitors)
     }
   }
 
