@@ -31,9 +31,6 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label Name of the edge.
- * @param valueFunction (Default: empty) Value function predicate of the node.
- * @param projectionIDs (Default: empty map) Projection identifier of the node.
- * @param condition (Default: null) Condition predicate of the edge.
  */
 open class TSCMonitorBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -41,13 +38,9 @@ open class TSCMonitorBuilder<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    label: String,
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    projectionIDs: Map<Any, Boolean> = mapOf(),
-    condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)
+    label: String
 ) :
-    TSCBuilder<E, T, S, U, D, TSCMonitorEdge<E, T, S, U, D>>(
-        label, valueFunction, projectionIDs, 0 to 0, condition) {
+    TSCBuilder<E, T, S, U, D, TSCMonitorEdge<E, T, S, U, D>>(label, 0 to 0 ) {
 
   override fun build(): TSCMonitorEdge<E, T, S, U, D> =
       TSCMonitorEdge(

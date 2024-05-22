@@ -45,10 +45,10 @@ sealed class TSCNode<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
-    val projectionIDMapper: Map<Any, Boolean>,
-    val edges: List<TSCEdge<E, T, S, U, D>>,
-    val monitors: TSCMonitorsEdge<E, T, S, U, D>?
+  val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
+  val projectionIDMapper: Map<Any, Boolean>,
+  open val edges: List<TSCEdge<E, T, S, U, D>>,
+  val monitors: TSCMonitorsEdge<E, T, S, U, D>?
 ) {
 
   /** Generates all TSC instances. */
@@ -133,7 +133,7 @@ sealed class TSCNode<
 
     return when (this) {
       is TSCMonitorNode -> TSCMonitorNode(this.valueFunction)
-      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitorList)
+      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, outgoingEdges)
       is TSCLeafNode -> TSCLeafNode(this.valueFunction, this.projectionIDMapper, this.monitors)
       is TSCBoundedNode ->
           TSCBoundedNode(this.valueFunction, this.projectionIDMapper, this.bounds, outgoingEdges, this.monitors)
