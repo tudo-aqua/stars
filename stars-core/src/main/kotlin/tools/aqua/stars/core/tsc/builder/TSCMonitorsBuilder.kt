@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
 import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
@@ -44,7 +43,7 @@ open class TSCMonitorsBuilder<
       TSCMonitorsEdge(TSCMonitorsNode(valueFunction, monitorMap))
 
   /**
-   * DSL function for an edge with MonitorNode.
+   * DSL function for a monitor.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -53,8 +52,6 @@ open class TSCMonitorsBuilder<
    * @param D [TickDifference].
    * @param label Name of the edge.
    * @param condition The monitor condition.
-   *
-   * @return The [TSCEdge] that is connected to a monitor node.
    */
   fun <
       E : EntityType<E, T, S, U, D>,

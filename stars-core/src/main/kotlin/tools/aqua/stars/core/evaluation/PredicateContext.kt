@@ -55,7 +55,7 @@ class PredicateContext<
     }
 
   /** Holds the evaluations of all previously calculated [NullaryPredicate]s. */
-  private val nullaryPredicateCache: MutableMap<NullaryPredicate<E, T, S, U, D>, List<U>> =
+  private val nullaryPredicateCache: MutableMap<Pair<NullaryPredicate<E, T, S, U, D>, U>, Boolean> =
       mutableMapOf()
   /** Holds the evaluations of all previously calculated [UnaryPredicate]s. */
   private val unaryPredicateCache:
@@ -68,25 +68,20 @@ class PredicateContext<
   // TODO: Check if the caches are still "useful" and actually used.
 
   /**
-   * Evaluates whether [NullaryPredicate] [predicate] holds for current [PredicateContext].
+   * Evaluates whether [NullaryPredicate] [predicate] holds for current [PredicateContext] at [tick]
+   * .
    *
    * @param predicate The [NullaryPredicate] that is to be evaluated.
+   * @param tick The [TickUnit] at which the [predicate] is evaluated.
    *
-   * @return The [List] of [TickUnit]s in which the predicate holds.
+   * @return Whether the [predicate] holds at the given [tick].
    */
-  fun holds(predicate: NullaryPredicate<E, T, S, U, D>): List<U> {
-    var evaluation = nullaryPredicateCache[predicate]
+  fun holds(predicate: NullaryPredicate<E, T, S, U, D>, tick: U): Boolean =
+      nullaryPredicateCache.getOrPut(predicate to tick) {
+        val currentTick = segment.ticks[tick]
 
-    // There exists no previous evaluation for the current predicate
-    if (evaluation == null) {
-      // Evaluate predicate
-      evaluation = segment.tickData.filter { predicate.eval(this, it) }.map { it.currentTick }
-      // Store evaluation result of predicate in cache
-      nullaryPredicateCache += predicate to evaluation
-    }
-
-    return evaluation
-  }
+        currentTick != null && predicate.eval(this)
+      }
 
   /**
    * Evaluates whether [UnaryPredicate] [predicate] holds for current [PredicateContext], at [tick]
