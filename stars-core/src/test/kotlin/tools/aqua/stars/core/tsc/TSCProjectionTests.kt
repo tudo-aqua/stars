@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
+import kotlin.test.assertNotNull
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.root
 
@@ -144,44 +145,61 @@ class TSCProjectionTests {
     val projectionSub1 = "projection_sub1"
     val projectionSub2 = "projection_sub2"
     val tsc =
-        root<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
-          all("root") {
-            projections {
-              projectionRecursive(projectionAll)
-              projection(projectionSub1)
-              projection(projectionSub2)
-            }
+        TSC(
+            root<
+                SimpleEntity,
+                SimpleTickData,
+                SimpleSegment,
+                SimpleTickDataUnit,
+                SimpleTickDataDifference> {
+              any("root") {
+                projections {
+                  projectionRecursive(projectionAll)
+                  projection(projectionSub1)
+                  projection(projectionSub2)
+                }
 
-            all("all1") {
-              projections { projectionRecursive(projectionSub1) }
+                all("all") {
+                  projections { projectionRecursive(projectionSub1) }
 
-              leaf("leaf1") // Should be included in the projectionAll and in the projectionSub1.
-            }
+                  // Should be included in the projectionAll and in the projectionSub1.
+                  leaf("leaf_all_1")
+                  leaf("leaf_all_2")
+                }
 
-            all("all2") {
-              projections { projectionRecursive(projectionSub2) }
+                exclusive("exclusive") {
+                  projections { projectionRecursive(projectionSub2) }
 
-              leaf("leaf2") // Should be included in the projectionAll and in the projectionSub2.
-            }
-          }
-        }
+                  // Should be included in the projectionAll and in the projectionSub2.
+                  leaf("leaf_exclusive_1")
+                  leaf("leaf_exclusive_2")
+                }
+              }
+            })
 
     val projections = tsc.buildProjections()
 
-    // Check that exactly two projections are produced
+    // Check that the projections are correctly represented in their respective TSCProjection class
+    val projectionAllTSC = projections.find { it.id == projectionAll }
+    val projectionSub1TSC = projections.find { it.id == projectionSub1 }
+    val projectionSub2TSC = projections.find { it.id == projectionSub2 }
+    assertNotNull(projectionAllTSC)
+    assertNotNull(projectionSub1TSC)
+    assertNotNull(projectionSub2TSC)
+
+    // Check that no more projections are produced
     assert(projections.size == 3)
 
-    // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.id == projectionAll })
-    assert(projections.any { it.id == projectionSub1 })
-    assert(projections.any { it.id == projectionSub2 })
+    // Assert the "all" projection contains both leafs
+    val expectedLabelsAll =
+        listOf(
+            "all", "leaf_all_1", "leaf_all_2", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
+    assert(projectionAllTSC.tsc.map { it.label } == expectedLabelsAll)
 
-    // Assert all projection contains both leafs
-    // assert(projections.first { it.id == projectionAll }.tsc.
+    val expectedLabelsSub1 = listOf("all", "leaf_all_1", "leaf_all_2")
+    assert(projectionSub1TSC.tsc.map { it.label } == expectedLabelsSub1)
+
+    val expectedLabelsSub2 = listOf("exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
+    assert(projectionSub2TSC.tsc.map { it.label } == expectedLabelsSub2)
   }
 }
