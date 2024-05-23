@@ -136,4 +136,52 @@ class TSCProjectionTests {
     // Check that exactly two projections are produced
     assert(projections.isEmpty())
   }
+
+  /** This test check that projection correctly split the TSC. */
+  @Test
+  fun testComplexProjectionBuilding() {
+    val projectionAll = "projection_all"
+    val projectionSub1 = "projection_sub1"
+    val projectionSub2 = "projection_sub2"
+    val tsc =
+        root<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference> {
+          all("root") {
+            projections {
+              projectionRecursive(projectionAll)
+              projection(projectionSub1)
+              projection(projectionSub2)
+            }
+
+            all("all1") {
+              projections { projectionRecursive(projectionSub1) }
+
+              leaf("leaf1") // Should be included in the projectionAll and in the projectionSub1.
+            }
+
+            all("all2") {
+              projections { projectionRecursive(projectionSub2) }
+
+              leaf("leaf2") // Should be included in the projectionAll and in the projectionSub2.
+            }
+          }
+        }
+
+    val projections = tsc.buildProjections()
+
+    // Check that exactly two projections are produced
+    assert(projections.size == 3)
+
+    // Check that the projections are correctly represented in their respective TSCProjection class
+    assert(projections.any { it.id == projectionAll })
+    assert(projections.any { it.id == projectionSub1 })
+    assert(projections.any { it.id == projectionSub2 })
+
+    // Assert all projection contains both leafs
+    // assert(projections.first { it.id == projectionAll }.tsc.
+  }
 }

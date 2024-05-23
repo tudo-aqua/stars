@@ -101,36 +101,37 @@ sealed class TSCNode<
    * @param projectionId The projection identifier as in [projections].
    */
   private fun buildProjection(projectionId: Any): TSCNode<E, T, S, U, D>? {
-    val mappedId = projections[projectionId]
-
-    // this projection id is not found, don't project, return null
-    if (mappedId == null) return null
+    val isRecursive = projections[projectionId] ?: return null
 
     // projection id is there and everything below should be included -> just deep clone
-    if (mappedId) return deepClone()
+    if (isRecursive) return deepClone()
 
     // the normal case: projection id is there, but recursive is off
-    return when (this) {
-      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitors)
-      is TSCLeafNode ->
-          TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
-      is TSCBoundedNode -> {
-        val outgoingEdges =
-            edges
-                .map { edge -> edge to edge.destination.buildProjection(projectionId) }
-                .map { TSCEdge(it.first.label, it.first.condition, it.second!!) }
-                .toList()
-        val alwaysEdgesBefore = edges.count { it.condition == CONST_TRUE }
-        val alwaysEdgesAfter = outgoingEdges.count { it.condition == CONST_TRUE }
-        val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
-        TSCBoundedNode(
-            this.valueFunction,
-            this.tscProjectionsEdge,
-            this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
-            outgoingEdges,
-            this.tscMonitorsEdge)
-      }
-    }
+    else
+        return when (this) {
+          is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitors)
+          is TSCLeafNode ->
+              TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
+          is TSCBoundedNode -> {
+            val outgoingEdges =
+                edges
+                    .mapNotNull { edge ->
+                      edge.destination.buildProjection(projectionId)?.let { projection ->
+                        TSCEdge(edge.label, edge.condition, projection)
+                      }
+                    }
+                    .toList()
+            val alwaysEdgesBefore = edges.count { it.condition == CONST_TRUE }
+            val alwaysEdgesAfter = outgoingEdges.count { it.condition == CONST_TRUE }
+            val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
+            TSCBoundedNode(
+                this.valueFunction,
+                this.tscProjectionsEdge,
+                this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
+                outgoingEdges,
+                this.tscMonitorsEdge)
+          }
+        }
   }
 
   /** Deeply clones [TSCNode]. */
