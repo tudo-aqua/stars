@@ -25,30 +25,31 @@ class TSCIteratorTest {
   @Test
   fun `Test TSC Iterator`() {
     val tsc =
-        root<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
-          all("root") {
-            exclusive("exclusive") {
-              leaf("leaf_exclusive_1")
-              leaf("leaf_exclusive_2")
-            }
+        TSC(
+            root<
+                SimpleEntity,
+                SimpleTickData,
+                SimpleSegment,
+                SimpleTickDataUnit,
+                SimpleTickDataDifference> {
+              all("root") {
+                exclusive("exclusive") {
+                  leaf("leaf_exclusive_1")
+                  leaf("leaf_exclusive_2")
+                }
 
-            any("any") {
-              leaf("leaf_any_1")
-              leaf("leaf_any_2")
+                any("any") {
+                  leaf("leaf_any_1")
+                  leaf("leaf_any_2")
 
-              bounded("bounded", 1 to 2) {
-                leaf("leaf_bounded_1")
-                leaf("leaf_bounded_2")
-                leaf("leaf_bounded_3")
+                  bounded("bounded", 1 to 2) {
+                    leaf("leaf_bounded_1")
+                    leaf("leaf_bounded_2")
+                    leaf("leaf_bounded_3")
+                  }
+                }
               }
-            }
-          }
-        }
+            })
 
     val expectedLabels =
         listOf(

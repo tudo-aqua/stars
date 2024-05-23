@@ -19,7 +19,6 @@ package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.tsc.TSCIterator
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
@@ -52,7 +51,7 @@ sealed class TSCNode<
     private val tscProjectionsEdge: TSCProjectionsEdge<E, T, S, U, D>?,
     private val tscMonitorsEdge: TSCMonitorsEdge<E, T, S, U, D>?,
     val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
-) : Iterable<TSCEdge<E, T, S, U, D>> {
+) {
 
   private val projections: Map<Any, Boolean> =
       (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap ?: emptyMap()
@@ -200,6 +199,4 @@ sealed class TSCNode<
   }
 
   override fun toString(): String = toString(0)
-
-  override fun iterator(): Iterator<TSCEdge<E, T, S, U, D>> = TSCIterator(this)
 }
