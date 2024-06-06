@@ -124,14 +124,29 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
     return FormulaBuilder().apply(init).buildNeg().also { phi.add(it) }
   }
 
-  infix fun Formula.and(other: Formula): And = And(this, other).also { phi.add(it) }
+  infix fun Formula.and(other: Formula): And =
+      And(this, other).also {
+        phi.clear()
+        phi.add(it)
+      }
 
-  infix fun Formula.or(other: Formula): Or = Or(this, other).also { phi.add(it) }
+  infix fun Formula.or(other: Formula): Or =
+      Or(this, other).also {
+        phi.clear()
+        phi.add(it)
+      }
 
   infix fun Formula.impl(other: Formula): Implication =
-      Implication(this, other).also { phi.add(it) }
+      Implication(this, other).also {
+        phi.clear()
+        phi.add(it)
+      }
 
-  infix fun Formula.iff(other: Formula): Iff = Iff(this, other).also { phi.add(it) }
+  infix fun Formula.iff(other: Formula): Iff =
+      Iff(this, other).also {
+        phi.clear()
+        phi.add(it)
+      }
 
   fun FormulaBuilder.prev(
       interval: Pair<Int, Int>? = null,
