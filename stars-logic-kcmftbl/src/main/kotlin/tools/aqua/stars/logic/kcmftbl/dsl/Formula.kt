@@ -17,8 +17,6 @@
 
 package tools.aqua.stars.logic.kcmftbl.dsl
 
-import tools.aqua.stars.core.types.*
-
 sealed interface Formula
 
 data object TT : Formula

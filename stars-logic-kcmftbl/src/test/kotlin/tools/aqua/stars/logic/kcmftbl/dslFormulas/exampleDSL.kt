@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.logic.kcmftbl.dslFormulas
 
 import tools.aqua.stars.data.av.dataclasses.Vehicle

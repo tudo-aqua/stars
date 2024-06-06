@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.logic.kcmftbl.dsl
 
 class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
