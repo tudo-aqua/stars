@@ -23,4 +23,7 @@ mavenMetadata {
       "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of CMFTBL")
 }
 
-dependencies { implementation(project(":stars-core")) }
+dependencies {
+  implementation(project(":stars-core"))
+  testImplementation(project(mapOf("path" to ":stars-data-av")))
+}
