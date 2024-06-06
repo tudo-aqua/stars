@@ -25,5 +25,5 @@ mavenMetadata {
 
 dependencies {
   implementation(project(":stars-core"))
-  implementation(project(":stars-data-av"))
+  testImplementation(project(mapOf("path" to ":stars-data-av")))
 }

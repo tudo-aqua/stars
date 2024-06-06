@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.logic.kcmftbl.dsl
+@file:Suppress("unused")
 
-import tools.aqua.stars.core.types.*
+package tools.aqua.stars.logic.kcmftbl.dsl
 
 class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
   companion object {
@@ -124,35 +124,20 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
     return FormulaBuilder().apply(init).buildNeg().also { phi.add(it) }
   }
 
-  infix fun Formula.and(other: Formula): And =
-      And(this, other).also {
-        phi.clear()
-        phi.add(it)
-      }
+  infix fun Formula.and(other: Formula): And = And(this, other).also { phi.add(it) }
 
-  infix fun Formula.or(other: Formula): Or =
-      Or(this, other).also {
-        phi.clear()
-        phi.add(it)
-      }
+  infix fun Formula.or(other: Formula): Or = Or(this, other).also { phi.add(it) }
 
   infix fun Formula.impl(other: Formula): Implication =
-      Implication(this, other).also {
-        phi.clear()
-        phi.add(it)
-      }
+      Implication(this, other).also { phi.add(it) }
 
-  infix fun Formula.iff(other: Formula): Iff =
-      Iff(this, other).also {
-        phi.clear()
-        phi.add(it)
-      }
+  infix fun Formula.iff(other: Formula): Iff = Iff(this, other).also { phi.add(it) }
 
   fun FormulaBuilder.prev(
       interval: Pair<Int, Int>? = null,
       init: FormulaBuilder.() -> Unit = {}
   ): Prev {
-    return apply(init).buildPrev(interval).also { phi.add(it) }
+    return FormulaBuilder().apply(init).buildPrev(interval).also { phi.add(it) }
   }
 
   fun FormulaBuilder.next(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.logic.kcmftbl.dslFormulas
 
-import kotlin.test.Test
 import tools.aqua.stars.data.av.dataclasses.Vehicle
 import tools.aqua.stars.logic.kcmftbl.dsl.FormulaBuilder.Companion.formula
 import tools.aqua.stars.logic.kcmftbl.dsl.Ref
 
 class exampleDSL {
-  @Test
   fun monitors() {
     val hasMidTrafficDensity = formula {
       exists { x: Ref<Vehicle> ->
@@ -41,9 +41,6 @@ class exampleDSL {
             (term { v.now().effVelocityInKmPH } leq
                 term { v.now().lane.speedLimits[v.now().positionOnLane.toInt()].speedLimit })
       }
-    }
-    formula { v: Ref<Vehicle> ->
-      minPrevalence(0.6) { neg(hasMidTrafficDensity) or neg(hasMidTrafficDensity) }
     }
 
     val changedLane = formula { v: Ref<Vehicle> ->
