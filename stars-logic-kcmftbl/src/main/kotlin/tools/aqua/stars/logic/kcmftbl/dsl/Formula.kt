@@ -51,7 +51,7 @@ data class Since(val interval: Pair<Int, Int>? = null, val lhs: Formula, val rhs
 data class Until(val interval: Pair<Int, Int>? = null, val lhs: Formula, val rhs: Formula) :
     Formula
 
-data class Forall(val ident: String, val inner: Formula) : Formula
+data class Forall(val inner: Formula) : Formula
 
 data class Exists(val inner: Formula) : Formula
 
