@@ -79,9 +79,9 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
     return Until(interval, lhs = phi[0], rhs = phi[1])
   }
 
-  private fun buildForall(ident: String): Forall {
+  private fun buildForall(): Forall {
     assert(phi.size == 1)
-    return Forall(ident, phi[0])
+    return Forall(phi[0])
   }
 
   private fun buildExists(): Exists {
@@ -204,8 +204,8 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
     return FormulaBuilder().apply(init).buildUntil(interval).also { phi.add(it) }
   }
 
-  fun FormulaBuilder.forall(ident: String, init: FormulaBuilder.() -> Unit = {}): Forall {
-    return FormulaBuilder().apply(init).buildForall(ident).also { phi.add(it) }
+  fun FormulaBuilder.forall(init: FormulaBuilder.() -> Unit = {}): Forall {
+    return FormulaBuilder().apply(init).buildForall().also { phi.add(it) }
   }
 
   fun <Type> FormulaBuilder.exists(init: FormulaBuilder.(Ref<Type>) -> Unit = {}): Exists {
