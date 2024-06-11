@@ -64,9 +64,9 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
     return Eventually(interval, phi.first())
   }
 
-  private fun buildGlobally(interval: Pair<Int, Int>? = null): Globally {
+  private fun buildAlways(interval: Pair<Int, Int>? = null): Always {
     assert(phi.size == 1)
-    return Globally(interval, inner = phi[0])
+    return Always(interval, inner = phi[0])
   }
 
   private fun buildSince(interval: Pair<Int, Int>? = null): Since {
@@ -116,6 +116,8 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
 
   fun FormulaBuilder.tt(): TT = TT.also { phi.add(it) }
   fun FormulaBuilder.ff(): FF = FF.also { phi.add(it) }
+  fun FormulaBuilder.pred(init: () -> Boolean = { true }): Formula =
+      Predicate(init).also { phi.add(it) }
   fun FormulaBuilder.neg(input: Formula): Neg {
     return Neg(input).also { phi.add(it) }
   }
@@ -183,11 +185,11 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
     return FormulaBuilder().apply(init).buildEventually(interval).also { phi.add(it) }
   }
 
-  fun FormulaBuilder.globally(
+  fun FormulaBuilder.always(
       interval: Pair<Int, Int>? = null,
       init: FormulaBuilder.() -> Unit = {}
-  ): Globally {
-    return FormulaBuilder().apply(init).buildGlobally(interval).also { phi.add(it) }
+  ): Always {
+    return FormulaBuilder().apply(init).buildAlways(interval).also { phi.add(it) }
   }
 
   fun FormulaBuilder.since(
@@ -264,7 +266,6 @@ class FormulaBuilder(val phi: MutableList<Formula> = mutableListOf()) {
   fun <Type> const(value: Type): Constant<Type> = Constant(value)
 }
 
-class Ref<T> {
-  var tick: Int = 0
+class Ref<T>(var id: Int? = null, var tick: Int = 0) {
   fun now(): T = TODO()
 }

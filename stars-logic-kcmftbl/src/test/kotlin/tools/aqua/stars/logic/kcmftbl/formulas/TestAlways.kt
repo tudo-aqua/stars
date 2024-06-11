@@ -23,7 +23,7 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.logic.kcmftbl.*
 
 /** This class tests the CMFTBL operator [globally]. */
-class TestGlobally {
+class TestAlways {
 
   /**
    * Test equivalence to eventually.

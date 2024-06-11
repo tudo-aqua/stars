@@ -19,11 +19,13 @@
 
 package tools.aqua.stars.logic.kcmftbl.dslFormulas
 
+import org.junit.jupiter.api.Test
 import tools.aqua.stars.data.av.dataclasses.Vehicle
 import tools.aqua.stars.logic.kcmftbl.dsl.FormulaBuilder.Companion.formula
 import tools.aqua.stars.logic.kcmftbl.dsl.Ref
 
 class exampleDSL {
+  @Test
   fun monitors() {
     val hasMidTrafficDensity = formula {
       exists { x: Ref<Vehicle> ->
@@ -32,6 +34,14 @@ class exampleDSL {
               term { x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } }) and
               (term { x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } } leq
                   const(15))
+        }
+      }
+    }
+    val hasMidTrafficDensityPred = formula {
+      exists { x: Ref<Vehicle> ->
+        eventually {
+          pred { 6 <= x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } } and
+              pred { x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } <= 6 }
         }
       }
     }

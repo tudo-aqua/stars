@@ -23,6 +23,8 @@ data object TT : Formula
 
 data object FF : Formula
 
+data class Predicate(val phi: () -> Boolean) : Formula
+
 data class Neg(val inner: Formula) : Formula
 
 data class And(val lhs: Formula, val rhs: Formula) : Formula
@@ -43,7 +45,7 @@ data class Historically(val interval: Pair<Int, Int>? = null, val inner: Formula
 
 data class Eventually(val interval: Pair<Int, Int>? = null, val inner: Formula) : Formula
 
-data class Globally(val interval: Pair<Int, Int>? = null, val inner: Formula) : Formula
+data class Always(val interval: Pair<Int, Int>? = null, val inner: Formula) : Formula
 
 data class Since(val interval: Pair<Int, Int>? = null, val lhs: Formula, val rhs: Formula) :
     Formula
