@@ -19,8 +19,10 @@
 
 package tools.aqua.stars.logic.kcmftbl.dslFormulas
 
+import kotlin.math.abs
+import kotlin.math.sign
 import org.junit.jupiter.api.Test
-import tools.aqua.stars.data.av.dataclasses.Vehicle
+import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.logic.kcmftbl.dsl.FormulaBuilder.Companion.formula
 import tools.aqua.stars.logic.kcmftbl.dsl.Ref
 
@@ -28,7 +30,7 @@ class exampleDSL {
   @Test
   fun monitors() {
     val hasMidTrafficDensity = formula {
-      exists { x: Ref<Vehicle> ->
+      forall() { x: Ref<Vehicle> ->
         eventually {
           (const(6) leq
               term { x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } }) and
@@ -40,8 +42,12 @@ class exampleDSL {
     val hasMidTrafficDensityPred = formula {
       exists { x: Ref<Vehicle> ->
         eventually {
-          pred { 6 <= x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } } and
-              pred { x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } <= 6 }
+          pred(x) {
+            6 <= x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size }
+          } and
+              pred(x) {
+                x.now().let { v -> v.tickData.vehiclesInBlock(v.lane.road.block).size } <= 6
+              }
         }
       }
     }
@@ -55,6 +61,54 @@ class exampleDSL {
 
     val changedLane = formula { v: Ref<Vehicle> ->
       binding(term { v.now().lane }) { l -> eventually { l ne term { v.now().lane } } }
+    }
+  }
+
+  @Test
+  fun varyingInOut() {
+    val outFormula = formula { x: Ref<Vehicle> -> tt() }
+    val noAnd = formula { exists { x: Ref<Vehicle> -> tt() } }
+    val predAnd = formula { exists { x: Ref<Vehicle> -> tt() and ff() } }
+    val outAnd = formula {
+      exists { x: Ref<Vehicle> -> outFormula.holds(x) and outFormula.holds(x) }
+    }
+  }
+
+  @Test
+  fun overtaking() {
+    val isBehind = formula { r1: Ref<Vehicle>, r2: Ref<Vehicle> ->
+      pred(r1, r2) { r1.now().lane.road == r2.now().lane.road } and
+          pred(r1, r2) { r1.now().lane.laneId.sign == r2.now().lane.laneId.sign } and
+          pred(r1, r2) { abs(r1.now().positionOnLane - r2.now().positionOnLane) <= 2.0 } and
+          pred(r1, r2) { (r1.now().positionOnLane + 2.0) < r2.now().positionOnLane }
+    }
+    val bothOver10Mph = formula { r1: Ref<Vehicle>, r2: Ref<Vehicle> ->
+      pred(r1, r2) { r1.now().effVelocityInMPH > 10 } and
+          pred(r1, r2) { r2.now().effVelocityInMPH > 10 }
+    }
+    val besides = formula { r1: Ref<Vehicle>, r2: Ref<Vehicle> ->
+      pred(r1, r2) { r1.now().lane.road == r2.now().lane.road } and
+          pred(r1, r2) { r1.now().lane.laneId.sign == r2.now().lane.laneId.sign } and
+          pred(r1, r2) { abs(r1.now().positionOnLane - r2.now().positionOnLane) <= 2.0 } and
+          pred(r1, r2) { abs(r2.now().positionOnLane - r1.now().positionOnLane) <= 2.0 }
+    }
+    val overtaking = formula { r1: Ref<Vehicle> ->
+      exists { r2: Ref<Vehicle> ->
+        isBehind.holds(r1, r2) and
+            bothOver10Mph.holds(r1, r2) and
+            until(1 to 100) {
+              isBehind.holds(r1, r2) and
+                  isBehind.holds(r1, r2) and
+                  isBehind.holds(r1, r2) and
+                  bothOver10Mph.holds(r1, r2)
+              besides.holds(r1, r2) and
+                  bothOver10Mph.holds(r1, r2) and
+                  until(1 to 100) {
+                    besides.holds(r1, r2) and bothOver10Mph.holds(r1, r2)
+                    isBehind.holds(r1, r2) and bothOver10Mph.holds(r1, r2)
+                  }
+            }
+      }
     }
   }
 }
