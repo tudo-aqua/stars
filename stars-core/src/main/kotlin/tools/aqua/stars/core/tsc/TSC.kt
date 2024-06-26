@@ -59,7 +59,7 @@ class TSC<
    * @return The [List] of all [TSCProjection]s for this [TSC].
    */
   fun buildProjections(
-      projectionIgnoreList: List<Any> = listOf()
+      projectionIgnoreList: List<Any> = emptyList()
   ): List<TSCProjection<E, T, S, U, D>> = rootNode.buildProjections(projectionIgnoreList)
 
   override fun toString(): String = this.rootNode.toString()

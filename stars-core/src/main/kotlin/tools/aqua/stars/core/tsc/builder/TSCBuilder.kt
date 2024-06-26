@@ -74,20 +74,20 @@ sealed class TSCBuilder<
   /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
   protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
     set(value) {
-      check(!conditionSet) { "Condition already set." }
-      conditionSet = true
+      check(!isConditionSet) { "Condition already set." }
+      isConditionSet = true
       field = value
     }
-  private var conditionSet = false
+  private var isConditionSet = false
 
   /** Value function predicate of the node. (Default: empty) */
   protected var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
     set(value) {
-      check(!valueFunctionSet) { "Value function already set." }
-      valueFunctionSet = true
+      check(!isValueFunctionSet) { "Value function already set." }
+      isValueFunctionSet = true
       field = value
     }
-  private var valueFunctionSet = false
+  private var isValueFunctionSet = false
 
   //  /** Projection identifier of the node. (Default: empty map) */
   //  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()

@@ -110,11 +110,9 @@ class TSCInstanceNode<
    * [TSCEdge.label] in recursive call.
    * @return List of [Pair]s of the failed monitor to the node label.
    */
-  private fun validateMonitorsRec(label: String): List<Pair<String, String>> {
-
-    return this.monitorResults.filterValues { !it }.keys.map { it to label } +
-        edges.flatMap { it.destination.validateMonitorsRec(it.label) }
-  }
+  private fun validateMonitorsRec(label: String): List<Pair<String, String>> =
+      this.monitorResults.filterValues { !it }.keys.map { it to label } +
+          edges.flatMap { it.destination.validateMonitorsRec(it.label) }
 
   /**
    * Prints [TSCInstanceNode] up to given [depth].
