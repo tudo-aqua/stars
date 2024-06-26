@@ -20,8 +20,21 @@ package tools.aqua.stars.core.tsc.edge
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
 
+/**
+ * Baseclass for TSC bounded edges.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param label Label of the edge.
+ * @param condition Condition of the edge.
+ * @param destination Destination [TSCMonitorsNode].
+ */
 open class TSCBoundedEdge<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,

@@ -54,11 +54,11 @@ sealed class TSCNode<
 ) {
 
   private val projections: Map<Any, Boolean> =
-      (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap ?: emptyMap()
+      (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap.orEmpty()
 
   /** Monitors of this TSC represented as label to monitor function. */
   val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
-      (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitorMap ?: emptyMap()
+      (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitorMap.orEmpty()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
@@ -90,7 +90,7 @@ sealed class TSCNode<
    * @param projectionIgnoreList Projections to ignore.
    */
   fun buildProjections(
-      projectionIgnoreList: List<Any> = listOf()
+      projectionIgnoreList: List<Any> = emptyList()
   ): List<TSCProjection<E, T, S, U, D>> =
       projections
           .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }

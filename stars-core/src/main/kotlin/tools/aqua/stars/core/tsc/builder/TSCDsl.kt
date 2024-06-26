@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
 val CONST_TRUE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { true }
 
 /** Label of the [TSCNode] built by the [root] function. */
-val ROOT_NODE_LABEL = "root"
+const val ROOT_NODE_LABEL = "root"
 
 /**
  * Builds root node. Applies [init] function to [TSCNode].

@@ -43,7 +43,7 @@ import tools.aqua.stars.core.types.*
  * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
  * depends on and needs for its calculation.
  * @property logger [Logger] instance.
- * @property onlyLeafNodes Whether the monitor should only be triggered for leaf nodes.
+ * @param onlyLeafNodes Whether the monitor should only be triggered for leaf nodes.
  */
 @Suppress("unused")
 class FailedMonitorsGroupedByTSCNodeMetric<
