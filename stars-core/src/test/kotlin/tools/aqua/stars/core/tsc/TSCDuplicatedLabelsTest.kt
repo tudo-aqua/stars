@@ -23,8 +23,10 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.root
 
+/** Test class for duplicated labels in TSC. */
 class TSCDuplicatedLabelsTest {
   // region node labels
+  /** Test duplicated node labels on same level throwing exception. */
   @Test
   fun `Test duplicated node labels on same level throwing exception`() {
     assertThrows<IllegalStateException> {
@@ -45,6 +47,7 @@ class TSCDuplicatedLabelsTest {
     }
   }
 
+  /** Test duplicated node labels on different levels throwing no exception. */
   @Test
   fun `Test duplicated node labels on different levels throwing no exception`() {
     assertDoesNotThrow {
@@ -64,6 +67,7 @@ class TSCDuplicatedLabelsTest {
   }
   // endregion
   // region projection labels
+  /** Test duplicated projection labels on same level throwing exception. */
   @Test
   fun `Test duplicated projection labels on same level throwing exception`() {
     assertThrows<IllegalStateException> {
@@ -85,6 +89,7 @@ class TSCDuplicatedLabelsTest {
     }
   }
 
+  /** Test duplicated projection labels on different levels throwing no exception. */
   @Test
   fun `Test duplicated projection labels on same level throwing exception 2`() {
     assertThrows<IllegalStateException> {
@@ -107,6 +112,7 @@ class TSCDuplicatedLabelsTest {
   }
   // endregion
   // region monitor labels
+  /** Test duplicated monitor labels on same level throwing exception. */
   @Test
   fun `Test duplicated monitor labels on same level throwing exception`() {
     assertThrows<IllegalStateException> {
@@ -128,6 +134,7 @@ class TSCDuplicatedLabelsTest {
     }
   }
 
+  /** Test duplicated monitor labels on different levels throwing no exception. */
   @Test
   fun `Test duplicated monitor labels on different levels throwing no exception`() {
     assertDoesNotThrow {
