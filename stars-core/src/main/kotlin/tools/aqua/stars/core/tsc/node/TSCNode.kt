@@ -56,6 +56,7 @@ sealed class TSCNode<
   private val projections: Map<Any, Boolean> =
       (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap ?: emptyMap()
 
+  /** Monitors of this TSC represented as label to monitor function. */
   val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
       (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitorMap ?: emptyMap()
 
