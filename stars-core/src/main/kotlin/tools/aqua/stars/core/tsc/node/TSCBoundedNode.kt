@@ -76,16 +76,16 @@ open class TSCBoundedNode<
 
     boundedSuccessors.forEach { subset ->
       when (subset.size) {
-        0 -> returnList += TSCInstanceNode(Unit, true, this)
+        0 -> returnList += TSCInstanceNode(this)
         1 ->
             subset.first().forEach { successors ->
-              val generatedNode = TSCInstanceNode(Unit, true, this)
+              val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
               returnList += generatedNode
             }
         else ->
             subset.crossProduct().forEach { successors ->
-              val generatedNode = TSCInstanceNode(Unit, true, this)
+              val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
               returnList += generatedNode
             }

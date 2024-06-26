@@ -26,6 +26,9 @@ import tools.aqua.stars.core.types.*
 /** Constant predicate for always true edges. */
 val CONST_TRUE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { true }
 
+/** Label of the [TSCNode] built by the [root] function. */
+val ROOT_NODE_LABEL = "root"
+
 /**
  * Builds root node. Applies [init] function to [TSCNode].
  *
@@ -47,7 +50,7 @@ fun <
     init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCNode<E, T, S, U, D> {
   val placeholderNode =
-      TSCBoundedBuilder<E, T, S, U, D>("root")
+      TSCBoundedBuilder<E, T, S, U, D>(ROOT_NODE_LABEL)
           .apply { init() }
           .apply { this.bounds = edgesCount() to edgesCount() }
           .build()

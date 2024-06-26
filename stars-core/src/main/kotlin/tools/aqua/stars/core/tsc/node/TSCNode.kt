@@ -67,15 +67,19 @@ sealed class TSCNode<
       ctx: PredicateContext<E, T, S, U, D>,
       depth: Int = 0
   ): TSCInstanceNode<E, T, S, U, D> =
-      TSCInstanceNode(this.valueFunction(ctx), true, this).also {
-        it.edges +=
-            this.edges
-                .filter { t -> t.condition(ctx) }
-                .map { tscEdge ->
-                  TSCInstanceEdge(
-                      tscEdge.label, tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
-                }
-      }
+      TSCInstanceNode(
+              this,
+              this.monitors.mapValues { (_, monitor) -> monitor(ctx) },
+              this.valueFunction(ctx))
+          .also {
+            it.edges +=
+                this.edges
+                    .filter { t -> t.condition(ctx) }
+                    .map { tscEdge ->
+                      TSCInstanceEdge(
+                          tscEdge.label, tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
+                    }
+          }
 
   /**
    * Builds the TSCs for each projection defined in this [TSCNode] and returns a [TSCProjection] for
