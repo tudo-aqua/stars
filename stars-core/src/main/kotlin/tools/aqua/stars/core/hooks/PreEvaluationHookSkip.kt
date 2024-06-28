@@ -17,23 +17,23 @@
 
 package tools.aqua.stars.core.hooks
 
-/**
- * Custom String wrapper to indicate that a [PreEvaluationHook] returned [EvaluationHookResult.SKIP]
- * .
- */
-class PreEvaluationHookSkip(segment: Any, hooks: List<PreEvaluationHook<*, *, *, *, *>>) {
-  /**
-   * Generated message indicating that a [PreEvaluationHook] returned [EvaluationHookResult.SKIP].
-   */
-  val msg: String =
-      "PreEvaluationHook${
-        if (hooks.size == 1) {
-            " " + hooks.first()
-        } else {
-            "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
-        }
-    } returned SKIP for segment ${segment}. Skipping current segment."
+import tools.aqua.stars.core.tsc.TSC
 
-  /** Prints the [msg] to the console. */
-  fun println() = println(msg)
+/**
+ * Custom String wrapper indicating that a [PreEvaluationHook] returned [EvaluationHookResult.SKIP].
+ */
+object PreEvaluationHookSkip {
+  /**
+   * Prints a message indicating that a [PreEvaluationHook] returned [EvaluationHookResult.SKIP] to
+   * the console.
+   */
+  fun println(tsc: TSC<*, *, *, *, *>, hooks: List<PreEvaluationHook<*, *, *, *, *>>) =
+      println(
+          "PreEvaluationHook${
+        if (hooks.size == 1) {
+          " " + hooks.first()
+        } else {
+          "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
+        }
+      } returned SKIP for TSC ${tsc}. Skipping current TSC.")
 }

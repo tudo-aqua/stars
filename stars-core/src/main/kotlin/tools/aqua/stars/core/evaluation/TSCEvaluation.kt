@@ -22,6 +22,8 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.hooks.*
+import tools.aqua.stars.core.hooks.defaulthooks.EmptySegmentHook
+import tools.aqua.stars.core.hooks.defaulthooks.EmptyTSCHook
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -56,17 +58,21 @@ class TSCEvaluation<
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
-  private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
+  val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 
   /** Holds a [List] of all [PreEvaluationHook]s registered by [registerPreEvaluationHooks]. */
-  private val preEvaluationHooks: MutableList<PreEvaluationHook<E, T, S, U, D>> = mutableListOf()
+  val preEvaluationHooks: MutableList<PreEvaluationHook<E, T, S, U, D>> = mutableListOf()
 
   /**
    * Holds a [List] of all [PreSegmentEvaluationHook]s registered by
    * [registerPreSegmentEvaluationHooks].
    */
-  private val preSegmentEvaluationHooks: MutableList<PreSegmentEvaluationHook<E, T, S, U, D>> =
+  val preSegmentEvaluationHooks: MutableList<PreSegmentEvaluationHook<E, T, S, U, D>> =
       mutableListOf()
+
+  init {
+    registerDefaultHooks()
+  }
 
   /**
    * Registers all [MetricProvider]s to the list of metrics that should be called during evaluation.
@@ -100,6 +106,26 @@ class TSCEvaluation<
   }
 
   /**
+   * Registers all default hooks to the list of hooks that should be called during evaluation. This
+   * includes:
+   * - [EmptyTSCHook]
+   * - [EmptySegmentHook]
+   *
+   * The lists of hooks [preEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared before.
+   * [clearHooks] may be called before to clear them.
+   */
+  fun registerDefaultHooks() {
+    preEvaluationHooks.add(EmptyTSCHook())
+    preSegmentEvaluationHooks.add(EmptySegmentHook())
+  }
+
+  /** Clears all [PreEvaluationHook]s and [PreSegmentEvaluationHook]s that have been registered. */
+  fun clearHooks() {
+    preEvaluationHooks.clear()
+    preSegmentEvaluationHooks.clear()
+  }
+
+  /**
    * Runs the evaluation of the [TSC] based on the [segments]. For each [SegmentType],
    * [TSCProjection] and [TSCInstanceNode], the related [MetricProvider] is called. It requires at
    * least one [MetricProvider].
@@ -123,7 +149,7 @@ class TSCEvaluation<
 
       val skippingHooks = hookResults.filter { it.second == EvaluationHookResult.SKIP }
       if (skippingHooks.isNotEmpty()) {
-        PreEvaluationHookSkip(tsc, skippingHooks.map { it.first }).println()
+        PreEvaluationHookSkip.println(tsc, skippingHooks.map { it.first })
         return
       }
 
@@ -202,7 +228,7 @@ class TSCEvaluation<
 
     val skippingHooks = hookResults.filter { it.second == EvaluationHookResult.SKIP }
     if (skippingHooks.isNotEmpty()) {
-      PreSegmentEvaluationHookSkip(segment, skippingHooks.map { it.first }).println()
+      PreSegmentEvaluationHookSkip.println(segment, skippingHooks.map { it.first })
       return
     }
 
