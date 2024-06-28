@@ -17,27 +17,27 @@
 
 package tools.aqua.stars.core.hooks
 
+import tools.aqua.stars.core.types.SegmentType
+
 /**
- * Custom String wrapper to indicate that a [PreSegmentEvaluationHook] has returned
+ * Custom String wrapper indicating that a [PreSegmentEvaluationHook] has returned
  * [EvaluationHookResult.SKIP].
  */
-class PreSegmentEvaluationHookSkip(
-    segment: Any,
-    hooks: List<PreSegmentEvaluationHook<*, *, *, *, *>>
-) {
+object PreSegmentEvaluationHookSkip {
   /**
-   * Generated message indicating that a [PreSegmentEvaluationHook] returned
-   * [EvaluationHookResult.SKIP].
+   * Prints a message indicating that a [PreSegmentEvaluationHook] returned
+   * [EvaluationHookResult.SKIP] to the console.
    */
-  val msg: String =
-      "PreSegmentEvaluationHook${
-    if (hooks.size == 1) {
-      " " + hooks.first()
-    } else {
-      "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
-    }
-  } returned SKIP for segment ${segment}. Skipping current segment."
-
-  /** Prints the [msg] to the console. */
-  fun println() = println(msg)
+  fun println(
+      segment: SegmentType<*, *, *, *, *>,
+      hooks: List<PreSegmentEvaluationHook<*, *, *, *, *>>
+  ) =
+      println(
+          "PreSegmentEvaluationHook${
+        if (hooks.size == 1) {
+          " " + hooks.first()
+        } else {
+          "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
+        }
+      } returned SKIP for segment ${segment}. Skipping current segment.")
 }
