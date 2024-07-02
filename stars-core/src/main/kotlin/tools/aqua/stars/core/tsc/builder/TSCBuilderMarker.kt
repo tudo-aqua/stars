@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+package tools.aqua.stars.core.tsc.builder
 
-package tools.aqua.stars.core.tsc.projection
-
-/**
- * Projection to [Pair] ([id], 'false'). This is used to not propagate the [TSCProjection]
- * calculation further down the tree.
- *
- * @return ([id], 'false')
- */
-fun proj(id: Any): Pair<Any, Boolean> = Pair(id, false)
-
-/**
- * Projection to [Pair] ([id], 'true'). This is used to propagate the [TSCProjection] calculation
- * further down the tree.
- *
- * @return ([id], 'true')
- */
-fun projRec(id: Any): Pair<Any, Boolean> = Pair(id, true)
+/** Marker annotation for TSCBuilder classes. */
+@DslMarker annotation class TSCBuilderMarker

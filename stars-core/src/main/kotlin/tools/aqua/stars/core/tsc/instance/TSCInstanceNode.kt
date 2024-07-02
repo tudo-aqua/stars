@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.instance
 
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
+import tools.aqua.stars.core.tsc.builder.ROOT_NODE_LABEL
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCNode
@@ -31,9 +32,9 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property value Value of this node.
- * @property monitorResult Monitor result of this node.
  * @property tscNode Associated [TSCNode].
+ * @property monitorResults Monitor results of this node.
+ * @property value Value of this node.
  */
 class TSCInstanceNode<
     E : EntityType<E, T, S, U, D>,
@@ -41,9 +42,9 @@ class TSCInstanceNode<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val value: Any,
-    val monitorResult: Boolean,
-    val tscNode: TSCNode<E, T, S, U, D>
+    val tscNode: TSCNode<E, T, S, U, D>,
+    val monitorResults: Map<String, Boolean> = emptyMap(),
+    val value: Any = Unit
 ) {
 
   /** Edges of this [TSCInstanceNode]. */
@@ -51,7 +52,7 @@ class TSCInstanceNode<
 
   /** Returns all edges. */
   fun getAllEdges(): List<TSCEdge<E, T, S, U, D>> =
-      this.edges.map { it.tscEdge } + this.edges.flatMap { it.destination.getAllEdges() }
+      edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
 
   /**
    * Validates own (and recursively all children's) successor constraints imposed by the
@@ -63,9 +64,11 @@ class TSCInstanceNode<
    * @return non-validating nodes; first element of pair is the node that failed to validate; second
    * element is a human-readable explanation for the failure.
    */
-  fun validate(label: String = "RootNode"): List<Pair<TSCInstanceNode<E, T, S, U, D>, String>> {
+  fun validate(
+      label: String = ROOT_NODE_LABEL
+  ): List<Pair<TSCInstanceNode<E, T, S, U, D>, String>> {
     val returnList = mutableListOf<Pair<TSCInstanceNode<E, T, S, U, D>, String>>()
-    when (this.tscNode) {
+    when (tscNode) {
       is TSCBoundedNode ->
           if (edges.size !in tscNode.bounds.first..tscNode.bounds.second)
               returnList +=
@@ -88,16 +91,15 @@ class TSCInstanceNode<
    */
   fun validateMonitors(
       segmentIdentifier: String,
-      label: String = "RootNode"
-  ): List<TSCFailedMonitorInstance<E, T, S, U, D>> {
-    val edgeLabelListLWithFalseMonitor = validateMonitorsRec(label)
-    return if (edgeLabelListLWithFalseMonitor.any()) {
-      edgeLabelListLWithFalseMonitor.map {
+      label: String = ROOT_NODE_LABEL
+  ): List<TSCFailedMonitorInstance<E, T, S, U, D>> =
+      validateMonitorsRec(label).map {
         TSCFailedMonitorInstance(
-            segmentIdentifier = segmentIdentifier, tscInstance = this, nodeLabel = it)
+            segmentIdentifier = segmentIdentifier,
+            tscInstance = this,
+            monitorLabel = it.first,
+            nodeLabel = it.second)
       }
-    } else listOf()
-  }
 
   /**
    * Validates own (and recursively all children's) results of the
@@ -106,14 +108,11 @@ class TSCInstanceNode<
    *
    * @param label the label added to the return list if [monitorResult] == `false`; uses
    * [TSCEdge.label] in recursive call.
-   * @return list of edge labels leading to a node with `false` monitor result.
+   * @return List of [Pair]s of the failed monitor to the node label.
    */
-  private fun validateMonitorsRec(label: String): List<String> {
-    val returnList = mutableListOf<String>()
-    if (!this.monitorResult) returnList += label
-    returnList += edges.flatMap { it.destination.validateMonitorsRec(it.label) }
-    return returnList
-  }
+  private fun validateMonitorsRec(label: String): List<Pair<String, String>> =
+      this.monitorResults.filterValues { !it }.keys.map { it to label } +
+          edges.flatMap { it.destination.validateMonitorsRec(it.label) }
 
   /**
    * Prints [TSCInstanceNode] up to given [depth].

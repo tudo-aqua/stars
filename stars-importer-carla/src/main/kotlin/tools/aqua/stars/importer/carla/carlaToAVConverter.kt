@@ -38,7 +38,7 @@ fun convertJsonTickDataToTickData(jsonTickData: JsonTickData, blocks: List<Block
           blocks = blocks,
           weather = jsonTickData.weatherParameters.toWeatherParameters(),
           daytime = jsonTickData.weatherParameters.type.toDaytime(),
-          entities = listOf())
+          entities = emptyList())
 
   tickData.entities =
       jsonTickData.actorPositions.mapNotNull {
@@ -100,7 +100,7 @@ fun convertJsonVehicleToVehicle(
         typeId = vehicle.typeId,
         acceleration = vehicle.acceleration.toVector3D(),
         angularVelocity = vehicle.angularVelocity.toVector3D(),
-        egoVehicle = vehicle.egoVehicle,
+        isEgo = vehicle.egoVehicle,
         forwardVector = vehicle.forwardVector.toVector3D(),
         id = vehicle.id,
         lane = lane,
@@ -134,7 +134,7 @@ fun convertJsonPedestrianToPedestrian(
  * @param fileName The filename.
  */
 fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String): Block =
-    Block(id = jsonBlock.id, roads = listOf(), fileName = fileName).apply {
+    Block(id = jsonBlock.id, roads = emptyList(), fileName = fileName).apply {
       roads = jsonBlock.roads.map { convertJsonRoadToRoad(it, this) }
     }
 
@@ -145,7 +145,7 @@ fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String): Block =
  * @param block The [Block].
  */
 fun convertJsonRoadToRoad(jsonRoad: JsonRoad, block: Block): Road =
-    Road(id = jsonRoad.roadId, block = block, lanes = listOf(), isJunction = jsonRoad.isJunction)
+    Road(id = jsonRoad.roadId, block = block, lanes = emptyList(), isJunction = jsonRoad.isJunction)
         .apply { lanes = jsonRoad.lanes.map { lane -> convertJsonLaneToLane(lane, this) } }
 
 /**
@@ -161,18 +161,18 @@ fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane =
             laneType = LaneType.getByValue(jsonLane.laneType.value),
             laneWidth = jsonLane.laneWidth,
             laneLength = jsonLane.laneLength,
-            predecessorLanes = listOf(),
-            successorLanes = listOf(),
-            intersectingLanes = listOf(),
-            yieldLanes = listOf(),
+            predecessorLanes = emptyList(),
+            successorLanes = emptyList(),
+            intersectingLanes = emptyList(),
+            yieldLanes = emptyList(),
             laneMidpoints = jsonLane.laneMidpoints.map { it.toLaneMidpoint() },
-            speedLimits = listOf(),
+            speedLimits = emptyList(),
             landmarks =
                 jsonLane.landmarks
                     .filter { it.type != JsonLandmarkType.LightPost }
                     .map { it.toLandmark() },
-            contactAreas = listOf(),
-            trafficLights = listOf(),
+            contactAreas = emptyList(),
+            trafficLights = emptyList(),
             laneDirection = LaneDirection.UNKNOWN,
         )
         .apply {

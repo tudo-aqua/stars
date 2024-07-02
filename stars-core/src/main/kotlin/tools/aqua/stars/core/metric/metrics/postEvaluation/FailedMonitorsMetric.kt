@@ -55,7 +55,8 @@ class FailedMonitorsMetric<
     override val logger: Logger = Loggable.getLogger("failed-monitors")
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
-  private val failedMonitors:
+  /** Holds all failed monitors after calling [postEvaluate]. */
+  val failedMonitors:
       MutableMap<TSCProjection<E, T, S, U, D>, List<TSCFailedMonitorInstance<E, T, S, U, D>>> =
       mutableMapOf()
   /**
@@ -83,7 +84,8 @@ class FailedMonitorsMetric<
 
       logFine("Failed monitors for projection '$projection':")
       failedMonitors.forEach { failedMonitor ->
-        logFine("Monitor failed in: ${failedMonitor.segmentIdentifier}")
+        logFine(
+            "Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.segmentIdentifier}")
         logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }

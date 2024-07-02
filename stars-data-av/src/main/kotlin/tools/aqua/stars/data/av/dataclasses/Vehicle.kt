@@ -30,7 +30,7 @@ import kotlin.math.sqrt
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property lane The [Vehicle]'s [Lane].
  * @property typeId The type identifier.
- * @property egoVehicle Whether this is the own vehicle.
+ * @property isEgo Whether this is the own vehicle.
  * @property location The [Location] of the vehicle.
  * @property forwardVector The current forward vector.
  * @property rotation The [Rotation] of the vehicle.
@@ -44,7 +44,7 @@ data class Vehicle(
     var positionOnLane: Double,
     var lane: Lane,
     val typeId: String,
-    var egoVehicle: Boolean,
+    var isEgo: Boolean,
     val location: Location,
     val forwardVector: Vector3D,
     val rotation: Rotation,
@@ -83,7 +83,7 @@ data class Vehicle(
           positionOnLane,
           lane,
           typeId,
-          egoVehicle,
+          isEgo,
           location,
           forwardVector,
           rotation,

@@ -50,7 +50,7 @@ class TSCEvaluation<
     D : TickDifference<D>>(
     val tsc: TSC<E, T, S, U, D>,
     val segments: Sequence<S>,
-    val projectionIgnoreList: List<String> = listOf(),
+    val projectionIgnoreList: List<String> = emptyList(),
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProvider]. */
