@@ -13,6 +13,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - tba
+### Added
+- Iterator for TSC.
+
 ## [0.3] - 16.05.2024
 ### Added
 - Add generic `TickUnit` and `TickDifference` instead of `Double` identifier. 
