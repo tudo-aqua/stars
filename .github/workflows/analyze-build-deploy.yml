@@ -2,7 +2,14 @@ name: Analyze, Build and Deploy
 
 on:
   pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
   push:
+    branches:
+        - main
+  
   workflow_dispatch:
 
 env:
