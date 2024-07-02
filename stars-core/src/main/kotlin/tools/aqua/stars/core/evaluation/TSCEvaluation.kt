@@ -119,10 +119,14 @@ class TSCEvaluation<
     preSegmentEvaluationHooks.add(EmptySegmentHook())
   }
 
-  /** Clears all [PreEvaluationHook]s and [PreSegmentEvaluationHook]s that have been registered. */
+  /**
+   * Clears all [PreEvaluationHook]s and [PreSegmentEvaluationHook]s that have been registered
+   * except those added by [registerDefaultHooks].
+   */
   fun clearHooks() {
     preEvaluationHooks.clear()
     preSegmentEvaluationHooks.clear()
+    registerDefaultHooks()
   }
 
   /**
