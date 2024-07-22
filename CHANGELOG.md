@@ -13,6 +13,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - tba
+### Added
+- Iterator for TSC.
+- Support for multiple monitors per node.
+- Dedicated TSCBuilders for bounded nodes and leaf nodes.
+- Dedicated TSCBuilders for monitors and projections.
+- Dedicated TSCBuilders for conditions and valueFunction.
+- Check for duplicated labels.
+
 ## [0.3] - 16.05.2024
 ### Added
 - Add generic `TickUnit` and `TickDifference` instead of `Double` identifier. 

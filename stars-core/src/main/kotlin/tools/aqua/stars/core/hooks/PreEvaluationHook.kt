@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,41 +15,29 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc.edge
+package tools.aqua.stars.core.hooks
 
-import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.builder.CONST_TRUE
-import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * Baseclass for TSC edges.
+ * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
+ * evaluation of the [TSC].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label Edge label.
- * @property condition Predicate for the edge condition.
- * @property destination Destination [TSCNode].
+ * @property identifier The identifier to be used in the error message.
+ * @property evaluationFunction The function to be executed before the evaluation of the [TSC].
  */
-open class TSCEdge<
+open class PreEvaluationHook<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    open val label: String,
-    open val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
-    val destination: TSCNode<E, T, S, U, D>,
-) {
-
-  override fun equals(other: Any?): Boolean =
-      other is TSCEdge<*, *, *, *, *> &&
-          label == other.label &&
-          condition == other.condition &&
-          destination == other.destination
-
-  override fun hashCode(): Int = label.hashCode() + condition.hashCode() + destination.hashCode()
-}
+    val identifier: String,
+    val evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult
+)

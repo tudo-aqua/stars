@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,34 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc.edge
+package tools.aqua.stars.core.hooks.defaulthooks
 
-import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.hooks.EvaluationHookResult
+import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * TSC edge with condition 'true'.
+ * [PreSegmentEvaluationHook] that checks if a [SegmentType] contains at least [minTicks] ticks.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Edge label.
- * @param destination Destination [TSCNode].
+ * @param minTicks The minimum number of ticks a [SegmentType] must contain.
+ * @param failPolicy The [EvaluationHookResult] to return if the [SegmentType] is empty.
  */
-class TSCAlwaysEdge<
+open class MinTicksPerSegmentHook<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(label: String, destination: TSCNode<E, T, S, U, D>) :
-    TSCEdge<E, T, S, U, D>(label, { true }, destination)
+    D : TickDifference<D>>(
+    minTicks: Int,
+    failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
+) :
+    PreSegmentEvaluationHook<E, T, S, U, D>(
+        identifier = "MinTicksPerSegmentHook",
+        evaluationFunction = { segment ->
+          if (segment.ticks.size > minTicks) EvaluationHookResult.OK else failPolicy
+        })

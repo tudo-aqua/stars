@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +15,7 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.stars.library-conventions") }
+package tools.aqua.stars.core.tsc.builder
 
-mavenMetadata {
-  name.set("STARS Core Library")
-  description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Core Library")
-}
-
-dependencies {
-  implementation(libs.letsplot.kotlinjvm)
-  implementation(libs.letsplot.imageexport)
-  implementation(libs.slf4j.api)
-  implementation(libs.slf4j.simple)
-  testImplementation(libs.kotlin.test)
-
-  // Use the Kotlin test library.
-  //  testImplementation("org.jetbrains.kotlin:kotlin-test")
-}
+/** Marker annotation for TSCBuilder classes. */
+@DslMarker annotation class TSCBuilderMarker

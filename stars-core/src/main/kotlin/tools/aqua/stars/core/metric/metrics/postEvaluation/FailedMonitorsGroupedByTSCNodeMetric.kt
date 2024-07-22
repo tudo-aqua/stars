@@ -43,7 +43,7 @@ import tools.aqua.stars.core.types.*
  * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
  * depends on and needs for its calculation.
  * @property logger [Logger] instance.
- * @property onlyLeafNodes Whether the monitor should only be triggered for leaf nodes.
+ * @param onlyLeafNodes Whether the monitor should only be triggered for leaf nodes.
  */
 @Suppress("unused")
 class FailedMonitorsGroupedByTSCNodeMetric<
@@ -80,8 +80,8 @@ class FailedMonitorsGroupedByTSCNodeMetric<
               .flatten()
               .flatMap { tscInstance ->
                 tscInstance.rootNode.validateMonitors(tscInstance.sourceSegmentIdentifier).map {
-                    failedMonitor ->
-                  failedMonitor to tscInstance
+                    tscFailedMonitorInstance ->
+                  tscFailedMonitorInstance to tscInstance
                 }
               }
               .groupBy({ it.first.nodeLabel }, { it.second })
@@ -89,9 +89,7 @@ class FailedMonitorsGroupedByTSCNodeMetric<
                 it.value
                     .map { t ->
                       t.rootNode.getAllEdges().mapNotNull { edge ->
-                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty() ||
-                            edge.destination.onlyMonitor)
-                            null
+                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty()) null
                         else edge.label to t
                       }
                     }
