@@ -26,12 +26,12 @@ plugins {
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
-  id("org.jetbrains.kotlinx.kover")
+  // id("org.jetbrains.kotlinx.kover")
 }
 
 detekt {
   basePath = rootProject.projectDir.absolutePath
-  config = files(rootProject.file("contrib/detekt-rules.yml"))
+  config.setFrom(files(rootProject.file("contrib/detekt-rules.yml")))
 }
 
 spotless { kotlin { defaultFormat(rootProject) } }

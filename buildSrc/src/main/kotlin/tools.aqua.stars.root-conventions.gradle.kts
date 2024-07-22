@@ -28,7 +28,7 @@ plugins {
   // plugins that must be applied to the root project
   id("io.github.gradle-nexus.publish-plugin")
   id("me.qoomon.git-versioning")
-  id("org.jetbrains.kotlinx.kover")
+  // id("org.jetbrains.kotlinx.kover")
 }
 
 version = "0.0.0-SNAPSHOT"
@@ -63,6 +63,6 @@ spotless {
   }
 }
 
-koverMerged.enable()
+// koverMerged.enable()
 
 nexusPublishing { repositories { sonatype() } }
