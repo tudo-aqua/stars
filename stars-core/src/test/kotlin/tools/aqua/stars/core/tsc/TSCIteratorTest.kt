@@ -19,7 +19,7 @@ package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.tsc.builder.root
+import tools.aqua.stars.core.tsc.builder.*
 
 class TSCIteratorTest {
   @Test
