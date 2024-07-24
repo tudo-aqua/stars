@@ -53,7 +53,7 @@ tasks.dependencyUpdates {
 
 spotless {
   kotlinGradle { defaultFormat(rootProject) }
-  // kotlin { defaultFormat(rootProject) }
+  kotlin { defaultFormat(rootProject) }
 }
 
 detekt {
