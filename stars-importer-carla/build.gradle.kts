@@ -31,5 +31,4 @@ dependencies {
   implementation(project(":stars-data-av"))
   testImplementation(project(":stars-data-av", "test"))
   implementation(libs.kotlinx.serialization.json)
-  testImplementation(libs.bundles.test)
 }
