@@ -27,7 +27,7 @@ private val regex = "^[0-9,.v-]+(-r)?$".toRegex()
 
 /** Checks if this string appears to represent a stable version. */
 val String.isStable: Boolean
-  get() = stableKeyword.any { toUpperCase().contains(it) } || regex.matches(this)
+  get() = stableKeyword.any { contains(it, ignoreCase = true) } || regex.matches(this)
 
 /** Checks if this string does not appear to represent a stable version. */
 val String.isUnstable: Boolean

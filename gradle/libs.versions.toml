@@ -1,112 +1,44 @@
 [versions]
 
-# Platforms
-
-kotlin = "2.0.0-RC2"
-spring = "2.7.2"
-vaadin = "23.1.6"
-
-# Other
-
-jackson = "2.13.3"
-jekyllDocker = "4.2.0"
-junit = "5.9.0"
-ktor = "2.1.0"
-openjfx = "18.0.2"
-guava = "31.1-jre"
-testcontainers = "1.17.3"
-
 [libraries]
 
 # Regular Libraries
 
-kotlin-test = {group = "org.jetbrains.kotlin", name="kotlin-test"}
 
-assertj = { group = "org.assertj", name = "assertj-core", version = "3.23.1" }
+# commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.26.0" }
 
-commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.21" }
+# Kotlinx
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.8.1" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.7.1" }
 
-dockerClient = { group = "de.gesellix", name = "docker-client", version = "2022-07-28T22-55-00" }
+# SLF4J
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.13"}
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.13"}
 
-hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", version = "2.18.0" }
+# Lets-Plot
+letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.7.3" }
+letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.3.3" }
 
-jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
-jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
-jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
-
-guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
-
-javaWebSocket = { group = "org.java-websocket", name = "Java-WebSocket", version = "1.5.3" }
-
-jfoenix = { group = "com.jfoenix", name = "jfoenix", version = "9.0.10" }
-
-jsonSchemaValidator = { group = "com.networknt", name = "json-schema-validator", version = "1.0.72" }
-
-junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
+# Tests
+kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
+assertj = { group = "org.assertj", name = "assertj-core", version = "3.26.3" }
+junit-bom = { group = "org.junit", name = "junit-bom", version = "5.10.3" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
 
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.4" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.5.1" }
-
-ktor-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
-ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
-
-letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.5.0" }
-letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.2.0" }
-slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.6"}
-slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.6"}
-
-openjfx-base = { group = "org.openjfx", name = "javafx-base", version.ref = "openjfx" }
-openjfx-controls = { group = "org.openjfx", name = "javafx-controls", version.ref = "openjfx" }
-openjfx-fxml = { group = "org.openjfx", name = "javafx-fxml", version.ref = "openjfx" }
-openjfx-graphics = { group = "org.openjfx", name = "javafx-graphics", version.ref = "openjfx" }
-openjfx-media = { group = "org.openjfx", name = "javafx-media", version.ref = "openjfx" }
-openjfx-swing = { group = "org.openjfx", name = "javafx-swing", version.ref = "openjfx" }
-openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openjfx" }
-
-postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.4.1" }
-
-testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
-h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.214" }
-
-
-spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
-spring-boot-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
-spring-boot-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
-spring-boot-vaadin = { group = "com.vaadin", name = "vaadin-spring-boot-starter" }
-spring-boot-websocket = { group = "org.springframework.boot", name = "spring-boot-starter-websocket" }
-spring-boot-oauth2-client = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
-
-ilay = { group = "org.ilay", name = "ilay", version = "3.0-Final" }
-
-vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin" }
-
 # Gradle Plugins
-
+gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.0.0" }
 gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "1.9.20" }
-gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-gradle-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
-gradle-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
-
-gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.42.0" }
-gradle-dependencyManagement = { group = "io.spring.gradle", name = "dependency-management-plugin", version = "1.0.13.RELEASE" }
-gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.21.0" }
+gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.6" }
+gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.51.0" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.3.0" }
-gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.6.0-Beta" }
-gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
+gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "4.0.0" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "6.9.1" }
-gradle-spring-boot = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "spring" }
-gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "2.1.0" }
-gradle-vaadin = { group = "com.vaadin", name = "vaadin-gradle-plugin", version.ref = "vaadin" }
+gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
+# gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.6.1" }
 
 # Other
-
 dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "1.9.20" }
 
 [bundles]
-
-ktor-netty = ["ktor-core", "ktor-netty"]
-openjfx-small = ["openjfx-base", "openjfx-controls", "openjfx-graphics"]
+gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin"]
 test = ["assertj", "kotlin-test"]
-
-gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin", "gradle-kotlin-allopen", "gradle-kotlin-noarg"]
