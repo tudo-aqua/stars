@@ -27,8 +27,4 @@ dependencies {
   implementation(libs.letsplot.imageexport)
   implementation(libs.slf4j.api)
   implementation(libs.slf4j.simple)
-  testImplementation(libs.kotlin.test)
-
-  // Use the Kotlin test library.
-  //  testImplementation("org.jetbrains.kotlin:kotlin-test")
 }

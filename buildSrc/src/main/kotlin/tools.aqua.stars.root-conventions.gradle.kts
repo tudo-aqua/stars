@@ -19,19 +19,39 @@ import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
+import tools.aqua.destabilizesVersion
 
 plugins {
-  id("tools.aqua.stars.base-conventions")
-
+  id("com.dorongold.task-tree")
+  id("com.github.ben-manes.versions")
   id("com.diffplug.spotless")
-
-  // plugins that must be applied to the root project
   id("io.github.gradle-nexus.publish-plugin")
   id("me.qoomon.git-versioning")
-  id("org.jetbrains.kotlinx.kover")
 }
 
-version = "0.0.0-SNAPSHOT"
+group = rootProject.group
+
+version = rootProject.version
+
+repositories { mavenCentral() }
+
+tasks.dependencyUpdates {
+  gradleReleaseChannel = "stable"
+  rejectVersionIf(destabilizesVersion)
+}
+
+spotless {
+  kotlinGradle { defaultFormat(rootProject) }
+
+  format("kotlinBuildSrc", KotlinExtension::class.java) {
+    target("buildSrc/src/*/kotlin/**/*.kt")
+    defaultFormat(rootProject)
+  }
+  format("kotlinGradleBuildSrc", KotlinGradleExtension::class.java) {
+    target("buildSrc/*.gradle.kts", "buildSrc/src/*/kotlin/**/*.gradle.kts")
+    defaultFormat(rootProject)
+  }
+}
 
 val mavenMetadata = extensions.create<GlobalMavenMetadataExtension>("mavenMetadata")
 
@@ -51,18 +71,5 @@ gitVersioning.apply {
 }
 
 val printVersion by tasks.registering { doFirst { logger.error(version.toString()) } }
-
-spotless {
-  format("kotlinBuildSrc", KotlinExtension::class.java) {
-    target("buildSrc/src/*/kotlin/**/*.kt")
-    defaultFormat(rootProject)
-  }
-  format("kotlinGradleBuildSrc", KotlinGradleExtension::class.java) {
-    target("buildSrc/*.gradle.kts", "buildSrc/src/*/kotlin/**/*.gradle.kts")
-    defaultFormat(rootProject)
-  }
-}
-
-koverMerged.enable()
 
 nexusPublishing { repositories { sonatype() } }
