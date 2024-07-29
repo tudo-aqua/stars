@@ -19,7 +19,7 @@ package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.tsc.builder.root
+import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Test class for TSC iterator. */
 class TSCIteratorTest {
@@ -28,7 +28,7 @@ class TSCIteratorTest {
   fun `Test TSC Iterator`() {
     val tsc =
         TSC(
-            root<
+            tsc<
                 SimpleEntity,
                 SimpleTickData,
                 SimpleSegment,
@@ -65,7 +65,7 @@ class TSCIteratorTest {
             "leaf_bounded_1",
             "leaf_bounded_2",
             "leaf_bounded_3")
-    val iteratorLabels = tsc.map { it.label }
+    val iteratorLabels = tsc.map { it.destination.label }
 
     assert(expectedLabels == iteratorLabels)
   }

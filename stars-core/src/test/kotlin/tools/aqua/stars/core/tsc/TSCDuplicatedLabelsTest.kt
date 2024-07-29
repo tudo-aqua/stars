@@ -21,7 +21,7 @@ import kotlin.test.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.tsc.builder.root
+import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Test class for duplicated labels in TSC. */
 class TSCDuplicatedLabelsTest {
@@ -30,7 +30,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated node labels on same level throwing exception`() {
     assertThrows<IllegalStateException> {
-      root<
+      tsc<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,
@@ -51,7 +51,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated node labels on different levels throwing no exception`() {
     assertDoesNotThrow {
-      root<
+      tsc<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,
@@ -71,7 +71,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated projection labels on same level throwing exception`() {
     assertThrows<IllegalStateException> {
-      root<
+      tsc<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,
@@ -93,7 +93,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated projection labels on same level throwing exception 2`() {
     assertThrows<IllegalStateException> {
-      root<
+      tsc<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,
@@ -116,7 +116,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated monitor labels on same level throwing exception`() {
     assertThrows<IllegalStateException> {
-      root<
+      tsc<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,
@@ -138,7 +138,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated monitor labels on different levels throwing no exception`() {
     assertDoesNotThrow {
-      root<
+      tsc<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,

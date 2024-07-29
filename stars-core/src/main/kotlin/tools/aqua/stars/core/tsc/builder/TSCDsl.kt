@@ -26,7 +26,7 @@ import tools.aqua.stars.core.types.*
 /** Constant predicate for always true edges. */
 val CONST_TRUE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { true }
 
-/** Label of the [TSCNode] built by the [root] function. */
+/** Label of the [TSCNode] built by the [tsc] function. */
 const val ROOT_NODE_LABEL = "root"
 
 /**
@@ -46,7 +46,7 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> root(
+    D : TickDifference<D>> tsc(
     init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSCNode<E, T, S, U, D> {
   val placeholderNode =

@@ -20,7 +20,6 @@ package tools.aqua.stars.core.tsc.edge
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
-import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -31,9 +30,8 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Label of the edge.
  * @param condition Condition of the edge.
- * @param destination Destination [TSCMonitorsNode].
+ * @param destination Destination [TSCBoundedNode].
  */
 open class TSCBoundedEdge<
     E : EntityType<E, T, S, U, D>,
@@ -41,7 +39,6 @@ open class TSCBoundedEdge<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    label: String,
     condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
     destination: TSCBoundedNode<E, T, S, U, D>
-) : TSCEdge<E, T, S, U, D>(label, condition, destination)
+) : TSCEdge<E, T, S, U, D>(condition = condition, destination = destination)

@@ -17,8 +17,6 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
-import tools.aqua.stars.core.tsc.node.TSCProjectionsNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -35,11 +33,12 @@ open class TSCProjectionsBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> :
-    TSCBuilder<E, T, S, U, D, TSCProjectionsEdge<E, T, S, U, D>>("projections", 0 to 0) {
+    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
 
-  override fun build(): TSCProjectionsEdge<E, T, S, U, D> =
-      TSCProjectionsEdge(TSCProjectionsNode(valueFunction, projectionIDs))
+  /** Holds all projections of the node. */
+  private val projectionIDs: MutableMap<String, Boolean> = mutableMapOf()
+
+  fun build(): Map<String, Boolean> = projectionIDs
 
   /**
    * DSL function to build projections from a label without recursion.

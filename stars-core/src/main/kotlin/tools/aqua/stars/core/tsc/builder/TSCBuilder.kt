@@ -19,8 +19,6 @@ package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
-import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.types.*
 
 /**
@@ -31,9 +29,6 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param B [TSCEdge].
- * @property label Name of the edge.
- * @property bounds Bounds of the node, only relevant for bounded nodes.
  */
 @TSCBuilderMarker
 sealed class TSCBuilder<
@@ -41,31 +36,24 @@ sealed class TSCBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>,
-    B : TSCEdge<E, T, S, U, D>>(
-    val label: String,
-    var bounds: Pair<Int, Int>,
-) {
+    D : TickDifference<D>> {
 
   /** Holds all edges of the node. */
-  protected val edges: MutableList<B> = mutableListOf()
-
-  /** Holds all projections of the node. */
-  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
+  protected val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
 
   /** Holds all monitors of the node. */
   protected val monitorMap: MutableMap<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
       mutableMapOf()
 
   /** Holds the optional projections. */
-  protected var projections: TSCProjectionsEdge<E, T, S, U, D>? = null
+  protected var projections: Map<String, Boolean>? = null
     set(value) {
       check(projections == null) { "Projections node already set." }
       field = value
     }
 
   /** Holds the optional monitors edge. */
-  protected var monitors: TSCMonitorsEdge<E, T, S, U, D>? = null
+  protected var monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
@@ -89,21 +77,15 @@ sealed class TSCBuilder<
     }
   private var isValueFunctionSet = false
 
-  //  /** Projection identifier of the node. (Default: empty map) */
-  //  protected val projectionIDs: MutableMap<Any, Boolean> = mutableMapOf()
-
-  /** Builds the [TSCEdge]. */
-  abstract fun build(): B
-
   /**
    * Adds the given [edge] to [edges]. This will become the edges of the node that will be created
    * off of this object.
    *
    * @param edge [TSCEdge] to be added.
    */
-  fun addEdge(edge: B) {
-    check(edges.none { it.label == edge.label }) {
-      "Edge with label ${edge.label} already exists in this scope."
+  fun addEdge(edge: TSCEdge<E, T, S, U, D>) {
+    check(edges.none { it.destination.label == edge.destination.label }) {
+      "Edge to node with label ${edge.destination.label} already exists in this scope."
     }
     edges.add(edge)
   }

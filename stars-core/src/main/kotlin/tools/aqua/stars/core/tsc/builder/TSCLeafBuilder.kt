@@ -20,8 +20,6 @@ package tools.aqua.stars.core.tsc.builder
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.edge.TSCLeafEdge
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
-import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.types.*
 
@@ -33,18 +31,24 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Name of the edge.
+ * @param label Label of the [TSCLeafNode].
  */
 open class TSCLeafBuilder<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(label: String) :
-    TSCBuilder<E, T, S, U, D, TSCLeafEdge<E, T, S, U, D>>(label, 0 to 0) {
+    D : TickDifference<D>>(val label: String) : TSCBuilder<E, T, S, U, D>() {
 
-  override fun build(): TSCLeafEdge<E, T, S, U, D> =
-      TSCLeafEdge(label, condition ?: CONST_TRUE, TSCLeafNode(valueFunction, projections, monitors))
+  fun build(): TSCLeafEdge<E, T, S, U, D> =
+      TSCLeafEdge(
+          condition = condition ?: CONST_TRUE,
+          destination =
+              TSCLeafNode(
+                  label = label,
+                  monitorsMap = monitors,
+                  projectionsMap = projections,
+                  valueFunction = valueFunction))
 
   /**
    * DSL function for edge conditions.
@@ -107,8 +111,7 @@ open class TSCLeafBuilder<
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCProjectionsEdge<E, T, S, U, D> =
-      TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
+  ) = TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
    * DSL function for an edge with MonitorsEdge in the leaf node scope.
@@ -129,6 +132,5 @@ open class TSCLeafBuilder<
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.monitors(
       init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCMonitorsEdge<E, T, S, U, D> =
-      TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.monitors = it }
+  ) = TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.also { this.monitors = it.build() }
 }

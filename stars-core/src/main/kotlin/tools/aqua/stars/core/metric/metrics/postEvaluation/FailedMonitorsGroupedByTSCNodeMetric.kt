@@ -91,7 +91,7 @@ class FailedMonitorsGroupedByTSCNodeMetric<
                     .map { t ->
                       t.rootNode.getAllEdges().mapNotNull { edge ->
                         if (onlyLeafNodes && edge.destination.edges.isNotEmpty()) null
-                        else edge.label to t
+                        else edge.destination.label to t
                       }
                     }
                     .flatten()

@@ -24,7 +24,7 @@ import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
 import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
-import tools.aqua.stars.core.tsc.builder.root
+import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Tests for monitors. */
 class TSCMonitorTests {
@@ -33,7 +33,7 @@ class TSCMonitorTests {
   @Test
   fun `Test monitor on root node`() {
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -73,7 +73,7 @@ class TSCMonitorTests {
   @Test
   fun `Test monitor on leaf node`() {
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -115,7 +115,7 @@ class TSCMonitorTests {
   @Test
   fun `Test monitor on root and leaf node`() {
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -167,7 +167,7 @@ class TSCMonitorTests {
   @Test
   fun `Test monitor on root and leaf node with identical label`() {
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,

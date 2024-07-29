@@ -20,7 +20,7 @@ package tools.aqua.stars.core.tsc
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.tsc.builder.root
+import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Tests for projections. */
 class TSCProjectionTests {
@@ -34,7 +34,7 @@ class TSCProjectionTests {
     val projection1 = "projection1"
     val projection2 = "projection2"
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -65,7 +65,7 @@ class TSCProjectionTests {
     val projection1 = "projection1"
     val projection2 = "projection2"
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -126,7 +126,7 @@ class TSCProjectionTests {
   @Test
   fun testNoExistingProjections() {
     val tsc =
-        root<
+        tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -146,7 +146,7 @@ class TSCProjectionTests {
     val projectionSub2 = "projection_sub2"
     val tsc =
         TSC(
-            root<
+            tsc<
                 SimpleEntity,
                 SimpleTickData,
                 SimpleSegment,
@@ -194,12 +194,12 @@ class TSCProjectionTests {
     val expectedLabelsAll =
         listOf(
             "all", "leaf_all_1", "leaf_all_2", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
-    assert(projectionAllTSC.tsc.map { it.label } == expectedLabelsAll)
+    assert(projectionAllTSC.tsc.map { it.destination.label } == expectedLabelsAll)
 
     val expectedLabelsSub1 = listOf("all", "leaf_all_1", "leaf_all_2")
-    assert(projectionSub1TSC.tsc.map { it.label } == expectedLabelsSub1)
+    assert(projectionSub1TSC.tsc.map { it.destination.label } == expectedLabelsSub1)
 
     val expectedLabelsSub2 = listOf("exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
-    assert(projectionSub2TSC.tsc.map { it.label } == expectedLabelsSub2)
+    assert(projectionSub2TSC.tsc.map { it.destination.label } == expectedLabelsSub2)
   }
 }

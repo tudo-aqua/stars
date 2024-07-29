@@ -18,8 +18,6 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
-import tools.aqua.stars.core.tsc.node.TSCMonitorsNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -36,11 +34,9 @@ open class TSCMonitorsBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> :
-    TSCBuilder<E, T, S, U, D, TSCMonitorsEdge<E, T, S, U, D>>("monitors", 0 to 0) {
+    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
 
-  override fun build(): TSCMonitorsEdge<E, T, S, U, D> =
-      TSCMonitorsEdge(TSCMonitorsNode(valueFunction, monitorMap))
+  fun build(): Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> = monitorMap
 
   /**
    * DSL function for a monitor.

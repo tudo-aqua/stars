@@ -21,8 +21,6 @@ import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
-import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -36,10 +34,11 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property edges [TSCEdge]s of the TSC.
- * @param tscProjectionsEdge [TSCProjectionsEdge] of the TSC.
- * @param tscMonitorsEdge [TSCMonitorsEdge] of the TSC.
- * @property valueFunction Value function predicate of the node.
+ * @property label Label of the [TSCNode].
+ * @property edges Outgoing [TSCEdge]s of the [TSCNode].
+ * @param monitorsMap Map of monitor labels to their predicates of the [TSCNode].
+ * @param projectionsMap Map of projections of the [TSCNode].
+ * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
     E : EntityType<E, T, S, U, D>,
@@ -47,18 +46,20 @@ sealed class TSCNode<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    val label: String,
     open val edges: List<TSCEdge<E, T, S, U, D>>,
-    private val tscProjectionsEdge: TSCProjectionsEdge<E, T, S, U, D>?,
-    private val tscMonitorsEdge: TSCMonitorsEdge<E, T, S, U, D>?,
+    private val monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    private val projectionsMap: Map<String, Boolean>?,
     val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
 ) {
 
-  private val projections: Map<Any, Boolean> =
-      (tscProjectionsEdge?.destination as? TSCProjectionsNode)?.projectionMap.orEmpty()
+  /** Map of projection labels to their recursive state. */
+  private val projections: Map<String, Boolean>
+    get() = projectionsMap ?: emptyMap()
 
-  /** Monitors of this TSC represented as label to monitor function. */
-  val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
-      (tscMonitorsEdge?.destination as? TSCMonitorsNode)?.monitorMap.orEmpty()
+  /** Map of monitor labels to their predicates. */
+  val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>
+    get() = monitorsMap ?: emptyMap()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
@@ -78,7 +79,9 @@ sealed class TSCNode<
                     .filter { t -> t.condition(ctx) }
                     .map { tscEdge ->
                       TSCInstanceEdge(
-                          tscEdge.label, tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
+                          tscEdge.destination.label,
+                          tscEdge.destination.evaluate(ctx, depth + 1),
+                          tscEdge)
                     }
           }
 
@@ -113,15 +116,18 @@ sealed class TSCNode<
     // the normal case: projection id is there, but recursive is off
     else
         return when (this) {
-          is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitors)
           is TSCLeafNode ->
-              TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
+              TSCLeafNode(
+                  label = label,
+                  monitorsMap = monitorsMap,
+                  projectionsMap = projectionsMap,
+                  valueFunction = valueFunction)
           is TSCBoundedNode -> {
             val outgoingEdges =
                 edges
                     .mapNotNull { edge ->
                       edge.destination.buildProjection(projectionId)?.let { projection ->
-                        TSCEdge(edge.label, edge.condition, projection)
+                        TSCEdge(edge.condition, projection)
                       }
                     }
                     .toList()
@@ -129,11 +135,13 @@ sealed class TSCNode<
             val alwaysEdgesAfter = outgoingEdges.count { it.condition == CONST_TRUE }
             val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
             TSCBoundedNode(
-                this.valueFunction,
-                this.tscProjectionsEdge,
-                this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
-                outgoingEdges,
-                this.tscMonitorsEdge)
+                label = this.label,
+                edges = outgoingEdges,
+                monitorsMap = this.monitorsMap,
+                projectionsMap = this.projectionsMap,
+                valueFunction = this.valueFunction,
+                bounds =
+                    this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff)
           }
         }
   }
@@ -143,20 +151,25 @@ sealed class TSCNode<
     val outgoingEdges =
         edges
             .map { it to it.destination.deepClone() }
-            .map { TSCEdge(it.first.label, it.first.condition, it.second) }
+            .map { TSCEdge(it.first.condition, it.second) }
             .toList()
 
     return when (this) {
-      is TSCMonitorsNode -> TSCMonitorsNode(this.valueFunction, this.monitors)
       is TSCLeafNode ->
-          TSCLeafNode(this.valueFunction, this.tscProjectionsEdge, this.tscMonitorsEdge)
+          TSCLeafNode(
+              label = this.label,
+              monitorsMap = this.monitorsMap,
+              projectionsMap = this.projectionsMap,
+              valueFunction = this.valueFunction)
       is TSCBoundedNode ->
           TSCBoundedNode(
-              this.valueFunction,
-              this.tscProjectionsEdge,
-              this.bounds,
-              outgoingEdges,
-              this.tscMonitorsEdge)
+              label = this.label,
+              edges = outgoingEdges,
+              monitorsMap = this.monitorsMap,
+              projectionsMap = this.projectionsMap,
+              valueFunction = this.valueFunction,
+              bounds = this.bounds,
+          )
     }
   }
 
@@ -175,7 +188,7 @@ sealed class TSCNode<
             edges.forEach { instanceEdge ->
               append("  ".repeat(depth))
               append(if (instanceEdge.condition == CONST_TRUE) "-T-> " else "---> ")
-              append(instanceEdge.label)
+              append(instanceEdge.destination.label)
               append(instanceEdge.destination.toString(depth + 1))
             }
           }
@@ -197,7 +210,7 @@ sealed class TSCNode<
     }
     this.edges.forEach { instanceEdge ->
       builder.append("  ".repeat(depth))
-      builder.append("-[${labels[instanceEdge] ?: 0}]-> ${instanceEdge.label} ")
+      builder.append("-[${labels[instanceEdge] ?: 0}]-> ${instanceEdge.destination.label} ")
       builder.append(instanceEdge.destination.toStringWithEdgeLabels(depth + 1, labels))
     }
     return builder.toString()

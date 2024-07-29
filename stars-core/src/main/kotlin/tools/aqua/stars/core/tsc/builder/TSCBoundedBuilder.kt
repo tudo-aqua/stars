@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Name of the edge.
+ * @param label Name of the destination [TSCNode].
  * @param bounds (Default: 0 to 0) Bounds of the node.
  */
 open class TSCBoundedBuilder<
@@ -41,20 +41,25 @@ open class TSCBoundedBuilder<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    label: String,
-    bounds: Pair<Int, Int> = Pair(0, 0),
-) : TSCBuilder<E, T, S, U, D, TSCBoundedEdge<E, T, S, U, D>>(label, bounds) {
+    val label: String,
+    var bounds: Pair<Int, Int> = Pair(0, 0),
+) : TSCBuilder<E, T, S, U, D>() {
 
   /**
    * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
    *
    * @return The created [TSCEdge].
    */
-  override fun build(): TSCBoundedEdge<E, T, S, U, D> =
+  fun build(): TSCBoundedEdge<E, T, S, U, D> =
       TSCBoundedEdge(
-          label,
-          condition ?: CONST_TRUE,
-          TSCBoundedNode(valueFunction, projections, bounds, edges.toList(), monitors))
+          condition = condition ?: CONST_TRUE,
+          destination =
+              TSCBoundedNode(
+                  label = label,
+                  edges = edges.toList(),
+                  monitorsMap = monitors,
+                  projectionsMap = projections,
+                  bounds = bounds))
 
   /**
    * DSL function for edge conditions.
@@ -117,8 +122,7 @@ open class TSCBoundedBuilder<
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCProjectionsEdge<E, T, S, U, D> =
-      TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.projections = it }
+  ) = TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
    * DSL function for the monitors block.
@@ -139,8 +143,7 @@ open class TSCBoundedBuilder<
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.monitors(
       init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCMonitorsEdge<E, T, S, U, D> =
-      TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.build().also { this.monitors = it }
+  ) = TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.also { this.monitors = it.build() }
 
   /**
    * DSL function for an edge with BoundedNode.

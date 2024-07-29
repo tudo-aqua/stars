@@ -18,8 +18,6 @@
 package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCMonitorsEdge
-import tools.aqua.stars.core.tsc.edge.TSCProjectionsEdge
 import tools.aqua.stars.core.types.*
 
 /**
@@ -30,9 +28,10 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param valueFunction Value function predicate of the node.
- * @param projections [TSCProjectionsEdge] of the TSC.
- * @param monitors [TSCMonitorsEdge] of the TSC.
+ * @param label Label of the [TSCLeafNode].
+ * @param monitorsMap Map of monitor labels to their predicates of the [TSCLeafNode].
+ * @param projectionsMap Map of projections of the [TSCLeafNode].
+ * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
 open class TSCLeafNode<
     E : EntityType<E, T, S, U, D>,
@@ -40,7 +39,15 @@ open class TSCLeafNode<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    label: String,
+    monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    projectionsMap: Map<String, Boolean>?,
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    projections: TSCProjectionsEdge<E, T, S, U, D>?,
-    monitors: TSCMonitorsEdge<E, T, S, U, D>?
-) : TSCBoundedNode<E, T, S, U, D>(valueFunction, projections, 0 to 0, emptyList(), monitors)
+) :
+    TSCBoundedNode<E, T, S, U, D>(
+        label = label,
+        edges = emptyList(),
+        monitorsMap = monitorsMap,
+        projectionsMap = projectionsMap,
+        valueFunction = valueFunction,
+        bounds = 0 to 0)

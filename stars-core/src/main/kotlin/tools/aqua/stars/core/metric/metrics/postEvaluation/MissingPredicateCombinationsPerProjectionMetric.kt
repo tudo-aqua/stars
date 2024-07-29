@@ -128,7 +128,8 @@ class MissingPredicateCombinationsPerProjectionMetric<
         allEdgesInValidInstances
             .filter { it != edge1 }
             .forEach { edge2 ->
-              predicateCombinations += PredicateCombination(edge1.label, edge2.label)
+              predicateCombinations +=
+                  PredicateCombination(edge1.destination.label, edge2.destination.label)
             }
       }
     }
