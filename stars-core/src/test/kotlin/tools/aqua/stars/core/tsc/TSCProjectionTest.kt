@@ -23,7 +23,7 @@ import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Tests for projections. */
-class TSCProjectionTests {
+class TSCProjectionTest {
 
   /**
    * This test check that with two existing projections in the TSC, exactly two projections are

@@ -24,7 +24,7 @@ import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Tests for root node DSL function. */
-class TSCRootTests {
+class TSCRootTest {
 
   /** Test adding one node as root. */
   @Test

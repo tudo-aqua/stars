@@ -27,7 +27,7 @@ import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Tests for monitors. */
-class TSCMonitorTests {
+class TSCMonitorTest {
 
   /** This test check that a monitor attached to the root node triggers correctly. */
   @Test
