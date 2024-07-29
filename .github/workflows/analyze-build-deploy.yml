@@ -80,7 +80,7 @@ jobs:
         arguments: test
 
     - name: Upload test results
-      uses: mikepenz/action-junit-report@v3
+      uses: mikepenz/action-junit-report@v4
       if: always() # Must execute after failed tests
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
