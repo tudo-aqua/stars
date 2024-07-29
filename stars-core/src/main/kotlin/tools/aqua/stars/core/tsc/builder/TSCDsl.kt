@@ -20,6 +20,7 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -48,18 +49,18 @@ fun <
     U : TickUnit<U, D>,
     D : TickDifference<D>> tsc(
     init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSCNode<E, T, S, U, D> {
-  val placeholderNode =
+): TSC<E, T, S, U, D> {
+  val rootEdge =
       TSCBoundedBuilder<E, T, S, U, D>(ROOT_NODE_LABEL)
           .apply { init() }
           .apply { this.bounds = edgesCount() to edgesCount() }
           .build()
 
-  check(placeholderNode.destination.edges.size < 2) {
+  check(rootEdge.destination.edges.size < 2) {
     "Too many elements to add - root can only host one."
   }
-  check(placeholderNode.destination.edges.isNotEmpty()) {
-    "Init must add exactly one element to root."
-  }
-  return placeholderNode.destination.edges[0].destination
+
+  check(rootEdge.destination.edges.isNotEmpty()) { "Init must add exactly one element to root." }
+
+  return TSC(rootEdge.destination.edges[0].destination)
 }

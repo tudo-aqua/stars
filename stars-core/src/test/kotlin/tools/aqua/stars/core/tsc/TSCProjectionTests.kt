@@ -145,37 +145,36 @@ class TSCProjectionTests {
     val projectionSub1 = "projection_sub1"
     val projectionSub2 = "projection_sub2"
     val tsc =
-        TSC(
-            tsc<
-                SimpleEntity,
-                SimpleTickData,
-                SimpleSegment,
-                SimpleTickDataUnit,
-                SimpleTickDataDifference> {
-              any("root") {
-                projections {
-                  projectionRecursive(projectionAll)
-                  projection(projectionSub1)
-                  projection(projectionSub2)
-                }
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference> {
+          any("root") {
+            projections {
+              projectionRecursive(projectionAll)
+              projection(projectionSub1)
+              projection(projectionSub2)
+            }
 
-                all("all") {
-                  projections { projectionRecursive(projectionSub1) }
+            all("all") {
+              projections { projectionRecursive(projectionSub1) }
 
-                  // Should be included in the projectionAll and in the projectionSub1.
-                  leaf("leaf_all_1")
-                  leaf("leaf_all_2")
-                }
+              // Should be included in the projectionAll and in the projectionSub1.
+              leaf("leaf_all_1")
+              leaf("leaf_all_2")
+            }
 
-                exclusive("exclusive") {
-                  projections { projectionRecursive(projectionSub2) }
+            exclusive("exclusive") {
+              projections { projectionRecursive(projectionSub2) }
 
-                  // Should be included in the projectionAll and in the projectionSub2.
-                  leaf("leaf_exclusive_1")
-                  leaf("leaf_exclusive_2")
-                }
-              }
-            })
+              // Should be included in the projectionAll and in the projectionSub2.
+              leaf("leaf_exclusive_1")
+              leaf("leaf_exclusive_2")
+            }
+          }
+        }
 
     val projections = tsc.buildProjections()
 

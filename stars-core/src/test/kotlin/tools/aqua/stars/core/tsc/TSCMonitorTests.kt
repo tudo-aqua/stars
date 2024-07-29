@@ -58,7 +58,7 @@ class TSCMonitorTests {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(TSC(tsc), segments(), emptyList()).apply {
+    TSCEvaluation(tsc, segments(), emptyList()).apply {
       registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
       runEvaluation()
     }
@@ -100,7 +100,7 @@ class TSCMonitorTests {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(TSC(tsc), segments(), emptyList()).apply {
+    TSCEvaluation(tsc, segments(), emptyList()).apply {
       registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
       runEvaluation()
     }
@@ -147,7 +147,7 @@ class TSCMonitorTests {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(TSC(tsc), segments(), emptyList()).apply {
+    TSCEvaluation(tsc, segments(), emptyList()).apply {
       registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
       runEvaluation()
     }
@@ -199,7 +199,7 @@ class TSCMonitorTests {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(TSC(tsc), segments(), emptyList()).apply {
+    TSCEvaluation(tsc, segments(), emptyList()).apply {
       registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
       runEvaluation()
     }
