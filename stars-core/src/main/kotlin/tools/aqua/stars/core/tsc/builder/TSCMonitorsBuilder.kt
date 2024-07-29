@@ -36,6 +36,7 @@ open class TSCMonitorsBuilder<
     U : TickUnit<U, D>,
     D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
 
+  /** Creates the monitors map. */
   fun build(): Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> = monitorMap
 
   /**

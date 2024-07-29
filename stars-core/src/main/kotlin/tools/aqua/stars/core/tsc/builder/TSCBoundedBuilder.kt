@@ -32,8 +32,8 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Name of the destination [TSCNode].
- * @param bounds (Default: 0 to 0) Bounds of the node.
+ * @property label Name of the destination [TSCNode].
+ * @property bounds (Default: 0 to 0) Bounds of the node.
  */
 open class TSCBoundedBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -46,9 +46,9 @@ open class TSCBoundedBuilder<
 ) : TSCBuilder<E, T, S, U, D>() {
 
   /**
-   * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
+   * Creates a [TSCBoundedEdge] with a [TSCBoundedNode].
    *
-   * @return The created [TSCEdge].
+   * @return The created [TSCBoundedEdge].
    */
   fun build(): TSCBoundedEdge<E, T, S, U, D> =
       TSCBoundedEdge(

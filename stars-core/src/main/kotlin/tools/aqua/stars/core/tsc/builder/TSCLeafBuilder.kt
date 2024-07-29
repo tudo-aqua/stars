@@ -31,7 +31,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Label of the [TSCLeafNode].
+ * @property label Label of the [TSCLeafNode].
  */
 open class TSCLeafBuilder<
     E : EntityType<E, T, S, U, D>,
@@ -40,6 +40,11 @@ open class TSCLeafBuilder<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val label: String) : TSCBuilder<E, T, S, U, D>() {
 
+  /**
+   * Creates a [TSCLeafEdge] with a [TSCLeafNode].
+   *
+   * @return The created [TSCLeafEdge].
+   */
   fun build(): TSCLeafEdge<E, T, S, U, D> =
       TSCLeafEdge(
           condition = condition ?: CONST_TRUE,

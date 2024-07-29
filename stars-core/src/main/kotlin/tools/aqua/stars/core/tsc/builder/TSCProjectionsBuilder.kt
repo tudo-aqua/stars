@@ -38,6 +38,7 @@ open class TSCProjectionsBuilder<
   /** Holds all projections of the node. */
   private val projectionIDs: MutableMap<String, Boolean> = mutableMapOf()
 
+  /** Creates the projections map. */
   fun build(): Map<String, Boolean> = projectionIDs
 
   /**
