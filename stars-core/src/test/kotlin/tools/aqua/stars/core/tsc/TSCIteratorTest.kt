@@ -54,6 +54,7 @@ class TSCIteratorTest {
 
     val expectedLabels =
         listOf(
+            "root",
             "exclusive",
             "leaf_exclusive_1",
             "leaf_exclusive_2",
@@ -64,7 +65,7 @@ class TSCIteratorTest {
             "leaf_bounded_1",
             "leaf_bounded_2",
             "leaf_bounded_3")
-    val iteratorLabels = tsc.map { it.destination.label }
+    val iteratorLabels = tsc.map { it.label }
 
     assert(expectedLabels == iteratorLabels)
   }

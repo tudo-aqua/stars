@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc
 
-import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -45,20 +44,20 @@ class TSCIterator<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(startNode: TSCNode<E, T, S, U, D>) : Iterator<TSCEdge<E, T, S, U, D>> {
+    D : TickDifference<D>>(startNode: TSCNode<E, T, S, U, D>) : Iterator<TSCNode<E, T, S, U, D>> {
 
-  private val items: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
+  private val items: MutableList<TSCNode<E, T, S, U, D>> = mutableListOf()
 
   init {
-    startNode.edges.forEach { addEdgesRecursively(it) }
+    addNodesRecursively(startNode)
   }
 
-  private fun addEdgesRecursively(edge: TSCEdge<E, T, S, U, D>) {
-    items.add(edge)
-    edge.destination.edges.forEach { addEdgesRecursively(it) }
+  private fun addNodesRecursively(node: TSCNode<E, T, S, U, D>) {
+    items.add(node)
+    node.edges.forEach { addNodesRecursively(it.destination) }
   }
 
   override fun hasNext(): Boolean = items.isNotEmpty()
 
-  override fun next(): TSCEdge<E, T, S, U, D> = items.removeFirst()
+  override fun next(): TSCNode<E, T, S, U, D> = items.removeFirst()
 }

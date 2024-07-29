@@ -192,13 +192,19 @@ class TSCProjectionTests {
     // Assert the "all" projection contains both leafs
     val expectedLabelsAll =
         listOf(
-            "all", "leaf_all_1", "leaf_all_2", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
-    assert(projectionAllTSC.tsc.map { it.destination.label } == expectedLabelsAll)
+            "root",
+            "all",
+            "leaf_all_1",
+            "leaf_all_2",
+            "exclusive",
+            "leaf_exclusive_1",
+            "leaf_exclusive_2")
+    assert(projectionAllTSC.tsc.map { it.label } == expectedLabelsAll)
 
-    val expectedLabelsSub1 = listOf("all", "leaf_all_1", "leaf_all_2")
-    assert(projectionSub1TSC.tsc.map { it.destination.label } == expectedLabelsSub1)
+    val expectedLabelsSub1 = listOf("root", "all", "leaf_all_1", "leaf_all_2")
+    assert(projectionSub1TSC.tsc.map { it.label } == expectedLabelsSub1)
 
-    val expectedLabelsSub2 = listOf("exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
-    assert(projectionSub2TSC.tsc.map { it.destination.label } == expectedLabelsSub2)
+    val expectedLabelsSub2 = listOf("root", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
+    assert(projectionSub2TSC.tsc.map { it.label } == expectedLabelsSub2)
   }
 }

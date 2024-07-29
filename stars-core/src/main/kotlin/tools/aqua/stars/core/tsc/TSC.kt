@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.tsc
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -40,7 +39,7 @@ class TSC<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val rootNode: TSCNode<E, T, S, U, D>) :
-    Iterable<TSCEdge<E, T, S, U, D>> {
+    Iterable<TSCNode<E, T, S, U, D>> {
   /**
    * Evaluates [PredicateContext] on [TSC].
    *
@@ -64,5 +63,5 @@ class TSC<
 
   override fun toString(): String = this.rootNode.toString()
 
-  override fun iterator(): Iterator<TSCEdge<E, T, S, U, D>> = TSCIterator(rootNode)
+  override fun iterator(): Iterator<TSCNode<E, T, S, U, D>> = TSCIterator(rootNode)
 }
