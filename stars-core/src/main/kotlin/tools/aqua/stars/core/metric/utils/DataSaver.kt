@@ -139,7 +139,7 @@ fun <T1 : Number, T2 : Number> getCSVString(
   for (i in 0 until valueMap.values.first().second.size) {
     csvString += "$i;"
     csvString += "${valueMap.values.first().first[i]};"
-    valueMap.keys.forEach { key -> csvString += "${valueMap[key]?.second?.get(i)};" }
+    valueMap.keys.forEach { key -> csvString += "${valueMap[key]?.run { second[i] }};" }
     csvString += "\n"
   }
 

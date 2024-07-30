@@ -55,11 +55,11 @@ sealed class TSCNode<
 
   /** Map of projection labels to their recursive state. */
   private val projections: Map<String, Boolean>
-    get() = projectionsMap ?: emptyMap()
+    get() = projectionsMap.orEmpty()
 
   /** Map of monitor labels to their predicates. */
   val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>
-    get() = monitorsMap ?: emptyMap()
+    get() = monitorsMap.orEmpty()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
