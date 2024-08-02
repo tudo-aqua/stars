@@ -1,3 +1,4 @@
+[0.4]: https://github.com/tudo-aqua/stars/releases/tag/v0.4
 [0.3]: https://github.com/tudo-aqua/stars/releases/tag/v0.3
 [0.2.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.2
 [0.2.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.1
@@ -13,7 +14,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.1] - tba
+## [0.4] - 02.08.2024
 ### Added
 - Add iterator for `TSC`.
 - Add support for multiple monitors per node.
