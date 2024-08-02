@@ -20,59 +20,17 @@ the [Gradle documentation](https://docs.gradle.org/current/userguide/sharing_bui
 
 Each Plugin is designed to contain common configuration for one project facette.
 
-### `base-conventions`
-
-The base conventions apply three plugins:
-
-- [Gradle Task Tree](https://github.com/dorongold/gradle-task-tree) helps with debugging the build performed by Gradle
-  (e.g., missing task dependencies).
-- [Gradle Version Plugin](https://github.com/ben-manes/gradle-versions-plugin) can be used to check dependencies for
-  updates. Since plugins are declared via `buildSrc`, it can unfortunately not detect plugin updates.
-- [Spotless](https://github.com/diffplug/spotless) is used for enforcing style and license headers on the Gradle build
-  files. The license header templates are located in the `contrib` folder.
-
-It should be “inherited“ by all other conventions.
-
-### `kotlin-conventions`
-
-The Kotlin conventions handle the setup of the Kotlin compiler, documentation generation, testing, and code quality
-enforcement. Style and license headers of Kotlin source files are again enforced
-via [Spotless](https://github.com/diffplug/spotless). Additionally, [Detekt](https://detekt.dev/) is configured to
-perform additional quality checks on Kotlin files, but will not fail the build on violations. The Detekt configuration
-(with some rationales) is located in `contrib/detekt-rules.yml`.
-
-### `publish-conventions`
-
-The publish-conventions handle publication of artifacts via Maven Central. Most of the process is automated, but each
-module must provide a name and description for the generated POM file. This is done using the (custom) `MavenMetadata`
-extension:
-
-```kotlin
-mavenMetadata {
-    name.set("STARS Thing")
-    description.set("A thing for STARS.")
-}
-```
-
-The extension also enforces signing as soon as a publication task (including `publishToMavenLocal`) is included in the
-build process. Each developer *must* generate a GPG key for signing and register the ID in their Gradle system
-properties file. See the [Gradle documentation](https://docs.gradle.org/current/userguide/signing_plugin.html) for
-details.
-
-### `executable-conventions`
-
-The executable conventions should be applied to every module that contains a main class. They enable the Kotlin and
-publishing configurations as well as the
-[application plugin](https://docs.gradle.org/current/userguide/application_plugin.html). Each module using these
-conventions must set an appropriate main class. See the `stars-examples` modules for examples.
-
 ### `library-conventions`
 
 The library conventions should be applied to every module that is intended to be reused. They enable the Kotlin and
 publishing configurations as well as the
 [Java library plugin](https://docs.gradle.org/current/userguide/java_library_plugin.html). Each module using this
-convention must take care to differentiate `api` and `implementation` dependencies. This convention can be combined with
-the executable convention for programs with a defined API. See the `stars-core` module for an example.
+convention must take care to differentiate `api` and `implementation` dependencies.
+It also handles the setup of the Kotlin compiler, documentation generation, testing, and code quality
+enforcement. Style and license headers of Kotlin source files are again enforced
+via [Spotless](https://github.com/diffplug/spotless). Additionally, [Detekt](https://detekt.dev/) is configured to
+perform additional quality checks on Kotlin files, but will not fail the build on violations. The Detekt configuration
+(with some rationales) is located in `contrib/detekt-rules.yml`.
 
 ### `root-conventions`
 
@@ -89,20 +47,22 @@ correctly. The versioning rules are:
 - If the branch is *not* `main`, the version is the *last* release, plus the branch name, plus a `git describe`-style
   specified, as a `SNAPSHOT`.
 - Otherwise, the version of last resort is `0.0.0-SNAPSHOT` and a warning is emitted.
-
-### `jekyll-conventions`
-
-The Jekyll conventions are designed for generated documentation sites and mostly emulate the build process provided by
-GitHub Pages. They provide the configuration `includedKDoc` for KDoc JARs that are to be included in the generated page.
-For example, the dependency
+  
+It also handles publication of artifacts via Maven Central. Most of the process is automated, but each
+module must provide a name and description for the generated POM file. This is done using the (custom) `MavenMetadata`
+extension:
 
 ```kotlin
-includedKDoc(project(":stars-thing", "kdoc"))
+mavenMetadata {
+    name.set("STARS Thing")
+    description.set("A thing for STARS.")
+}
 ```
 
-will take the artifact associated with the configuration `kdoc` from the project `stars-thing` and unpack it in the
-directory `stars-thing` relative to the site root. The `kdoc` configuration is provided by every project using
-the `kotlin-conventions`.
+The extension also enforces signing as soon as a publication task (including `publishToMavenLocal`) is included in the
+build process. Each developer *must* generate a GPG key for signing and register the ID in their Gradle system
+properties file. See the [Gradle documentation](https://docs.gradle.org/current/userguide/signing_plugin.html) for
+details.
 
 ## Custom Extensions, Tasks and Shorthands
 
@@ -116,13 +76,11 @@ The STARS project utilizes *version catalogs* provided by the `gradle/libs.versi
 STARS projects should be defined there and included into projects using Gradle's type-safe accessor syntax. See any
 project or convention for examples.
 
-The file uses some shared version declarations in the `[versions]` block. These are required for versions shared by
-multiple dependencies (e.g., Kotlin) and versions of non-Java-dependencies (i.e., the Jekyll Docker image). Depencencies
-themselves are declared in the `[libraries]` block. Since Gradle plugins are applies via `buildSrc` and are therefore *
-regular* dependencies of that project, they are declared here. Their aliases are prefixed by `gradle-`. Bundles are used
+Depencencies are declared in the `[libraries]` block. Since Gradle plugins are applies via `buildSrc` and are therefore 
+*regular* dependencies of that project, they are declared here. Their aliases are prefixed by `gradle-`. Bundles are used
 to group some common dependencies, while plugin aliases cannot be used in combination with `buildSrc`-applied plugins.
 
-The [Gradle documentation](https://docs.gradle.org/current/userguide/platforms.html) should be consulted for further
+The [Gradle documentation](https://docs.gradle.org/current/userguide/platforms.html) should be consulted for further 
 information on catalogs and the TOML syntax.
 
 ## Style & Quality
