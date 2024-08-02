@@ -80,6 +80,7 @@ class SimpleTickDataDifference(val tickDifference: Long) :
     TickDifference<SimpleTickDataDifference> {
   override fun compareTo(other: SimpleTickDataDifference): Int =
       tickDifference.compareTo(other.tickDifference)
+
   override fun plus(other: SimpleTickDataDifference): SimpleTickDataDifference =
       SimpleTickDataDifference(tickDifference + other.tickDifference)
 

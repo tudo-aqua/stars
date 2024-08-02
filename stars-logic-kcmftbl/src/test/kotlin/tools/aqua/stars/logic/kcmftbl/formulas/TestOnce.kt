@@ -29,7 +29,6 @@ class TestOnce {
    * Test equivalence to since.
    *
    * Once phi === True Since phi
-   *
    * - phi: All combinations of 0-1 arrays with length 5
    * - interval: All combinations including null
    * - Expected: true

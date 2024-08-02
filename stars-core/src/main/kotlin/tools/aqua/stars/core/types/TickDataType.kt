@@ -46,7 +46,6 @@ interface TickDataType<
    * Retrieves [EntityType] from [entities] by given [entityID].
    *
    * @param entityID Entity identifier.
-   *
    * @return The [EntityType] with the ID [entityID] if existing. Null otherwise.
    */
   fun getEntityById(entityID: Int): E? = entities.firstOrNull { it.id == entityID }

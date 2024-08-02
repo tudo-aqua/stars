@@ -36,7 +36,9 @@ class TSCRootTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> { all(label) }
+            SimpleTickDataDifference> {
+          all(label)
+        }
 
     assertEquals(label, tsc.rootNode.label)
   }

@@ -52,7 +52,6 @@ class SegmentCountMetric<
    * Increases the count of evaluated [SegmentType]s.
    *
    * @param segment The current [SegmentType] that is evaluated.
-   *
    * @return The number of analyzed [SegmentType]s so far.
    */
   override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int =

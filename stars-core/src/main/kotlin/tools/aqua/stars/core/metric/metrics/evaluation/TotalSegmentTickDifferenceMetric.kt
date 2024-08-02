@@ -51,11 +51,9 @@ class TotalSegmentTickDifferenceMetric<
    * Add the given [segment] to the total [TickDifference].
    *
    * @param segment The [SegmentType] for which the total [TickDifference] should be tracked.
-   *
    * @return The current total [TickDifference] of all analyzed [SegmentType]s.
-   *
    * @throws IllegalStateException If the [TickDifference] between the first and last [TickDataType]
-   * of the [SegmentType] is negative.
+   *   of the [SegmentType] is negative.
    */
   override fun evaluate(segment: SegmentType<E, T, S, U, D>): Optional<D> {
     // The Segment has at least two TickData objects from which a TickDifference can be calculated.

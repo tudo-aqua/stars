@@ -27,12 +27,12 @@ import tools.aqua.stars.core.types.*
  * provides an [evaluate] function which gets a [TSCProjection] and a [TSCInstance] which is called
  * during the evaluation phase.
  *
- * @see TSCEvaluation.runEvaluation
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @see TSCEvaluation.runEvaluation
  */
 interface ProjectionAndTSCInstanceNodeMetricProvider<
     E : EntityType<E, T, S, U, D>,

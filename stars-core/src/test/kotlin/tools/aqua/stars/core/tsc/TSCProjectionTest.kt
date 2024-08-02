@@ -131,7 +131,9 @@ class TSCProjectionTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> { all("root") }
+            SimpleTickDataDifference> {
+          all("root")
+        }
 
     val projections = tsc.buildProjections()
     // Check that exactly two projections are produced

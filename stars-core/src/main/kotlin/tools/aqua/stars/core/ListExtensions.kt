@@ -50,6 +50,7 @@ fun <T> List<T>.powerlist(): List<List<T>> =
 /**
  * Build all possible combinations of the lists in the input list. Example instances kept until
  * better documentation will be written.
+ *
  * ```
  *    val input = listOf(
  *        listOf(listOf("a"), listOf("b"), listOf("c")),

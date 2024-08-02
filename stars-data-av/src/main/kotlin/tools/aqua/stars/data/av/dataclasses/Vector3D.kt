@@ -26,6 +26,7 @@ package tools.aqua.stars.data.av.dataclasses
  */
 data class Vector3D(val x: Double, val y: Double, val z: Double) {
   constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)
+
   constructor(location: Location) : this(location.x, location.y, location.z)
 
   /** Addition operator. */

@@ -26,7 +26,7 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
  *
  * @param fileName The filename.
  * @throws IllegalStateException When the [fileName] is not empty and does not include "static_data"
- * or "dynamic_data".
+ *   or "dynamic_data".
  */
 @Suppress("unused")
 fun getMapName(fileName: String): String =

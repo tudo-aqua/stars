@@ -39,7 +39,6 @@ const val ROOT_NODE_LABEL = "root"
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param init The init function. Must add exactly one edge.
- *
  * @return The [TSCNode] at the root level of the TSC.
  */
 fun <

@@ -34,10 +34,10 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label Label of the [TSCNode].
- * @property edges Outgoing [TSCEdge]s of the [TSCNode].
  * @param monitorsMap Map of monitor labels to their predicates of the [TSCNode].
  * @param projectionsMap Map of projections of the [TSCNode].
+ * @property label Label of the [TSCNode].
+ * @property edges Outgoing [TSCEdge]s of the [TSCNode].
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<

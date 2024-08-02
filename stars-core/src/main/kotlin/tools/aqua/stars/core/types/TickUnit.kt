@@ -29,7 +29,6 @@ interface TickUnit<U : TickUnit<U, D>, D : TickDifference<D>> : Comparable<U> {
    * Adds a [TickDifference] to this [TickUnit].
    *
    * @param other The [TickDifference] to add.
-   *
    * @return A new [TickUnit] object.
    */
   operator fun plus(other: D): U
@@ -38,7 +37,6 @@ interface TickUnit<U : TickUnit<U, D>, D : TickDifference<D>> : Comparable<U> {
    * Subtracts a [TickDifference] from this [TickUnit].
    *
    * @param other The [TickDifference] to subtract.
-   *
    * @return A new [TickUnit] object.
    */
   operator fun minus(other: D): U
@@ -47,7 +45,6 @@ interface TickUnit<U : TickUnit<U, D>, D : TickDifference<D>> : Comparable<U> {
    * Creates a [TickDifference] between the given and this [TickUnit].
    *
    * @param other The other [TickUnit].
-   *
    * @return A new [TickDifference] object.
    */
   operator fun minus(other: U): D

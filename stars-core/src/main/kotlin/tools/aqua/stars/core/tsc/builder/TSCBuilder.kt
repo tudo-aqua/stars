@@ -66,6 +66,7 @@ sealed class TSCBuilder<
       isConditionSet = true
       field = value
     }
+
   private var isConditionSet = false
 
   /** Value function predicate of the node. (Default: empty) */
@@ -75,6 +76,7 @@ sealed class TSCBuilder<
       isValueFunctionSet = true
       field = value
     }
+
   private var isValueFunctionSet = false
 
   /**
