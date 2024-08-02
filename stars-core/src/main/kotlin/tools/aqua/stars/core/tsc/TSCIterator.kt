@@ -23,8 +23,8 @@ import tools.aqua.stars.core.types.*
 /**
  * Iterator for the TSC. Iterates over all edges of the TSC.
  *
- * The following TSC will be traversed in the order ["root", "exclusive", "leaf_exclusive_1",
- * "leaf_exclusive_2", "any", "leaf_any_1", "leaf_any_2"].
+ * The following TSC will be traversed in the order
+ * ["root", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2", "any", "leaf_any_1", "leaf_any_2"].
  *
  * ```
  * all("root") {

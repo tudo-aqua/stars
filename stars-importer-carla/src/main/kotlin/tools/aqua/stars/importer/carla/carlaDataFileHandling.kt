@@ -105,12 +105,12 @@ fun loadBlocks(mapDataFile: Path): Sequence<Block> =
  * data, each as [Path]s.
  *
  * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
- * to its dynamic data
+ *   to its dynamic data
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- * vehicle as the "ego" vehicle
+ *   vehicle as the "ego" vehicle
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- * the map
+ *   the map
  * @return A [Sequence] of [Segment]s based on the given [simulationRunsWrappers]
  */
 fun loadSegments(
@@ -199,12 +199,12 @@ fun loadSegments(
  *
  * @param mapDataFile The [Path] to map data file containing all static information
  * @param dynamicDataFile The [Path] to the data file which contains the timed state data for the
- * simulation
+ *   simulation
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- * vehicle as the "ego" vehicle
+ *   vehicle as the "ego" vehicle
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- * the map
+ *   the map
  * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFile]
  */
 fun loadSegments(
@@ -227,12 +227,12 @@ fun loadSegments(
  *
  * @param mapDataFile The [Path] to map data file containing all static information
  * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state data
- * for the simulation
+ *   for the simulation
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- * vehicle as the "ego" vehicle
+ *   vehicle as the "ego" vehicle
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- * the map
+ *   the map
  * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles]
  */
 fun loadSegments(
@@ -255,13 +255,13 @@ fun loadSegments(
  * linked to a map data, they are linked in the [Map].
  *
  * @param mapToDynamicDataFiles Maps the [Path] of the static file to a [List] of [Path]s of dynamic
- * files related to the static file.
+ *   files related to the static file.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- * vehicle as the "ego" vehicle.
+ *   vehicle as the "ego" vehicle.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
- * .
+ *   .
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- * the map.
+ *   the map.
  * @return A [Sequence] of [Segment]s based on the given 'mapDataFile' and 'dynamicDataFiles'.
  */
 fun loadSegments(

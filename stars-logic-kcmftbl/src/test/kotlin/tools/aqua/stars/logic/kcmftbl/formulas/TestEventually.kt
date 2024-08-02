@@ -29,7 +29,6 @@ class TestEventually {
    * Test equivalence to until.
    *
    * Eventually phi === True Until phi
-   *
    * - phi: All combinations of 0-1 arrays with length 5
    * - interval: All combinations including null
    * - Expected: true

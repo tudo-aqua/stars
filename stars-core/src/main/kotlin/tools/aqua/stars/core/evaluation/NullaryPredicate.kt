@@ -43,7 +43,6 @@ class NullaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
-   *
    * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
    */
   fun holds(
@@ -61,7 +60,6 @@ class NullaryPredicate<
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param eval The evaluation function on the [PredicateContext].
-     *
      * @return The created [NullaryPredicate] with the given [eval] function.
      */
     fun <

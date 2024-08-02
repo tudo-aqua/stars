@@ -29,7 +29,6 @@ class TestGlobally {
    * Test equivalence to eventually.
    *
    * Globally phi === !Eventually !phi
-   *
    * - phi: All combinations of 0-1 arrays with length 5
    * - interval: All combinations including null
    * - Expected: true

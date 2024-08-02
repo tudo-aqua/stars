@@ -44,7 +44,6 @@ class TSC<
    * Evaluates [PredicateContext] on [TSC].
    *
    * @param context The [PredicateContext].
-   *
    * @return The calculated [TSCInstance] based on the evaluation.
    */
   fun evaluate(context: PredicateContext<E, T, S, U, D>): TSCInstance<E, T, S, U, D> =
@@ -54,7 +53,6 @@ class TSC<
    * Builds all possible projections ignoring those in [projectionIgnoreList].
    *
    * @param projectionIgnoreList Projections to ignore.
-   *
    * @return The [List] of all [TSCProjection]s for this [TSC].
    */
   fun buildProjections(

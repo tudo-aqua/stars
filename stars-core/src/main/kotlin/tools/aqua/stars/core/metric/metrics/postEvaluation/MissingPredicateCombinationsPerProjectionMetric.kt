@@ -41,7 +41,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
- * depends on and needs for its calculation.
+ *   depends on and needs for its calculation.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -86,11 +86,10 @@ class MissingPredicateCombinationsPerProjectionMetric<
    * Calculate the [Set] of [PredicateCombination]s that are missing.
    *
    * @param tscProjection The [TSCProjection] for which the missing [PredicateCombination]s should
-   * be calculated.
+   *   be calculated.
    * @param tscInstances The occurred [List] of [TSCInstanceNode]s.
-   *
    * @return A [Set] of [PredicateCombination]s that can occur based on the given [tscProjection]
-   * but are not present in the given [tscInstances].
+   *   but are not present in the given [tscInstances].
    */
   private fun getAllMissingPredicateCombinationsForProjection(
       tscProjection: TSCProjection<E, T, S, U, D>,
@@ -109,8 +108,7 @@ class MissingPredicateCombinationsPerProjectionMetric<
    * Get all [PredicateCombination]s for the given [List] of [TSCInstanceNode]s.
    *
    * @param tscInstances A [List] of [TSCInstanceNode] for which all possible [PredicateCombination]
-   * s should be calculated.
-   *
+   *   s should be calculated.
    * @return the [Set] of [PredicateCombination]s based on the [tscInstances].
    */
   private fun getAllPredicateCombinations(

@@ -29,8 +29,8 @@ package tools.aqua.stars.data.av.dataclasses
  * @property successorLanes List of [ContactLaneInfo]s for successive [Lane]s.
  * @property intersectingLanes List of [ContactLaneInfo]s for intersecting [Lane]s.
  * @property yieldLanes List of [Lane]s that this [Lane] yields to. Lanes that this lane must yield
- * to according to the "right before left" rule, i.e., traffic signs or lights are not taken into
- * account. it is always a subset of [intersectingLanes]
+ *   to according to the "right before left" rule, i.e., traffic signs or lights are not taken into
+ *   account. it is always a subset of [intersectingLanes]
  * @property laneMidpoints List of [LaneMidpoint]s for [Lane] midpoints.
  * @property speedLimits List of [SpeedLimit]s for the speed limits.
  * @property landmarks List of [Landmark]s on list [Lane].
@@ -99,8 +99,7 @@ data class Lane(
   fun speedAt(vPos: Double): Double =
       speedLimits
           .firstOrNull { it.fromDistanceFromStart <= vPos && vPos < it.toDistanceFromStart }
-          ?.speedLimit
-          ?: 30.0
+          ?.speedLimit ?: 30.0
 
   /**
    * Retrieve the position (relative to this lane's start) where [otherLane] is crossed. if the

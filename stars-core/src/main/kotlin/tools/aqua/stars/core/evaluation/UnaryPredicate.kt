@@ -48,9 +48,8 @@ class UnaryPredicate<
    * @param ctx The context this predicate is evaluated in.
    * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
    * @param entityId (Default: Primary entity) The ID of the entity to evaluate this predicate for.
-   *
    * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
-   * given [entityId].
+   *   given [entityId].
    */
   fun holds(
       ctx: PredicateContext<E, T, S, U, D>,
@@ -63,7 +62,6 @@ class UnaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param entity The entity to evaluate this predicate for.
-   *
    * @return Whether the predicate holds in the given [PredicateContext] for the given [entity].
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>, entity: E): Boolean =
@@ -73,7 +71,6 @@ class UnaryPredicate<
    * Check if this predicate holds (i.e. is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
-   *
    * @return Whether the predicate holds in the given [PredicateContext].
    */
   fun holds(ctx: PredicateContext<E, T, S, U, D>): Boolean =
@@ -91,9 +88,8 @@ class UnaryPredicate<
      * @param D [TickDifference].
      * @param kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
      * @param eval The evaluation function on the [PredicateContext].
-     *
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass] of the
-     * entity for which the predicate should be evaluated.
+     *   entity for which the predicate should be evaluated.
      */
     fun <
         E1 : E,

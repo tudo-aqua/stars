@@ -25,12 +25,12 @@ import tools.aqua.stars.core.types.*
  * The [ProjectionMetricProvider] implements the [EvaluationMetricProvider] and provides an
  * [evaluate] function which gets a [TSCProjection] which is called during the evaluation phase.
  *
- * @see TSCEvaluation.runEvaluation
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @see TSCEvaluation.runEvaluation
  */
 interface ProjectionMetricProvider<
     E : EntityType<E, T, S, U, D>,

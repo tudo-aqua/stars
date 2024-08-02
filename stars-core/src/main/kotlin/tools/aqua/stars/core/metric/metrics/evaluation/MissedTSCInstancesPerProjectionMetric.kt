@@ -66,9 +66,9 @@ class MissedTSCInstancesPerProjectionMetric<
    * current [tscInstance] is invalid it is skipped.
    *
    * @param projection The current [TSCProjection] for which the [TSCInstance] should be set to
-   * false (not missed).
+   *   false (not missed).
    * @param tscInstance The current [TSCInstance] which is removed from the [missedInstancesMap]
-   * list.
+   *   list.
    */
   override fun evaluate(
       projection: TSCProjection<E, T, S, U, D>,
@@ -87,9 +87,9 @@ class MissedTSCInstancesPerProjectionMetric<
    * (missed).
    *
    * @return the filled [MutableMap] mapping all [TSCProjection.possibleTSCInstances] to true
-   * (missed).
+   *   (missed).
    * @throws IllegalStateException when the resulting size of the [MutableMap] is not equals to the
-   * amount of [TSCInstanceNode]s in [TSCProjection.possibleTSCInstances].
+   *   amount of [TSCInstanceNode]s in [TSCProjection.possibleTSCInstances].
    */
   private fun createDefaultMissedInstanceFlagMap(
       projection: TSCProjection<E, T, S, U, D>

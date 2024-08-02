@@ -204,10 +204,8 @@ fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane =
  * Converts [JsonContactArea] to [ContactArea].
  *
  * @param jsonContactArea The [JsonContactArea].
- * @param lane1 [Lane]
- * 1.
- * @param lane2 [Lane]
- * 2.
+ * @param lane1 [Lane] 1.
+ * @param lane2 [Lane] 2.
  */
 fun convertJsonContactAreaToContactArea(
     jsonContactArea: JsonContactArea,

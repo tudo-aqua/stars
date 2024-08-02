@@ -40,11 +40,11 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
- * depends on and needs for its calculation.
- * @property logger [Logger] instance.
  * @param onlyLeafNodes (Default: false) Whether the monitor should only be triggered for leaf
- * nodes.
+ *   nodes.
+ * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
+ *   depends on and needs for its calculation.
+ * @property logger [Logger] instance.
  */
 @Suppress("unused")
 class FailedMonitorsGroupedByTSCNodeMetric<

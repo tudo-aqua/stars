@@ -60,9 +60,9 @@ class TSCInstanceNode<
    * correct range for [TSCBoundedNode]).
    *
    * @param label the label used to build the human-readable string; uses [TSCEdge.label] in
-   * recursive call.
+   *   recursive call.
    * @return non-validating nodes; first element of pair is the node that failed to validate; second
-   * element is a human-readable explanation for the failure.
+   *   element is a human-readable explanation for the failure.
    */
   fun validate(
       label: String = ROOT_NODE_LABEL
@@ -107,7 +107,7 @@ class TSCInstanceNode<
    * true.
    *
    * @param label the label added to the return list if [monitorResult] == `false`; uses
-   * [TSCEdge.label] in recursive call.
+   *   [TSCEdge.label] in recursive call.
    * @return List of [Pair]s of the failed monitor to the node label.
    */
   private fun validateMonitorsRec(label: String): List<Pair<String, String>> =

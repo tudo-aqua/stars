@@ -44,14 +44,14 @@ private const val POSITION_DODGE = 0.3
  * @param plot Contains all necessary data points for the bar chart.
  * @param fileName The name of the resulting PNG file.
  * @param folder The name of the metric from which the plot is created. The resulting PNG file is
- * located under the metrics names folder.
+ *   located under the metrics names folder.
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
- * resulting path.
+ *   resulting path.
  * @param size (Default: null) The size of the resulting PNG file.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
  * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
  */
@@ -89,12 +89,12 @@ fun plotDataAsLineChart(
  * @param fileName The name of the resulting PNG file.
  * @param folder The name of the top-level folder for this file.
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
- * resulting path.
+ *   resulting path.
  * @param size (Default: null) The size of the resulting PNG file.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
  * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
  */
@@ -129,12 +129,12 @@ fun plotDataAsBarChart(
  * @param fileName The name of the resulting PNG file.
  * @param folder The name of the top-level folder for this file.
  * @param subFolder (Default: "") This optional folder will be added after the [folder] to the
- * resulting path.
+ *   resulting path.
  * @param size (Default: null) The size of the resulting PNG file.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
  * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
  */
@@ -165,12 +165,13 @@ fun plotDataAsHistogram(
 /**
  * Creates a [Plot] object from [plot] containing features for plot size and x-y-axis scale and
  * ranges.
+ *
  * @param plot Contains all necessary data points for the histogram.
  * @param size (Default: null) The size of the resulting PNG file.
  * @param xAxisScaleMaxValue (Default: null) Sets the max x-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param yAxisScaleMaxValue (Default: null) Sets the max y-value for the chart. The data is scaled
- * accordingly.
+ *   accordingly.
  * @param logScaleX (Default: false) If true, the x-axis will be scaled logarithmically.
  * @param logScaleY (Default: false) If true, the y-axis will be scaled logarithmically.
  */
@@ -272,7 +273,7 @@ fun <T : Number> getPlot(
  * @param T2 [Number].
  * @param legendEntries The names that are displayed in the legend for the data sets.
  * @param xAndYValues A [List] of x- and y-value [List]s. Each [List] item corresponds to one item
- * of [legendEntries].
+ *   of [legendEntries].
  * @param xAxisName (Default: 'x') The name that is displayed below the x-axis of the plot.
  * @param yAxisName (Default 'y') The name that is displayed besides the y-axis of the plot.
  * @param legendHeader (Default 'Legend') The name that is displayed above the legend list.
@@ -302,7 +303,7 @@ fun <T1 : Number, T2 : Number> getPlot(
  * @param T1 [Number].
  * @param T2 [Number].
  * @param nameToValuesMap The [Map] that contains the x- and y-values in relation to their legend
- * entry.
+ *   entry.
  * @param xAxisName The name that is displayed below the x-axis of the plot.
  * @param yAxisName The name that is displayed besides the y-axis of the plot.
  * @param legendHeader The name that is displayed above the legend list.
@@ -352,10 +353,9 @@ fun <T1 : Number, T2 : Number> getPlot(
  *
  * @param folder The name of the top-level folder.
  * @param subFolder (Default: "") The name of the sub-folder under [folder] in which the file will
- * be saved.
+ *   be saved.
  * @return The path to the created folder.
  */
 private fun getAndCreatePlotFolder(folder: String, subFolder: String): String =
-    "analysis-result-logs/${ApplicationStartTimeHolder.applicationStartTimeString}/plots/$folder/$subFolder".also {
-      File(it).mkdirs()
-    }
+    "analysis-result-logs/${ApplicationStartTimeHolder.applicationStartTimeString}/plots/$folder/$subFolder"
+        .also { File(it).mkdirs() }

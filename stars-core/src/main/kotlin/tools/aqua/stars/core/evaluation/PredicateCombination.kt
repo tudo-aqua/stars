@@ -31,7 +31,6 @@ data class PredicateCombination(val predicate1: String, val predicate2: String) 
    * equal. The order is irrelevant. ["pre1", "pre2"] == ["pre2", "pre1"] is true.
    *
    * @param other The other object to which "this" should be checked for equality.
-   *
    * @return Whether the two object are equal.
    */
   override fun equals(other: Any?): Boolean =

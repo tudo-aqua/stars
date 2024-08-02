@@ -22,12 +22,10 @@ package tools.aqua.stars.data.av.dataclasses
  *
  * @property id Identifier of the road touching point.
  * @property contactLocation The [Location] of the touching point.
- * @property lane1 [Lane]
- * 1.
+ * @property lane1 [Lane] 1.
  * @property lane1StartPos Start position on lane 1.
  * @property lane1EndPos End position on lane 1.
- * @property lane2 [Lane]
- * 2.
+ * @property lane2 [Lane] 2.
  * @property lane2StartPos Start position on lane 2.
  * @property lane2EndPos End position on lane 2.
  */

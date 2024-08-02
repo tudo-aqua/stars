@@ -26,7 +26,7 @@ import java.io.File
  * @param fileName The name of the saved file.
  * @param folder The name of the top-level folder.
  * @param subFolder (Default: "") The name of the sub-folder under [folder] in which the file will
- * be saved.
+ *   be saved.
  */
 fun saveAsCSVFile(
     csvString: String,
@@ -82,7 +82,7 @@ fun <T : Number> getCSVString(
  * @param T2 [Number].
  * @param columnEntries The names that are displayed in the legend for the data sets.
  * @param xAndYValues A [List] of x- and y-value [List]s. Each [List] item corresponds to one item
- * of [columnEntries].
+ *   of [columnEntries].
  * @param sliceValue (Default: null) If set the values will be sliced by the given [sliceValue].
  * @return The CSV [String] based on the [xAndYValues].
  */
@@ -108,9 +108,9 @@ fun <T1 : Number, T2 : Number> getCSVString(
  * @param T1 [Number].
  * @param T2 [Number].
  * @param nameToValuesMap The [Map] that contains the x- and y-values in relation to their legend
- * entry.
+ *   entry.
  * @param sliceValue (Default: null) If set the values of each key in the [nameToValuesMap] will be
- * sliced by the given [sliceValue].
+ *   sliced by the given [sliceValue].
  * @return The CSV [String] based on the [nameToValuesMap].
  */
 fun <T1 : Number, T2 : Number> getCSVString(
@@ -152,10 +152,9 @@ fun <T1 : Number, T2 : Number> getCSVString(
  *
  * @param folder The name of the top-level folder.
  * @param subFolder (Default: "") The name of the sub-folder under [folder] in which the file will
- * be saved.
+ *   be saved.
  * @return The path to the created folder.
  */
 private fun getAndCreateCSVFolder(folder: String, subFolder: String): String =
-    "analysis-result-logs/${ApplicationStartTimeHolder.applicationStartTimeString}/csv/$folder/$subFolder".also {
-      File(it).mkdirs()
-    }
+    "analysis-result-logs/${ApplicationStartTimeHolder.applicationStartTimeString}/csv/$folder/$subFolder"
+        .also { File(it).mkdirs() }

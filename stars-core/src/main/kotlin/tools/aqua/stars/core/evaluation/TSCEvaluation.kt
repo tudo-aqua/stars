@@ -82,7 +82,6 @@ class TSCEvaluation<
    *
    * @param writePlots (Default: ``true``) Whether to write plots after the analysis.
    * @param writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
-   *
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun runEvaluation(writePlots: Boolean = true, writePlotDataCSV: Boolean = false) {

@@ -41,7 +41,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
- * depends on and needs for its calculation.
+ *   depends on and needs for its calculation.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")

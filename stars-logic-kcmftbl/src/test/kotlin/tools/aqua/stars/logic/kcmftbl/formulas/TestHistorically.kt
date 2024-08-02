@@ -29,7 +29,6 @@ class TestHistorically {
    * Test equivalence to once.
    *
    * Historically phi === !Once !phi
-   *
    * - phi: All combinations of 0-1 arrays with length 5
    * - interval: All combinations including null
    * - Expected: true
