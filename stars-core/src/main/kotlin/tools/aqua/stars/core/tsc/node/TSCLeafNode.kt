@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,32 +15,39 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc
+package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.types.*
 
 /**
- * This class contains the information of one failing monitor for one [TSCInstanceNode].
+ * Leaf TSC node.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
- * results.
- * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
- * @property monitorLabel The label of the monitor that failed.
- * @property nodeLabel Specifies the [TSCInstanceNode] at which a monitor failed.
+ * @param label Label of the [TSCLeafNode].
+ * @param monitorsMap Map of monitor labels to their predicates of the [TSCLeafNode].
+ * @param projectionsMap Map of projections of the [TSCLeafNode].
+ * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
-class TSCFailedMonitorInstance<
+open class TSCLeafNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val segmentIdentifier: String,
-    var tscInstance: TSCInstanceNode<E, T, S, U, D>,
-    val monitorLabel: String,
-    var nodeLabel: String,
-)
+    label: String,
+    monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    projectionsMap: Map<String, Boolean>?,
+    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+) :
+    TSCBoundedNode<E, T, S, U, D>(
+        label = label,
+        edges = emptyList(),
+        monitorsMap = monitorsMap,
+        projectionsMap = projectionsMap,
+        valueFunction = valueFunction,
+        bounds = 0 to 0)

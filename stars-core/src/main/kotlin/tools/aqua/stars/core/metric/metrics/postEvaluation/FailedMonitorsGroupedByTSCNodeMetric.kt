@@ -81,8 +81,8 @@ class FailedMonitorsGroupedByTSCNodeMetric<
               .flatten()
               .flatMap { tscInstance ->
                 tscInstance.rootNode.validateMonitors(tscInstance.sourceSegmentIdentifier).map {
-                    failedMonitor ->
-                  failedMonitor to tscInstance
+                    tscFailedMonitorInstance ->
+                  tscFailedMonitorInstance to tscInstance
                 }
               }
               .groupBy({ it.first.nodeLabel }, { it.second })
@@ -90,10 +90,8 @@ class FailedMonitorsGroupedByTSCNodeMetric<
                 it.value
                     .map { t ->
                       t.rootNode.getAllEdges().mapNotNull { edge ->
-                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty() ||
-                            edge.destination.onlyMonitor)
-                            null
-                        else edge.label to t
+                        if (onlyLeafNodes && edge.destination.edges.isNotEmpty()) null
+                        else edge.destination.label to t
                       }
                     }
                     .flatten()

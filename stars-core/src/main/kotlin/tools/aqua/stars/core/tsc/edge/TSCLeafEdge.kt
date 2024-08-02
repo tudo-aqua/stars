@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,28 @@
 
 package tools.aqua.stars.core.tsc.edge
 
-import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.types.*
 
 /**
- * TSC edge with condition 'true'.
+ * Baseclass for TSC leaf edges.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param label Edge label.
- * @param destination Destination [TSCNode].
+ * @param condition Condition of the edge.
+ * @param destination Destination [TSCLeafNode].
  */
-class TSCAlwaysEdge<
+open class TSCLeafEdge<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(label: String, destination: TSCNode<E, T, S, U, D>) :
-    TSCEdge<E, T, S, U, D>(label, { true }, destination)
+    D : TickDifference<D>>(
+    condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
+    destination: TSCLeafNode<E, T, S, U, D>
+) : TSCBoundedEdge<E, T, S, U, D>(condition = condition, destination = destination)

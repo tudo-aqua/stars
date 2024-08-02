@@ -33,34 +33,39 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param valueFunction Value function predicate of the node.
- * @param monitorFunction Monitor function predicate of the node.
- * @param projectionIDMapper Mapper for projection identifiers.
- * @property bounds [Pair] of bounds.
- * @param edges [TSCEdge]s of the TSC.
- * @param onlyMonitor (Default: false) Determines, whether this node only evaluates the
- * [monitorFunction] and not the [valueFunction].
+ * @param label Label of the [TSCBoundedNode].
+ * @param edges [TSCEdge]s of the [TSCBoundedNode].
+ * @param monitorsMap Map of monitor labels to their predicates of the [TSCBoundedNode].
+ * @param projectionsMap Map of projections of the [TSCBoundedNode].
+ * @param valueFunction Value function predicate of the [TSCBoundedNode].
+ * @property bounds [Pair] of bounds of the [TSCBoundedNode].
  */
-class TSCBoundedNode<
+open class TSCBoundedNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
-    projectionIDMapper: Map<Any, Boolean> = mapOf(),
-    val bounds: Pair<Int, Int>,
+    label: String,
     edges: List<TSCEdge<E, T, S, U, D>>,
-    onlyMonitor: Boolean = false,
-) : TSCNode<E, T, S, U, D>(valueFunction, monitorFunction, projectionIDMapper, edges, onlyMonitor) {
+    monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    projectionsMap: Map<String, Boolean>?,
+    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+    val bounds: Pair<Int, Int>
+) :
+    TSCNode<E, T, S, U, D>(
+        label = label,
+        edges = edges,
+        monitorsMap = monitorsMap,
+        projectionsMap = projectionsMap,
+        valueFunction = valueFunction) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()
     edges.forEach { edge ->
       val successorList = mutableListOf<List<TSCInstanceEdge<E, T, S, U, D>>>()
       edge.destination.generateAllInstances().forEach { generatedChild ->
-        successorList += listOf(TSCInstanceEdge(edge.label, generatedChild, edge))
+        successorList += listOf(TSCInstanceEdge(edge.destination.label, generatedChild, edge))
       }
       allSuccessorsList += successorList
     }
@@ -77,16 +82,16 @@ class TSCBoundedNode<
 
     boundedSuccessors.forEach { subset ->
       when (subset.size) {
-        0 -> returnList += TSCInstanceNode(Unit, true, this)
+        0 -> returnList += TSCInstanceNode(this)
         1 ->
             subset.first().forEach { successors ->
-              val generatedNode = TSCInstanceNode(Unit, true, this)
+              val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
               returnList += generatedNode
             }
         else ->
             subset.crossProduct().forEach { successors ->
-              val generatedNode = TSCInstanceNode(Unit, true, this)
+              val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
               returnList += generatedNode
             }
@@ -95,20 +100,4 @@ class TSCBoundedNode<
 
     return returnList
   }
-
-  override fun equals(other: Any?): Boolean =
-      other is TSCBoundedNode<*, *, *, *, *> &&
-          valueFunction == other.valueFunction &&
-          monitorFunction == other.monitorFunction &&
-          projectionIDMapper == other.projectionIDMapper &&
-          bounds == other.bounds &&
-          edges.containsAll(other.edges) &&
-          other.edges.containsAll(edges)
-
-  override fun hashCode(): Int =
-      valueFunction.hashCode() +
-          monitorFunction.hashCode() +
-          projectionIDMapper.hashCode() +
-          bounds.hashCode() +
-          edges.sumOf { it.hashCode() }
 }

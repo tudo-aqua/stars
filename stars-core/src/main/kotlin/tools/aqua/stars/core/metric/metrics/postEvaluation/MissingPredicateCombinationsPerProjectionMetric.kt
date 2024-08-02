@@ -22,7 +22,7 @@ import tools.aqua.stars.core.evaluation.PredicateCombination
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.tsc.edge.TSCAlwaysEdge
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.*
@@ -122,13 +122,14 @@ class MissingPredicateCombinationsPerProjectionMetric<
       // Get all TSCEdges that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
       // as they do not
       // represent a predicate
-      val allEdgesInValidInstances = t.getAllEdges().filter { it !is TSCAlwaysEdge<E, T, S, U, D> }
+      val allEdgesInValidInstances = t.getAllEdges().filter { it.condition != CONST_TRUE }
       // Combine all TSCEdges with each other
       allEdgesInValidInstances.forEach { edge1 ->
         allEdgesInValidInstances
             .filter { it != edge1 }
             .forEach { edge2 ->
-              predicateCombinations += PredicateCombination(edge1.label, edge2.label)
+              predicateCombinations +=
+                  PredicateCombination(edge1.destination.label, edge2.destination.label)
             }
       }
     }

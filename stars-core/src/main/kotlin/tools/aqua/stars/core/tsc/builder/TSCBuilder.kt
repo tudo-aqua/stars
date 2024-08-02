@@ -18,57 +18,64 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.edge.TSCAlwaysEdge
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating objects in the dsl. always contains one edge and the node that
- * belongs to that edge (edge.destination = node)
+ * Class to assist in creating objects in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label name of the edge.
- * @property valueFunction Value function predicate of the node.
- * @property monitorFunction Monitor function predicate of the node.
- * @property projectionIDs Projection identifier of the node.
- * @property bounds Bounds of the node, only relevant for bounded nodes.
- * @property condition Condition predicate of the edge.
- * @property onlyMonitor Flag to indicate if this node is only a monitor.
  */
-class TSCBuilder<
+@TSCBuilderMarker
+sealed class TSCBuilder<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    val label: String = "",
-    var valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    var monitorFunction: (PredicateContext<E, T, S, U, D>) -> Boolean = { true },
-    var projectionIDs: Map<Any, Boolean> = mapOf(),
-    var bounds: Pair<Int, Int> = Pair(0, 0),
-    var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null,
-    var onlyMonitor: Boolean = false
-) {
+    D : TickDifference<D>> {
 
   /** Holds all edges of the node. */
-  private val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
+  protected val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
 
-  /**
-   * Creates a [TSCEdge] with a [TSCBoundedNode]. Only functions where [bounds] is relevant.
-   *
-   * @return The created [TSCEdge].
-   */
-  fun buildBounded(): TSCEdge<E, T, S, U, D> {
-    val node =
-        TSCBoundedNode(
-            valueFunction, monitorFunction, projectionIDs, bounds, edges.toList(), onlyMonitor)
-    return condition?.let { cond -> TSCEdge(label, cond, node) } ?: TSCAlwaysEdge(label, node)
-  }
+  /** Holds all monitors of the node. */
+  protected val monitorMap: MutableMap<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
+      mutableMapOf()
+
+  /** Holds the optional projections. */
+  protected var projections: Map<String, Boolean>? = null
+    set(value) {
+      check(projections == null) { "Projections node already set." }
+      field = value
+    }
+
+  /** Holds the optional monitors edge. */
+  protected var monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>? = null
+    set(value) {
+      check(monitors == null) { "Monitors node already set." }
+      field = value
+    }
+
+  /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
+  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
+    set(value) {
+      check(!isConditionSet) { "Condition already set." }
+      isConditionSet = true
+      field = value
+    }
+  private var isConditionSet = false
+
+  /** Value function predicate of the node. (Default: empty) */
+  protected var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
+    set(value) {
+      check(!isValueFunctionSet) { "Value function already set." }
+      isValueFunctionSet = true
+      field = value
+    }
+  private var isValueFunctionSet = false
 
   /**
    * Adds the given [edge] to [edges]. This will become the edges of the node that will be created
@@ -77,6 +84,9 @@ class TSCBuilder<
    * @param edge [TSCEdge] to be added.
    */
   fun addEdge(edge: TSCEdge<E, T, S, U, D>) {
+    check(edges.none { it.destination.label == edge.destination.label }) {
+      "Edge to node with label ${edge.destination.label} already exists in this scope."
+    }
     edges.add(edge)
   }
 

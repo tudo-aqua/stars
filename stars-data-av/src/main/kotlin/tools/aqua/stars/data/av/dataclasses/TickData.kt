@@ -46,7 +46,7 @@ data class TickData(
 
   /** The ego vehicle. */
   val egoVehicle: Vehicle
-    get() = actors.firstOrNull { it is Vehicle && it.egoVehicle } as Vehicle
+    get() = actors.firstOrNull { it is Vehicle && it.isEgo } as Vehicle
 
   /** All vehicles. */
   val vehicles: List<Vehicle>

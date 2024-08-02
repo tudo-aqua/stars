@@ -132,7 +132,7 @@ fun emptyVehicle(
         id = id,
         rotation = emptyRotation(),
         location = location,
-        egoVehicle = egoVehicle,
+        isEgo = egoVehicle,
         acceleration = emptyVector3D(),
         angularVelocity = emptyVector3D(),
         forwardVector = emptyVector3D(),

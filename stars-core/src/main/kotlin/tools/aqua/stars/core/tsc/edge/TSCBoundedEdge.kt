@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,32 +15,30 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc
+package tools.aqua.stars.core.tsc.edge
 
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.types.*
 
 /**
- * This class contains the information of one failing monitor for one [TSCInstanceNode].
+ * Baseclass for TSC bounded edges.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
- * results.
- * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
- * @property monitorLabel The label of the monitor that failed.
- * @property nodeLabel Specifies the [TSCInstanceNode] at which a monitor failed.
+ * @param condition Condition of the edge.
+ * @param destination Destination [TSCBoundedNode].
  */
-class TSCFailedMonitorInstance<
+open class TSCBoundedEdge<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val segmentIdentifier: String,
-    var tscInstance: TSCInstanceNode<E, T, S, U, D>,
-    val monitorLabel: String,
-    var nodeLabel: String,
-)
+    condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
+    destination: TSCBoundedNode<E, T, S, U, D>
+) : TSCEdge<E, T, S, U, D>(condition = condition, destination = destination)

@@ -15,52 +15,51 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
-/** Constant predicate for always true edges. */
-val CONST_TRUE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { true }
-
-/** Label of the [TSCNode] built by the [tsc] function. */
-const val ROOT_NODE_LABEL = "root"
-
 /**
- * Builds root node. Applies [init] function to [TSCNode].
+ * Class to assist in creating monitors nodes in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param init The init function. Must add exactly one edge.
- *
- * @return The [TSCNode] at the root level of the TSC.
  */
-fun <
+open class TSCMonitorsBuilder<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> tsc(
-    init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSC<E, T, S, U, D> {
-  val rootEdge =
-      TSCBoundedBuilder<E, T, S, U, D>(ROOT_NODE_LABEL)
-          .apply { init() }
-          .apply { this.bounds = edgesCount() to edgesCount() }
-          .build()
+    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
 
-  check(rootEdge.destination.edges.size < 2) {
-    "Too many elements to add - root can only host one."
+  /** Creates the monitors map. */
+  fun build(): Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> = monitorMap
+
+  /**
+   * DSL function for a monitor.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param label Name of the edge.
+   * @param condition The monitor condition.
+   */
+  fun <
+      E : EntityType<E, T, S, U, D>,
+      T : TickDataType<E, T, S, U, D>,
+      S : SegmentType<E, T, S, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>> TSCMonitorsBuilder<E, T, S, U, D>.monitor(
+      label: String,
+      condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+  ) {
+    check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
+    monitorMap[label] = condition
   }
-
-  check(rootEdge.destination.edges.isNotEmpty()) { "Init must add exactly one element to root." }
-
-  return TSC(rootEdge.destination.edges[0].destination)
 }
