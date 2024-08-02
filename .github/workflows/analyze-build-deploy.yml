@@ -53,7 +53,7 @@ jobs:
         xargs -n1 -0 bash -c 'cp "$1" "sarif/${1//\//-}"' '{}'
 
     - name: Upload analysis results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: sarif
         wait-for-processing: true
