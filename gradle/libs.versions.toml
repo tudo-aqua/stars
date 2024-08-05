@@ -17,7 +17,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.13"}
 
 # Lets-Plot
 letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.7.3" }
-letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.3.3" }
+letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.4.0" }
 
 # Tests
 kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
