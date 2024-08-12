@@ -31,9 +31,9 @@ object PreEvaluationHookSkip {
       println(
           "PreEvaluationHook${
         if (hooks.size == 1) {
-          " " + hooks.first()
+          " '${hooks.first().identifier}'"
         } else {
-          "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
+          "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { "'${it.identifier}'" }
         }
-      } returned SKIP for TSC ${tsc}. Skipping current TSC.")
+      } returned SKIP for TSC: '${tsc}'. Skipping current TSC.")
 }
