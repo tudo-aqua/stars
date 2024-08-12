@@ -9,6 +9,9 @@ updates:
       directory: "/"
       schedule:
           interval: "weekly"
+      ignore:
+          - dependency-name: "*"
+            update-types: ["version-update:semver-patch"]
       open-pull-requests-limit: 25
 
     - package-ecosystem: "github-actions"
