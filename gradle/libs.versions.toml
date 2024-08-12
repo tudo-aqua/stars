@@ -13,7 +13,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 # SLF4J
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.13"}
-slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.13"}
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.16"}
 
 # Lets-Plot
 letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.7.3" }
