@@ -23,6 +23,7 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.tsc
 
+/** The tests in this class test the correct functionality of the [TSC.toString] method. */
 class TSCToStringTest {
 
   /** Given an empty TSC, the println should also be empty. */
@@ -90,7 +91,7 @@ class TSCToStringTest {
    * Given a TSC with only one single 'exclusive' bounded node, "bounded(1..1)" should be returned.
    */
   @Test
-  fun `Test TSC with single bounded node with bounds (2,3)`() {
+  fun `Test TSC with single bounded node with bounds (2,3) and no children`() {
     val tsc =
         tsc<
             SimpleEntity,
