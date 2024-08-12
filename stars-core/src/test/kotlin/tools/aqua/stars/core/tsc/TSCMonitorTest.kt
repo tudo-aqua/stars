@@ -46,6 +46,8 @@ class TSCMonitorTest {
               monitor("RootMonitorFalse") { _ -> false } // Always trigger
               monitor("RootMonitorTrue") { _ -> true } // Never trigger
             }
+
+            leaf("leaf") {} // Needed since empty TSC gets skipped by PreEvaluationHook
           }
         }
 
