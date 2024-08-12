@@ -182,6 +182,7 @@ sealed class TSCNode<
       StringBuilder()
           .apply {
             when (this@TSCNode) {
+              is TSCLeafNode -> append(label)
               is TSCBoundedNode -> append("${label}(${bounds.first}..${bounds.second})")
             }
 
