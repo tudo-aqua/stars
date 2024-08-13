@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 build:
   maxIssues: -1 # report only; do not fail for any # of violations
 
@@ -182,7 +183,7 @@ naming:
     # Rationale: better suited for code review
     active: false
   FunctionNaming:
-    functionPattern: '([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,.-]+\`)'
+    functionPattern: '([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,.\-\(\)\{\}#]+\`)'
     active: true
   FunctionParameterNaming:
     active: true
@@ -345,18 +346,10 @@ style:
     active: false
   ForbiddenMethodCall:
     active: false
-  ForbiddenPublicDataClass:
-    # Rationale: only becomes an issue when API is changed
-    active: false
   ForbiddenVoid:
     active: true
   FunctionOnlyReturningConstant:
     active: true
-  LibraryCodeMustSpecifyReturnType:
-    active: true
-  LibraryEntitiesShouldNotBePublic:
-    # Rationale: forbids OOP APIs
-    active: false
   LoopWithTooManyJumpStatements:
     # Rationale: better suited for code review
     active: false
@@ -479,4 +472,16 @@ style:
     active: true
   WildcardImport:
     # Rationale: handled by spotless
+    active: false
+
+libraries:
+  active: true
+
+  ForbiddenPublicDataClass:
+    # Rationale: only becomes an issue when API is changed
+    active: false
+  LibraryCodeMustSpecifyReturnType:
+    active: true
+  LibraryEntitiesShouldNotBePublic:
+    # Rationale: forbids OOP APIs
     active: false

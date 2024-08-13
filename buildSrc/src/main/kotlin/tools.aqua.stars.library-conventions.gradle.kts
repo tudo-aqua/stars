@@ -94,6 +94,8 @@ dependencies {
 
   testImplementation(platform(libs.junit.bom))
   testImplementation(libs.bundles.test)
+
+  detektPlugins(libs.detekt.rules.libraries)
 }
 
 tasks.test {
