@@ -357,5 +357,5 @@ fun <T1 : Number, T2 : Number> getPlot(
  * @return The path to the created folder.
  */
 private fun getAndCreatePlotFolder(folder: String, subFolder: String): String =
-    "analysis-result-logs/${ApplicationStartTimeHolder.applicationStartTimeString}/plots/$folder/$subFolder"
+    "${ApplicationStartTimeHolder.logFolder}/${ApplicationStartTimeHolder.applicationStartTimeString}/plots/$folder/$subFolder"
         .also { File(it).mkdirs() }
