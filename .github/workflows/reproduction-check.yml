@@ -28,7 +28,7 @@ jobs:
     name: Reproduction check
     needs: safety-check
     runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.draft }}
+    # if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: Initial Setup
         uses: actions/checkout@v3
