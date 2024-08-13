@@ -51,7 +51,8 @@ jobs:
       - name: Navigate into repository
         run: cd stars-carla
           
-      - name: Run tests
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          arguments: run
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Navigate into repository
+        run: ./gradlew run
