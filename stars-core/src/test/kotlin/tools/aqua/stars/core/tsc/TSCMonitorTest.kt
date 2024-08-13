@@ -206,7 +206,10 @@ class TSCMonitorTest {
       runEvaluation()
     }
 
+    assertTrue { failedMonitorsMetric.failedMonitors.any() }
+
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
+
     assertEquals(2, failedMonitors.size)
     assertTrue(failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "MonitorFalse" })
     assertTrue(failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "MonitorFalse" })
