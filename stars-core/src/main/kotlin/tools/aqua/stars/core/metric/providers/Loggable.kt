@@ -111,7 +111,9 @@ interface Loggable {
 
       val currentTimeAndDate = ApplicationStartTimeHolder.applicationStartTimeString
       val logFolderFile =
-          File("analysis-result-logs/$currentTimeAndDate/metrics/$name").also { it.mkdirs() }
+          File("${ApplicationStartTimeHolder.logFolder}/$currentTimeAndDate/metrics/$name").also {
+            it.mkdirs()
+          }
       val file = "$logFolderFile/$name-${currentTimeAndDate}"
 
       return@run Logger.getAnonymousLogger().apply {

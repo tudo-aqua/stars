@@ -17,8 +17,10 @@
 
 package tools.aqua.stars.core.metric.utils
 
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.logging.LogManager
 
 /**
  * This singleton holds the current date and time at the start of the application. It is used to
@@ -27,7 +29,33 @@ import java.time.format.DateTimeFormatter
 object ApplicationStartTimeHolder {
   /** Holds the [LocalDateTime] at the start of the application. */
   private val applicationStartTime: LocalDateTime = LocalDateTime.now()
+
   /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
   val applicationStartTimeString: String =
-      applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
+      applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
+
+  /** Indicates whether the application is running in test mode. */
+  private fun isTestRun(): Boolean =
+      try {
+        Class.forName("org.junit.jupiter.api.Test")
+        true
+      } catch (e: ClassNotFoundException) {
+        false
+      }
+
+  private const val TEST_LOG_FOLDER = "test-result-logs"
+  private const val ANALYSIS_LOG_FOLDER = "analysis-result-logs"
+
+  /** Holds the folder name for the logs. */
+  val logFolder: String
+    get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
+
+  init {
+    Runtime.getRuntime()
+        .addShutdownHook(
+            Thread {
+              LogManager.getLogManager().reset()
+              File(TEST_LOG_FOLDER).deleteRecursively()
+            })
+  }
 }
