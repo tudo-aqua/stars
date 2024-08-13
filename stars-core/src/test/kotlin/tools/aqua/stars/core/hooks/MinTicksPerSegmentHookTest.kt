@@ -28,7 +28,7 @@ import tools.aqua.stars.core.tsc.builder.tsc
 
 /** MinTicksPerSegmentHookTest. */
 class MinTicksPerSegmentHookTest {
-  /** Test MinTicksPerSegmentHookTest with fail policy OK. */
+  /** Test MinTicksPerSegmentHook with fail policy OK. */
   @Test
   fun `Test MinTicksPerSegmentHook with fail policy OK`() {
     val tsc =
@@ -51,7 +51,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHookTest with fail policy SKIP. */
+  /** Test MinTicksPerSegmentHook with fail policy SKIP. */
   @Test
   fun `Test MinTicksPerSegmentHook with fail policy SKIP`() {
     val tsc =
@@ -74,7 +74,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHookTest with fail policy ABORT. */
+  /** Test MinTicksPerSegmentHook with fail policy ABORT. */
   @Test
   fun `Test MinTicksPerSegmentHook with fail policy ABORT`() {
     val tsc =
@@ -97,7 +97,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHookTest with #ticks less than or equal to minTicks. */
+  /** Test MinTicksPerSegmentHook with #ticks less than or equal to minTicks. */
   @Test
   fun `Test MinTicksPerSegmentHook with #ticks less than or equal to minTicks`() {
     val tsc =
@@ -117,6 +117,20 @@ class MinTicksPerSegmentHookTest {
       runEvaluation(writePlots = false, writePlotDataCSV = false)
 
       assertEquals(2, segmentCountMetric.getState())
+    }
+  }
+
+  /** Test MinTicksPerSegmentHook with #tivks negative. */
+  @Test
+  fun `Test MinTicksPerSegmentHook with #ticks negative`() {
+    assertFailsWith<IllegalArgumentException> {
+      MinTicksPerSegmentHook<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference>(
+          minTicks = -1)
     }
   }
 
@@ -148,26 +162,24 @@ class MinTicksPerSegmentHookTest {
    */
   private fun segments(): Sequence<SimpleSegment> {
     val entities = mutableListOf<SimpleEntity>()
-    val tickdatas1 = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
-    val tickdatas2 = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
+    val tickDataList1 = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
+    val tickDataList2 = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
 
-    val segments = listOf(SimpleSegment(tickdatas1), SimpleSegment(tickdatas2)).asSequence()
+    val segments = listOf(SimpleSegment(tickDataList1), SimpleSegment(tickDataList2)).asSequence()
 
     val tick1 = SimpleTickDataUnit(0)
     val tick2 = SimpleTickDataUnit(1)
     val tick3 = SimpleTickDataUnit(2)
 
-    val tickdata1 = SimpleTickData(tick1)
-    val tickdata2 = SimpleTickData(tick2)
-    val tickdata3 = SimpleTickData(tick3)
+    val tickData1 = SimpleTickData(tick1)
+    val tickData2 = SimpleTickData(tick2)
+    val tickData3 = SimpleTickData(tick3)
 
-    tickdatas1[tick1] = tickdata1
-    tickdatas2[tick2] = tickdata2
-    tickdatas2[tick3] = tickdata3
+    tickDataList1[tick1] = tickData1
+    tickDataList2[tick2] = tickData2
+    tickDataList2[tick3] = tickData3
 
-    entities.add(SimpleEntity(0, tickdata1))
-    //    entities.add(SimpleEntity(0, tickdata2))
-    //    entities.add(SimpleEntity(0, tickdata3))
+    entities.add(SimpleEntity(0, tickData1))
 
     return segments
   }

@@ -19,6 +19,7 @@ package tools.aqua.stars.core.hooks
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
@@ -143,6 +144,20 @@ class MinNodesInTSCHookTest {
     }
   }
 
+  /** Test MinNodesInTSCHook with #nodes negative. */
+  @Test
+  fun `Test MinNodesInTSCHook with #nodes negative`() {
+    assertFailsWith<IllegalArgumentException> {
+      MinNodesInTSCHook<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference>(
+          minNodes = -1)
+    }
+  }
+
   private fun TSCEvaluation<
       SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference>
       .setup():
@@ -167,12 +182,12 @@ class MinNodesInTSCHookTest {
 
   private fun segments(): Sequence<SimpleSegment> {
     val entities = mutableListOf<SimpleEntity>()
-    val tickdatas = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
-    val segments = listOf(SimpleSegment(tickdatas)).asSequence()
+    val tickDataList = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
+    val segments = listOf(SimpleSegment(tickDataList)).asSequence()
     val tick = SimpleTickDataUnit(0)
-    val tickdata = SimpleTickData(tick)
-    tickdatas[tick] = tickdata
-    entities.add(SimpleEntity(0, tickdata))
+    val tickData = SimpleTickData(tick)
+    tickDataList[tick] = tickData
+    entities.add(SimpleEntity(0, tickData))
 
     return segments
   }

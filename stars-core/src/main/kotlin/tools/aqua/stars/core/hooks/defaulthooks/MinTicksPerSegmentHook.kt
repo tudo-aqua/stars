@@ -45,4 +45,8 @@ open class MinTicksPerSegmentHook<
         identifier = "MinTicksPerSegmentHook",
         evaluationFunction = { segment ->
           if (segment.ticks.size >= minTicks) EvaluationHookResult.OK else failPolicy
-        })
+        }) {
+  init {
+    require(minTicks >= 0) { "minTicks must be >= 0" }
+  }
+}
