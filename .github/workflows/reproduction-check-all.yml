@@ -1,6 +1,10 @@
 name: reproduction-check
 
 on:
+  pull_request:
+    types: [ready_for_review]
+    branches:
+      - main
   workflow_dispatch:
 
 env:
