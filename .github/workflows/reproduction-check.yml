@@ -30,16 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     # if: ${{ !github.event.pull_request.draft }}
     steps:
-      #- name: Checkout STARS
-      #  uses: actions/checkout@v3
-        # with:
-          # fetch-depth: 0 # Required for version number generation & diff generation
+      - name: Checkout STARS
+        uses: actions/checkout@v4
+        with:
+          path: stars
 
       - name: Checkout STARS-CARLA
         uses: actions/checkout@v3
         with:
           repository: tudo-aqua/stars-carla-experiments
           ref: dev
+          path: stars-carla
 
       - name: TEST
         run: |
