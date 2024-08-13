@@ -21,15 +21,28 @@ import tools.aqua.stars.core.hooks.EvaluationHookResult
 import tools.aqua.stars.core.hooks.PreEvaluationHook
 import tools.aqua.stars.core.types.*
 
-/** [PreEvaluationHook] that checks if a [TSC] is empty, i.e. has no nodes. */
-open class EmptyTSCHook<
+/**
+ * [PreEvaluationHook] that checks if a TSC has at least [minNodes] nodes.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param minNodes The minimum number of nodes the TSC must have.
+ * @param failPolicy The [EvaluationHookResult] to return if the TSC has less [minNodes] nodes.
+ */
+open class MinNodesInTSCHook<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> :
+    D : TickDifference<D>>(
+    private val minNodes: Int,
+    failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
+) :
     PreEvaluationHook<E, T, S, U, D>(
         identifier = "EmptyTSCHook",
         evaluationFunction = { tsc ->
-          if (tsc.toList().size > 1) EvaluationHookResult.OK else EvaluationHookResult.SKIP
+          if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy
         })

@@ -23,7 +23,6 @@ import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.hooks.*
 import tools.aqua.stars.core.hooks.defaulthooks.EmptySegmentHook
-import tools.aqua.stars.core.hooks.defaulthooks.EmptyTSCHook
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -107,14 +106,12 @@ class TSCEvaluation<
   /**
    * Registers all default hooks to the list of hooks that should be called during evaluation. This
    * includes:
-   * - [EmptyTSCHook]
    * - [EmptySegmentHook]
    *
    * The lists of hooks [preEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared before.
    * [clearHooks] may be called before to clear them.
    */
   fun registerDefaultHooks() {
-    preEvaluationHooks.add(EmptyTSCHook())
     preSegmentEvaluationHooks.add(EmptySegmentHook())
   }
 
