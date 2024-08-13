@@ -43,9 +43,9 @@ jobs:
 
       - name: TEST
         run: |
-          echo ls -a
+          ls -a
           cd ..
-          echo ls -a
+          ls -a
         
       - name: Set up JDK
         uses: actions/setup-java@v3
