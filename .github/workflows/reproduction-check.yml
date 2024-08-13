@@ -52,23 +52,13 @@ jobs:
           
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: TEST
-        run: |
-          cd stars-carla
-          ls -a
-            
+        
       - name: Restore experiments data
         id: cache-data-restore
         uses: actions/cache/restore@v4
         with:
           path: stars-carla/stars-reproduction-source/stars-experiments-data/simulation_runs
           key: ${{ runner.os }}-data
-
-      - name: TEST2
-        run: |
-          cd stars-carla
-          ls -a
         
       - name: Run experiments
         run: |
