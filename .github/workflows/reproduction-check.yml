@@ -75,6 +75,7 @@ jobs:
           cd stars-carla
           ls -a
           chmod +x ./gradlew
+          ./gradlew run --args="--staticFilter STADT"
 
       - name: Save experiments data
         uses: actions/cache/save@v4
