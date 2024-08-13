@@ -22,7 +22,7 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.hooks.*
-import tools.aqua.stars.core.hooks.defaulthooks.EmptySegmentHook
+import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -106,13 +106,13 @@ class TSCEvaluation<
   /**
    * Registers all default hooks to the list of hooks that should be called during evaluation. This
    * includes:
-   * - [EmptySegmentHook]
+   * - [MinTicksPerSegmentHook] with a minimum of 1 tick per segment.
    *
    * The lists of hooks [preEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared before.
    * [clearHooks] may be called before to clear them.
    */
   fun registerDefaultHooks() {
-    preSegmentEvaluationHooks.add(EmptySegmentHook())
+    preSegmentEvaluationHooks.add(MinTicksPerSegmentHook(minTicks = 1))
   }
 
   /**
