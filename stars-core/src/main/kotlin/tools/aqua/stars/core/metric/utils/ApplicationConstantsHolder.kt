@@ -23,10 +23,10 @@ import java.time.format.DateTimeFormatter
 import java.util.logging.LogManager
 
 /**
- * This singleton holds the current date and time at the start of the application. It is used to
- * persist a consistent folder name for all exported files.
+ * This singleton holds the current date and time at the start of the application and the log
+ * folder. It is used to persist a consistent folder name for all exported files.
  */
-object ApplicationStartTimeHolder {
+object ApplicationConstantsHolder {
   /** Holds the [LocalDateTime] at the start of the application. */
   private val applicationStartTime: LocalDateTime = LocalDateTime.now()
 
@@ -44,15 +44,6 @@ object ApplicationStartTimeHolder {
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
 
-  /** Indicates whether the application is running in test mode. */
-  private fun isTestRun(): Boolean =
-      try {
-        Class.forName("org.junit.jupiter.api.Test")
-        true
-      } catch (e: ClassNotFoundException) {
-        false
-      }
-
   init {
     Runtime.getRuntime()
         .addShutdownHook(
@@ -61,4 +52,13 @@ object ApplicationStartTimeHolder {
               File(TEST_LOG_FOLDER).deleteRecursively()
             })
   }
+
+  /** Indicates whether the application is running in test mode. */
+  private fun isTestRun(): Boolean =
+      try {
+        Class.forName("org.junit.jupiter.api.Test")
+        true
+      } catch (e: ClassNotFoundException) {
+        false
+      }
 }
