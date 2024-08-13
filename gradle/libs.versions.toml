@@ -3,9 +3,7 @@
 [libraries]
 
 # Regular Libraries
-
-
-# commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.26.0" }
+detekt-rules-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-libraries", version ="1.23.6" }
 
 # Kotlinx
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.8.1" }

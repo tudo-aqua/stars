@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 build:
   maxIssues: -1 # report only; do not fail for any # of violations
 
@@ -13,8 +14,6 @@ console-reports:
     - 'FileBasedFindingsReport'
 
 comments:
-  excludes: ['**/stars-examples/**']
-
   # Mostly enabled. Rationale: maintenance issues
   AbsentOrWrongFileLicense:
     # Rationale: handled by Spotless
@@ -39,14 +38,12 @@ comments:
     active: true
 
 complexity:
-  excludes: ['**/stars-examples/**']
-
   # Mostly disabled. Rationale: better suited for code review
   ComplexCondition:
     active: false
   ComplexInterface:
     active: false
-  ComplexMethod:
+  CyclomaticComplexMethod:
     active: false
   LabeledExpression:
     active: false
@@ -66,14 +63,13 @@ complexity:
     # Rationale: easily avoidable, bad style
     active: true
   StringLiteralDuplication:
+    excludes: ['**/test/**']
     # Rationale: maintenance issue
     active: true
   TooManyFunctions:
     active: false
 
 coroutines:
-  excludes: ['**/stars-examples/**']
-
   # Mostly enabled. Rationale: indicative of errors
   GlobalCoroutineUsage:
     active: true
@@ -88,8 +84,6 @@ coroutines:
     active: true
 
 empty-blocks:
-  excludes: ['**/stars-examples/**']
-
   # Completely enabled. Rationale: indicative of errors
   EmptyCatchBlock:
     active: true
@@ -124,8 +118,6 @@ empty-blocks:
     active: true
 
 exceptions:
-  excludes: ['**/stars-examples/**']
-
   # Mostly enabled. Rationale: indicative of errors
   active: true
   ExceptionRaisedInUnexpectedLocation:
@@ -159,8 +151,6 @@ exceptions:
     active: true
 
 naming:
-  excludes: ['**/stars-examples/**']
-
   # Mostly enabled. Rationale: principle of the least surprise
   active: true
   BooleanPropertyNaming:
@@ -182,7 +172,7 @@ naming:
     # Rationale: better suited for code review
     active: false
   FunctionNaming:
-    functionPattern: '([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,.-]+\`)'
+    functionPattern: '([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,.\-\(\)\{\}#]+\`)'
     active: true
   FunctionParameterNaming:
     active: true
@@ -215,8 +205,6 @@ naming:
     active: true
 
 performance:
-  excludes: ['**/stars-examples/**']
-
   # Completely enabled. Rationale: indicative of errors
   active: true
   ArrayPrimitive:
@@ -229,8 +217,6 @@ performance:
     active: true
 
 potential-bugs:
-  excludes: ['**/stars-examples/**']
-
   # Completely enabled. Rationale: indicative of errors
   active: true
   AvoidReferentialEquality:
@@ -242,8 +228,6 @@ potential-bugs:
   DontDowncastCollectionTypes:
     active: true
   DoubleMutabilityForCollection:
-    active: true
-  DuplicateCaseInWhenExpression:
     active: true
   EqualsAlwaysReturnsTrueOrFalse:
     active: true
@@ -275,15 +259,10 @@ potential-bugs:
     active: true
   MissingPackageDeclaration:
     active: true
-  MissingWhenCase:
+  NullCheckOnMutableProperty:
     active: true
-  # Future Detekt feature
-  #NullCheckOnMutableProperty:
-  #  active: true
   NullableToStringCall:
     active: false
-  RedundantElseInWhen:
-    active: true
   UnconditionalJumpStatementInLoop:
     active: true
   UnnecessaryNotNullOperator:
@@ -306,8 +285,6 @@ potential-bugs:
     active: true
 
 style:
-  excludes: ['**/stars-examples/**']
-
   # Partially enabled to complement Spotless. Rationale: helps consistency
   active: true
   # Future Detekt feature
@@ -345,25 +322,17 @@ style:
     active: false
   ForbiddenMethodCall:
     active: false
-  ForbiddenPublicDataClass:
-    # Rationale: only becomes an issue when API is changed
-    active: false
   ForbiddenVoid:
     active: true
   FunctionOnlyReturningConstant:
     active: true
-  LibraryCodeMustSpecifyReturnType:
-    active: true
-  LibraryEntitiesShouldNotBePublic:
-    # Rationale: forbids OOP APIs
-    active: false
   LoopWithTooManyJumpStatements:
     # Rationale: better suited for code review
     active: false
   MagicNumber:
     # Rationale: better suited for code review
     active: false
-  MandatoryBracesIfStatements:
+  BracesOnIfStatements:
     # Rationale: handled by spotless + code review
     active: false
   MandatoryBracesLoops:
@@ -393,7 +362,7 @@ style:
     active: true
   OptionalUnit:
     active: false
-  OptionalWhenBraces:
+  BracesOnWhenStatements:
     active: false
   PreferToOverPairSyntax:
     active: false
@@ -479,4 +448,16 @@ style:
     active: true
   WildcardImport:
     # Rationale: handled by spotless
+    active: false
+
+libraries:
+  active: true
+
+  ForbiddenPublicDataClass:
+    # Rationale: only becomes an issue when API is changed
+    active: false
+  LibraryCodeMustSpecifyReturnType:
+    active: true
+  LibraryEntitiesShouldNotBePublic:
+    # Rationale: forbids OOP APIs
     active: false
