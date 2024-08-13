@@ -55,4 +55,5 @@ jobs:
         run: |
           cd stars-carla
           ls -a
+          chmod +x ./gradlew
           ./gradlew run
