@@ -41,19 +41,17 @@ jobs:
           repository: tudo-aqua/stars-carla-experiments
           ref: dev
           path: stars-carla
-
-      - name: TEST
-        run: |
-          ls -a
-          cd ..
-          echo -----
-          ls -a
-          cd ..
-          echo -----
-          ls -a
         
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
+
+      - name: Navigate into repository
+        run: cd stars-carla
+          
+      - name: Run tests
+        uses: gradle/gradle-build-action@v3.5.0
+        with:
+          arguments: run
