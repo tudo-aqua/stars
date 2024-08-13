@@ -55,4 +55,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Navigate into repository
-        run: ./gradlew run
+        run: |
+          ls -a
+          ./gradlew run
