@@ -44,5 +44,5 @@ open class MinTicksPerSegmentHook<
     PreSegmentEvaluationHook<E, T, S, U, D>(
         identifier = "MinTicksPerSegmentHook",
         evaluationFunction = { segment ->
-          if (segment.ticks.size > minTicks) EvaluationHookResult.OK else failPolicy
+          if (segment.ticks.size >= minTicks) EvaluationHookResult.OK else failPolicy
         })
