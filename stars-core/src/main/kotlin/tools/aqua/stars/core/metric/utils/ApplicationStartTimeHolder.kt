@@ -34,6 +34,16 @@ object ApplicationStartTimeHolder {
   val applicationStartTimeString: String =
       applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
 
+  /** Log folder directory for analysis result logs. */
+  private const val ANALYSIS_LOG_FOLDER = "analysis-result-logs"
+
+  /** Log folder directory for result logs produced in test runs. */
+  private const val TEST_LOG_FOLDER = "test-result-logs"
+
+  /** Holds the folder name for the logs. */
+  val logFolder: String
+    get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
+
   /** Indicates whether the application is running in test mode. */
   private fun isTestRun(): Boolean =
       try {
@@ -42,13 +52,6 @@ object ApplicationStartTimeHolder {
       } catch (e: ClassNotFoundException) {
         false
       }
-
-  private const val TEST_LOG_FOLDER = "test-result-logs"
-  private const val ANALYSIS_LOG_FOLDER = "analysis-result-logs"
-
-  /** Holds the folder name for the logs. */
-  val logFolder: String
-    get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
 
   init {
     Runtime.getRuntime()

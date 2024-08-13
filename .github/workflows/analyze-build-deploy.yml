@@ -58,8 +58,8 @@ jobs:
         sarif_file: sarif
         wait-for-processing: true
 
-  junit-test:
-    name: Run JUnit tests
+  unit-test:
+    name: Run unit tests
     needs: safety-check
     runs-on: ubuntu-latest
     steps:
@@ -87,7 +87,7 @@ jobs:
 
   platform-test:
     name: Run JUnit tests on ${{ matrix.os }}
-    needs: junit-test
+    needs: unit-test
     strategy:
       matrix:
         os: [ macos-latest, windows-latest ] # Ubuntu is tested in "test" job
