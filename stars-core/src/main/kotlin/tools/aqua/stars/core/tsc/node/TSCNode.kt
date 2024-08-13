@@ -182,13 +182,14 @@ sealed class TSCNode<
       StringBuilder()
           .apply {
             when (this@TSCNode) {
-              is TSCBoundedNode -> append("(${bounds.first}..${bounds.second})\n")
+              is TSCLeafNode -> append(label)
+              is TSCBoundedNode -> append("${label}(${bounds.first}..${bounds.second})")
             }
 
             edges.forEach { instanceEdge ->
+              append("\n")
               append("  ".repeat(depth))
               append(if (instanceEdge.condition == CONST_TRUE) "-T-> " else "---> ")
-              append(instanceEdge.destination.label)
               append(instanceEdge.destination.toString(depth + 1))
             }
           }
