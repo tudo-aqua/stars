@@ -30,11 +30,23 @@ jobs:
     runs-on: ubuntu-latest
     # if: ${{ !github.event.pull_request.draft }}
     steps:
-      - name: Initial Setup
+      - name: Checkout STARS
+        uses: actions/checkout@v3
+        # with:
+          # fetch-depth: 0 # Required for version number generation & diff generation
+
+      - name: Checkout STARS-CARLA
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Required for version number generation & diff generation
+          repository: tudo-aqua/stars-carla-experiments
+          ref: dev
 
+      - name: TEST
+        run: |
+          echo ls -a
+          cd ..
+          echo ls -a
+        
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
