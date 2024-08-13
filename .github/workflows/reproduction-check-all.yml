@@ -1,4 +1,4 @@
-name: reproduction-check
+name: reproduction-check-all
 
 on:
   pull_request:
