@@ -22,6 +22,7 @@ package tools.aqua.stars.core.tsc.builder
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -112,7 +113,7 @@ open class TSCBoundedBuilder<
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a projections node.
+   * @return The [TSCEdge] that is connected to a projections' node.
    */
   fun <
       E : EntityType<E, T, S, U, D>,
@@ -132,7 +133,7 @@ open class TSCBoundedBuilder<
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a monitors node.
+   * @return The [TSCEdge] that is connected to a monitors' node.
    */
   fun <
       E : EntityType<E, T, S, U, D>,
@@ -209,7 +210,7 @@ open class TSCBoundedBuilder<
    * @param D [TickDifference].
    * @param label Name of the edge.
    * @param init The init function.
-   * @return The [TSCEdge] with the specific bounds (0,1#Edges).
+   * @return The [TSCEdge] with the specific bounds (0,#Edges).
    */
   fun <
       E : EntityType<E, T, S, U, D>,
