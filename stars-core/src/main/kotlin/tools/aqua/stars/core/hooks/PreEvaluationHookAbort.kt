@@ -34,4 +34,8 @@ class PreEvaluationHookAbort(
             } else {
                 "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
             }
-        } returned ABORT for TSC ${tsc}. Aborting evaluation.")
+        } returned ABORT for TSC ${tsc}. Aborting evaluation.") {
+  init {
+    require(hooks.isNotEmpty()) { "No hooks provided." }
+  }
+}

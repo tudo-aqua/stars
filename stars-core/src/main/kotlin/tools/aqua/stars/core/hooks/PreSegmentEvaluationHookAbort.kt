@@ -34,4 +34,8 @@ class PreSegmentEvaluationHookAbort(
             } else {
                 "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
             }
-        } returned ABORT for segment ${segment}. Aborting evaluation.")
+        } returned ABORT for segment ${segment}. Aborting evaluation.") {
+  init {
+    require(hooks.isNotEmpty()) { "No hooks provided." }
+  }
+}
