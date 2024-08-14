@@ -19,7 +19,7 @@ package tools.aqua.stars.logic.kcmftbl.formulas
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertFailsWith
 import tools.aqua.stars.logic.kcmftbl.*
 
 /** This class tests the CMFTBL operator [globally]. */
@@ -60,7 +60,7 @@ class TestGlobally {
     val phi = listOf(1, 1, 1)
     val interval = 0 to 0
 
-    assertThrows<IllegalArgumentException> {
+    assertFailsWith<IllegalArgumentException> {
       globally(createTicks(phi)[0], createInterval(interval), phi = { it.phi1 })
     }
   }
@@ -76,7 +76,7 @@ class TestGlobally {
     val phi = listOf(1, 1, 1)
     val interval = 1 to 0
 
-    assertThrows<IllegalArgumentException> {
+    assertFailsWith<IllegalArgumentException> {
       globally(createTicks(phi)[0], createInterval(interval), phi = { it.phi1 })
     }
   }
@@ -92,7 +92,7 @@ class TestGlobally {
     val phi = listOf(1, 1, 1)
     val interval = -1 to 1
 
-    assertThrows<IllegalArgumentException> {
+    assertFailsWith<IllegalArgumentException> {
       globally(createTicks(phi)[0], createInterval(interval), phi = { it.phi1 })
     }
   }

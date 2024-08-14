@@ -18,9 +18,9 @@
 package tools.aqua.stars.logic.kcmftbl.formulas
 
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
@@ -171,7 +171,7 @@ class TestPrevious {
     val phi = listOf(1, 1, 1)
     val interval = 0 to 0
 
-    assertThrows<IllegalArgumentException> {
+    assertFailsWith<IllegalArgumentException> {
       previous(createTicks(phi)[2], createInterval(interval), phi = { it.phi1 })
     }
   }
@@ -187,7 +187,7 @@ class TestPrevious {
     val phi = listOf(1, 1, 1)
     val interval = 1 to 0
 
-    assertThrows<IllegalArgumentException> {
+    assertFailsWith<IllegalArgumentException> {
       previous(createTicks(phi)[2], createInterval(interval), phi = { it.phi1 })
     }
   }
@@ -203,7 +203,7 @@ class TestPrevious {
     val phi = listOf(1, 1, 1)
     val interval = -1 to 1
 
-    assertThrows<IllegalArgumentException> {
+    assertFailsWith<IllegalArgumentException> {
       previous(createTicks(phi)[2], createInterval(interval), phi = { it.phi1 })
     }
   }

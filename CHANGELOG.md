@@ -14,6 +14,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.5 - TBA
+### Fixed
+- Fix `toString()` function of `TSCNode` to include the root node's label.
+
 ## [0.4] - 02.08.2024
 ### Added
 - Add iterator for `TSC`.
