@@ -136,9 +136,7 @@ class TSCEvaluation<
    */
   fun runEvaluation(writePlots: Boolean = true, writePlotDataCSV: Boolean = false) {
     try {
-      require(metricProviders.any()) {
-        "There needs to be at least one registered MetricProviders."
-      }
+      require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
       // Evaluate PreEvaluationHooks
       val hookResults = this.preEvaluationHooks.map { it to it.evaluationFunction.invoke(tsc) }
