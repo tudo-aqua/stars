@@ -120,7 +120,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHook with #tivks negative. */
+  /** Test MinTicksPerSegmentHook with #ticks negative. */
   @Test
   fun `Test MinTicksPerSegmentHook with #ticks negative`() {
     assertFailsWith<IllegalArgumentException> {
