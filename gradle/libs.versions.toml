@@ -19,9 +19,6 @@ letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-im
 
 # Tests
 kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
-assertj = { group = "org.assertj", name = "assertj-core", version = "3.26.3" }
-junit-bom = { group = "org.junit", name = "junit-bom", version = "5.10.3" }
-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
 
 # Gradle Plugins
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.0.0" }
@@ -39,4 +36,3 @@ dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin",
 
 [bundles]
 gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin"]
-test = ["assertj", "kotlin-test"]

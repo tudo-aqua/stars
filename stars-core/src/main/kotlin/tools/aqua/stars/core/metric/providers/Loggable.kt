@@ -19,7 +19,7 @@ package tools.aqua.stars.core.metric.providers
 
 import java.io.File
 import java.util.logging.*
-import tools.aqua.stars.core.metric.utils.ApplicationStartTimeHolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
 
 /** This interface can be implemented to be able to log data into the stdout and log files. */
 @Suppress("unused")
@@ -109,9 +109,11 @@ interface Loggable {
       // https://www.logicbig.com/tutorials/core-java-tutorial/logging/customizing-default-format.html
       System.setProperty("java.util.logging.SimpleFormatter.format", "%5\$s %n")
 
-      val currentTimeAndDate = ApplicationStartTimeHolder.applicationStartTimeString
+      val currentTimeAndDate = ApplicationConstantsHolder.applicationStartTimeString
       val logFolderFile =
-          File("analysis-result-logs/$currentTimeAndDate/metrics/$name").also { it.mkdirs() }
+          File("${ApplicationConstantsHolder.logFolder}/$currentTimeAndDate/metrics/$name").also {
+            it.mkdirs()
+          }
       val file = "$logFolderFile/$name-${currentTimeAndDate}"
 
       return@run Logger.getAnonymousLogger().apply {
