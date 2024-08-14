@@ -19,6 +19,7 @@ package tools.aqua.stars.core.metric.utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlinx.serialization.json.Json
 
 /**
  * This singleton holds the current date and time at the start of the application. It is used to
@@ -30,4 +31,9 @@ object ApplicationStartTimeHolder {
   /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
   val applicationStartTimeString: String =
       applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"))
+
+  val jsonConfiguration = Json {
+    prettyPrint = true
+    isLenient = true
+  }
 }

@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.metric.serialization.SerializableResult
+
 /** This interface should be implemented when a metric has a running state. */
 interface Stateful {
   /**
@@ -28,4 +30,13 @@ interface Stateful {
 
   /** This function prints the current state of the implementing class. */
   fun printState()
+
+  fun getSerializableResults(): SerializableResult
+
+  fun compareResults(otherResult: SerializableResult): Boolean {
+    if (this.getSerializableResults().javaClass.name != otherResult.javaClass.name) {
+      throw RuntimeException("These results cannot be compared")
+    }
+    return this.getSerializableResults() == otherResult
+  }
 }

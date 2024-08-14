@@ -21,6 +21,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -125,5 +126,13 @@ class InvalidTSCInstancesPerProjectionMetric<
         logFiner()
       }
     }
+  }
+
+  override fun getSerializableResults(): SerializableResult {
+    TODO("Not yet implemented")
+  }
+
+  override fun compareResults(otherResult: SerializableResult): Boolean {
+    TODO("Not yet implemented")
   }
 }

@@ -21,6 +21,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.serialization.SerializableIntResult
 import tools.aqua.stars.core.types.*
 
 /**
@@ -68,4 +69,7 @@ class SegmentCountMetric<
   override fun printState() {
     logInfo("Analyzed $segmentCount Segments.")
   }
+
+  override fun getSerializableResults(): SerializableIntResult =
+      SerializableIntResult(number = segmentCount)
 }

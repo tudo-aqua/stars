@@ -22,6 +22,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.types.*
 
 /**
@@ -101,5 +102,13 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
       logInfo(
           "The analyzed segments with source '$identifier' yielded a total tick difference of $totalDifference.")
     }
+  }
+
+  override fun getSerializableResults(): SerializableResult {
+    TODO("Not yet implemented")
+  }
+
+  override fun compareResults(otherResult: SerializableResult): Boolean {
+    TODO("Not yet implemented")
   }
 }
