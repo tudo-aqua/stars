@@ -98,9 +98,9 @@ class MinNodesInTSCHookTest {
     }
   }
 
-  /** Test MinNodesInTSCHook with #nodes = minNodes. */
+  /** Test MinNodesInTSCHook with #nodes equal to minNodes. */
   @Test
-  fun `Test MinNodesInTSCHook with #nodes = minNodes`() {
+  fun `Test MinNodesInTSCHook with #nodes equal to minNodes`() {
     val tsc =
         tsc<
             SimpleEntity,
