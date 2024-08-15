@@ -22,6 +22,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
+import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
+import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
+import tools.aqua.stars.core.metric.utils.getSerializedResultFromFileSystem
 import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 
 class SerializableIntResultTest {
@@ -39,6 +42,7 @@ class SerializableIntResultTest {
             SimpleTickDataDifference>()
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
+    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
     val serializedResult = segmentCountMetric.getSerializableResults()
     val serializedResultJsonString = serializedResult.getJsonString()
 
@@ -47,6 +51,22 @@ class SerializableIntResultTest {
         SerializableResult.getJsonContentFromString(serializedResultJsonString))
 
     saveAsJSONFile(serializedResult)
+    var latestResultsPath = getLatestSerializationResultPath()
+    var groundTruthPath = getGroundTruthSerializationResultPath()
+    var s = ""
+
+    if (latestResultsPath != null) {
+      val deserializedResult =
+          getSerializedResultFromFileSystem(latestResultsPath, serializedResult)
+      val compared = segmentCountMetric.compareResults(deserializedResult)
+      val s = ""
+    }
+
+    if (groundTruthPath != null) {
+      val deserializedResult = getSerializedResultFromFileSystem(groundTruthPath, serializedResult)
+      val compared = segmentCountMetric.compareResults(deserializedResult)
+      val s = ""
+    }
   }
 
   @Test

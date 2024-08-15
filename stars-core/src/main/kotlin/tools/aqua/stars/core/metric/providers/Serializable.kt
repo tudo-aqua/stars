@@ -17,20 +17,33 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonResult
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 
 interface Serializable {
   fun getSerializableResults(): SerializableResult
 
-  fun compareResults(otherResult: SerializableResult): Boolean {
-    if (this.getSerializableResults().javaClass.name != otherResult.javaClass.name) {
+  fun compareResults(otherResult: SerializableResult): SerializableResultComparisonResult {
+    val serializedResult = getSerializableResults()
+    if (serializedResult.javaClass.name != otherResult.javaClass.name) {
       throw RuntimeException("These results cannot be compared")
     }
-    return this.getSerializableResults() == otherResult
+    return SerializableResultComparisonResult(
+        areEqual = serializedResult == otherResult,
+        identifier = serializedResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
+        source = serializedResult.source,
+        oldValue = otherResult.value.toString(),
+        newValue = serializedResult.value.toString())
   }
 
   fun writeSerializedResults() {
     saveAsJSONFile(getSerializableResults())
+  }
+
+  fun compareAllResults(path: Path): Boolean {
+    return true
   }
 }

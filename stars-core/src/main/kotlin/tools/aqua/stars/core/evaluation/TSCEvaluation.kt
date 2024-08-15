@@ -22,6 +22,8 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
+import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -187,6 +189,22 @@ class TSCEvaluation<
       if (writeSerializedResults) {
         println("Writing serialized results")
         metricProviders.filterIsInstance<Serializable>().forEach { it.writeSerializedResults() }
+
+        // Check that there is a previous run with recorded results
+        val pathToPreviousRun = getLatestSerializationResultPath()
+        if (pathToPreviousRun != null) {
+          metricProviders.filterIsInstance<Serializable>().forEach {
+            it.compareAllResults(pathToPreviousRun)
+          }
+        }
+
+        // Check that there is a ground truth run with recorded results
+        val pathToGroundTruthRun = getGroundTruthSerializationResultPath()
+        if (pathToGroundTruthRun != null) {
+          metricProviders.filterIsInstance<Serializable>().forEach {
+            it.compareAllResults(pathToGroundTruthRun)
+          }
+        }
       }
     } finally {
       // Close all logging handlers to prevent .lck files to remain

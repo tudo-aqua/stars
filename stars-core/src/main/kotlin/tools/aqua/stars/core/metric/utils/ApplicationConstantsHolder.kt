@@ -44,6 +44,10 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized metric results produced in evaluation. */
   const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
 
+  const val DEFAULT_SERIALIZED_RESULT_IDENTIFIER = "result"
+
+  const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth-serialized-result"
+
   /** Holds the folder name for the logs. */
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
