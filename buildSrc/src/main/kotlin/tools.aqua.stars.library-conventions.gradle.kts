@@ -91,9 +91,8 @@ val libs = the<LibrariesForLibs>()
 
 dependencies {
   dokkaGfmPlugin(libs.dokka.javadoc)
-
-  testImplementation(platform(libs.junit.bom))
-  testImplementation(libs.bundles.test)
+  testImplementation(libs.kotlin.test)
+  detektPlugins(libs.detekt.rules.libraries)
 }
 
 tasks.test {

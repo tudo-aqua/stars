@@ -156,5 +156,5 @@ fun <T1 : Number, T2 : Number> getCSVString(
  * @return The path to the created folder.
  */
 private fun getAndCreateCSVFolder(folder: String, subFolder: String): String =
-    "analysis-result-logs/${ApplicationStartTimeHolder.applicationStartTimeString}/csv/$folder/$subFolder"
+    "${ApplicationConstantsHolder.logFolder}/${ApplicationConstantsHolder.applicationStartTimeString}/csv/$folder/$subFolder"
         .also { File(it).mkdirs() }
