@@ -18,27 +18,67 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.assertDoesNotThrow
-import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.providers.Serializable
 
 class SerializableListResultTest {
 
+  // region Test of simple serializable list
   @Test
-  fun `Test serialization of simple typed list of type 'Int'`() {
-    val simpleObject = TypedClass<Int>()
-    assertDoesNotThrow { simpleObject.getSerializableResults().getJsonString() }
+  fun `Test serialization of explicitly typed list of type 'Int' with values`() {
+    val simpleObject = IntListClass(listOf(2, 3))
+    val simpleObjectResult = simpleObject.getSerializableResults()
+
+    assertEquals(2, simpleObject.stateList.size)
+    assertDoesNotThrow { simpleObjectResult.getJsonString() }
+
+    val serializedResult = simpleObjectResult.getJsonString()
+    val deserializedResult = SerializableResult.getJsonContentFromString(serializedResult)
+
+    assertEquals(simpleObjectResult, deserializedResult)
   }
 
-  private inner class TypedClass<T> : Stateful {
-    val stateList: List<T> = emptyList()
+  @Test
+  fun `Test serialization of explicitly typed list of type 'Int' with no values`() {
+    val simpleObject = IntListClass(emptyList())
+    val simpleObjectResult = simpleObject.getSerializableResults()
 
-    override fun getState(): List<T> = stateList
+    assertEquals(0, simpleObject.stateList.size)
+    assertDoesNotThrow { simpleObjectResult.getJsonString() }
 
-    override fun printState() {
-      println("${getState()}")
-    }
+    val serializedResult = simpleObjectResult.getJsonString()
+    val deserializedResult = SerializableResult.getJsonContentFromString(serializedResult)
 
-    override fun getSerializableResults(): SerializableListResult<T> =
-        SerializableListResult(getState())
+    assertEquals(simpleObjectResult, deserializedResult)
   }
+
+  private inner class IntListClass(val stateList: List<Int>) : Serializable {
+    override fun getSerializableResults(): SerializableIntListResult =
+        SerializableIntListResult(stateList, source = "IntListClass")
+  }
+
+  // endregion
+
+  // region Test of simple nested kotlin datastructures in serializable list
+  @Test
+  fun `Test serialization of list of pairs of two Int values`() {
+    val simpleObject = IntPairClass(listOf(2 to 3, 3 to 4))
+    val simpleObjectResult = simpleObject.getSerializableResults()
+
+    assertEquals(2, simpleObject.stateList.size)
+    assertDoesNotThrow { simpleObjectResult.getJsonString() }
+
+    val serializedResult = simpleObjectResult.getJsonString()
+    val deserializedResult = SerializableResult.getJsonContentFromString(serializedResult)
+
+    assertEquals(simpleObjectResult, deserializedResult)
+  }
+
+  private inner class IntPairClass(val stateList: List<Pair<Int, Int>>) : Serializable {
+    override fun getSerializableResults(): SerializableIntPairListResult =
+        SerializableIntPairListResult(stateList, source = "IntPairClass")
+  }
+
+  // endregion
 }

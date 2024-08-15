@@ -22,6 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
+import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 
 class SerializableIntResultTest {
 
@@ -44,6 +45,8 @@ class SerializableIntResultTest {
     assertEquals(
         segmentCountMetric.getSerializableResults(),
         SerializableResult.getJsonContentFromString(serializedResultJsonString))
+
+    saveAsJSONFile(serializedResult)
   }
 
   @Test

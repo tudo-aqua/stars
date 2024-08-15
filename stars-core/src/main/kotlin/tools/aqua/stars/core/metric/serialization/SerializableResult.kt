@@ -25,11 +25,13 @@ import kotlin.io.path.readText
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.utils.ApplicationStartTimeHolder.jsonConfiguration
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
 
 @Serializable
 sealed class SerializableResult {
   abstract val identifier: String?
+  abstract val source: String
+  abstract val value: Any
 
   abstract override fun equals(other: Any?): Boolean
 

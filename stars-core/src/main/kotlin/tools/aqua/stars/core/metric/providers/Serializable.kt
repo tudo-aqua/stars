@@ -15,10 +15,22 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.metric.providers
 
-import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 
-@Serializable
-data class SerializableListResult<T>(val value: List<T>, override val identifier: String? = null) :
-    SerializableResult()
+interface Serializable {
+  fun getSerializableResults(): SerializableResult
+
+  fun compareResults(otherResult: SerializableResult): Boolean {
+    if (this.getSerializableResults().javaClass.name != otherResult.javaClass.name) {
+      throw RuntimeException("These results cannot be compared")
+    }
+    return this.getSerializableResults() == otherResult
+  }
+
+  fun writeSerializedResults() {
+    saveAsJSONFile(getSerializableResults())
+  }
+}

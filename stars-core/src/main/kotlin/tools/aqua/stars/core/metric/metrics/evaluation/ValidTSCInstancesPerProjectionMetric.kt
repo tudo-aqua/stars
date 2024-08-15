@@ -21,7 +21,6 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.*
-import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.utils.getCSVString
 import tools.aqua.stars.core.metric.utils.getPlot
 import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
@@ -179,14 +178,6 @@ class ValidTSCInstancesPerProjectionMetric<
         logFine("----------------")
       }
     }
-  }
-
-  override fun getSerializableResults(): SerializableResult {
-    TODO("Not yet implemented")
-  }
-
-  override fun compareResults(otherResult: SerializableResult): Boolean {
-    TODO("Not yet implemented")
   }
 
   /**

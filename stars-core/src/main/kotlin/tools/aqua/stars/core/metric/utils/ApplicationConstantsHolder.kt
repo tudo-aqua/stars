@@ -41,9 +41,17 @@ object ApplicationConstantsHolder {
   /** Log folder directory for result logs produced in test runs. */
   private const val TEST_LOG_FOLDER = "test-result-logs"
 
+  /** Folder directory for serialized metric results produced in evaluation. */
+  const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
+
   /** Holds the folder name for the logs. */
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
+
+  val jsonConfiguration = Json {
+    prettyPrint = true
+    isLenient = true
+  }
 
   init {
     Runtime.getRuntime()
@@ -62,9 +70,4 @@ object ApplicationConstantsHolder {
       } catch (e: ClassNotFoundException) {
         false
       }
-
-  val jsonConfiguration = Json {
-    prettyPrint = true
-    isLenient = true
-  }
 }

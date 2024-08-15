@@ -20,5 +20,8 @@ package tools.aqua.stars.core.metric.serialization
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SerializableDoubleResult(val value: Double, override val identifier: String?) :
-    SerializableResult()
+data class SerializableDoubleResult(
+    override val identifier: String?,
+    override val value: Double,
+    override val source: String
+) : SerializableResult()

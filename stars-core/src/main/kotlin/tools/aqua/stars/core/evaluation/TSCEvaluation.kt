@@ -84,7 +84,11 @@ class TSCEvaluation<
    * @param writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
-  fun runEvaluation(writePlots: Boolean = true, writePlotDataCSV: Boolean = false) {
+  fun runEvaluation(
+      writePlots: Boolean = true,
+      writePlotDataCSV: Boolean = false,
+      writeSerializedResults: Boolean = true
+  ) {
     try {
       require(metricProviders.any()) {
         "There needs to be at least one registered MetricProviders."
@@ -177,6 +181,12 @@ class TSCEvaluation<
       if (writePlotDataCSV) {
         println("Writing CSVs")
         metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+      }
+
+      // Write JSON files of all Stateful metrics
+      if (writeSerializedResults) {
+        println("Writing serialized results")
+        metricProviders.filterIsInstance<Serializable>().forEach { it.writeSerializedResults() }
       }
     } finally {
       // Close all logging handlers to prevent .lck files to remain
