@@ -71,6 +71,6 @@ class SegmentCountMetric<
     logInfo("Analyzed $segmentCount Segments.")
   }
 
-  override fun getSerializableResult(): SerializableIntResult =
-      SerializableIntResult(value = segmentCount, source = "SegmentCountMetric")
+  override fun getSerializableResults(): List<SerializableIntResult> =
+      listOf(SerializableIntResult(value = segmentCount, source = "SegmentCountMetric"))
 }

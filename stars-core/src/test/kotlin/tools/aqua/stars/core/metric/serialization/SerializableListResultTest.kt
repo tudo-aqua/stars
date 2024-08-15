@@ -28,13 +28,14 @@ class SerializableListResultTest {
   @Test
   fun `Test serialization of explicitly typed list of type 'Int' with values`() {
     val simpleObject = IntListClass(listOf(2, 3))
-    val simpleObjectResult = simpleObject.getSerializableResult()
+    val simpleObjectResult = simpleObject.getSerializableResults()
 
     assertEquals(2, simpleObject.stateList.size)
-    assertDoesNotThrow { simpleObjectResult.getJsonString() }
+    assertDoesNotThrow { simpleObject.writeSerializedResults() }
 
-    val serializedResult = simpleObjectResult.getJsonString()
-    val deserializedResult = SerializableResult.getJsonContentFromString(serializedResult)
+    val serializedResult = simpleObjectResult.map { it.getJsonString() }
+    val deserializedResult =
+        serializedResult.map { SerializableResult.getJsonContentFromString(it) }
 
     assertEquals(simpleObjectResult, deserializedResult)
   }
@@ -42,20 +43,21 @@ class SerializableListResultTest {
   @Test
   fun `Test serialization of explicitly typed list of type 'Int' with no values`() {
     val simpleObject = IntListClass(emptyList())
-    val simpleObjectResult = simpleObject.getSerializableResult()
+    val simpleObjectResult = simpleObject.getSerializableResults()
 
     assertEquals(0, simpleObject.stateList.size)
-    assertDoesNotThrow { simpleObjectResult.getJsonString() }
+    assertDoesNotThrow { simpleObject.writeSerializedResults() }
 
-    val serializedResult = simpleObjectResult.getJsonString()
-    val deserializedResult = SerializableResult.getJsonContentFromString(serializedResult)
+    val serializedResult = simpleObjectResult.map { it.getJsonString() }
+    val deserializedResult =
+        serializedResult.map { SerializableResult.getJsonContentFromString(it) }
 
     assertEquals(simpleObjectResult, deserializedResult)
   }
 
   private inner class IntListClass(val stateList: List<Int>) : Serializable {
-    override fun getSerializableResult(): SerializableIntListResult =
-        SerializableIntListResult(stateList, source = "IntListClass")
+    override fun getSerializableResults(): List<SerializableIntListResult> =
+        listOf(SerializableIntListResult(stateList, source = "IntListClass"))
   }
 
   // endregion
@@ -64,20 +66,21 @@ class SerializableListResultTest {
   @Test
   fun `Test serialization of list of pairs of two Int values`() {
     val simpleObject = IntPairClass(listOf(2 to 3, 3 to 4))
-    val simpleObjectResult = simpleObject.getSerializableResult()
+    val simpleObjectResult = simpleObject.getSerializableResults()
 
     assertEquals(2, simpleObject.stateList.size)
-    assertDoesNotThrow { simpleObjectResult.getJsonString() }
+    assertDoesNotThrow { simpleObject.writeSerializedResults() }
 
-    val serializedResult = simpleObjectResult.getJsonString()
-    val deserializedResult = SerializableResult.getJsonContentFromString(serializedResult)
+    val serializedResult = simpleObjectResult.map { it.getJsonString() }
+    val deserializedResult =
+        serializedResult.map { SerializableResult.getJsonContentFromString(it) }
 
     assertEquals(simpleObjectResult, deserializedResult)
   }
 
   private inner class IntPairClass(val stateList: List<Pair<Int, Int>>) : Serializable {
-    override fun getSerializableResult(): SerializableIntPairListResult =
-        SerializableIntPairListResult(stateList, source = "IntPairClass")
+    override fun getSerializableResults(): List<SerializableIntPairListResult> =
+        listOf(SerializableIntPairListResult(stateList, source = "IntPairClass"))
   }
 
   // endregion

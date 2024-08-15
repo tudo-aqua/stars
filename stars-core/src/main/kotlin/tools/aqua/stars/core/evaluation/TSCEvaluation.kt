@@ -195,8 +195,10 @@ class TSCEvaluation<
         val pathToPreviousRun = getLatestSerializationResultPath()
         if (pathToPreviousRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
-            val resultComparison = it.compareResults(pathToPreviousRun)
-            saveAsJSONFile(resultComparison, false)
+            val resultComparisons = it.compareResults(pathToPreviousRun)
+            resultComparisons.forEach { resultComparison ->
+              saveAsJSONFile(resultComparison, false)
+            }
           }
         }
 
@@ -204,8 +206,8 @@ class TSCEvaluation<
         val pathToGroundTruthRun = getGroundTruthSerializationResultPath()
         if (pathToGroundTruthRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
-            val resultComparison = it.compareResults(pathToGroundTruthRun)
-            saveAsJSONFile(resultComparison, true)
+            val resultComparisons = it.compareResults(pathToGroundTruthRun)
+            resultComparisons.forEach { resultComparison -> saveAsJSONFile(resultComparison, true) }
           }
         }
       }

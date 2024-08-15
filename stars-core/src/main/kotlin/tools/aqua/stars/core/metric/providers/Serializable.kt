@@ -25,29 +25,35 @@ import tools.aqua.stars.core.metric.utils.getSerializedResultFromFileSystem
 import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 
 interface Serializable {
-  fun getSerializableResult(): SerializableResult
+  fun getSerializableResults(): List<SerializableResult>
 
   fun compareTo(otherResult: SerializableResult): SerializableResultComparison {
-    val serializedResult = getSerializableResult()
-    if (serializedResult.javaClass.name != otherResult.javaClass.name) {
-      throw RuntimeException("These results cannot be compared")
+    val serializedResults = getSerializableResults()
+    serializedResults.forEach { serializedResult ->
+      if (serializedResult.javaClass.name != otherResult.javaClass.name) {
+        return@forEach
+      }
+      if (serializedResult.source != otherResult.source ||
+          serializedResult.identifier != otherResult.identifier) {
+        return@forEach
+      }
+      return SerializableResultComparison(
+          areEqual = serializedResult == otherResult,
+          identifier = serializedResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
+          source = serializedResult.source,
+          oldValue = otherResult.value.toString(),
+          newValue = serializedResult.value.toString())
     }
-    return SerializableResultComparison(
-        areEqual = serializedResult == otherResult,
-        identifier = serializedResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
-        source = serializedResult.source,
-        oldValue = otherResult.value.toString(),
-        newValue = serializedResult.value.toString())
+    throw IllegalArgumentException("There were no results that were comparable.")
   }
 
   fun writeSerializedResults() {
-    saveAsJSONFile(getSerializableResult())
+    getSerializableResults().forEach { saveAsJSONFile(it) }
   }
 
-  fun compareResults(resultFolderPath: Path): SerializableResultComparison {
-    val deserializedResult =
-        getSerializedResultFromFileSystem(resultFolderPath, getSerializableResult())
-
-    return compareTo(deserializedResult)
-  }
+  fun compareResults(resultFolderPath: Path): List<SerializableResultComparison> =
+      getSerializableResults().map {
+        val deserializedResult = getSerializedResultFromFileSystem(resultFolderPath, it)
+        compareTo(deserializedResult)
+      }
 }
