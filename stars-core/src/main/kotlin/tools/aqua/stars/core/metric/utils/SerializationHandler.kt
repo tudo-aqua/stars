@@ -20,12 +20,17 @@ package tools.aqua.stars.core.metric.utils
 import java.io.File
 import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.COMPARED_RESULTS_FOLDER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.SERIALIZED_RESULTS_FOLDER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 
 fun saveAsJSONFile(serializableResult: SerializableResult) {
-  val resultFolder = getAndCreateJSONFolder(source = serializableResult.source)
+  val resultFolder =
+      "${SERIALIZED_RESULTS_FOLDER}/${applicationStartTimeString}/${serializableResult.source}"
+          .also { File(it).mkdirs() }
   File("$resultFolder/${serializableResult.identifier?:DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json")
       .apply {
         createNewFile()
@@ -33,12 +38,21 @@ fun saveAsJSONFile(serializableResult: SerializableResult) {
       }
 }
 
-private fun getAndCreateJSONFolder(source: String): String =
-    "${ApplicationConstantsHolder.SERIALIZED_RESULTS_FOLDER}/${applicationStartTimeString}/$source"
-        .also { File(it).mkdirs() }
+fun saveAsJSONFile(
+    serializableResultComparison: SerializableResultComparison,
+    comparedToGroundTruth: Boolean
+) {
+  val resultFolder =
+      "${COMPARED_RESULTS_FOLDER}/${applicationStartTimeString}/${if(comparedToGroundTruth){"/ground-truth"}else{"/last-evaluation"}}/${serializableResultComparison.source}"
+          .also { File(it).mkdirs() }
+  File("$resultFolder/comparison_${serializableResultComparison.identifier}.json").apply {
+    createNewFile()
+    writeText(serializableResultComparison.getJsonString())
+  }
+}
 
 fun getLatestSerializationResultPath(): Path? {
-  val resultFolder = File(ApplicationConstantsHolder.SERIALIZED_RESULTS_FOLDER)
+  val resultFolder = File(SERIALIZED_RESULTS_FOLDER)
   return resultFolder
       .listFiles()
       ?.filter {
@@ -51,7 +65,7 @@ fun getLatestSerializationResultPath(): Path? {
 }
 
 fun getGroundTruthSerializationResultPath(): Path? {
-  val resultFolder = File(ApplicationConstantsHolder.SERIALIZED_RESULTS_FOLDER)
+  val resultFolder = File(SERIALIZED_RESULTS_FOLDER)
   return resultFolder
       .listFiles()
       ?.filter { it.name == GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER }

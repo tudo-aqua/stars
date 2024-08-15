@@ -43,11 +43,11 @@ class SerializableIntResultTest {
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
-    val serializedResult = segmentCountMetric.getSerializableResults()
+    val serializedResult = segmentCountMetric.getSerializableResult()
     val serializedResultJsonString = serializedResult.getJsonString()
 
     assertEquals(
-        segmentCountMetric.getSerializableResults(),
+        segmentCountMetric.getSerializableResult(),
         SerializableResult.getJsonContentFromString(serializedResultJsonString))
 
     saveAsJSONFile(serializedResult)
@@ -58,14 +58,14 @@ class SerializableIntResultTest {
     if (latestResultsPath != null) {
       val deserializedResult =
           getSerializedResultFromFileSystem(latestResultsPath, serializedResult)
-      val compared = segmentCountMetric.compareResults(deserializedResult)
-      val s = ""
+      val compared = segmentCountMetric.compareTo(deserializedResult)
+      saveAsJSONFile(compared, false)
     }
 
     if (groundTruthPath != null) {
       val deserializedResult = getSerializedResultFromFileSystem(groundTruthPath, serializedResult)
-      val compared = segmentCountMetric.compareResults(deserializedResult)
-      val s = ""
+      val compared = segmentCountMetric.compareTo(deserializedResult)
+      saveAsJSONFile(compared, true)
     }
   }
 
@@ -83,13 +83,13 @@ class SerializableIntResultTest {
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
     val serializedResultGroundTruthJsonString =
-        segmentCountMetric.getSerializableResults().getJsonString()
+        segmentCountMetric.getSerializableResult().getJsonString()
     val deserializedResultGroundTruth =
         SerializableResult.getJsonContentFromString(serializedResultGroundTruthJsonString)
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
     val serializedResultCompareJsonString =
-        segmentCountMetric.getSerializableResults().getJsonString()
+        segmentCountMetric.getSerializableResult().getJsonString()
     val deserializedResultCompare =
         SerializableResult.getJsonContentFromString(serializedResultCompareJsonString)
 

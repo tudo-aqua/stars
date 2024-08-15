@@ -28,7 +28,7 @@ class SerializableListResultTest {
   @Test
   fun `Test serialization of explicitly typed list of type 'Int' with values`() {
     val simpleObject = IntListClass(listOf(2, 3))
-    val simpleObjectResult = simpleObject.getSerializableResults()
+    val simpleObjectResult = simpleObject.getSerializableResult()
 
     assertEquals(2, simpleObject.stateList.size)
     assertDoesNotThrow { simpleObjectResult.getJsonString() }
@@ -42,7 +42,7 @@ class SerializableListResultTest {
   @Test
   fun `Test serialization of explicitly typed list of type 'Int' with no values`() {
     val simpleObject = IntListClass(emptyList())
-    val simpleObjectResult = simpleObject.getSerializableResults()
+    val simpleObjectResult = simpleObject.getSerializableResult()
 
     assertEquals(0, simpleObject.stateList.size)
     assertDoesNotThrow { simpleObjectResult.getJsonString() }
@@ -54,7 +54,7 @@ class SerializableListResultTest {
   }
 
   private inner class IntListClass(val stateList: List<Int>) : Serializable {
-    override fun getSerializableResults(): SerializableIntListResult =
+    override fun getSerializableResult(): SerializableIntListResult =
         SerializableIntListResult(stateList, source = "IntListClass")
   }
 
@@ -64,7 +64,7 @@ class SerializableListResultTest {
   @Test
   fun `Test serialization of list of pairs of two Int values`() {
     val simpleObject = IntPairClass(listOf(2 to 3, 3 to 4))
-    val simpleObjectResult = simpleObject.getSerializableResults()
+    val simpleObjectResult = simpleObject.getSerializableResult()
 
     assertEquals(2, simpleObject.stateList.size)
     assertDoesNotThrow { simpleObjectResult.getJsonString() }
@@ -76,7 +76,7 @@ class SerializableListResultTest {
   }
 
   private inner class IntPairClass(val stateList: List<Pair<Int, Int>>) : Serializable {
-    override fun getSerializableResults(): SerializableIntPairListResult =
+    override fun getSerializableResult(): SerializableIntPairListResult =
         SerializableIntPairListResult(stateList, source = "IntPairClass")
   }
 

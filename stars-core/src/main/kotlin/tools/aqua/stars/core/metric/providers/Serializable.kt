@@ -19,19 +19,20 @@ package tools.aqua.stars.core.metric.providers
 
 import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonResult
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.getSerializedResultFromFileSystem
 import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 
 interface Serializable {
-  fun getSerializableResults(): SerializableResult
+  fun getSerializableResult(): SerializableResult
 
-  fun compareResults(otherResult: SerializableResult): SerializableResultComparisonResult {
-    val serializedResult = getSerializableResults()
+  fun compareTo(otherResult: SerializableResult): SerializableResultComparison {
+    val serializedResult = getSerializableResult()
     if (serializedResult.javaClass.name != otherResult.javaClass.name) {
       throw RuntimeException("These results cannot be compared")
     }
-    return SerializableResultComparisonResult(
+    return SerializableResultComparison(
         areEqual = serializedResult == otherResult,
         identifier = serializedResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
         source = serializedResult.source,
@@ -40,10 +41,13 @@ interface Serializable {
   }
 
   fun writeSerializedResults() {
-    saveAsJSONFile(getSerializableResults())
+    saveAsJSONFile(getSerializableResult())
   }
 
-  fun compareAllResults(path: Path): Boolean {
-    return true
+  fun compareResults(resultFolderPath: Path): SerializableResultComparison {
+    val deserializedResult =
+        getSerializedResultFromFileSystem(resultFolderPath, getSerializableResult())
+
+    return compareTo(deserializedResult)
   }
 }

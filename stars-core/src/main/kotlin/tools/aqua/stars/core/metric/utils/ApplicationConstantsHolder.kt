@@ -44,6 +44,9 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized metric results produced in evaluation. */
   const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
 
+  /** Folder directory for serialized results produced in evaluation. */
+  const val COMPARED_RESULTS_FOLDER = "compared-results"
+
   const val DEFAULT_SERIALIZED_RESULT_IDENTIFIER = "result"
 
   const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth-serialized-result"

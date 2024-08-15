@@ -24,6 +24,7 @@ import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
 import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
+import tools.aqua.stars.core.metric.utils.saveAsJSONFile
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -194,7 +195,8 @@ class TSCEvaluation<
         val pathToPreviousRun = getLatestSerializationResultPath()
         if (pathToPreviousRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
-            it.compareAllResults(pathToPreviousRun)
+            val resultComparison = it.compareResults(pathToPreviousRun)
+            saveAsJSONFile(resultComparison, false)
           }
         }
 
@@ -202,7 +204,8 @@ class TSCEvaluation<
         val pathToGroundTruthRun = getGroundTruthSerializationResultPath()
         if (pathToGroundTruthRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
-            it.compareAllResults(pathToGroundTruthRun)
+            val resultComparison = it.compareResults(pathToGroundTruthRun)
+            saveAsJSONFile(resultComparison, true)
           }
         }
       }
