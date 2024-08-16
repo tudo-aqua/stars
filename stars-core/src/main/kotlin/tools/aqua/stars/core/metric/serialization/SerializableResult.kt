@@ -25,6 +25,7 @@ import kotlin.io.path.readText
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
 
 @Serializable
@@ -40,6 +41,26 @@ sealed class SerializableResult {
   override fun toString(): String = getJsonString()
 
   fun getJsonString(): String = jsonConfiguration.encodeToString(this)
+
+  fun compareTo(otherResult: SerializableResult): SerializableResultComparison? {
+    if (javaClass.name != otherResult.javaClass.name) {
+      return null
+    }
+    if (source != otherResult.source || identifier != otherResult.identifier) {
+      return null
+    }
+    return SerializableResultComparison(
+        verdict =
+            if (this == otherResult) {
+              SerializableResultComparisonVerdict.EQUAL_RESULTS
+            } else {
+              SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS
+            },
+        identifier = identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
+        source = source,
+        oldValue = otherResult.value.toString(),
+        newValue = value.toString())
+  }
 
   companion object {
     fun getJsonContentOfPath(file: Path): SerializableResult {

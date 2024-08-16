@@ -17,17 +17,7 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
+import tools.aqua.stars.core.metric.providers.Serializable
 
-@Serializable
-data class SerializableResultComparison(
-    val verdict: SerializableResultComparisonVerdict,
-    val source: String,
-    val identifier: String,
-    val oldValue: String,
-    val newValue: String,
-) {
-  fun getJsonString(): String = jsonConfiguration.encodeToString(this)
-}
+fun serializeAndDeserialize(serializable: Serializable): List<SerializableResult> =
+    serializable.getJsonStrings().map { SerializableResult.getJsonContentFromString(it) }

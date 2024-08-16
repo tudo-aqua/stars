@@ -17,43 +17,42 @@
 
 package tools.aqua.stars.core.metric.providers
 
+import java.io.File
 import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
-import tools.aqua.stars.core.metric.utils.getSerializedResultFromFileSystem
-import tools.aqua.stars.core.metric.utils.saveAsJSONFile
+import tools.aqua.stars.core.metric.utils.*
 
 interface Serializable {
   fun getSerializableResults(): List<SerializableResult>
 
-  fun compareTo(otherResult: SerializableResult): SerializableResultComparison {
-    val serializedResults = getSerializableResults()
-    serializedResults.forEach { serializedResult ->
-      if (serializedResult.javaClass.name != otherResult.javaClass.name) {
-        return@forEach
+  fun compareToLastResults(): List<SerializableResultComparison> =
+      compareTo(
+          getSerializedResultFromFileSystem(
+              getLatestSerializationResultPath() ?: File("").toPath(), getSerializableResults()))
+
+  fun compareToGroundTruthResults(): List<SerializableResultComparison> =
+      compareTo(
+          getSerializedResultFromFileSystem(
+              getGroundTruthSerializationResultPath() ?: File("").toPath(),
+              getSerializableResults()))
+
+  fun compareTo(otherResults: List<SerializableResult>): List<SerializableResultComparison> =
+      getSerializableResults().compareTo(otherResults)
+
+  fun compareTo(otherResult: SerializableResult): SerializableResultComparison? =
+      getSerializableResults().compareTo(otherResult)
+
+  fun compareResults(resultFolderPath: Path): List<SerializableResultComparison> =
+      getSerializableResults().mapNotNull {
+        compareTo(getSerializedResultFromFileSystem(resultFolderPath, it))
       }
-      if (serializedResult.source != otherResult.source ||
-          serializedResult.identifier != otherResult.identifier) {
-        return@forEach
-      }
-      return SerializableResultComparison(
-          areEqual = serializedResult == otherResult,
-          identifier = serializedResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
-          source = serializedResult.source,
-          oldValue = otherResult.value.toString(),
-          newValue = serializedResult.value.toString())
-    }
-    throw IllegalArgumentException("There were no results that were comparable.")
+
+  fun getJsonStrings(): List<String> {
+    return getSerializableResults().map { it.getJsonString() }
   }
 
   fun writeSerializedResults() {
     getSerializableResults().forEach { saveAsJSONFile(it) }
   }
-
-  fun compareResults(resultFolderPath: Path): List<SerializableResultComparison> =
-      getSerializableResults().map {
-        val deserializedResult = getSerializedResultFromFileSystem(resultFolderPath, it)
-        compareTo(deserializedResult)
-      }
 }

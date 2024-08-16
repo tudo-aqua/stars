@@ -42,18 +42,32 @@ object ApplicationConstantsHolder {
   private const val TEST_LOG_FOLDER = "test-result-logs"
 
   /** Folder directory for serialized metric results produced in evaluation. */
-  const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
+  private const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
 
   /** Folder directory for serialized results produced in evaluation. */
-  const val COMPARED_RESULTS_FOLDER = "compared-results"
+  private const val COMPARED_RESULTS_FOLDER = "compared-results"
 
   const val DEFAULT_SERIALIZED_RESULT_IDENTIFIER = "result"
 
-  const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth-serialized-result"
+  private const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth-serialized-result"
 
   /** Holds the folder name for the logs. */
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
+
+  /** Holds the folder name for the logs. */
+  val serializedResultsFolder: String
+    get() = if (isTestRun()) "test-$SERIALIZED_RESULTS_FOLDER" else SERIALIZED_RESULTS_FOLDER
+
+  /** Holds the folder name for the logs. */
+  val comparedResultsFolder: String
+    get() = if (isTestRun()) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
+
+  /** Holds the folder name for the logs. */
+  val groundTruthFolder: String
+    get() =
+        if (isTestRun()) "test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER"
+        else GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
 
   val jsonConfiguration = Json {
     prettyPrint = true
@@ -66,6 +80,9 @@ object ApplicationConstantsHolder {
             Thread {
               LogManager.getLogManager().reset()
               File(TEST_LOG_FOLDER).deleteRecursively()
+              File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
+              File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
+              File("test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER").deleteRecursively()
             })
   }
 

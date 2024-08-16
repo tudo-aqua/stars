@@ -19,6 +19,7 @@ package tools.aqua.stars.core.metric.serialization
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
@@ -58,30 +59,32 @@ class SerializableIntResultTest {
     }
   }
 
-  //  @Test
-  //  fun `Test changed result value`() {
-  //    val simpleSegment1 = SimpleSegment()
-  //
-  //    val segmentCountMetric =
-  //        SegmentCountMetric<
-  //            SimpleEntity,
-  //            SimpleTickData,
-  //            SimpleSegment,
-  //            SimpleTickDataUnit,
-  //            SimpleTickDataDifference>()
-  //
-  //    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
-  //    val serializedResultGroundTruthJsonString =
-  //        segmentCountMetric.getSerializableResults().getJsonString()
-  //    val deserializedResultGroundTruth =
-  //        SerializableResult.getJsonContentFromString(serializedResultGroundTruthJsonString)
-  //
-  //    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
-  //    val serializedResultCompareJsonString =
-  //        segmentCountMetric.getSerializableResults().getJsonString()
-  //    val deserializedResultCompare =
-  //        SerializableResult.getJsonContentFromString(serializedResultCompareJsonString)
-  //
-  //    assertNotEquals(deserializedResultGroundTruth, deserializedResultCompare)
-  //  }
+  @Test
+  fun `Test changed result value`() {
+    val simpleSegment1 = SimpleSegment()
+
+    val segmentCountMetric =
+        SegmentCountMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
+    val serializedResultGroundTruth = segmentCountMetric.getSerializableResults()
+    val deserializedResultGroundTruth =
+        serializedResultGroundTruth.map {
+          SerializableResult.getJsonContentFromString(it.getJsonString())
+        }
+
+    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
+    val serializedResultCompare = segmentCountMetric.getSerializableResults()
+    val deserializedResultCompare =
+        serializedResultCompare.map {
+          SerializableResult.getJsonContentFromString(it.getJsonString())
+        }
+
+    assertNotEquals(deserializedResultGroundTruth, deserializedResultCompare)
+  }
 }
