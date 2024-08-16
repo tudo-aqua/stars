@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.metric.providers
 
-import java.io.File
 import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
@@ -27,15 +26,10 @@ interface Serializable {
   fun getSerializableResults(): List<SerializableResult>
 
   fun compareToLastResults(): List<SerializableResultComparison> =
-      compareTo(
-          getSerializedResultFromFileSystem(
-              getLatestSerializationResultPath() ?: File("").toPath(), getSerializableResults()))
+      compareTo(getSerializedResultsFromFolder(getLatestSerializationResultPath()))
 
   fun compareToGroundTruthResults(): List<SerializableResultComparison> =
-      compareTo(
-          getSerializedResultFromFileSystem(
-              getGroundTruthSerializationResultPath() ?: File("").toPath(),
-              getSerializableResults()))
+      compareTo(getSerializedResultsFromFolder(getGroundTruthSerializationResultPath()))
 
   fun compareTo(otherResults: List<SerializableResult>): List<SerializableResultComparison> =
       getSerializableResults().compareTo(otherResults)
@@ -44,9 +38,7 @@ interface Serializable {
       getSerializableResults().compareTo(otherResult)
 
   fun compareResults(resultFolderPath: Path): List<SerializableResultComparison> =
-      getSerializableResults().mapNotNull {
-        compareTo(getSerializedResultFromFileSystem(resultFolderPath, it))
-      }
+      getSerializableResults().compareTo(getSerializedResultsFromFolder(resultFolderPath))
 
   fun getJsonStrings(): List<String> {
     return getSerializableResults().map { it.getJsonString() }

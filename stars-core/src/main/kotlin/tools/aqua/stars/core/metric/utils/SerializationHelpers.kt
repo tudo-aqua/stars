@@ -79,19 +79,12 @@ fun getGroundTruthSerializationResultPath(): Path? {
       ?.toPath()
 }
 
-fun getSerializedResultFromFileSystem(
-    rootFolderPath: Path,
+fun getSerializedResultsFromFolder(
+    rootFolderPath: Path?,
     serializableResult: SerializableResult
-): SerializableResult {
-  val serializedResultFile =
-      File(
-          "${rootFolderPath}/${serializableResult.source}/${serializableResult.identifier?:DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json")
-  check(serializedResultFile.exists())
-  return SerializableResult.getJsonContentOfPath(serializedResultFile.toPath())
-}
-
-fun getSerializedResultFromFileSystem(
-    rootFolderPath: Path,
-    serializableResults: List<SerializableResult>
 ): List<SerializableResult> =
-    serializableResults.map { getSerializedResultFromFileSystem(rootFolderPath, it) }
+    getSerializedResultsFromFolder(File("${rootFolderPath}/${serializableResult.source}").toPath())
+
+fun getSerializedResultsFromFolder(folderPath: Path?): List<SerializableResult> =
+    folderPath?.toFile()?.listFiles()?.map { SerializableResult.getJsonContentOfPath(it.toPath()) }
+        ?: emptyList()

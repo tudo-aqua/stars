@@ -36,7 +36,7 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruth
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
 import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
-import tools.aqua.stars.core.metric.utils.getSerializedResultFromFileSystem
+import tools.aqua.stars.core.metric.utils.getSerializedResultsFromFolder
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
 class SerializationHelpersTest {
@@ -322,7 +322,7 @@ class SerializationHelpersTest {
   }
   // endregion
 
-  // region Tests for getSerializedResultFromFileSystem(Path,SerializableResult)
+  // region Tests for getSerializedResultsFromFolder(Path,SerializableResult)
 
   @Test
   fun `Test correct deserialization of SerializableResult with latest results`() {
@@ -343,12 +343,12 @@ class SerializationHelpersTest {
     assertNotNull(latestResultPath)
 
     val deserializedIntResultList = assertDoesNotThrow {
-      getSerializedResultFromFileSystem(latestResultPath, actualSerializableResult)
+      getSerializedResultsFromFolder(latestResultPath, actualSerializableResult)
     }
 
-    assertEquals(actualSerializableResult.value, deserializedIntResultList.value)
-    assertEquals(actualSerializableResult.source, deserializedIntResultList.source)
-    assertEquals(actualSerializableResult.identifier, deserializedIntResultList.identifier)
+    assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
+    assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
+    assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
   }
 
   @Test
@@ -372,13 +372,13 @@ class SerializationHelpersTest {
     // Create dummy result to get correct result from latestResultPath
     val serializableIntResult = SerializableIntResult(2, actualIdentifier, actualSource)
 
-    val deserializedIntResult = assertDoesNotThrow {
-      getSerializedResultFromFileSystem(latestResultPath, serializableIntResult)
+    val deserializedIntResultList = assertDoesNotThrow {
+      getSerializedResultsFromFolder(latestResultPath, serializableIntResult)
     }
 
-    assertEquals(actualSerializableResult.value, deserializedIntResult.value)
-    assertEquals(actualSerializableResult.source, deserializedIntResult.source)
-    assertEquals(actualSerializableResult.identifier, deserializedIntResult.identifier)
+    assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
+    assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
+    assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
   }
 
   @Test
@@ -397,13 +397,13 @@ class SerializationHelpersTest {
     // Create dummy result to get correct result from latestResultPath
     val serializableIntResult = SerializableIntResult(2, actualIdentifier, actualSource)
 
-    val deserializedIntResult = assertDoesNotThrow {
-      getSerializedResultFromFileSystem(latestResultPath, serializableIntResult)
+    val deserializedIntResultList = assertDoesNotThrow {
+      getSerializedResultsFromFolder(latestResultPath, serializableIntResult)
     }
 
-    assertEquals(actualSerializableResult.value, deserializedIntResult.value)
-    assertEquals(actualSerializableResult.source, deserializedIntResult.source)
-    assertEquals(actualSerializableResult.identifier, deserializedIntResult.identifier)
+    assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
+    assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
+    assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
   }
 
   @Test
@@ -422,13 +422,13 @@ class SerializationHelpersTest {
     // Create dummy result to get correct result from latestResultPath
     val serializableIntResult = SerializableIntResult(2, actualIdentifier, actualSource)
 
-    val deserializedIntResult = assertDoesNotThrow {
-      getSerializedResultFromFileSystem(latestResultPath, serializableIntResult)
+    val deserializedIntResultList = assertDoesNotThrow {
+      getSerializedResultsFromFolder(latestResultPath, serializableIntResult)
     }
 
-    assertEquals(actualSerializableResult.value, deserializedIntResult.value)
-    assertEquals(actualSerializableResult.source, deserializedIntResult.source)
-    assertEquals(actualSerializableResult.identifier, deserializedIntResult.identifier)
+    assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
+    assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
+    assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
   }
 
   // endregion
