@@ -23,5 +23,5 @@ import kotlinx.serialization.Serializable
 data class SerializableBooleanResult(
     override val value: Boolean,
     override val identifier: String? = null,
-    override val source: String
+    override val source: String,
 ) : SerializableResult()

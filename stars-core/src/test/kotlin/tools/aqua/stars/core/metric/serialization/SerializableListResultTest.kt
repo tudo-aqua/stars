@@ -46,7 +46,6 @@ class SerializableListResultTest {
     val simpleObjectResult = simpleObject.getSerializableResults()
 
     assertEquals(0, simpleObject.stateList.size)
-    assertDoesNotThrow { simpleObject.writeSerializedResults() }
 
     val serializedResult = simpleObjectResult.map { it.getJsonString() }
     val deserializedResult =

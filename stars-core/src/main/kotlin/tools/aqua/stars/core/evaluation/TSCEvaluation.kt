@@ -24,7 +24,7 @@ import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
 import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
-import tools.aqua.stars.core.metric.utils.saveAsJSONFile
+import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -196,10 +196,10 @@ class TSCEvaluation<
         if (pathToPreviousRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
             it.compareToLastResults().forEach { resultComparison ->
-              saveAsJSONFile(resultComparison, false)
+              saveAsJsonFile(resultComparison, false)
             }
             it.compareToGroundTruthResults().forEach { resultComparison ->
-              saveAsJSONFile(resultComparison, true)
+              saveAsJsonFile(resultComparison, true)
             }
           }
         }
@@ -209,10 +209,10 @@ class TSCEvaluation<
         if (pathToGroundTruthRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
             it.compareToLastResults().forEach { resultComparison ->
-              saveAsJSONFile(resultComparison, false)
+              saveAsJsonFile(resultComparison, false)
             }
             it.compareToGroundTruthResults().forEach { resultComparison ->
-              saveAsJSONFile(resultComparison, true)
+              saveAsJsonFile(resultComparison, true)
             }
           }
         }

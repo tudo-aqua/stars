@@ -24,7 +24,7 @@ import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
 import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
-import tools.aqua.stars.core.metric.utils.saveAsJSONFile
+import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
 class SerializableIntResultTest {
 
@@ -48,14 +48,14 @@ class SerializableIntResultTest {
     val pathToPreviousRun = getLatestSerializationResultPath()
     if (pathToPreviousRun != null) {
       val resultComparisons = segmentCountMetric.compareResults(pathToPreviousRun)
-      resultComparisons.forEach { resultComparison -> saveAsJSONFile(resultComparison, false) }
+      resultComparisons.forEach { resultComparison -> saveAsJsonFile(resultComparison, false) }
     }
 
     // Check that there is a ground truth run with recorded results
     val pathToGroundTruthRun = getGroundTruthSerializationResultPath()
     if (pathToGroundTruthRun != null) {
       val resultComparisons = segmentCountMetric.compareResults(pathToGroundTruthRun)
-      resultComparisons.forEach { resultComparison -> saveAsJSONFile(resultComparison, true) }
+      resultComparisons.forEach { resultComparison -> saveAsJsonFile(resultComparison, true) }
     }
   }
 

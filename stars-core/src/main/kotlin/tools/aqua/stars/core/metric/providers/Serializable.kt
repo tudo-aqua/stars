@@ -53,6 +53,6 @@ interface Serializable {
   }
 
   fun writeSerializedResults() {
-    getSerializableResults().forEach { saveAsJSONFile(it) }
+    getSerializableResults().forEach { saveAsJsonFile(it) }
   }
 }

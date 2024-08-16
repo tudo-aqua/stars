@@ -27,32 +27,36 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedRes
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
-fun saveAsJSONFile(filePathWithExtension: String, jsonContent: String) {
-  File(filePathWithExtension).apply {
+fun saveAsJsonFile(filePathWithExtension: String, jsonContent: String): Path {
+  var filePath = filePathWithExtension
+  if (File(filePathWithExtension).extension == "") {
+    filePath += ".json"
+  }
+  val file = File(filePath)
+  check(!file.exists()) { "The file already exists! File at path: '$file'" }
+  file.apply {
+    parentFile.mkdirs()
     createNewFile()
     writeText(jsonContent)
   }
+  return file.toPath()
 }
 
-fun saveAsJSONFile(serializableResult: SerializableResult) {
-  val resultFolder =
-      "${serializedResultsFolder}/${applicationStartTimeString}/${serializableResult.source}"
-          .also { File(it).mkdirs() }
-  saveAsJSONFile(
-      "$resultFolder/${serializableResult.identifier?:DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json",
-      serializableResult.getJsonString())
+fun saveAsJsonFile(serializableResult: SerializableResult): Path {
+  val resultingPath =
+      "${serializedResultsFolder}/${applicationStartTimeString}/${serializableResult.source}/${serializableResult.identifier?:DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json"
+  saveAsJsonFile(resultingPath, serializableResult.getJsonString())
+  return File(resultingPath).toPath()
 }
 
-fun saveAsJSONFile(
+fun saveAsJsonFile(
     serializableResultComparison: SerializableResultComparison,
     comparedToGroundTruth: Boolean
-) {
-  val resultFolder =
-      "${comparedResultsFolder}/${applicationStartTimeString}/${if(comparedToGroundTruth){"/ground-truth"}else{"/last-evaluation"}}/${serializableResultComparison.source}"
-          .also { File(it).mkdirs() }
-  saveAsJSONFile(
-      "$resultFolder/comparison_${serializableResultComparison.identifier}.json",
-      serializableResultComparison.getJsonString())
+): Path {
+  val resultingPath =
+      "${comparedResultsFolder}/${applicationStartTimeString}/${if(comparedToGroundTruth){"/ground-truth"}else{"/last-evaluation"}}/${serializableResultComparison.source}/comparison_${serializableResultComparison.identifier}.json"
+  saveAsJsonFile(resultingPath, serializableResultComparison.getJsonString())
+  return File(resultingPath).toPath()
 }
 
 fun getLatestSerializationResultPath(): Path? {
@@ -77,12 +81,6 @@ fun getGroundTruthSerializationResultPath(): Path? {
 
 fun getSerializedResultFromFileSystem(
     rootFolderPath: Path,
-    serializableResults: List<SerializableResult>
-): List<SerializableResult> =
-    serializableResults.map { getSerializedResultFromFileSystem(rootFolderPath, it) }
-
-fun getSerializedResultFromFileSystem(
-    rootFolderPath: Path,
     serializableResult: SerializableResult
 ): SerializableResult {
   val serializedResultFile =
@@ -91,3 +89,9 @@ fun getSerializedResultFromFileSystem(
   check(serializedResultFile.exists())
   return SerializableResult.getJsonContentOfPath(serializedResultFile.toPath())
 }
+
+fun getSerializedResultFromFileSystem(
+    rootFolderPath: Path,
+    serializableResults: List<SerializableResult>
+): List<SerializableResult> =
+    serializableResults.map { getSerializedResultFromFileSystem(rootFolderPath, it) }
