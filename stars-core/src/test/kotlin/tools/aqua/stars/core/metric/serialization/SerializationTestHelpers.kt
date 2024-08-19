@@ -18,6 +18,8 @@
 package tools.aqua.stars.core.metric.serialization
 
 import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.utils.getJsonContentFromString
+import tools.aqua.stars.core.metric.utils.getJsonString
 
 /**
  * Serializes all[SerializableResult]s of the given [serializable] and deserializes them again.
@@ -29,4 +31,4 @@ fun serializeAndDeserialize(serializable: Serializable): List<SerializableResult
     serializable
         .getSerializableResults()
         .map { it.getJsonString() }
-        .map { SerializableResult.getJsonContentFromString(it) }
+        .map { getJsonContentFromString(it) }

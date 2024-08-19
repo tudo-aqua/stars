@@ -32,6 +32,7 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.application
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultDirectory
+import tools.aqua.stars.core.metric.utils.getJsonString
 import tools.aqua.stars.core.metric.utils.getLatestSerializationResultDirectory
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 

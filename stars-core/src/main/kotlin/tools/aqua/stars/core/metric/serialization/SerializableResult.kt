@@ -17,21 +17,21 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-import java.io.File
-import kotlin.io.path.exists
-import kotlin.io.path.extension
-import kotlin.io.path.isDirectory
-import kotlin.io.path.readText
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
+import tools.aqua.stars.core.metric.utils.getJsonString
 
+/**
+ * This interface defines the base structure for all [SerializableResult]s that are produced by
+ * implementing classes of the [Serializable] interface.
+ */
 @Serializable
 sealed class SerializableResult {
+  /** The identifier of this specific result. */
   abstract val identifier: String
+  /** The source (i.e. the metric) which produced this result. */
   abstract val source: String
+  /** The value that should be serialized. */
   abstract val value: Any
 
   abstract override fun equals(other: Any?): Boolean
@@ -40,8 +40,19 @@ sealed class SerializableResult {
 
   override fun toString(): String = getJsonString()
 
-  fun getJsonString(): String = jsonConfiguration.encodeToString(this)
-
+  /**
+   * Compares this [SerializableResult] to the given [otherResult] and produces a possible
+   * [SerializableResultComparison].
+   *
+   * No [SerializableResultComparison] is created when either:
+   * 1. The [SerializableResult]s have different implementation (i.e. have incomparable [value]s.
+   * 2. The [source] and [identifier] do not match.
+   *
+   * @param otherResult The [SerializableResult] to which this [SerializableResult] is compared
+   *   with.
+   * @return The [SerializableResultComparison] when the [SerializableResult]s are comparable.
+   *   Otherwise, null.
+   */
   fun compareTo(otherResult: SerializableResult): SerializableResultComparison? {
     if (javaClass.name != otherResult.javaClass.name) {
       return null
@@ -55,27 +66,5 @@ sealed class SerializableResult {
         source = source,
         oldValue = otherResult.value.toString(),
         newValue = value.toString())
-  }
-
-  companion object {
-    fun getJsonContentOfDirectory(directory: File): SerializableResult {
-
-      // Check if inputFilePath exists
-      check(directory.exists()) { "The given file path does not exist: ${directory.path}" }
-
-      // Check whether the given inputFilePath is a directory
-      check(!directory.isDirectory()) { "Cannot get InputStream for directory. Path: $directory" }
-
-      // If ".json"-file: Just return InputStream of file
-      if (directory.extension == "json") {
-        return getJsonContentFromString(directory.readText())
-      }
-
-      // If none of the supported file extensions is present, throw an Exception
-      error("Unexpected file extension: ${directory.extension}. Supported extensions: '.json'")
-    }
-
-    fun getJsonContentFromString(content: String): SerializableResult =
-        Json.decodeFromString<SerializableResult>(content)
   }
 }

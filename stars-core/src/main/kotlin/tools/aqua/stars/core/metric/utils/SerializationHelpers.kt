@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.metric.utils
 
 import java.io.File as File
+import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
@@ -26,6 +27,7 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.application
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
+// region saveAsJson()
 /**
  * Extension function for [String] to save it as a Json file at the [filePathWithExtension].
  *
@@ -83,6 +85,40 @@ fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean):
   getJsonString().saveAsJsonFile(resultingPath)
   return File(resultingPath)
 }
+// endregion
+
+// Get Json content from filesystem
+/**
+ * Returns a deserialized [SerializableResult] for the given [file].
+ *
+ * @param file The [File] from which the [SerializableResult] should be deserialized from.
+ * @return The deserialized [SerializableResult] from the given [file].
+ */
+fun getJsonContentOfFile(file: File): SerializableResult {
+  // Check if inputFilePath exists
+  check(file.exists()) { "The given file path does not exist: ${file.path}" }
+
+  // Check whether the given inputFilePath is a directory
+  check(!file.isDirectory()) { "Cannot get InputStream for directory. Path: $file" }
+
+  // If ".json"-file: Just return InputStream of file
+  if (file.extension == "json") {
+    return getJsonContentFromString(file.readText())
+  }
+
+  // If none of the supported file extensions is present, throw an Exception
+  error("Unexpected file extension: ${file.extension}. Supported extensions: '.json'")
+}
+
+/**
+ * Returns a deserialized [SerializableResult] for the given [String].
+ *
+ * @param content The [String] content from which the [SerializableResult] should be deserialized
+ *   from.
+ * @return The deserialized [SerializableResult] from the given [String].
+ */
+fun getJsonContentFromString(content: String): SerializableResult =
+    Json.decodeFromString<SerializableResult>(content)
 
 /**
  * Returns a [Map] of [String] to [List] of [SerializableResult] with the following structure:
@@ -95,38 +131,11 @@ fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean):
  */
 fun getSerializedResults(root: File?): Map<String, List<SerializableResult>> =
     root?.listFiles()?.associate { sourceDir ->
-      sourceDir.name to
-          sourceDir.listFiles().map { SerializableResult.getJsonContentOfDirectory(it) }
+      sourceDir.name to sourceDir.listFiles().map { getJsonContentOfFile(it) }
     } ?: emptyMap()
+// endregion
 
-/**
- * Returns the [File] pointing to the root directory of the ground truth result data set. When no
- * such directory was found, `null` is returned.
- *
- * @return A [File] pointing to the root directory of the ground truth result data set. Otherwise,
- *   null.
- */
-fun getGroundTruthSerializationResultDirectory(): File? =
-    File(serializedResultsFolder).listFiles()?.firstOrNull {
-      it.name == GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
-    }
-
-/**
- * Returns the [File] pointing to the root directory of the latest evaluation result directory. When
- * no such directory was found, `null` is returned.
- *
- * @return A [File] pointing to the root directory of the latest evaluation result directory.
- *   Otherwise, null.
- */
-fun getLatestSerializationResultDirectory(): File? =
-    File(serializedResultsFolder)
-        .listFiles()
-        ?.filter {
-          it.name != GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER &&
-              it.name != applicationStartTimeString
-        }
-        ?.maxByOrNull { it.name }
-
+// region Ground Truth
 /**
  * Holds the [Map] of all ground-truth sources with their deserialized [SerializableResult]s, or
  * null when the ground truth was not demanded.
@@ -140,6 +149,21 @@ val groundTruth: Map<String, List<SerializableResult>>
           ?: getSerializedResults(getGroundTruthSerializationResultDirectory()).also {
             groundTruthCache = it
           }
+
+/**
+ * Returns the [File] pointing to the root directory of the ground truth result data set. When no
+ * such directory was found, `null` is returned.
+ *
+ * @return A [File] pointing to the root directory of the ground truth result data set. Otherwise,
+ *   null.
+ */
+fun getGroundTruthSerializationResultDirectory(): File? =
+    File(serializedResultsFolder).listFiles()?.firstOrNull {
+      it.name == GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
+    }
+// endregion
+
+// region Latest Results
 
 /**
  * Holds the [Map] of all latest evaluation result sources with their deserialized
@@ -157,3 +181,20 @@ val latestResults: Map<String, List<SerializableResult>>
           ?: getSerializedResults(getLatestSerializationResultDirectory()).also {
             latestResultsCache = it
           }
+
+/**
+ * Returns the [File] pointing to the root directory of the latest evaluation result directory. When
+ * no such directory was found, `null` is returned.
+ *
+ * @return A [File] pointing to the root directory of the latest evaluation result directory.
+ *   Otherwise, null.
+ */
+fun getLatestSerializationResultDirectory(): File? =
+    File(serializedResultsFolder)
+        .listFiles()
+        ?.filter {
+          it.name != GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER &&
+              it.name != applicationStartTimeString
+        }
+        ?.maxByOrNull { it.name }
+// endregion
