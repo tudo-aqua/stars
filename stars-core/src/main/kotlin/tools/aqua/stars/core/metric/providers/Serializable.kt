@@ -19,6 +19,14 @@ package tools.aqua.stars.core.metric.providers
 
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 
+/**
+ * This interface should be implemented when a metric has a results that should be compared in
+ * later/previous evaluations.
+ */
 interface Serializable {
+  /**
+   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
+   * later/previous evaluations.
+   */
   fun getSerializableResults(): List<SerializableResult>
 }
