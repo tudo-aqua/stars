@@ -22,8 +22,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
+/** Tests the functionality for the [SerializableResult] class. */
 class SerializationResultTest {
 
+  /**
+   * Tests the correct functionality of [compareTo] of [SerializableResult]s where the values match.
+   */
   @Test
   fun `Test compareTo with SerializationResult that matches`() {
     val result = SerializableIntResult(1, "result 1", "Test case 1")
@@ -39,6 +43,10 @@ class SerializationResultTest {
     assertEquals(result.source, compareResult.source)
   }
 
+  /**
+   * Tests the correct functionality of [compareTo] of [SerializableResult]s where the values are
+   * different.
+   */
   @Test
   fun `Test compareTo with SerializationResult that has different value`() {
     val result = SerializableIntResult(1, "result 1", "Test case 1")
@@ -54,6 +62,10 @@ class SerializationResultTest {
     assertEquals(result.source, compareResult.source)
   }
 
+  /**
+   * Tests the correct functionality of [compareTo] of [SerializableResult]s where the identifiers
+   * are different.
+   */
   @Test
   fun `Test compareTo with SerializationResult that has different identifier`() {
     val result = SerializableIntResult(1, "result 1", "Test case 1")
@@ -64,6 +76,10 @@ class SerializationResultTest {
     assertNull(compareResult)
   }
 
+  /**
+   * Tests the correct functionality of [compareTo] of [SerializableResult]s where the sources are
+   * different.
+   */
   @Test
   fun `Test compareTo with SerializationResult that has different source`() {
     val result = SerializableIntResult(1, "result 1", "Test case 1")
