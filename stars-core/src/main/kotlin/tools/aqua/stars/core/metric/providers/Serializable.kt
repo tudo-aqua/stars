@@ -28,13 +28,10 @@ interface Serializable {
   fun getListOfSources(): List<String> = getSerializableResults().map { it.source }.distinct()
 
   fun compareToLastResults(): List<SerializableResultComparison> =
-      compareTo(
-          getSerializedResultsFromFolder(getLatestSerializationResultPath(), getListOfSources()))
+      compareTo(getSerializedResultsFromFolder(getLatestSerializationResultPath()))
 
   fun compareToGroundTruthResults(): List<SerializableResultComparison> =
-      compareTo(
-          getSerializedResultsFromFolder(
-              getGroundTruthSerializationResultPath(), getListOfSources()))
+      compareTo(getSerializedResultsFromFolder(getGroundTruthSerializationResultPath()))
 
   fun compareTo(otherResults: List<SerializableResult>): List<SerializableResultComparison> =
       getSerializableResults().compareTo(otherResults)

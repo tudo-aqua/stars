@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.metric.utils
 
-import java.io.File
+import java.io.File as File
 import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
@@ -27,7 +27,7 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedRes
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
-fun saveAsJsonFile(filePathWithExtension: String, jsonContent: String): Path {
+fun saveAsJsonFile(filePathWithExtension: String, jsonContent: String): File {
   var filePath = filePathWithExtension
   if (File(filePathWithExtension).extension == "") {
     filePath += ".json"
@@ -39,14 +39,14 @@ fun saveAsJsonFile(filePathWithExtension: String, jsonContent: String): Path {
     createNewFile()
     writeText(jsonContent)
   }
-  return file.toPath()
+  return file
 }
 
-fun saveAsJsonFile(serializableResult: SerializableResult): Path {
+fun saveAsJsonFile(serializableResult: SerializableResult): File {
   val resultingPath =
       "${serializedResultsFolder}/${applicationStartTimeString}/${serializableResult.source}/${serializableResult.identifier?:DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json"
   saveAsJsonFile(resultingPath, serializableResult.getJsonString())
-  return File(resultingPath).toPath()
+  return File(resultingPath)
 }
 
 fun saveAsJsonFile(
@@ -88,9 +88,9 @@ fun getGroundTruthSerializationResultPath(): File? {
 
 fun getSerializedResultsFromFolder(
     rootFolderPath: File?,
-    sources: List<String>
+    serializableResult: SerializableResult
 ): List<SerializableResult> =
-    sources.map { getSerializedResultsFromFolder(File("${rootFolderPath}/$it")) }.flatten()
+    getSerializedResultsFromFolder(File("${rootFolderPath}/${serializableResult.source}"))
 
 fun getSerializedResultsFromFolder(folderPath: File?): List<SerializableResult> =
     folderPath?.listFiles()?.map { SerializableResult.getJsonContentOfDirectory(it) } ?: emptyList()

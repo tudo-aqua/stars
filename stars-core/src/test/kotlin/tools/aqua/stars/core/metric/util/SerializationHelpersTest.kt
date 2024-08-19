@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.metric.util
 
 import java.io.File
-import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.exists
@@ -60,8 +59,8 @@ class SerializationHelpersTest {
 
     assertTrue(actualFile.exists())
     assertTrue(resultPath.exists())
-    assertEquals(actualFileContent, resultPath.toFile().readText())
-    assertEquals(actualFile.toPath(), resultPath)
+    assertEquals(actualFileContent, resultPath.readText())
+    assertEquals(actualFile, resultPath)
   }
 
   @Test
@@ -75,7 +74,7 @@ class SerializationHelpersTest {
     assertTrue(actualFile.exists())
     assertTrue(resultPath.exists())
     assertEquals(actualFileContent, actualFile.readText())
-    assertEquals(actualFile.toPath(), resultPath)
+    assertEquals(actualFile, resultPath)
   }
 
   @Test
@@ -100,20 +99,20 @@ class SerializationHelpersTest {
 
     // Check that the returned path really exists and contains the necessary keywords
     assertTrue(resultPath.exists())
-    assertTrue(resultPath.toFile().isFile)
-    assertTrue(resultPath.pathString.contains(actualIdentifier))
-    assertTrue(resultPath.pathString.contains(actualSource))
+    assertTrue(resultPath.isFile)
+    assertTrue(resultPath.absolutePath.contains(actualIdentifier))
+    assertTrue(resultPath.absolutePath.contains(actualSource))
 
     // Check that the returned path is equal to the expected path
     val actualFile =
         File(
             "$serializedResultsFolder/$applicationStartTimeString/${actualSource}/${actualIdentifier}.json")
-    assertEquals(actualFile, resultPath.toFile())
+    assertEquals(actualFile, resultPath)
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
 
     // Check that the content of the file is actually the Json string of the SerializableResult
-    assertEquals(actualSerializableResult.getJsonString(), resultPath.toFile().readText())
+    assertEquals(actualSerializableResult.getJsonString(), resultPath.readText())
   }
 
   @Test
@@ -125,20 +124,20 @@ class SerializationHelpersTest {
 
     // Check that the returned path really exists and contains the necessary keywords
     assertTrue(resultPath.exists())
-    assertTrue(resultPath.toFile().isFile)
-    assertTrue(resultPath.pathString.contains(DEFAULT_SERIALIZED_RESULT_IDENTIFIER))
-    assertTrue(resultPath.pathString.contains(actualSource))
+    assertTrue(resultPath.isFile)
+    assertTrue(resultPath.absolutePath.contains(DEFAULT_SERIALIZED_RESULT_IDENTIFIER))
+    assertTrue(resultPath.absolutePath.contains(actualSource))
 
     // Check that the returned path is equal to the expected path
     val actualFile =
         File(
             "$serializedResultsFolder/$applicationStartTimeString/${actualSource}/$DEFAULT_SERIALIZED_RESULT_IDENTIFIER.json")
-    assertEquals(actualFile, resultPath.toFile())
+    assertEquals(actualFile, resultPath)
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
 
     // Check that the content of the file is actually the Json string of the SerializableResult
-    assertEquals(actualSerializableResult.getJsonString(), resultPath.toFile().readText())
+    assertEquals(actualSerializableResult.getJsonString(), resultPath.readText())
   }
 
   // endregion
@@ -230,13 +229,13 @@ class SerializationHelpersTest {
     val latestResult = getLatestSerializationResultPath()
 
     assertNotNull(latestResult)
-    assertEquals(resultPath.parent.parent, latestResult)
+    assertEquals(resultPath.parentFile.parentFile, latestResult)
   }
 
   @Test
   fun `Test correct getting of latest SerializationResult with multiple last results`() {
     // Setup of previous SerializationResults for testing
-    lateinit var lastActualSavedPath: Path
+    lateinit var lastActualSavedPath: File
     for (i in 3 downTo 0) {
       val actualIdentifier = "actualIdentifier"
       val actualSource = "actualSource"
@@ -259,7 +258,7 @@ class SerializationHelpersTest {
     val latestResult = getLatestSerializationResultPath()
 
     assertNotNull(latestResult)
-    assertEquals(lastActualSavedPath.parent.parent, latestResult)
+    assertEquals(lastActualSavedPath.parentFile.parentFile, latestResult)
   }
 
   @Test
@@ -288,16 +287,15 @@ class SerializationHelpersTest {
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
-    val actualFilePath =
+    val actualFile =
         "$serializedResultsFolder/$groundTruthFolder/${actualSource}/${actualIdentifier}.json"
-    val lastActualSavedPath =
-        saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
+    val lastActualSavedPath = saveAsJsonFile(actualFile, actualSerializableResult.getJsonString())
 
     // Get Path to latest SerializationResult
     val latestResult = getGroundTruthSerializationResultPath()
 
     assertNotNull(latestResult)
-    assertEquals(lastActualSavedPath.parent.parent, latestResult)
+    assertEquals(lastActualSavedPath.parentFile.parentFile, latestResult)
   }
 
   @Test
