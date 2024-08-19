@@ -90,7 +90,7 @@ class SerializationHelpersTest {
     actualFileContent.saveAsJsonFile(actualFilePath)
 
     assertTrue(File(actualFilePath).exists())
-    assertThrows<IllegalStateException> { actualFileContent.saveAsJsonFile(actualFilePath) }
+    assertThrows<IllegalArgumentException> { actualFileContent.saveAsJsonFile(actualFilePath) }
   }
   // endregion
 
