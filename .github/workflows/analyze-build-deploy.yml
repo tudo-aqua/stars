@@ -81,7 +81,7 @@ jobs:
 
   unit-test:
     name: Run unit tests
-    needs: safety-check
+    needs: compile
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
