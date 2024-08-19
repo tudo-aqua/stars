@@ -19,6 +19,7 @@ package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
 
+/** This class implements the [SerializableResult] interface and story one [Int] as a [value]. */
 @Serializable
 data class SerializableIntResult(
     override val value: Int,
