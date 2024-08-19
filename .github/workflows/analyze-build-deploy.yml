@@ -40,8 +40,10 @@ jobs:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
 
-      - name: Compile Kotlin
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Compile Kotlin
         run: ./gradlew assemble
 
   detekt:
@@ -60,8 +62,10 @@ jobs:
         distribution: temurin
         java-version: ${{ env.JDK_VERSION }}
 
-    - name: Run Detekt
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
+
+    - name: Run Detekt
       run: ./gradlew detekt
 
     - name: Collect results
@@ -93,8 +97,10 @@ jobs:
         distribution: temurin
         java-version: ${{ env.JDK_VERSION }}
 
-    - name: Run tests
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
+
+    - name: Run tests
       run: ./gradlew test
 
     - name: Upload test results
@@ -123,8 +129,10 @@ jobs:
         distribution: temurin
         java-version: ${{ env.JDK_VERSION }}
 
-    - name: Run tests
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
+
+    - name: Run tests
       run: ./gradlew test
 
   spotless:
@@ -143,14 +151,15 @@ jobs:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Run Spotless checks
         id: spotlessCheck
-        uses: gradle/actions/setup-gradle@v4
         run: ./gradlew spotlessCheck
 
       - name: Apply Spotless fixes
         if: failure()
-        uses: gradle/actions/setup-gradle@v4
         run: ./gradlew spotlessApply
 
       - name: Generate diff
