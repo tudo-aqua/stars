@@ -80,6 +80,7 @@ jobs:
       with:
         sarif_file: sarif
         wait-for-processing: true
+        category: ${{ matrix.app }}
 
   unit-test:
     name: Run unit tests
