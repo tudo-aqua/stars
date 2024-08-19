@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-import java.nio.file.Path
+import java.io.File
 import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.isDirectory
@@ -63,21 +63,21 @@ sealed class SerializableResult {
   }
 
   companion object {
-    fun getJsonContentOfPath(file: Path): SerializableResult {
+    fun getJsonContentOfDirectory(directory: File): SerializableResult {
 
       // Check if inputFilePath exists
-      check(file.exists()) { "The given file path does not exist: ${file.toUri()}" }
+      check(directory.exists()) { "The given file path does not exist: ${directory.path}" }
 
       // Check whether the given inputFilePath is a directory
-      check(!file.isDirectory()) { "Cannot get InputStream for directory. Path: $file" }
+      check(!directory.isDirectory()) { "Cannot get InputStream for directory. Path: $directory" }
 
       // If ".json"-file: Just return InputStream of file
-      if (file.extension == "json") {
-        return getJsonContentFromString(file.readText())
+      if (directory.extension == "json") {
+        return getJsonContentFromString(directory.readText())
       }
 
       // If none of the supported file extensions is present, throw an Exception
-      error("Unexpected file extension: ${file.extension}. Supported extensions: '.json'")
+      error("Unexpected file extension: ${directory.extension}. Supported extensions: '.json'")
     }
 
     fun getJsonContentFromString(content: String): SerializableResult =

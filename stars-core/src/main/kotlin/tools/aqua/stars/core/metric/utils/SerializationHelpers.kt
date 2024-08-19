@@ -59,32 +59,38 @@ fun saveAsJsonFile(
   return File(resultingPath).toPath()
 }
 
-fun getLatestSerializationResultPath(): Path? {
+fun getLatestSerializationResultPath(): File? {
   val resultFolder = File(serializedResultsFolder)
   return resultFolder
       .listFiles()
       ?.filter { it.name != groundTruthFolder && it.name != applicationStartTimeString }
       ?.sortedByDescending { it.name }
       ?.firstOrNull()
-      ?.toPath()
 }
 
-fun getGroundTruthSerializationResultPath(): Path? {
+fun getSourcesOfLatestSerializationResults(): List<String>? =
+    getSourcesOfDirectory(getLatestSerializationResultPath())
+
+fun getSourcesOfGroundTruthSerializationResults(): List<String>? =
+    getSourcesOfDirectory(getGroundTruthSerializationResultPath())
+
+private fun getSourcesOfDirectory(directory: File?): List<String>? =
+    directory?.listFiles()?.filter { it.isDirectory }?.map { it.name }
+
+fun getGroundTruthSerializationResultPath(): File? {
   val resultFolder = File(serializedResultsFolder)
   return resultFolder
       .listFiles()
       ?.filter { it.name == groundTruthFolder }
       ?.sortedByDescending { it.name }
       ?.firstOrNull()
-      ?.toPath()
 }
 
 fun getSerializedResultsFromFolder(
-    rootFolderPath: Path?,
-    serializableResult: SerializableResult
+    rootFolderPath: File?,
+    sources: List<String>
 ): List<SerializableResult> =
-    getSerializedResultsFromFolder(File("${rootFolderPath}/${serializableResult.source}").toPath())
+    sources.map { getSerializedResultsFromFolder(File("${rootFolderPath}/$it")) }.flatten()
 
-fun getSerializedResultsFromFolder(folderPath: Path?): List<SerializableResult> =
-    folderPath?.toFile()?.listFiles()?.map { SerializableResult.getJsonContentOfPath(it.toPath()) }
-        ?: emptyList()
+fun getSerializedResultsFromFolder(folderPath: File?): List<SerializableResult> =
+    folderPath?.listFiles()?.map { SerializableResult.getJsonContentOfDirectory(it) } ?: emptyList()
