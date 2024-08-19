@@ -45,7 +45,7 @@ object ApplicationConstantsHolder {
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
 
-  /** Holds the list of all currently registered [Logger]s. */
+  /** Holds the [MutableList] of all currently registered [Logger]s. */
   val activeLoggers: MutableList<Logger> = mutableListOf()
 
   init {
@@ -53,7 +53,7 @@ object ApplicationConstantsHolder {
         .addShutdownHook(
             Thread {
               LogManager.getLogManager().reset()
-              activeLoggers.forEach { it.handlers.forEach { it.close() } }
+              activeLoggers.forEach { it.handlers.forEach { handler -> handler.close() } }
               File(TEST_LOG_FOLDER).deleteRecursively()
             })
   }
