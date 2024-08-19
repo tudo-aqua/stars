@@ -58,6 +58,27 @@ jobs:
         sarif_file: sarif
         wait-for-processing: true
 
+  compile:
+    name: Compile Kotlin code
+    needs: detekt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for version number generation
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JDK_VERSION }}
+
+      - name: Compile Kotlin
+        uses: gradle/gradle-build-action@v3.5.0
+        with:
+          arguments: assemble
+
   unit-test:
     name: Run unit tests
     needs: safety-check
