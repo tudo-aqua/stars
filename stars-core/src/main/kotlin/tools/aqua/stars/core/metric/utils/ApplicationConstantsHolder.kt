@@ -44,10 +44,14 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized metric results produced in evaluation. */
   private const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
 
-  /** Folder directory for serialized results produced in evaluation. */
+  /** Folder directory for serialized compared results produced in evaluation. */
   private const val COMPARED_RESULTS_FOLDER = "compared-results"
 
+  /** Folder directory for serialized ground-truth result data set. */
   const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth"
+
+  /** Folder directory for serialized latest evaluation result. */
+  const val LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "latest-evaluation"
 
   /** Holds the folder name for the logs. */
   val logFolder: String
@@ -61,12 +65,18 @@ object ApplicationConstantsHolder {
   val comparedResultsFolder: String
     get() = if (isTestRun()) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
 
+  /** Holds the [Json] configuration that is used throughout the project. */
   val jsonConfiguration = Json {
     prettyPrint = true
     isLenient = true
   }
 
+  /** Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data. */
   var resultsReproducedFromGroundTruth: Boolean? = null
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the latest evaluation
+   * results.
+   */
   var resultsReproducedFromLatestRun: Boolean? = null
 
   init {
@@ -75,9 +85,9 @@ object ApplicationConstantsHolder {
             Thread {
               LogManager.getLogManager().reset()
               File(TEST_LOG_FOLDER).deleteRecursively()
-              // File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
-              // File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
-              // File("test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER").deleteRecursively()
+              File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
+              File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
+              File("test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER").deleteRecursively()
             })
   }
 

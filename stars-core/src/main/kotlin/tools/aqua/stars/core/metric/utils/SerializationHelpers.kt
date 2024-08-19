@@ -21,6 +21,7 @@ import java.io.File as File
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
@@ -76,7 +77,7 @@ fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean):
   val resultingPath =
       "${comparedResultsFolder}/" +
           "${applicationStartTimeString}/" +
-          "${if(comparedToGroundTruth){"/ground-truth"}else{"/latest-evaluation"}}/" +
+          "${if(comparedToGroundTruth){"/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER"}else{"/$LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}}/" +
           "${source}/" +
           "[${verdict.shortString}]_comparison_${identifier}.json"
   getJsonString().saveAsJsonFile(resultingPath)

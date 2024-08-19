@@ -27,6 +27,7 @@ import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.EQUAL_RESULTS
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
@@ -147,7 +148,7 @@ class SerializationHelpersTest {
         File(
             "$comparedResultsFolder/" +
                 "$applicationStartTimeString/" +
-                "latest-evaluation/" +
+                "$LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER/" +
                 "$actualSource/" +
                 "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json")
     assertTrue(actualFile.exists())
@@ -182,7 +183,8 @@ class SerializationHelpersTest {
         File(
             "$comparedResultsFolder/" +
                 "$applicationStartTimeString/" +
-                "ground-truth/$actualSource/" +
+                "$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/" +
+                "$actualSource/" +
                 "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json")
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
