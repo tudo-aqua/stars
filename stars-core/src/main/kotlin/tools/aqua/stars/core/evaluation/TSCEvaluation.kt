@@ -86,6 +86,8 @@ class TSCEvaluation<
    *
    * @param writePlots (Default: ``true``) Whether to write plots after the analysis.
    * @param writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
+   * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare
+   *   them to previous runs after the analysis.
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun runEvaluation(
@@ -187,29 +189,32 @@ class TSCEvaluation<
         metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
       }
 
-      // Write JSON files of all Stateful metrics
+      // Write JSON files of all Serializable metrics
       if (writeSerializedResults) {
-        println("Writing serialized results")
-        metricProviders.filterIsInstance<Serializable>().let {
-          it.forEach { t -> t.writeSerializedResults() }
+        val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+        if (serializableMetrics.any()) {
+          println("Writing serialized results")
+          metricProviders.filterIsInstance<Serializable>().let {
+            it.forEach { t -> t.writeSerializedResults() }
 
-          it.compareToGroundTruthResults()
-              .also { comparisonResults ->
-                resultsReproducedFromGroundTruth =
-                    comparisonResults.all { t ->
-                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                    }
-              }
-              .forEach { resultComparison -> resultComparison.saveAsJsonFile(true) }
+            it.compareToGroundTruthResults()
+                .also { comparisonResults ->
+                  resultsReproducedFromGroundTruth =
+                      comparisonResults.all { t ->
+                        t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+                      }
+                }
+                .forEach { resultComparison -> resultComparison.saveAsJsonFile(true) }
 
-          it.compareToLatestResults()
-              .also { comparisonResults ->
-                resultsReproducedFromLatestRun =
-                    comparisonResults.all { t ->
-                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                    }
-              }
-              .forEach { resultComparison -> resultComparison.saveAsJsonFile(false) }
+            it.compareToLatestResults()
+                .also { comparisonResults ->
+                  resultsReproducedFromLatestRun =
+                      comparisonResults.all { t ->
+                        t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+                      }
+                }
+                .forEach { resultComparison -> resultComparison.saveAsJsonFile(false) }
+          }
         }
       }
     } finally {
