@@ -17,26 +17,36 @@
 
 package tools.aqua.stars.core.metric.serialization
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import tools.aqua.stars.core.*
+import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
+import tools.aqua.stars.core.types.SegmentType
 
+/** Tests the [Serializable] interface implementation for the [SegmentCountMetric]. */
 class SegmentCountMetricSerializationTest {
 
-  //  @Test
-  //  fun `Test serialization of evaluation of single segment`() {
-  //    val simpleSegment1 = SimpleSegment()
-  //
-  //    val segmentCountMetric =
-  //        SegmentCountMetric<
-  //            SimpleEntity,
-  //            SimpleTickData,
-  //            SimpleSegment,
-  //            SimpleTickDataUnit,
-  //            SimpleTickDataDifference>()
-  //
-  //    segmentCountMetric.evaluate(simpleSegment1)
-  //
-  //    val segmentCountResults = segmentCountMetric.getSerializableResults()
-  //    val deserializedResults = serializeAndDeserialize(segmentCountMetric)
-  //    //    deserializedResults.forEach { segmentCountMetric.compareTo() }
-  //  }
+  /**
+   * Tests the correct (de)serialization of the [SegmentCountMetric] after evaluating one
+   * [SegmentType].
+   */
+  @Test
+  fun `Test serialization of evaluation of single segment`() {
+    val simpleSegment = SimpleSegment()
+
+    val segmentCountMetric =
+        SegmentCountMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    // Evaluate to populate segmentCountMetric with a correct value
+    segmentCountMetric.evaluate(simpleSegment)
+
+    val segmentCountResults = segmentCountMetric.getSerializableResults()
+    val deserializedResults = serializeAndDeserialize(segmentCountMetric)
+    assertEquals(segmentCountResults, deserializedResults)
+  }
 }
