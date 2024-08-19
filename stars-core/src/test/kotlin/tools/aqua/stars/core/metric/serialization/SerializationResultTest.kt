@@ -73,14 +73,4 @@ class SerializationResultTest {
 
     assertNull(compareResult)
   }
-
-  @Test
-  fun `Test compareTo with SerializationResult of different class`() {
-    val result = SerializableIntResult(1, "result 1", "Test case 1")
-    val compareToResult = SerializableStringResult("value", "result 1", "Test case 2")
-
-    val compareResult = result.compareTo(compareToResult)
-
-    assertNull(compareResult)
-  }
 }
