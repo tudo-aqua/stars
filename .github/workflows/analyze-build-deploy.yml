@@ -41,9 +41,8 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Compile Kotlin
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          arguments: assemble
+        uses: gradle/actions/setup-gradle@v4
+        run: ./gradlew assemble
 
   detekt:
     name: Generate Detekt report
@@ -62,9 +61,8 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run Detekt
-      uses: gradle/gradle-build-action@v3.5.0
-      with:
-        arguments: detekt
+      uses: gradle/actions/setup-gradle@v4
+      run: ./gradlew detekt
 
     - name: Collect results
       shell: sh
@@ -96,9 +94,8 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run tests
-      uses: gradle/gradle-build-action@v3.5.0
-      with:
-        arguments: test
+      uses: gradle/actions/setup-gradle@v4
+      run: ./gradlew test
 
     - name: Upload test results
       uses: mikepenz/action-junit-report@v4
@@ -127,9 +124,8 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run tests
-      uses: gradle/gradle-build-action@v3.5.0
-      with:
-        arguments: test
+      uses: gradle/actions/setup-gradle@v4
+      run: ./gradlew test
 
   spotless:
     name: Run Spotless
@@ -149,15 +145,13 @@ jobs:
 
       - name: Run Spotless checks
         id: spotlessCheck
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          arguments: spotlessCheck
+        uses: gradle/actions/setup-gradle@v4
+        run: ./gradlew spotlessCheck
 
       - name: Apply Spotless fixes
         if: failure()
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          arguments: spotlessApply
+        uses: gradle/actions/setup-gradle@v4
+        run: ./gradlew spotlessApply
 
       - name: Generate diff
         if: failure()
