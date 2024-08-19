@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.metric.utils
 
 import java.io.File as File
-import java.nio.file.Path
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
@@ -26,9 +25,9 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.application
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
-fun saveAsJsonFile(filePathWithExtension: String, jsonContent: String): File {
+fun String.saveAsJsonFile(filePathWithExtension: String): File {
   var filePath = filePathWithExtension
-  if (File(filePathWithExtension).extension == "") {
+  if (File(filePathWithExtension).extension.isBlank()) {
     filePath += ".json"
   }
   val file = File(filePath)
@@ -36,30 +35,27 @@ fun saveAsJsonFile(filePathWithExtension: String, jsonContent: String): File {
   file.apply {
     parentFile.mkdirs()
     createNewFile()
-    writeText(jsonContent)
+    writeText(this@saveAsJsonFile)
   }
   return file
 }
 
-fun saveAsJsonFile(serializableResult: SerializableResult): File {
+fun SerializableResult.saveAsJsonFile(): File {
   val resultingPath =
-      "${serializedResultsFolder}/${applicationStartTimeString}/${serializableResult.source}/${serializableResult.identifier}.json"
-  saveAsJsonFile(resultingPath, serializableResult.getJsonString())
+      "${serializedResultsFolder}/${applicationStartTimeString}/${source}/${identifier}.json"
+  getJsonString().saveAsJsonFile(resultingPath)
   return File(resultingPath)
 }
 
-fun saveAsJsonFile(
-    serializableResultComparison: SerializableResultComparison,
-    comparedToGroundTruth: Boolean
-): Path {
+fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean): File {
   val resultingPath =
       "${comparedResultsFolder}/" +
           "${applicationStartTimeString}/" +
           "${if(comparedToGroundTruth){"/ground-truth"}else{"/latest-evaluation"}}/" +
-          "${serializableResultComparison.source}/" +
-          "[${serializableResultComparison.verdict.shortString}]_comparison_${serializableResultComparison.identifier}.json"
-  saveAsJsonFile(resultingPath, serializableResultComparison.getJsonString())
-  return File(resultingPath).toPath()
+          "${source}/" +
+          "[${verdict.shortString}]_comparison_${identifier}.json"
+  getJsonString().saveAsJsonFile(resultingPath)
+  return File(resultingPath)
 }
 
 fun getSourcesOfLatestSerializationResults(): List<String>? =

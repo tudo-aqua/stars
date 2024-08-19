@@ -24,6 +24,12 @@ enum class SerializableResultComparisonVerdict(val shortString: String) {
   /** Result file with the same identifier has been found but the results are not equal. */
   NOT_EQUAL_RESULTS("NEQ"),
 
+  /** Source found in the compared results is missing. */
+  MISSING_METRIC_SOURCE("MIS"),
+
+  /** No matching source has been found in the compared results. */
+  NEW_METRIC_SOURCE("NEW"),
+
   /** Identifier found in the compared results is missing. */
   MISSING_IDENTIFIER("MIS"),
 

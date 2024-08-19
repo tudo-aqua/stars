@@ -20,26 +20,16 @@ package tools.aqua.stars.core.metric.utils
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 
-fun Serializable.compareToLatestResults(): List<SerializableResultComparison> =
-    getSerializableResults().groupBy { it.source }.compareTo(latestResults)
+fun List<Serializable>.compareToLatestResults(): List<SerializableResultComparison> =
+    map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(latestResults)
 
-fun Serializable.compareToGroundTruthResults(): List<SerializableResultComparison> =
-    getSerializableResults().groupBy { it.source }.compareTo(groundTruth)
+fun List<Serializable>.compareToGroundTruthResults(): List<SerializableResultComparison> =
+    map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(groundTruth)
 
-// fun Serializable.compareTo(otherResults: List<SerializableResult>):
-// List<SerializableResultComparison> =
-//  getSerializableResults().compareTo(otherResults)
-//
-// fun Serializable.compareTo(otherResult: SerializableResult): SerializableResultComparison? =
-//  getSerializableResults().compareTo(otherResult)
-//
-// fun Serializable.compareResults(resultFolder: File): List<SerializableResultComparison> =
-//  getSerializableResults().compareTo(getSerializedResultsFromSourceFolder(resultFolder))
-
-fun Serializable.getJsonStrings(): List<String> {
-  return getSerializableResults().map { it.getJsonString() }
-}
+// fun Serializable.getJsonStrings(): List<String> {
+//  return getSerializableResults().map { it.getJsonString() }
+// }
 
 fun Serializable.writeSerializedResults() {
-  getSerializableResults().forEach { saveAsJsonFile(it) }
+  getSerializableResults().forEach { it.saveAsJsonFile() }
 }

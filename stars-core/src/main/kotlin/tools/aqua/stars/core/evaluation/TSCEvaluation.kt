@@ -22,7 +22,10 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
 import tools.aqua.stars.core.metric.utils.*
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.resultsReproducedFromGroundTruth
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.resultsReproducedFromLatestRun
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -187,32 +190,26 @@ class TSCEvaluation<
       // Write JSON files of all Stateful metrics
       if (writeSerializedResults) {
         println("Writing serialized results")
-        metricProviders.filterIsInstance<Serializable>().forEach { it.writeSerializedResults() }
+        metricProviders.filterIsInstance<Serializable>().let {
+          it.forEach { t -> t.writeSerializedResults() }
 
-        // Check that there is a previous run with recorded results
-        val pathToPreviousRun = getLatestSerializationResultDirectory()
-        if (pathToPreviousRun != null) {
-          metricProviders.filterIsInstance<Serializable>().forEach {
-            it.compareToLatestResults().forEach { resultComparison ->
-              saveAsJsonFile(resultComparison, false)
-            }
-            it.compareToGroundTruthResults().forEach { resultComparison ->
-              saveAsJsonFile(resultComparison, true)
-            }
-          }
-        }
+          it.compareToGroundTruthResults()
+              .also { comparisonResults ->
+                resultsReproducedFromGroundTruth =
+                    comparisonResults.all { t ->
+                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+                    }
+              }
+              .forEach { resultComparison -> resultComparison.saveAsJsonFile(true) }
 
-        // Check that there is a ground truth run with recorded results
-        val pathToGroundTruthRun = getGroundTruthSerializationResultDirectory()
-        if (pathToGroundTruthRun != null) {
-          metricProviders.filterIsInstance<Serializable>().forEach {
-            it.compareToLatestResults().forEach { resultComparison ->
-              saveAsJsonFile(resultComparison, false)
-            }
-            it.compareToGroundTruthResults().forEach { resultComparison ->
-              saveAsJsonFile(resultComparison, true)
-            }
-          }
+          it.compareToLatestResults()
+              .also { comparisonResults ->
+                resultsReproducedFromLatestRun =
+                    comparisonResults.all { t ->
+                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+                    }
+              }
+              .forEach { resultComparison -> resultComparison.saveAsJsonFile(false) }
         }
       }
     } finally {
@@ -220,6 +217,11 @@ class TSCEvaluation<
       println("Closing Loggers")
       metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
       closeLogger()
+
+      if (writeSerializedResults) {
+        println("Results reproduced from ground truth: $resultsReproducedFromGroundTruth")
+        println("Results reproduced from latest run: $resultsReproducedFromLatestRun")
+      }
     }
   }
 }

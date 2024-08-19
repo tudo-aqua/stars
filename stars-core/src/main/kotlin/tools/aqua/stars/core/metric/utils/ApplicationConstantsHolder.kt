@@ -66,6 +66,9 @@ object ApplicationConstantsHolder {
     isLenient = true
   }
 
+  var resultsReproducedFromGroundTruth: Boolean? = null
+  var resultsReproducedFromLatestRun: Boolean? = null
+
   init {
     Runtime.getRuntime()
         .addShutdownHook(

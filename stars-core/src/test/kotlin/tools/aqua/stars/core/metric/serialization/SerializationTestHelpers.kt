@@ -17,21 +17,7 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-import tools.aqua.stars.core.*
-import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
-import tools.aqua.stars.core.metric.providers.Serializable
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
-import tools.aqua.stars.core.metric.utils.compareToGroundTruthResults
-import tools.aqua.stars.core.metric.utils.compareToLatestResults
-import tools.aqua.stars.core.metric.utils.getJsonStrings
-
-fun serializeAndDeserialize(serializable: Serializable): List<SerializableResult> =
-    serializable.getJsonStrings().map { SerializableResult.getJsonContentFromString(it) }
-
-
-fun main() {
-    val t1 = SegmentCountMetric<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference>().compareToLatestResults()
-    val t2 = SegmentCountMetric<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference>().compareToGroundTruthResults()
-    println(ApplicationConstantsHolder.logFolder)
-    t1
-}
+// import tools.aqua.stars.core.metric.utils.getJsonStrings
+//
+// fun serializeAndDeserialize(serializable: Serializable): List<SerializableResult> =
+//    serializable.getJsonStrings().map { SerializableResult.getJsonContentFromString(it) }

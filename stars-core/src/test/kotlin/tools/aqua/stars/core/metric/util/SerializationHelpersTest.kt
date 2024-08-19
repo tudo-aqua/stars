@@ -21,12 +21,10 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.exists
-import kotlin.io.path.pathString
 import kotlin.test.*
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.metric.serialization.SerializableIntResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict
@@ -53,7 +51,7 @@ class SerializationHelpersTest {
     val actualFileContent = "{}"
     val actualFile = File(actualFilePath)
 
-    val resultPath = saveAsJsonFile(actualFilePath, actualFileContent)
+    val resultPath = actualFileContent.saveAsJsonFile(actualFilePath)
 
     assertTrue(actualFile.exists())
     assertTrue(resultPath.exists())
@@ -67,7 +65,7 @@ class SerializationHelpersTest {
     val actualFileContent = "{}"
     val actualFile = File("$actualFilePath.json")
 
-    val resultPath = saveAsJsonFile(actualFilePath, actualFileContent)
+    val resultPath = actualFileContent.saveAsJsonFile(actualFilePath)
 
     assertTrue(actualFile.exists())
     assertTrue(resultPath.exists())
@@ -79,10 +77,10 @@ class SerializationHelpersTest {
   fun `Test error when wanting to override SerializableResult with saveAsJsonFile()`() {
     val actualFilePath = "$serializedResultsFolder/testFile.json"
     val actualFileContent = "{}"
-    saveAsJsonFile(actualFilePath, actualFileContent)
+    actualFileContent.saveAsJsonFile(actualFilePath)
 
     assertTrue(File(actualFilePath).exists())
-    assertThrows<IllegalStateException> { saveAsJsonFile(actualFilePath, actualFileContent) }
+    assertThrows<IllegalStateException> { actualFileContent.saveAsJsonFile(actualFilePath) }
   }
 
   // endregion
@@ -93,7 +91,7 @@ class SerializationHelpersTest {
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
-    val resultPath = saveAsJsonFile(actualSerializableResult)
+    val resultPath = actualSerializableResult.saveAsJsonFile()
 
     // Check that the returned path really exists and contains the necessary keywords
     assertTrue(resultPath.exists())
@@ -128,24 +126,24 @@ class SerializationHelpersTest {
             actualIdentifier,
             "oldValue",
             "newValue")
-    val resultPath = saveAsJsonFile(actualSerializableResultComparison, false)
+    val resultPath = actualSerializableResultComparison.saveAsJsonFile(false)
 
     // Check that the returned path really exists and contains the necessary keywords
     assertTrue(resultPath.exists())
-    assertTrue(resultPath.toFile().isFile)
-    assertTrue(resultPath.pathString.contains(actualIdentifier))
-    assertTrue(resultPath.pathString.contains(actualSource))
+    assertTrue(resultPath.isFile)
+    assertTrue(resultPath.absolutePath.contains(actualIdentifier))
+    assertTrue(resultPath.absolutePath.contains(actualSource))
 
     // Check that the returned path is equal to the expected path
     val actualFile =
         File(
             "$comparedResultsFolder/$applicationStartTimeString/latest-evaluation/$actualSource/comparison_$actualIdentifier.json")
-    assertEquals(actualFile, resultPath.toFile())
+    assertEquals(actualFile, resultPath)
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
 
     // Check that the content of the file is actually the Json string of the SerializableResult
-    assertEquals(actualSerializableResultComparison.getJsonString(), resultPath.toFile().readText())
+    assertEquals(actualSerializableResultComparison.getJsonString(), resultPath.readText())
   }
 
   @Test
@@ -159,24 +157,24 @@ class SerializationHelpersTest {
             actualIdentifier,
             "oldValue",
             "newValue")
-    val resultPath = saveAsJsonFile(actualSerializableResultComparison, true)
+    val resultPath = actualSerializableResultComparison.saveAsJsonFile(true)
 
     // Check that the returned path really exists and contains the necessary keywords
     assertTrue(resultPath.exists())
-    assertTrue(resultPath.toFile().isFile)
-    assertTrue(resultPath.pathString.contains(actualIdentifier))
-    assertTrue(resultPath.pathString.contains(actualSource))
+    assertTrue(resultPath.isFile)
+    assertTrue(resultPath.absolutePath.contains(actualIdentifier))
+    assertTrue(resultPath.absolutePath.contains(actualSource))
 
     // Check that the returned path is equal to the expected path
     val actualFile =
         File(
             "$comparedResultsFolder/$applicationStartTimeString/ground-truth/$actualSource/comparison_$actualIdentifier.json")
-    assertEquals(actualFile, resultPath.toFile())
+    assertEquals(actualFile, resultPath)
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
 
     // Check that the content of the file is actually the Json string of the SerializableResult
-    assertEquals(actualSerializableResultComparison.getJsonString(), resultPath.toFile().readText())
+    assertEquals(actualSerializableResultComparison.getJsonString(), resultPath.readText())
   }
 
   // endregion
@@ -196,7 +194,7 @@ class SerializationHelpersTest {
     val actualFileContent = actualSerializableResult.getJsonString()
     val actualFilePath =
         "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
-    val resultPath = saveAsJsonFile(actualFilePath, actualFileContent)
+    val resultPath = actualFileContent.saveAsJsonFile(actualFilePath)
 
     // Get Path to latest SerializationResult
     val latestResult = getLatestSerializationResultDirectory()
@@ -223,7 +221,7 @@ class SerializationHelpersTest {
       // Therefore, save the previous to last result path.
       if (i == 1) {
         lastActualSavedPath =
-            saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
+            actualSerializableResult.getJsonString().saveAsJsonFile(actualFilePath)
       }
     }
 
@@ -242,7 +240,7 @@ class SerializationHelpersTest {
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
     val actualFilePath =
         "$serializedResultsFolder/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/${actualSource}/${actualIdentifier}.json"
-    saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
+    actualSerializableResult.getJsonString().saveAsJsonFile(actualFilePath)
 
     // Get Path to latest SerializationResult (ground truth SerializationResult should be ignored)
     val latestResult = getLatestSerializationResultDirectory()
@@ -262,7 +260,7 @@ class SerializationHelpersTest {
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
     val actualFile =
         "$serializedResultsFolder/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/${actualSource}/${actualIdentifier}.json"
-    val lastActualSavedPath = saveAsJsonFile(actualFile, actualSerializableResult.getJsonString())
+    val lastActualSavedPath = actualSerializableResult.getJsonString().saveAsJsonFile(actualFile)
 
     // Get Path to latest SerializationResult
     val latestResult = getGroundTruthSerializationResultDirectory()
@@ -284,7 +282,7 @@ class SerializationHelpersTest {
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
     val actualFilePath =
         "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
-    saveAsJsonFile(actualFilePath, actualFileContent)
+    actualFileContent.saveAsJsonFile(actualFilePath)
 
     // Get Path to ground truth SerializationResult (latest SerializationResult should be ignored)
     val latestResult = getGroundTruthSerializationResultDirectory()
@@ -308,7 +306,7 @@ class SerializationHelpersTest {
     val actualFileContent = actualSerializableResult.getJsonString()
     val actualFilePath =
         "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
-    saveAsJsonFile(actualFilePath, actualFileContent)
+    actualFileContent.saveAsJsonFile(actualFilePath)
 
     val latestResultPath = getLatestSerializationResultDirectory()
     assertNotNull(latestResultPath)
@@ -330,7 +328,7 @@ class SerializationHelpersTest {
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
     val actualFilePath =
         "$serializedResultsFolder/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/${actualSource}/${actualIdentifier}.json"
-    saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
+    actualSerializableResult.getJsonString().saveAsJsonFile(actualFilePath)
 
     val latestResultPath = getGroundTruthSerializationResultDirectory()
     assertNotNull(latestResultPath)
@@ -347,36 +345,4 @@ class SerializationHelpersTest {
     assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
   }
   // endregion
-
-  @Test
-  fun `Test PLACEHOLDER1`() {
-    // Create SegmentCountMetric with segmentCount = 1
-    val metric =
-        SegmentCountMetric<
-                SimpleEntity,
-                SimpleTickData,
-                SimpleSegment,
-                SimpleTickDataUnit,
-                SimpleTickDataDifference>()
-            .also { it.evaluate(SimpleSegment()) }
-
-    // Save the results of the metric
-    metric.writeSerializedResults()
-
-    val diffToGroundTruth = metric.compareToGroundTruthResults()
-    val diffToLastest = metric.compareToLatestResults()
-
-    diffToGroundTruth.forEach { saveAsJsonFile(it, true) }
-    diffToLastest.forEach { saveAsJsonFile(it, false) }
-
-    //    assertTrue { diffToGroundTruth.all { it.verdict ==
-    // SerializableResultComparisonVerdict.EQUAL_RESULTS } }
-    //    assertTrue { diffToLastest.all { it.verdict ==
-    // SerializableResultComparisonVerdict.EQUAL_RESULTS } }
-  }
-
-  @Test
-  fun a () {
-    println(ApplicationConstantsHolder.logFolder)
-  }
 }

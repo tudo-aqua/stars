@@ -20,11 +20,13 @@ package tools.aqua.stars.core.metric.utils
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.MISSING_IDENTIFIER
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.MISSING_METRIC_SOURCE
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.NEW_IDENTIFIER
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.NEW_METRIC_SOURCE
 
-fun List<SerializableResult>.compareTo(
-    otherResult: SerializableResult
-): SerializableResultComparison? = this.firstNotNullOfOrNull { it.compareTo(otherResult) }
+// fun List<SerializableResult>.compareTo(
+//    otherResult: SerializableResult
+// ): SerializableResultComparison? = this.firstNotNullOfOrNull { it.compareTo(otherResult) }
 
 fun Map<String, List<SerializableResult>>.compareTo(
     otherResults: Map<String, List<SerializableResult>>
@@ -44,7 +46,7 @@ fun Map<String, List<SerializableResult>>.compareTo(
           .map { key ->
             checkNotNull(this[key]).map { res ->
               SerializableResultComparison(
-                  verdict = NEW_IDENTIFIER,
+                  verdict = NEW_METRIC_SOURCE,
                   source = res.source,
                   identifier = res.identifier,
                   newValue = res.value.toString(),
@@ -59,7 +61,7 @@ fun Map<String, List<SerializableResult>>.compareTo(
           .map { key ->
             checkNotNull(otherResults[key]).map { res ->
               SerializableResultComparison(
-                  verdict = MISSING_IDENTIFIER,
+                  verdict = MISSING_METRIC_SOURCE,
                   source = res.source,
                   identifier = res.identifier,
                   newValue = "None",
@@ -129,25 +131,3 @@ fun Map<String, List<SerializableResult>>.compareTo(
 
   return result
 }
-
-  //  val comparedThisToOther: List<SerializableResultComparison> =
-  //      this.map { thisResult ->
-  //        otherResults.firstNotNullOfOrNull { otherResult -> thisResult.compareTo(otherResult) }
-  //            ?: SerializableResultComparison(
-  //                verdict = NO_MATCHING_RESULT,
-  //                source = thisResult.source,
-  //                identifier = thisResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
-  //                newValue = thisResult.value.toString(),
-  //                oldValue = "None")
-  //      }
-  //  val comparedOtherToThis =
-  //      otherResults.map { otherResult ->
-  //        this.firstNotNullOfOrNull { thisResult -> thisResult.compareTo(otherResult) }
-  //            ?: SerializableResultComparison(
-  //                verdict = NO_MATCHING_RESULT,
-  //                source = otherResult.source,
-  //                identifier = otherResult.identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
-  //                newValue = otherResult.value.toString(),
-  //                oldValue = "None")
-  //      }
-  // return (comparedThisToOther + comparedOtherToThis).distinct() // TODO: Performance
