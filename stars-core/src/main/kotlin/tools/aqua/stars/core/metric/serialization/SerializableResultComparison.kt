@@ -18,16 +18,18 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
 
+/** This class defines the structure for all comparisons between two [SerializableResult]s. */
 @Serializable
 data class SerializableResultComparison(
+    /** The [SerializableResultComparisonVerdict] of this comparison. */
     val verdict: SerializableResultComparisonVerdict,
+    /** The source from which the compared [SerializableResult]s came from. */
     val source: String,
+    /** The source from which the compared [SerializableResult]s came from. */
     val identifier: String,
+    /** The value of the old [SerializableResult]. */
     val oldValue: String,
+    /** The value of the [SerializableResult] that was produced during this evaluation. */
     val newValue: String,
-) {
-  fun getJsonString(): String = jsonConfiguration.encodeToString(this)
-}
+)
