@@ -24,66 +24,80 @@ import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVe
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.NEW_IDENTIFIER
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.NEW_METRIC_SOURCE
 
-// fun List<SerializableResult>.compareTo(
-//    otherResult: SerializableResult
-// ): SerializableResultComparison? = this.firstNotNullOfOrNull { it.compareTo(otherResult) }
-
+/**
+ * Extension function for [Map] of [String] to [List] of [SerializableResult] that builds a
+ * difference [List] of [SerializableResultComparison] with the given [otherResultsMap].
+ *
+ * To create the difference [List] multiple checks are done:
+ * 1. We check which [SerializableResult.source]s are either NEW, MISSING, EQUAL, or NOT_EQUAL. With
+ *    this, it is possible to check that a source was either added, or removed. When the source
+ *    still exists, its values are compared with the verdicts EQUAL oder NOT_EQUAL.
+ * 2. For all [SerializableResult.source]s that do match, the [SerializableResult.identifier]s are
+ *    then checked for the same differences. So they are either NEW, MISSING, EQUAL, or NOT_EQUAL.
+ *
+ * With this distinction it is possible to conclude which source/identifier was newly added, or was
+ * removed and when they are still there, whether their values have changed.
+ */
 fun Map<String, List<SerializableResult>>.compareTo(
-    otherResults: Map<String, List<SerializableResult>>
+    otherResultsMap: Map<String, List<SerializableResult>>
 ): List<SerializableResultComparison> {
-  val result = mutableListOf<SerializableResultComparison>()
+  val serializableResultComparisons = mutableListOf<SerializableResultComparison>()
 
   val theseSources = this.keys
-  val otherSources = otherResults.keys
+  val otherSources = otherResultsMap.keys
 
   val newSources = theseSources - otherSources
   val removedSources = otherSources - theseSources
   val commonSources = theseSources.intersect(otherSources)
 
   // Add new keys to results
-  result.addAll(
+  serializableResultComparisons.addAll(
       newSources
-          .map { key ->
-            checkNotNull(this[key]).map { res ->
+          .map { source ->
+            checkNotNull(this[source]).map { result ->
               SerializableResultComparison(
                   verdict = NEW_METRIC_SOURCE,
-                  source = res.source,
-                  identifier = res.identifier,
-                  newValue = res.value.toString(),
+                  source = result.source,
+                  identifier = result.identifier,
+                  newValue = result.value.toString(),
                   oldValue = "None")
             }
           }
           .flatten())
 
   // Add removed keys to results
-  result.addAll(
+  serializableResultComparisons.addAll(
       removedSources
-          .map { key ->
-            checkNotNull(otherResults[key]).map { res ->
+          .map { source ->
+            checkNotNull(otherResultsMap[source]).map { result ->
               SerializableResultComparison(
                   verdict = MISSING_METRIC_SOURCE,
-                  source = res.source,
-                  identifier = res.identifier,
+                  source = result.source,
+                  identifier = result.identifier,
                   newValue = "None",
-                  oldValue = res.value.toString())
+                  oldValue = result.value.toString())
             }
           }
           .flatten())
 
-  // Compare common keys
-  result.addAll(
+  // Compare common keys and their identifiers
+  serializableResultComparisons.addAll(
       commonSources
-          .map { key ->
+          .map { source ->
             val identifierComparisons = mutableListOf<SerializableResultComparison>()
 
-            val t1 = checkNotNull(this[key])
-            val t2 = checkNotNull(otherResults[key])
+            val theseResults = checkNotNull(this[source])
+            val otherResults = checkNotNull(otherResultsMap[source])
 
-            val theseIdentifiers = t1.map { it.identifier }.toSet()
-            val otherIdentifiers = t2.map { it.identifier }.toSet()
+            val theseIdentifiers = theseResults.map { it.identifier }.toSet()
+            val otherIdentifiers = otherResults.map { it.identifier }.toSet()
 
-            check(theseIdentifiers.size == t1.size) { "Duplicate identifiers in source: $key" }
-            check(otherIdentifiers.size == t2.size) { "Duplicate identifiers in source: $key" }
+            check(theseIdentifiers.size == theseResults.size) {
+              "Duplicate identifiers in source: $source"
+            }
+            check(otherIdentifiers.size == otherResults.size) {
+              "Duplicate identifiers in source: $source"
+            }
 
             val newIdentifiers = theseIdentifiers - otherIdentifiers
             val removedIdentifiers = otherIdentifiers - theseIdentifiers
@@ -92,13 +106,14 @@ fun Map<String, List<SerializableResult>>.compareTo(
             // Add new identifiers to results
             identifierComparisons.addAll(
                 newIdentifiers.map { identifier ->
-                  t1.first { it.identifier == identifier }
-                      .let { res ->
+                  theseResults
+                      .first { it.identifier == identifier }
+                      .let { result ->
                         SerializableResultComparison(
                             verdict = NEW_IDENTIFIER,
-                            source = res.source,
-                            identifier = res.identifier,
-                            newValue = res.value.toString(),
+                            source = result.source,
+                            identifier = result.identifier,
+                            newValue = result.value.toString(),
                             oldValue = "None")
                       }
                 })
@@ -106,28 +121,29 @@ fun Map<String, List<SerializableResult>>.compareTo(
             // Add removed identifiers to results
             identifierComparisons.addAll(
                 removedIdentifiers.map { identifier ->
-                  t2.first { it.identifier == identifier }
-                      .let { res ->
+                  otherResults
+                      .first { it.identifier == identifier }
+                      .let { result ->
                         SerializableResultComparison(
                             verdict = MISSING_IDENTIFIER,
-                            source = res.source,
-                            identifier = res.identifier,
+                            source = result.source,
+                            identifier = result.identifier,
                             newValue = "None",
-                            oldValue = res.value.toString())
+                            oldValue = result.value.toString())
                       }
                 })
 
             // Compare common identifiers
             identifierComparisons.addAll(
                 commonIdentifiers.mapNotNull { identifier ->
-                  val r1 = t1.first { it.identifier == identifier }
-                  val r2 = t2.first { it.identifier == identifier }
-                  r1.compareTo(r2)
+                  val thisResult = theseResults.first { it.identifier == identifier }
+                  val otherResult = otherResults.first { it.identifier == identifier }
+                  thisResult.compareTo(otherResult)
                 })
 
-            identifierComparisons
+            return@map identifierComparisons
           }
           .flatten())
 
-  return result
+  return serializableResultComparisons
 }
