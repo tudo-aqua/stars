@@ -18,11 +18,11 @@
 package tools.aqua.stars.core.hooks.defaulthooks
 
 import tools.aqua.stars.core.hooks.EvaluationHookResult
-import tools.aqua.stars.core.hooks.PreEvaluationHook
+import tools.aqua.stars.core.hooks.PreTSCEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreEvaluationHook] that checks if a TSC has at least minNodes nodes.
+ * [PreTSCEvaluationHook] that checks if a TSC has at least minNodes nodes.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -41,7 +41,7 @@ open class MinNodesInTSCHook<
     minNodes: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
-    PreEvaluationHook<E, T, S, U, D>(
+    PreTSCEvaluationHook<E, T, S, U, D>(
         identifier = "EmptyTSCHook",
         evaluationFunction = { tsc ->
           if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy

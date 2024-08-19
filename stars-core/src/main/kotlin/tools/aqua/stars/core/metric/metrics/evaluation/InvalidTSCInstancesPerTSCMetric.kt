@@ -19,22 +19,23 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.ProjectionAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
-import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.*
 
 /**
- * This class implements the [ProjectionAndTSCInstanceNodeMetricProvider] interface and tracks the
- * invalid [TSCInstance]s for each [TSCProjection].
+ * This class implements the [TSCAndTSCInstanceNodeMetricProvider] interface and tracks the invalid
+ * [TSCInstance]s for each [TSC].
  *
- * This class implements the [Stateful] interface. Its state contains the [Map] of [TSCProjection]s
- * to a [List] of invalid [TSCInstance]s.
+ * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
+ * [List] of invalid [TSCInstance]s.
  *
- * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for
- * [TSCProjection]s.
+ * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for [TSC]s.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -44,67 +45,64 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
-class InvalidTSCInstancesPerProjectionMetric<
+class InvalidTSCInstancesPerTSCMetric<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-projection")
-) : ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Loggable {
-  /**
-   * Map the [TSCProjection] to a map in which the occurrences of invalid [TSCInstance]s are stored.
-   */
+    override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-tsc")
+) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Loggable {
+  /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<
-          TSCProjection<E, T, S, U, D>,
+          TSC<E, T, S, U, D>,
           MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
       mutableMapOf()
 
   /**
-   * Track the invalid [TSCInstance]s for each [TSCProjection] in the [invalidInstancesMap]. If the
-   * current [tscInstance] is valid it is skipped.
+   * Track the invalid [TSCInstance]s for each [TSC] in the [invalidInstancesMap]. If the current
+   * [tscInstance] is valid it is skipped.
    *
-   * @param projection The current [TSCProjection] for which the invalidity should be checked.
+   * @param tsc The current [TSC] for which the invalidity should be checked.
    * @param tscInstance The current [TSCInstance] which is checked for invalidity.
    */
-  override fun evaluate(
-      projection: TSCProjection<E, T, S, U, D>,
-      tscInstance: TSCInstance<E, T, S, U, D>
-  ) {
-    invalidInstancesMap.putIfAbsent(projection, mutableMapOf())
+  override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
+    invalidInstancesMap.putIfAbsent(tsc, mutableMapOf())
     // Check if the given tscInstance is valid. If so, skip
-    if (projection.possibleTSCInstances.contains(tscInstance.rootNode)) return
+    if (tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
 
-    // Get already observed invalid instances for current projection and add current instance
+    // Get already observed invalid instances for current tsc and add current instance
     invalidInstancesMap
-        .getValue(projection)
+        .getValue(tsc)
         .getOrPut(tscInstance.rootNode) { mutableListOf() }
         .add(tscInstance)
   }
 
   /**
    * Returns the full [invalidInstancesMap] containing the list of invalid [TSCInstance]s for each
-   * [TSCProjection].
+   * [TSC].
    */
   override fun getState():
       MutableMap<
-          TSCProjection<E, T, S, U, D>,
+          TSC<E, T, S, U, D>,
           MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
       invalidInstancesMap
 
   /**
-   * Logs and prints the number of invalid [TSCInstance] for each [TSCProjection]. Also logs count
-   * of invalid classes and their reasons for invalidity.
+   * Logs and prints the number of invalid [TSCInstance] for each [TSC]. Also logs count of invalid
+   * classes and their reasons for invalidity.
    */
   override fun printState() {
-    invalidInstancesMap.forEach { (projection, invalidInstancesMap) ->
+    println(
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR")
+    invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
-          "Count of unique invalid instances for projection '$projection': ${invalidInstancesMap.size} (of " +
-              "${projection.possibleTSCInstances.size} possible instances).")
+          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size} (of " +
+              "${tsc.possibleTSCInstances.size} possible instances).")
 
       logFine(
-          "Count of unique invalid instances for projection '$projection' per instance: " +
+          "Count of unique invalid instances for tsc '${tsc.identifier}' per instance: " +
               invalidInstancesMap.map { it.value.size })
 
       invalidInstancesMap.forEach { (referenceInstance, invalidInstances) ->

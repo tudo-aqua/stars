@@ -28,7 +28,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property identifier The identifier to be used in the error message.
+ * @param identifier The identifier to be used in the error message.
  * @property evaluationFunction The function to be executed before the evaluation of the
  *   [SegmentType].
  */
@@ -37,7 +37,5 @@ open class PreSegmentEvaluationHook<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    val identifier: String,
-    val evaluationFunction: (S) -> EvaluationHookResult
-)
+    D : TickDifference<D>>(identifier: String, evaluationFunction: (S) -> EvaluationHookResult) :
+    EvaluationHook<S>(identifier = identifier, evaluationFunction = evaluationFunction)

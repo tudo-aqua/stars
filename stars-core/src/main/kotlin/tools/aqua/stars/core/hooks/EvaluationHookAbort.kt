@@ -17,25 +17,8 @@
 
 package tools.aqua.stars.core.hooks
 
-import tools.aqua.stars.core.tsc.TSC
-
 /**
- * Custom [RuntimeException] to indicate that a [PreEvaluationHook] has returned
+ * Custom [RuntimeException] to indicate that an [EvaluationHook] has returned
  * [EvaluationHookResult.ABORT].
  */
-class PreEvaluationHookAbort(
-    tsc: TSC<*, *, *, *, *>,
-    hooks: List<PreEvaluationHook<*, *, *, *, *>>
-) :
-    RuntimeException(
-        "PreEvaluationHook${
-            if (hooks.size == 1) {
-                " " + hooks.first()
-            } else {
-                "s " + hooks.joinToString(separator = ",", prefix = "[", postfix = "]") { it.identifier }
-            }
-        } returned ABORT for TSC ${tsc}. Aborting evaluation.") {
-  init {
-    require(hooks.isNotEmpty()) { "No hooks provided." }
-  }
-}
+class EvaluationHookAbort(msg: String) : RuntimeException(msg)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,35 +15,31 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.hooks
 
-import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.tsc.projection.TSCProjection
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * The [ProjectionMetricProvider] implements the [EvaluationMetricProvider] and provides an
- * [evaluate] function which gets a [TSCProjection] which is called during the evaluation phase.
+ * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
+ * evaluation of the [TSC].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @see TSCEvaluation.runEvaluation
+ * @param identifier The identifier to be used in the error message.
+ * @param evaluationFunction The function to be executed before the evaluation of the [TSC].
  */
-interface ProjectionMetricProvider<
+open class PreTSCEvaluationHook<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
-
-  /**
-   * Evaluate the metric based on the given parameter.
-   *
-   * @param projection The current [TSCProjection].
-   * @return The evaluation result.
-   */
-  fun evaluate(projection: TSCProjection<E, T, S, U, D>): Any?
-}
+    D : TickDifference<D>>(
+    identifier: String,
+    evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult
+) :
+    EvaluationHook<TSC<E, T, S, U, D>>(
+        identifier = identifier, evaluationFunction = evaluationFunction)

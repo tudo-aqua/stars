@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
+import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
@@ -46,13 +46,11 @@ class TSCMonitorTest {
               monitor("RootMonitorFalse") { _ -> false } // Always trigger
               monitor("RootMonitorTrue") { _ -> true } // Never trigger
             }
-
-            leaf("leaf") {} // Needed since empty TSC gets skipped by PreEvaluationHook
           }
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -94,7 +92,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -141,7 +139,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -193,7 +191,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,

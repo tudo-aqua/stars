@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The STARS Project Authors
+ * Copyright 2023-2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,29 +15,35 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.hooks
+package tools.aqua.stars.core.metric.providers
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
- * evaluation of the [TSC].
+ * The [TSCMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
+ * function which gets a [TSC] which is called during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property identifier The identifier to be used in the error message.
- * @property evaluationFunction The function to be executed before the evaluation of the [TSC].
+ * @see TSCEvaluation.runEvaluation
  */
-open class PreEvaluationHook<
+interface TSCMetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    val identifier: String,
-    val evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult
-)
+    D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
+
+  /**
+   * Evaluate the metric based on the given parameter.
+   *
+   * @param tsc The current [TSC].
+   * @return The evaluation result.
+   */
+  fun evaluate(tsc: TSC<E, T, S, U, D>): Any?
+}

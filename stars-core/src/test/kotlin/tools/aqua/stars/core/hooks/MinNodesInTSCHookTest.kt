@@ -27,9 +27,9 @@ import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
-/** MinNodesInTSCHookTest. */
+/** Class that contains tests for the [MinNodesInTSCHook]. */
 class MinNodesInTSCHookTest {
-  /** Test MinNodesInTSCHook with fail policy OK. */
+  /** Test [MinNodesInTSCHook] with fail policy [EvaluationHookResult.OK]. */
   @Test
   fun `Test MinNodesInTSCHook with fail policy OK`() {
     val tsc =
@@ -52,7 +52,7 @@ class MinNodesInTSCHookTest {
     }
   }
 
-  /** Test MinNodesInTSCHook with fail policy SKIP. */
+  /** Test [MinNodesInTSCHook] with fail policy [EvaluationHookResult.SKIP]. */
   @Test
   fun `Test MinNodesInTSCHook with fail policy SKIP`() {
     val tsc =
@@ -75,7 +75,7 @@ class MinNodesInTSCHookTest {
     }
   }
 
-  /** Test MinNodesInTSCHook with fail policy ABORT. */
+  /** Test [MinNodesInTSCHook] with fail policy [EvaluationHookResult.ABORT]. */
   @Test
   fun `Test MinNodesInTSCHook with fail policy ABORT`() {
     val tsc =
@@ -92,13 +92,13 @@ class MinNodesInTSCHookTest {
       registerPreEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT))
 
-      assertThrows<PreEvaluationHookAbort> {
+      assertThrows<EvaluationHookAbort> {
         runEvaluation(writePlots = false, writePlotDataCSV = false)
       }
     }
   }
 
-  /** Test MinNodesInTSCHook with #nodes equal to minNodes. */
+  /** Test [MinNodesInTSCHook] with #nodes equal to minNodes. */
   @Test
   fun `Test MinNodesInTSCHook with #nodes equal to minNodes`() {
     val tsc =
@@ -121,7 +121,7 @@ class MinNodesInTSCHookTest {
     }
   }
 
-  /** Test MinNodesInTSCHook with #nodes greater than minNodes. */
+  /** Test [MinNodesInTSCHook] with #nodes greater than minNodes. */
   @Test
   fun `Test MinNodesInTSCHook with #nodes greater than minNodes`() {
     val tsc =
@@ -144,7 +144,7 @@ class MinNodesInTSCHookTest {
     }
   }
 
-  /** Test MinNodesInTSCHook with #nodes negative. */
+  /** Test [MinNodesInTSCHook] with #nodes negative. */
   @Test
   fun `Test MinNodesInTSCHook with #nodes negative`() {
     assertFailsWith<IllegalArgumentException> {
@@ -175,7 +175,7 @@ class MinNodesInTSCHookTest {
               SimpleTickDataDifference>()
           .also {
             // Clear hooks to test them individually
-            preEvaluationHooks.clear()
+            preTSCEvaluationHooks.clear()
             preSegmentEvaluationHooks.clear()
             registerMetricProviders(it)
           }

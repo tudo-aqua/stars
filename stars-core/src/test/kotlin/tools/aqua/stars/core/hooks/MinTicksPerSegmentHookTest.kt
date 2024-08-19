@@ -26,9 +26,9 @@ import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
-/** MinTicksPerSegmentHookTest. */
+/** Class that contains tests for the [MinTicksPerSegmentHook]. */
 class MinTicksPerSegmentHookTest {
-  /** Test MinTicksPerSegmentHook with fail policy OK. */
+  /** Test [MinTicksPerSegmentHook] with fail policy [EvaluationHookResult.OK]. */
   @Test
   fun `Test MinTicksPerSegmentHook with fail policy OK`() {
     val tsc =
@@ -51,7 +51,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHook with fail policy SKIP. */
+  /** Test [MinTicksPerSegmentHook] with fail policy [EvaluationHookResult.SKIP]. */
   @Test
   fun `Test MinTicksPerSegmentHook with fail policy SKIP`() {
     val tsc =
@@ -74,7 +74,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHook with fail policy ABORT. */
+  /** Test [MinTicksPerSegmentHook] with fail policy [EvaluationHookResult.ABORT]. */
   @Test
   fun `Test MinTicksPerSegmentHook with fail policy ABORT`() {
     val tsc =
@@ -97,7 +97,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHook with #ticks less than or equal to minTicks. */
+  /** Test [MinTicksPerSegmentHook] with #ticks less than or equal to minTicks. */
   @Test
   fun `Test MinTicksPerSegmentHook with #ticks less than or equal to minTicks`() {
     val tsc =
@@ -120,7 +120,7 @@ class MinTicksPerSegmentHookTest {
     }
   }
 
-  /** Test MinTicksPerSegmentHook with #ticks negative. */
+  /** Test [MinTicksPerSegmentHook] with #ticks negative. */
   @Test
   fun `Test MinTicksPerSegmentHook with #ticks negative`() {
     assertFailsWith<IllegalArgumentException> {
@@ -151,7 +151,7 @@ class MinTicksPerSegmentHookTest {
               SimpleTickDataDifference>()
           .also {
             // Clear hooks to test them individually
-            preEvaluationHooks.clear()
+            preTSCEvaluationHooks.clear()
             preSegmentEvaluationHooks.clear()
             registerMetricProviders(it)
           }

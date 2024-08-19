@@ -23,7 +23,6 @@ import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
-import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.*
 
 /**
@@ -86,19 +85,19 @@ sealed class TSCNode<
           }
 
   /**
-   * Builds the TSCs for each projection defined in this [TSCNode] and returns a [TSCProjection] for
-   * each projection id. All projection ids in [projectionIgnoreList] are ignored and will not be in
-   * the resulting projection list.
+   * Builds the TSCs for each projection defined in this [TSCNode] and returns a [TSC] for each
+   * projection id. All projection ids in [projectionIgnoreList] are ignored and will not be in the
+   * resulting projection list.
    *
    * @param projectionIgnoreList Projections to ignore.
    */
-  fun buildProjections(
-      projectionIgnoreList: List<Any> = emptyList()
-  ): List<TSCProjection<E, T, S, U, D>> =
+  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, S, U, D>> =
       projections
           .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
-          .mapNotNull {
-            buildProjection(it.key)?.let { tsc -> TSCProjection(it.key, TSC(rootNode = tsc)) }
+          .mapNotNull { (projectionId, _) ->
+            buildProjection(projectionId = projectionId)?.let { rootNode ->
+              TSC(rootNode = rootNode, identifier = projectionId)
+            }
           }
 
   /**
@@ -126,7 +125,8 @@ sealed class TSCNode<
             val outgoingEdges =
                 edges
                     .mapNotNull { edge ->
-                      edge.destination.buildProjection(projectionId)?.let { projection ->
+                      edge.destination.buildProjection(projectionId = projectionId)?.let {
+                          projection ->
                         TSCEdge(edge.condition, projection)
                       }
                     }

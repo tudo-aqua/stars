@@ -23,7 +23,7 @@ import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** PreEvaluationHookAbortTest. */
-class PreEvaluationHookAbortTest {
+class EvaluationHookAbortTest {
   /** Test PreEvaluationHookAbort with one failing hook. */
   @Test
   fun `Test PreEvaluationHookAbort with one failing hook`() {
@@ -47,8 +47,8 @@ class PreEvaluationHookAbortTest {
             minNodes = 1)
 
     try {
-      throw PreEvaluationHookAbort(tsc = tsc, hooks = listOf(hook))
-    } catch (e: PreEvaluationHookAbort) {
+      throw EvaluationHookAbort(tsc = tsc, hooks = listOf(hook))
+    } catch (e: EvaluationHookAbort) {
       val msg = checkNotNull(e.message)
 
       assertTrue { msg.contains("PreEvaluationHook ") }
@@ -79,8 +79,8 @@ class PreEvaluationHookAbortTest {
             minNodes = 1)
 
     try {
-      throw PreEvaluationHookAbort(tsc = tsc, hooks = listOf(hook, hook))
-    } catch (e: PreEvaluationHookAbort) {
+      throw EvaluationHookAbort(tsc = tsc, hooks = listOf(hook, hook))
+    } catch (e: EvaluationHookAbort) {
       val msg = checkNotNull(e.message)
 
       assertFalse { msg.contains("PreEvaluationHook ") }
@@ -102,7 +102,7 @@ class PreEvaluationHookAbortTest {
         }
 
     assertFailsWith<IllegalArgumentException> {
-      throw PreEvaluationHookAbort(tsc = tsc, hooks = emptyList())
+      throw EvaluationHookAbort(tsc = tsc, hooks = emptyList())
     }
   }
 }

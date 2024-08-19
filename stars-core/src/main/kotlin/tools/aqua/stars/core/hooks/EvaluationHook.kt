@@ -17,17 +17,14 @@
 
 package tools.aqua.stars.core.hooks
 
-/** The result of an evaluation hook. */
-enum class EvaluationHookResult {
-  /** Continue with the evaluation. */
-  OK,
-
-  /** Skip this evaluation step and continue with next element. */
-  SKIP,
-
-  /** Cancel the evaluation at this point but finish post evaluation steps normally. */
-  CANCEL,
-
-  /** Abort the evaluation and throw an Exception. */
-  ABORT
-}
+/**
+ * Base class for evaluation hooks that can be registered to a TSCEvaluation to be executed before
+ * the evaluation.
+ *
+ * @property identifier The identifier to be used in the error message. *
+ * @property evaluationFunction The function to be executed before the evaluation.
+ */
+sealed class EvaluationHook<T>(
+    val identifier: String,
+    val evaluationFunction: (T) -> EvaluationHookResult
+)
