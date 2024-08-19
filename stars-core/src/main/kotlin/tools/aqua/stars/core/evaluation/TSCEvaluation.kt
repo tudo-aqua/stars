@@ -22,9 +22,7 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
-import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
-import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
-import tools.aqua.stars.core.metric.utils.saveAsJsonFile
+import tools.aqua.stars.core.metric.utils.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -192,10 +190,10 @@ class TSCEvaluation<
         metricProviders.filterIsInstance<Serializable>().forEach { it.writeSerializedResults() }
 
         // Check that there is a previous run with recorded results
-        val pathToPreviousRun = getLatestSerializationResultPath()
+        val pathToPreviousRun = getLatestSerializationResultDirectory()
         if (pathToPreviousRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
-            it.compareToLastResults().forEach { resultComparison ->
+            it.compareToLatestResults().forEach { resultComparison ->
               saveAsJsonFile(resultComparison, false)
             }
             it.compareToGroundTruthResults().forEach { resultComparison ->
@@ -205,10 +203,10 @@ class TSCEvaluation<
         }
 
         // Check that there is a ground truth run with recorded results
-        val pathToGroundTruthRun = getGroundTruthSerializationResultPath()
+        val pathToGroundTruthRun = getGroundTruthSerializationResultDirectory()
         if (pathToGroundTruthRun != null) {
           metricProviders.filterIsInstance<Serializable>().forEach {
-            it.compareToLastResults().forEach { resultComparison ->
+            it.compareToLatestResults().forEach { resultComparison ->
               saveAsJsonFile(resultComparison, false)
             }
             it.compareToGroundTruthResults().forEach { resultComparison ->

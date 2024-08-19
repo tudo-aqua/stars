@@ -25,28 +25,26 @@ import kotlin.io.path.pathString
 import kotlin.test.*
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import tools.aqua.stars.core.*
+import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.metric.serialization.SerializableIntResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.*
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
-import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultPath
-import tools.aqua.stars.core.metric.utils.getLatestSerializationResultPath
-import tools.aqua.stars.core.metric.utils.getSerializedResultsFromFolder
-import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
 class SerializationHelpersTest {
 
-  /** Clear all existing test folders for a clean setup for each test. */
-  @BeforeTest
-  fun `Clean up all existing test folders`() {
-    File(serializedResultsFolder).deleteRecursively()
-    File(comparedResultsFolder).deleteRecursively()
-    File(groundTruthFolder).deleteRecursively()
-  }
+  //  /** Clear all existing test folders for a clean setup for each test. */
+  //  @BeforeTest
+  //  fun `Clean up all existing test folders`() {
+  //    File(serializedResultsFolder).deleteRecursively()
+  //    File(comparedResultsFolder).deleteRecursively()
+  //    File(GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER).deleteRecursively()
+  //  }
 
   // region Tests for saveAsJsonFile(String, String)
   @Test
@@ -115,31 +113,6 @@ class SerializationHelpersTest {
     assertEquals(actualSerializableResult.getJsonString(), resultPath.readText())
   }
 
-  @Test
-  fun `Test correct saving of SerializableResult object with no actualIdentifier`() {
-    val actualIdentifier = null
-    val actualSource = "actualSource"
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
-    val resultPath = saveAsJsonFile(actualSerializableResult)
-
-    // Check that the returned path really exists and contains the necessary keywords
-    assertTrue(resultPath.exists())
-    assertTrue(resultPath.isFile)
-    assertTrue(resultPath.absolutePath.contains(DEFAULT_SERIALIZED_RESULT_IDENTIFIER))
-    assertTrue(resultPath.absolutePath.contains(actualSource))
-
-    // Check that the returned path is equal to the expected path
-    val actualFile =
-        File(
-            "$serializedResultsFolder/$applicationStartTimeString/${actualSource}/$DEFAULT_SERIALIZED_RESULT_IDENTIFIER.json")
-    assertEquals(actualFile, resultPath)
-    assertTrue(actualFile.exists())
-    assertTrue(actualFile.isFile())
-
-    // Check that the content of the file is actually the Json string of the SerializableResult
-    assertEquals(actualSerializableResult.getJsonString(), resultPath.readText())
-  }
-
   // endregion
 
   // region Tests for saveAsJsonFile(SerializableResultComparison,Boolean)
@@ -166,7 +139,7 @@ class SerializationHelpersTest {
     // Check that the returned path is equal to the expected path
     val actualFile =
         File(
-            "$comparedResultsFolder/$applicationStartTimeString/last-evaluation/$actualSource/comparison_$actualIdentifier.json")
+            "$comparedResultsFolder/$applicationStartTimeString/latest-evaluation/$actualSource/comparison_$actualIdentifier.json")
     assertEquals(actualFile, resultPath.toFile())
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
@@ -226,7 +199,7 @@ class SerializationHelpersTest {
     val resultPath = saveAsJsonFile(actualFilePath, actualFileContent)
 
     // Get Path to latest SerializationResult
-    val latestResult = getLatestSerializationResultPath()
+    val latestResult = getLatestSerializationResultDirectory()
 
     assertNotNull(latestResult)
     assertEquals(resultPath.parentFile.parentFile, latestResult)
@@ -255,7 +228,7 @@ class SerializationHelpersTest {
     }
 
     // Get Path to latest SerializationResult
-    val latestResult = getLatestSerializationResultPath()
+    val latestResult = getLatestSerializationResultDirectory()
 
     assertNotNull(latestResult)
     assertEquals(lastActualSavedPath.parentFile.parentFile, latestResult)
@@ -268,11 +241,11 @@ class SerializationHelpersTest {
     val actualSource = "actualSource"
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
     val actualFilePath =
-        "$serializedResultsFolder/$groundTruthFolder/${actualSource}/${actualIdentifier}.json"
+        "$serializedResultsFolder/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/${actualSource}/${actualIdentifier}.json"
     saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
 
     // Get Path to latest SerializationResult (ground truth SerializationResult should be ignored)
-    val latestResult = getLatestSerializationResultPath()
+    val latestResult = getLatestSerializationResultDirectory()
 
     assertNull(latestResult)
   }
@@ -288,11 +261,11 @@ class SerializationHelpersTest {
     val actualSource = "actualSource"
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
     val actualFile =
-        "$serializedResultsFolder/$groundTruthFolder/${actualSource}/${actualIdentifier}.json"
+        "$serializedResultsFolder/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/${actualSource}/${actualIdentifier}.json"
     val lastActualSavedPath = saveAsJsonFile(actualFile, actualSerializableResult.getJsonString())
 
     // Get Path to latest SerializationResult
-    val latestResult = getGroundTruthSerializationResultPath()
+    val latestResult = getGroundTruthSerializationResultDirectory()
 
     assertNotNull(latestResult)
     assertEquals(lastActualSavedPath.parentFile.parentFile, latestResult)
@@ -314,7 +287,7 @@ class SerializationHelpersTest {
     saveAsJsonFile(actualFilePath, actualFileContent)
 
     // Get Path to ground truth SerializationResult (latest SerializationResult should be ignored)
-    val latestResult = getGroundTruthSerializationResultPath()
+    val latestResult = getGroundTruthSerializationResultDirectory()
 
     assertNull(latestResult)
   }
@@ -337,41 +310,11 @@ class SerializationHelpersTest {
         "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
     saveAsJsonFile(actualFilePath, actualFileContent)
 
-    val latestResultPath = getLatestSerializationResultPath()
+    val latestResultPath = getLatestSerializationResultDirectory()
     assertNotNull(latestResultPath)
 
     val deserializedIntResultList = assertDoesNotThrow {
-      getSerializedResultsFromFolder(latestResultPath, actualSerializableResult)
-    }
-
-    assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
-    assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
-    assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
-  }
-
-  @Test
-  fun `Test correct deserialization of SerializableResult with latest results with no identifier`() {
-    // Setup of previous SerializationResult for testing
-    val actualIdentifier = null
-    val actualSource = "actualSource"
-    val timeOfLatestState =
-        LocalDateTime.now()
-            .minusMinutes(2)
-            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
-    val actualFileContent = actualSerializableResult.getJsonString()
-    val actualFilePath =
-        "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json"
-    saveAsJsonFile(actualFilePath, actualFileContent)
-
-    val latestResultPath = getLatestSerializationResultPath()
-    assertNotNull(latestResultPath)
-
-    // Create dummy result to get correct result from latestResultPath
-    val serializableIntResult = SerializableIntResult(2, actualIdentifier, actualSource)
-
-    val deserializedIntResultList = assertDoesNotThrow {
-      getSerializedResultsFromFolder(latestResultPath, serializableIntResult)
+      getSerializedResultsFromSourceFolder(latestResultPath, actualSerializableResult)
     }
 
     assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
@@ -386,48 +329,54 @@ class SerializationHelpersTest {
     val actualSource = "actualSource"
     val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
     val actualFilePath =
-        "$serializedResultsFolder/$groundTruthFolder/${actualSource}/${actualIdentifier}.json"
+        "$serializedResultsFolder/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER/${actualSource}/${actualIdentifier}.json"
     saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
 
-    val latestResultPath = getGroundTruthSerializationResultPath()
+    val latestResultPath = getGroundTruthSerializationResultDirectory()
     assertNotNull(latestResultPath)
 
     // Create dummy result to get correct result from latestResultPath
     val serializableIntResult = SerializableIntResult(2, actualIdentifier, actualSource)
 
     val deserializedIntResultList = assertDoesNotThrow {
-      getSerializedResultsFromFolder(latestResultPath, serializableIntResult)
+      getSerializedResultsFromSourceFolder(latestResultPath, serializableIntResult)
     }
 
     assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
     assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
     assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
+  }
+  // endregion
+
+  @Test
+  fun `Test PLACEHOLDER1`() {
+    // Create SegmentCountMetric with segmentCount = 1
+    val metric =
+        SegmentCountMetric<
+                SimpleEntity,
+                SimpleTickData,
+                SimpleSegment,
+                SimpleTickDataUnit,
+                SimpleTickDataDifference>()
+            .also { it.evaluate(SimpleSegment()) }
+
+    // Save the results of the metric
+    metric.writeSerializedResults()
+
+    val diffToGroundTruth = metric.compareToGroundTruthResults()
+    val diffToLastest = metric.compareToLatestResults()
+
+    diffToGroundTruth.forEach { saveAsJsonFile(it, true) }
+    diffToLastest.forEach { saveAsJsonFile(it, false) }
+
+    //    assertTrue { diffToGroundTruth.all { it.verdict ==
+    // SerializableResultComparisonVerdict.EQUAL_RESULTS } }
+    //    assertTrue { diffToLastest.all { it.verdict ==
+    // SerializableResultComparisonVerdict.EQUAL_RESULTS } }
   }
 
   @Test
-  fun `Test correct deserialization of SerializableResult with ground truth results with no identifier`() {
-    // Setup of ground truth SerializationResults for testing
-    val actualIdentifier = null
-    val actualSource = "actualSource"
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
-    val actualFilePath =
-        "$serializedResultsFolder/$groundTruthFolder/${actualSource}/${DEFAULT_SERIALIZED_RESULT_IDENTIFIER}.json"
-    saveAsJsonFile(actualFilePath, actualSerializableResult.getJsonString())
-
-    val latestResultPath = getGroundTruthSerializationResultPath()
-    assertNotNull(latestResultPath)
-
-    // Create dummy result to get correct result from latestResultPath
-    val serializableIntResult = SerializableIntResult(2, actualIdentifier, actualSource)
-
-    val deserializedIntResultList = assertDoesNotThrow {
-      getSerializedResultsFromFolder(latestResultPath, serializableIntResult)
-    }
-
-    assertEquals(actualSerializableResult.value, deserializedIntResultList[0].value)
-    assertEquals(actualSerializableResult.source, deserializedIntResultList[0].source)
-    assertEquals(actualSerializableResult.identifier, deserializedIntResultList[0].identifier)
+  fun a () {
+    println(ApplicationConstantsHolder.logFolder)
   }
-
-  // endregion
 }

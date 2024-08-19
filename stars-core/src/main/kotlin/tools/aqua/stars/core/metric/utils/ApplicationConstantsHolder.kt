@@ -47,9 +47,7 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized results produced in evaluation. */
   private const val COMPARED_RESULTS_FOLDER = "compared-results"
 
-  const val DEFAULT_SERIALIZED_RESULT_IDENTIFIER = "result"
-
-  private const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth-serialized-result"
+  const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth"
 
   /** Holds the folder name for the logs. */
   val logFolder: String
@@ -63,12 +61,6 @@ object ApplicationConstantsHolder {
   val comparedResultsFolder: String
     get() = if (isTestRun()) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
 
-  /** Holds the folder name for the logs. */
-  val groundTruthFolder: String
-    get() =
-        if (isTestRun()) "test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER"
-        else GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
-
   val jsonConfiguration = Json {
     prettyPrint = true
     isLenient = true
@@ -80,9 +72,9 @@ object ApplicationConstantsHolder {
             Thread {
               LogManager.getLogManager().reset()
               File(TEST_LOG_FOLDER).deleteRecursively()
-              File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
-              File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
-              File("test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER").deleteRecursively()
+              // File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
+              // File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
+              // File("test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER").deleteRecursively()
             })
   }
 

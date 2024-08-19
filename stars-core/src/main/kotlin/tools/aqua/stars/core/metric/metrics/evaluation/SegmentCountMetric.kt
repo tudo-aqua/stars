@@ -72,5 +72,9 @@ class SegmentCountMetric<
   }
 
   override fun getSerializableResults(): List<SerializableIntResult> =
-      listOf(SerializableIntResult(value = segmentCount, source = "SegmentCountMetric"))
+      listOf(
+          SerializableIntResult(
+              value = segmentCount,
+              identifier = "SegmentCountMetric",
+              source = "SegmentCountMetric"))
 }

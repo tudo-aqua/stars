@@ -17,8 +17,16 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-enum class SerializableResultComparisonVerdict {
-  EQUAL_RESULTS,
-  NOT_EQUAL_RESULTS,
-  NO_MATCHING_RESULT
+enum class SerializableResultComparisonVerdict(val shortString: String) {
+  /** Result file with the same identifier has been found and the results are equal. */
+  EQUAL_RESULTS("EQ"),
+
+  /** Result file with the same identifier has been found but the results are not equal. */
+  NOT_EQUAL_RESULTS("NEQ"),
+
+  /** Identifier found in the compared results is missing. */
+  MISSING_IDENTIFIER("MIS"),
+
+  /** No matching identifier has been found in the compared results. */
+  NEW_IDENTIFIER("NEW")
 }

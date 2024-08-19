@@ -17,36 +17,8 @@
 
 package tools.aqua.stars.core.metric.providers
 
-import java.io.File
 import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.utils.*
 
 interface Serializable {
   fun getSerializableResults(): List<SerializableResult>
-
-  fun getListOfSources(): List<String> = getSerializableResults().map { it.source }.distinct()
-
-  fun compareToLastResults(): List<SerializableResultComparison> =
-      compareTo(getSerializedResultsFromFolder(getLatestSerializationResultPath()))
-
-  fun compareToGroundTruthResults(): List<SerializableResultComparison> =
-      compareTo(getSerializedResultsFromFolder(getGroundTruthSerializationResultPath()))
-
-  fun compareTo(otherResults: List<SerializableResult>): List<SerializableResultComparison> =
-      getSerializableResults().compareTo(otherResults)
-
-  fun compareTo(otherResult: SerializableResult): SerializableResultComparison? =
-      getSerializableResults().compareTo(otherResult)
-
-  fun compareResults(resultFolder: File): List<SerializableResultComparison> =
-      getSerializableResults().compareTo(getSerializedResultsFromFolder(resultFolder))
-
-  fun getJsonStrings(): List<String> {
-    return getSerializableResults().map { it.getJsonString() }
-  }
-
-  fun writeSerializedResults() {
-    getSerializableResults().forEach { saveAsJsonFile(it) }
-  }
 }

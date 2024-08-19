@@ -25,12 +25,12 @@ import kotlin.io.path.readText
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.DEFAULT_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
 
 @Serializable
 sealed class SerializableResult {
-  abstract val identifier: String?
+  abstract val identifier: String
   abstract val source: String
   abstract val value: Any
 
@@ -50,13 +50,8 @@ sealed class SerializableResult {
       return null
     }
     return SerializableResultComparison(
-        verdict =
-            if (this == otherResult) {
-              SerializableResultComparisonVerdict.EQUAL_RESULTS
-            } else {
-              SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS
-            },
-        identifier = identifier ?: DEFAULT_SERIALIZED_RESULT_IDENTIFIER,
+        verdict = if (this == otherResult) EQUAL_RESULTS else NOT_EQUAL_RESULTS,
+        identifier = identifier,
         source = source,
         oldValue = otherResult.value.toString(),
         newValue = value.toString())

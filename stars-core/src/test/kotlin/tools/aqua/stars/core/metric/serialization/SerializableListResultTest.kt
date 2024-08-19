@@ -21,6 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.assertDoesNotThrow
 import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.utils.writeSerializedResults
 
 class SerializableListResultTest {
 
@@ -56,7 +57,9 @@ class SerializableListResultTest {
 
   private inner class IntListClass(val stateList: List<Int>) : Serializable {
     override fun getSerializableResults(): List<SerializableIntListResult> =
-        listOf(SerializableIntListResult(stateList, source = "IntListClass"))
+        listOf(
+            SerializableIntListResult(
+                stateList, identifier = "IntListClass", source = "IntListClass"))
   }
 
   // endregion
@@ -79,7 +82,9 @@ class SerializableListResultTest {
 
   private inner class IntPairClass(val stateList: List<Pair<Int, Int>>) : Serializable {
     override fun getSerializableResults(): List<SerializableIntPairListResult> =
-        listOf(SerializableIntPairListResult(stateList, source = "IntPairClass"))
+        listOf(
+            SerializableIntPairListResult(
+                stateList, identifier = "IntPairClass", source = "IntPairClass"))
   }
 
   // endregion

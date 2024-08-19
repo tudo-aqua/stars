@@ -22,6 +22,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SerializableIntResult(
     override val value: Int,
-    override val identifier: String? = null,
+    override val identifier: String,
     override val source: String
 ) : SerializableResult()

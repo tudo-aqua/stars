@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SerializableDoubleResult(
-    override val identifier: String?,
+    override val identifier: String,
     override val value: Double,
     override val source: String
 ) : SerializableResult()
