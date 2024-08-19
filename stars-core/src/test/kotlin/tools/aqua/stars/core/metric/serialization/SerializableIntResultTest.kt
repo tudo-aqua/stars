@@ -72,16 +72,12 @@ class SerializableIntResultTest {
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
     val serializedResultGroundTruth = segmentCountMetric.getSerializableResults()
     val deserializedResultGroundTruth =
-        serializedResultGroundTruth.map {
-          getJsonContentFromString(it.getJsonString())
-        }
+        serializedResultGroundTruth.map { getJsonContentFromString(it.getJsonString()) }
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
     val serializedResultCompare = segmentCountMetric.getSerializableResults()
     val deserializedResultCompare =
-        serializedResultCompare.map {
-          getJsonContentFromString(it.getJsonString())
-        }
+        serializedResultCompare.map { getJsonContentFromString(it.getJsonString()) }
 
     assertNotEquals(deserializedResultGroundTruth, deserializedResultCompare)
   }
