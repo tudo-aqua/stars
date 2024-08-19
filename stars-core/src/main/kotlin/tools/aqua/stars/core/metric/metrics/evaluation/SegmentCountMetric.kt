@@ -33,6 +33,8 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements [Loggable] and logs the final [segmentCount].
  *
+ * This class implements [Serializable] and stores, and compares its evaluation results.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
