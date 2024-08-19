@@ -17,19 +17,35 @@
 
 package tools.aqua.stars.core.metric.utils
 
+import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 
+/**
+ * Extension function of [List] of [Serializable] that compares it to the latest evaluation results.
+ *
+ * @return Returns the [List] of [SerializableResultComparison]s that was created by comparing the
+ *   [SerializableResult]s of the calling [Serializable] with the latest [SerializableResult]s.
+ */
 fun List<Serializable>.compareToLatestResults(): List<SerializableResultComparison> =
     map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(latestResults)
 
+/**
+ * Extension function of [List] of [Serializable] that compares it to the ground-truth evaluation
+ * results.
+ *
+ * @return Returns the [List] of [SerializableResultComparison]s that was created by comparing the
+ *   [SerializableResult]s of the calling [Serializable] with the ground-truth
+ *   [SerializableResult]s.
+ */
 fun List<Serializable>.compareToGroundTruthResults(): List<SerializableResultComparison> =
     map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(groundTruth)
 
-// fun Serializable.getJsonStrings(): List<String> {
-//  return getSerializableResults().map { it.getJsonString() }
-// }
-
+/**
+ * Extension function for [Serializable] that writes all its [SerializableResult]s as [Json] files
+ * to the disc.
+ */
 fun Serializable.writeSerializedResults() {
   getSerializableResults().forEach { it.saveAsJsonFile() }
 }
