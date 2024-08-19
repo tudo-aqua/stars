@@ -21,6 +21,7 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.logging.LogManager
+import java.util.logging.Logger
 
 /**
  * This singleton holds the current date and time at the start of the application and the log
@@ -44,11 +45,15 @@ object ApplicationConstantsHolder {
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
 
+  /** Holds the list of all currently registered [Logger]s. */
+  val activeLoggers: MutableList<Logger> = mutableListOf()
+
   init {
     Runtime.getRuntime()
         .addShutdownHook(
             Thread {
               LogManager.getLogManager().reset()
+              activeLoggers.forEach { it.handlers.forEach { it.close() } }
               File(TEST_LOG_FOLDER).deleteRecursively()
             })
   }
