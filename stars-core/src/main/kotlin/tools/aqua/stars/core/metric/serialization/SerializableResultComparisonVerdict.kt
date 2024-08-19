@@ -17,6 +17,12 @@
 
 package tools.aqua.stars.core.metric.serialization
 
+/**
+ * Enumeration that holds all verdicts for [SerializableResultComparison]s.
+ *
+ * @property shortString The abbreviation for each verdict to be used as a prefix for
+ *   [SerializableResultComparison] files.
+ */
 enum class SerializableResultComparisonVerdict(val shortString: String) {
   /** Result file with the same identifier has been found and the results are equal. */
   EQUAL_RESULTS("EQ"),
