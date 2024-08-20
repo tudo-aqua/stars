@@ -114,8 +114,11 @@ jobs:
 
   unit-test:
     name: Run Unit tests
-    needs: compile
+    needs: discover-projects
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: ${{ fromJson(needs.discover-projects.outputs.matrix) }} # Get gradle projects from previous step
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -132,7 +135,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
 
     - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew :${{ matrix.project }}:test
 
     - name: Upload test results
       uses: mikepenz/action-junit-report@v4
@@ -146,6 +149,7 @@ jobs:
     strategy:
       matrix:
         os: [ macos-latest, windows-latest ] # Ubuntu is tested in "test" job
+        project: ${{ fromJson(needs.discover-projects.outputs.matrix) }} # Get gradle projects from previous step
       fail-fast: false # Ensure we get all failures on other platforms
     runs-on: ${{ matrix.os }}
     steps:
@@ -164,11 +168,11 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
 
     - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew :${{ matrix.project }}:test
 
   spotless:
     name: Run Spotless
-    needs: compile
+    needs: discover-projects
     runs-on: ubuntu-latest
     steps:
       - name: Initial Setup
@@ -187,11 +191,11 @@ jobs:
 
       - name: Run Spotless checks
         id: spotlessCheck
-        run: ./gradlew spotlessCheck
+        run: ./gradlew :${{ matrix.project }}:spotlessCheck
 
       - name: Apply Spotless fixes
         if: failure()
-        run: ./gradlew spotlessApply
+        run: ./gradlew :${{ matrix.project }}:spotlessApply
 
       - name: Generate diff
         if: failure()
