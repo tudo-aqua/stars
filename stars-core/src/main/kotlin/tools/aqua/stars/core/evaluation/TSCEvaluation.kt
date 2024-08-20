@@ -56,6 +56,9 @@ class TSCEvaluation<
     val projectionIgnoreList: List<String> = emptyList(),
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
+
+  private val mutex: Any = Any()
+
   /**
    * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
    * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
@@ -63,9 +66,11 @@ class TSCEvaluation<
    */
   var resultsReproducedFromGroundTruth: Boolean? = null
     set(value) {
-      when {
-        field == null -> field = value
-        field != null && value != null -> field = field ?: false && value
+      synchronized(mutex) {
+        when {
+          field == null -> field = value
+          field != null && value != null -> field = field!! && value
+        }
       }
     }
 
@@ -76,9 +81,11 @@ class TSCEvaluation<
    */
   var resultsReproducedFromPreviousRun: Boolean? = null
     set(value) {
-      when {
-        field == null -> field = value
-        field != null && value != null -> field = field ?: false && value
+      synchronized(mutex) {
+        when {
+          field == null -> field = value
+          field != null && value != null -> field = field!! && value
+        }
       }
     }
 
