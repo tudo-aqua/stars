@@ -48,6 +48,7 @@ jobs:
 
   discover-projects:
     runs-on: ubuntu-latest
+    needs: compile
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
