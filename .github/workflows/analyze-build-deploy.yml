@@ -48,7 +48,7 @@ jobs:
 
   discover-projects:
     name: Discover Gradle Projects
-    # needs: compile
+    needs: compile
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
