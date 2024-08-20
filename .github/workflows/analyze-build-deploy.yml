@@ -76,7 +76,7 @@ jobs:
         id: set-matrix
 
   detekt:
-    name: Generate Detekt report for ${{ matrix.project }}
+    name: Generate Detekt report (${{ matrix.project }})
     needs: discover-projects
     runs-on: ubuntu-latest
     strategy:
@@ -114,7 +114,7 @@ jobs:
         category: ${{ matrix.project }}
 
   platform-test:
-    name: Run JUnit tests for ${{ matrix.project }} on ${{ matrix.os }}
+    name: Run JUnit tests (${{ matrix.project }} on ${{ matrix.os }})
     needs: discover-projects
     strategy:
       matrix:
@@ -147,7 +147,7 @@ jobs:
         report_paths: '**/build/test-results/test/TEST-*.xml'
 
   spotless:
-    name: Run Spotless
+    name: Run Spotless (${{ matrix.project }})
     needs: discover-projects
     strategy:
       matrix:
