@@ -27,13 +27,13 @@ import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.EQUAL_RESULTS
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultDirectory
 import tools.aqua.stars.core.metric.utils.getJsonString
-import tools.aqua.stars.core.metric.utils.getLatestSerializationResultDirectory
+import tools.aqua.stars.core.metric.utils.getPreviousSerializationResultDirectory
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
 /** Contains test functions for the SerializationHelpers.kt file. */
@@ -149,7 +149,7 @@ class SerializationHelpersTest {
         File(
             "$comparedResultsFolder/" +
                 "$applicationStartTimeString/" +
-                "$LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER/" +
+                "$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER/" +
                 "$actualSource/" +
                 "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json")
     assertTrue(actualFile.exists())
@@ -198,8 +198,8 @@ class SerializationHelpersTest {
 
   // region Tests for getLatestSerializationResultPath()
   /**
-   * Tests that the [getLatestSerializationResultDirectory] function returns the correct directory,
-   * when exactly one previous run exists.
+   * Tests that the [getPreviousSerializationResultDirectory] function returns the correct
+   * directory, when exactly one previous run exists.
    */
   @Test
   fun `Test correct getting of latest SerializationResult`() {
@@ -217,15 +217,15 @@ class SerializationHelpersTest {
     val resultPath = actualFileContent.saveAsJsonFile(actualFilePath)
 
     // Get Path to latest SerializationResult
-    val latestResult = getLatestSerializationResultDirectory()
+    val latestResult = getPreviousSerializationResultDirectory()
 
     assertNotNull(latestResult)
     assertEquals(resultPath.parentFile.parentFile, latestResult)
   }
 
   /**
-   * Tests that the [getLatestSerializationResultDirectory] function returns the correct directory,
-   * when multiple previous runs exists.
+   * Tests that the [getPreviousSerializationResultDirectory] function returns the correct
+   * directory, when multiple previous runs exists.
    */
   @Test
   fun `Test correct getting of latest SerializationResult with multiple latest results`() {
@@ -250,14 +250,14 @@ class SerializationHelpersTest {
     }
 
     // Get Path to latest SerializationResult
-    val latestResult = getLatestSerializationResultDirectory()
+    val latestResult = getPreviousSerializationResultDirectory()
 
     assertNotNull(latestResult)
     assertEquals(latestActualSavedPath.parentFile.parentFile, latestResult)
   }
 
   /**
-   * Tests that the [getLatestSerializationResultDirectory] function returns no directory, when no
+   * Tests that the [getPreviousSerializationResultDirectory] function returns no directory, when no
    * previous run exists.
    */
   @Test
@@ -271,7 +271,7 @@ class SerializationHelpersTest {
     actualSerializableResult.getJsonString().saveAsJsonFile(actualFilePath)
 
     // Get Path to latest SerializationResult (ground truth SerializationResult should be ignored)
-    val latestResult = getLatestSerializationResultDirectory()
+    val latestResult = getPreviousSerializationResultDirectory()
 
     assertNull(latestResult)
   }

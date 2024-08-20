@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
@@ -71,20 +71,34 @@ fun SerializableResult.saveAsJsonFile(): File {
  * passes it to [saveAsJsonFile] for [String]s.
  *
  * @param comparedToGroundTruth Sets whether the [SerializableResultComparison] were created by the
- *   comparison to ground the ground truth result set, or to the latest evaluation run. This alters
- *   the resulting folder.
+ *   comparison to ground the ground truth result set, or to the previous evaluation run. This
+ *   alters the resulting folder.
  * @return The created [File].
  */
 fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean): File {
   val resultingPath =
       "${comparedResultsFolder}/" +
           "${applicationStartTimeString}/" +
-          "${if(comparedToGroundTruth){"/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER"}else{"/$LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}}/" +
+          "${if(comparedToGroundTruth){"/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER"}else{"/$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}}/" +
           "${source}/" +
           "[${verdict.shortString}]_comparison_${identifier}.json"
   getJsonString().saveAsJsonFile(resultingPath)
   return File(resultingPath)
 }
+
+/**
+ * Extension function for [SerializableResultComparison]s to save them as Json files.
+ *
+ * @param comparedToGroundTruth Sets whether the [SerializableResultComparison]s were created by the
+ *   comparison to ground the ground truth result set, or to the previous evaluation run. This
+ *   alters the resulting folder.
+ * @return The created [File]s.
+ * @see SerializableResultComparison.saveAsJsonFile
+ */
+fun List<SerializableResultComparison>.saveAsJsonFiles(comparedToGroundTruth: Boolean): List<File> =
+    map {
+      it.saveAsJsonFile(comparedToGroundTruth)
+    }
 // endregion
 
 // Get Json content from filesystem
@@ -163,33 +177,32 @@ fun getGroundTruthSerializationResultDirectory(): File? =
     }
 // endregion
 
-// region Latest Results
-
+// region previous Results
 /**
  * Holds the [Map] of all latest evaluation result sources with their deserialized
  * [SerializableResult]s, or null when the latest evaluations results were not demanded.
  */
-private var latestResultsCache: Map<String, List<SerializableResult>>? = null
+private var previousResultsCache: Map<String, List<SerializableResult>>? = null
 
 /**
  * Holds the [Map] of all latest evaluation result sources with their deserialized
  * [SerializableResult]s.
  */
-val latestResults: Map<String, List<SerializableResult>>
+val previousResults: Map<String, List<SerializableResult>>
   get() =
-      latestResultsCache
-          ?: getSerializedResults(getLatestSerializationResultDirectory()).also {
-            latestResultsCache = it
+      previousResultsCache
+          ?: getSerializedResults(getPreviousSerializationResultDirectory()).also {
+            previousResultsCache = it
           }
 
 /**
- * Returns the [File] pointing to the root directory of the latest evaluation result directory. When
- * no such directory was found, `null` is returned.
+ * Returns the [File] pointing to the root directory of the previous evaluation result directory.
+ * When no such directory was found, `null` is returned.
  *
- * @return A [File] pointing to the root directory of the latest evaluation result directory.
+ * @return A [File] pointing to the root directory of the previous evaluation result directory.
  *   Otherwise, null.
  */
-fun getLatestSerializationResultDirectory(): File? =
+fun getPreviousSerializationResultDirectory(): File? =
     File(serializedResultsFolder)
         .listFiles()
         ?.filter {

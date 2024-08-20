@@ -51,8 +51,8 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized ground-truth result data set. */
   const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth"
 
-  /** Folder directory for serialized latest evaluation result. */
-  const val LATEST_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "latest-evaluation"
+  /** Folder directory for serialized previous evaluation result. */
+  const val PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "previous-evaluation"
 
   /** Holds the folder name for the logs. */
   val logFolder: String
@@ -75,20 +75,67 @@ object ApplicationConstantsHolder {
     isLenient = true
   }
 
-  /** Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data. */
-  var resultsReproducedFromGroundTruth: Boolean? = null
   /**
-   * Holds the aggregated [Boolean] verdict of all compared results with the latest evaluation
-   * results.
+   * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
+   * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
+   * be changed to 'true' again.
    */
-  var resultsReproducedFromLatestRun: Boolean? = null
+  var resultsReproducedFromGroundTruth: Boolean? = null
+    set(value) {
+      when {
+        field == null -> field = value
+        field != null && value != null -> field = field ?: false && value
+      }
+    }
+
+  val resultsReproducedFromGroundTruthFile =
+      File("$comparedResultsFolder/latest-run-reproduced-from-ground-truth.verdict")
+
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
+   * results. Setting a new value will be conjugated with the old value such that a verdict 'false'
+   * may not be changed to 'true' again.
+   */
+  var resultsReproducedFromPreviousRun: Boolean? = null
+    set(value) {
+      when {
+        field == null -> field = value
+        field != null && value != null -> field = field ?: false && value
+      }
+    }
+
+  val resultsReproducedFromPreviousRunVerdictFile =
+      File("$comparedResultsFolder/latest-run-reproduced-from-previous-run.verdict")
 
   init {
+    resultsReproducedFromGroundTruthFile.delete()
+    resultsReproducedFromPreviousRunVerdictFile.delete()
+
     Runtime.getRuntime()
         .addShutdownHook(
             Thread {
+              // Close loggers
               LogManager.getLogManager().reset()
               activeLoggers.forEach { it.handlers.forEach { handler -> handler.close() } }
+
+              // Save comparison verdicts
+              if (resultsReproducedFromGroundTruth != null) {
+                resultsReproducedFromGroundTruthFile.writeText(
+                    resultsReproducedFromGroundTruth.toString())
+                File(
+                        "$comparedResultsFolder/$applicationStartTimeString/verdicts/reproduced-from-ground-truth.verdict")
+                    .writeText(resultsReproducedFromGroundTruth.toString())
+              }
+
+              if (resultsReproducedFromPreviousRun != null) {
+                resultsReproducedFromPreviousRunVerdictFile.writeText(
+                    resultsReproducedFromPreviousRun.toString())
+                File(
+                        "$comparedResultsFolder/$applicationStartTimeString/verdicts/reproduced-from-previous-run.verdict")
+                    .writeText(resultsReproducedFromPreviousRun.toString())
+              }
+
+              // Delete test log folders
               File(TEST_LOG_FOLDER).deleteRecursively()
               File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
               File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()

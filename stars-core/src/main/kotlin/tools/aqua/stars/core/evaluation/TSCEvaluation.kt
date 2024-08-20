@@ -22,10 +22,7 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
 import tools.aqua.stars.core.metric.utils.*
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.resultsReproducedFromGroundTruth
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.resultsReproducedFromLatestRun
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.projection.TSCProjection
@@ -88,12 +85,18 @@ class TSCEvaluation<
    * @param writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
    * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare
    *   them to previous runs after the analysis.
+   * @param compareToGroundTruth (Default: ``false``) Whether to compare the results to the ground
+   *   truth.
+   * @param compareToPreviousRun (Default: ``false``) Whether to compare the results to the previous
+   *   run.
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun runEvaluation(
       writePlots: Boolean = true,
       writePlotDataCSV: Boolean = false,
-      writeSerializedResults: Boolean = true
+      writeSerializedResults: Boolean = true,
+      compareToGroundTruth: Boolean = false,
+      compareToPreviousRun: Boolean = false,
   ) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProviders." }
 
@@ -186,32 +189,28 @@ class TSCEvaluation<
       metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
     }
 
-    // Write JSON files of all Serializable metrics
-    if (writeSerializedResults) {
-      val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
-      if (serializableMetrics.any()) {
+    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    if (serializableMetrics.any()) {
+      // Write JSON files of all Serializable metrics
+      if (writeSerializedResults) {
         println("Writing serialized results")
-        metricProviders.filterIsInstance<Serializable>().let {
-          it.forEach { t -> t.writeSerializedResults() }
+        serializableMetrics.forEach { t -> t.writeSerializedResults() }
+      }
 
-          it.compareToGroundTruthResults()
-              .also { comparisonResults ->
-                resultsReproducedFromGroundTruth =
-                    comparisonResults.all { t ->
-                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                    }
-              }
-              .forEach { resultComparison -> resultComparison.saveAsJsonFile(true) }
+      // Compare the results to the ground truth
+      if (compareToGroundTruth) {
+        println("Comparing to ground truth")
+        serializableMetrics
+            .compareToGroundTruthResults(saveVerdict = true)
+            .saveAsJsonFiles(comparedToGroundTruth = true)
+      }
 
-          it.compareToLatestResults()
-              .also { comparisonResults ->
-                resultsReproducedFromLatestRun =
-                    comparisonResults.all { t ->
-                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                    }
-              }
-              .forEach { resultComparison -> resultComparison.saveAsJsonFile(false) }
-        }
+      // Compare the results to the latest run
+      if (compareToPreviousRun) {
+        println("Comparing to previous run")
+        serializableMetrics
+            .compareToPreviousResults(saveVerdict = true)
+            .saveAsJsonFiles(comparedToGroundTruth = false)
       }
     }
   }
