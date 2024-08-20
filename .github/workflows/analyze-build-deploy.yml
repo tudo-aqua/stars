@@ -48,7 +48,7 @@ jobs:
 
   discover-projects:
     name: Discover Gradle Projects
-    needs: compile
+    # needs: compile
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -98,6 +98,13 @@ jobs:
 
     - name: Run Detekt
       run: ./gradlew :${{ matrix.project }}:detekt
+
+    - name: Collect result
+      shell: sh
+      run: >
+        mkdir sarif &&
+        find * -name detekt.sarif -print0 |
+        xargs -n1 -0 bash -c 'cp "$1" "sarif/${1//\//-}"' '{}'
       
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
