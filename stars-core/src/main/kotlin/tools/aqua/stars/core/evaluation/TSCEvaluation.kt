@@ -164,7 +164,6 @@ class TSCEvaluation<
   fun runEvaluation(segments: Sequence<S>) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
-    try {
       val totalEvaluationTime = measureTime {
         // Evaluate PreEvaluationHooks
         val hookResults =
@@ -231,12 +230,6 @@ class TSCEvaluation<
         println("Writing CSVs")
         metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
       }
-    } finally {
-      // Close all logging handlers to prevent .lck files to remain
-      println("Closing Loggers")
-      metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
-      closeLogger()
-    }
   }
 
   /**
