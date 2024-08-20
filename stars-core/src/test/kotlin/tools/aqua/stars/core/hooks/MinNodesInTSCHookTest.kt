@@ -41,12 +41,12 @@ class MinNodesInTSCHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.OK))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(1, segmentCountMetric.getState())
     }
@@ -64,12 +64,12 @@ class MinNodesInTSCHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.SKIP))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(0, segmentCountMetric.getState())
     }
@@ -87,14 +87,12 @@ class MinNodesInTSCHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       setup()
       registerPreEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT))
 
-      assertThrows<EvaluationHookAbort> {
-        runEvaluation(writePlots = false, writePlotDataCSV = false)
-      }
+      assertThrows<EvaluationHookAbort> { runEvaluation(segments = segments()) }
     }
   }
 
@@ -110,12 +108,12 @@ class MinNodesInTSCHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(1, segmentCountMetric.getState())
     }
@@ -133,12 +131,12 @@ class MinNodesInTSCHookTest {
             SimpleTickDataDifference> {
           any("") { any("") {} }
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(1, segmentCountMetric.getState())
     }

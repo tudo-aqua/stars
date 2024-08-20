@@ -203,7 +203,8 @@ class TSCEvaluation<
 
         // Evaluate all segments
         val segmentsEvaluationTime = measureTime {
-          segments.computeWhile { evaluateSegment(segment = it, tscList = tscList) }
+          if (tscList.isNotEmpty())
+              segments.computeWhile { evaluateSegment(segment = it, tscList = tscList) }
         }
         logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
       }

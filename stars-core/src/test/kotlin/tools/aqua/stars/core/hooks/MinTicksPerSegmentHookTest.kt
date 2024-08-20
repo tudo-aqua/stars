@@ -40,12 +40,12 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreSegmentEvaluationHooks(
           MinTicksPerSegmentHook(minTicks = 2, failPolicy = EvaluationHookResult.OK))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(2, segmentCountMetric.getState())
     }
@@ -63,12 +63,12 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreSegmentEvaluationHooks(
           MinTicksPerSegmentHook(minTicks = 2, failPolicy = EvaluationHookResult.SKIP))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(1, segmentCountMetric.getState())
     }
@@ -86,14 +86,12 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       setup()
       registerPreSegmentEvaluationHooks(
           MinTicksPerSegmentHook(minTicks = 2, failPolicy = EvaluationHookResult.ABORT))
 
-      assertFailsWith<PreSegmentEvaluationHookAbort> {
-        runEvaluation(writePlots = false, writePlotDataCSV = false)
-      }
+      assertFailsWith<EvaluationHookAbort> { runEvaluation(segments = segments()) }
     }
   }
 
@@ -109,12 +107,12 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataDifference> {
           any("") {}
         }
-    TSCEvaluation(tsc = tsc, segments = segments()).apply {
+    TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
       registerPreSegmentEvaluationHooks(
           MinTicksPerSegmentHook(minTicks = 1, failPolicy = EvaluationHookResult.ABORT))
 
-      runEvaluation(writePlots = false, writePlotDataCSV = false)
+      runEvaluation(segments = segments())
 
       assertEquals(2, segmentCountMetric.getState())
     }
