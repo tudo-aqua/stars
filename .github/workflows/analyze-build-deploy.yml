@@ -72,10 +72,11 @@ jobs:
           ./gradlew projects --quiet | grep "Project ':" | awk -F"'" '{print $2}' | sed 's/^://' > projects.txt
           projects=$(cat projects.txt | sed '/^$/d' | awk '{print "\""$0"\""}' | paste -sd "," - | sed 's/^/[/' | sed 's/$/]/')
           echo "matrix=${projects}" >> $GITHUB_OUTPUT
+          echo ${projects} >> $GITHUB_STEP_SUMMARY
         id: set-matrix
 
   detekt:
-    name: Generate Detekt report
+    name: Generate Detekt report for ${{ matrix.project }}
     needs: discover-projects
     runs-on: ubuntu-latest
     strategy:
@@ -112,13 +113,15 @@ jobs:
         sarif_file: ./sarif/${{ matrix.project }}-build-reports-detekt-detekt.sarif
         category: ${{ matrix.project }}
 
-  unit-test:
-    name: Run Unit tests
+  platform-test:
+    name: Run JUnit tests for ${{ matrix.project }} on ${{ matrix.os }}
     needs: discover-projects
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         project: ${{ fromJson(needs.discover-projects.outputs.matrix) }} # Get gradle projects from previous step
+        os: [ ubuntu-latest, macos-latest, windows-latest ] # Ubuntu is tested in "test" job
+      fail-fast: false # Ensure we get all failures on other platforms
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -142,33 +145,6 @@ jobs:
       if: always() # Must execute after failed tests
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
-
-  platform-test:
-    name: Run JUnit tests on ${{ matrix.os }}
-    needs: unit-test
-    strategy:
-      matrix:
-        os: [ macos-latest, windows-latest ] # Ubuntu is tested in "test" job
-        project: ${{ fromJson(needs.discover-projects.outputs.matrix) }} # Get gradle projects from previous step
-      fail-fast: false # Ensure we get all failures on other platforms
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # Required for version number generation
-
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: ${{ env.JDK_VERSION }}
-
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v4
-
-    - name: Run tests
-      run: ./gradlew :${{ matrix.project }}:test
 
   spotless:
     name: Run Spotless
