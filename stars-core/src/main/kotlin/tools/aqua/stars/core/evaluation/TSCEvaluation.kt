@@ -164,72 +164,72 @@ class TSCEvaluation<
   fun runEvaluation(segments: Sequence<S>) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
-      val totalEvaluationTime = measureTime {
-        // Evaluate PreEvaluationHooks
-        val hookResults =
-            tscList.associateWith { tsc ->
-              this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
-            }
+    val totalEvaluationTime = measureTime {
+      // Evaluate PreEvaluationHooks
+      val hookResults =
+          tscList.associateWith { tsc ->
+            this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
+          }
 
-        // Save results to preTSCEvaluationHookResults
-        preTSCEvaluationHookResults.putAll(hookResults)
+      // Save results to preTSCEvaluationHookResults
+      preTSCEvaluationHookResults.putAll(hookResults)
 
-        // Filter out all TSCs that have not returned OK. Do not optimize by using
-        // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
-        val tscList = mutableListOf<TSC<E, T, S, U, D>>()
-        hookResults.forEach { (tsc, results) ->
-          val (result, hooks) = evaluateHooks(results)
-          when (result) {
-            // Abort evaluation using a EvaluationHookAbort exception
-            EvaluationHookResult.ABORT -> {
-              EvaluationHookStringWrapper.abort(tsc, hooks)
-            }
-            // Cancel evaluation by returning
-            EvaluationHookResult.CANCEL -> {
-              EvaluationHookStringWrapper.cancel(tsc, hooks)
-              return
-            }
-            // Don't include current TSC in the list
-            EvaluationHookResult.SKIP -> {
-              EvaluationHookStringWrapper.skip(tsc, hooks)
-            }
-            // Include current TSC in the list
-            EvaluationHookResult.OK -> {
-              tscList.add(tsc)
-            }
+      // Filter out all TSCs that have not returned OK. Do not optimize by using
+      // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
+      val tscList = mutableListOf<TSC<E, T, S, U, D>>()
+      hookResults.forEach { (tsc, results) ->
+        val (result, hooks) = evaluateHooks(results)
+        when (result) {
+          // Abort evaluation using a EvaluationHookAbort exception
+          EvaluationHookResult.ABORT -> {
+            EvaluationHookStringWrapper.abort(tsc, hooks)
+          }
+          // Cancel evaluation by returning
+          EvaluationHookResult.CANCEL -> {
+            EvaluationHookStringWrapper.cancel(tsc, hooks)
+            return
+          }
+          // Don't include current TSC in the list
+          EvaluationHookResult.SKIP -> {
+            EvaluationHookStringWrapper.skip(tsc, hooks)
+          }
+          // Include current TSC in the list
+          EvaluationHookResult.OK -> {
+            tscList.add(tsc)
           }
         }
-
-        // Evaluate all segments
-        val segmentsEvaluationTime = measureTime {
-          if (tscList.isNotEmpty())
-              segments.computeWhile { evaluateSegment(segment = it, tscList = tscList) }
-        }
-        logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
-      }
-      logInfo("The whole evaluation took: $totalEvaluationTime")
-
-      // Print the results of all Stateful metrics
-      metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
-
-      // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-      println("Running post evaluation metrics")
-      metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
-        it.postEvaluate()
-        it.printPostEvaluationResult()
       }
 
-      // Plot the results of all Plottable metrics
-      if (writePlots) {
-        println("Creating Plots")
-        metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+      // Evaluate all segments
+      val segmentsEvaluationTime = measureTime {
+        if (tscList.isNotEmpty())
+            segments.computeWhile { evaluateSegment(segment = it, tscList = tscList) }
       }
+      logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
+    }
+    logInfo("The whole evaluation took: $totalEvaluationTime")
 
-      // Write CSV of the results of all Plottable metrics
-      if (writePlotDataCSV) {
-        println("Writing CSVs")
-        metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
-      }
+    // Print the results of all Stateful metrics
+    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+
+    // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
+    println("Running post evaluation metrics")
+    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
+      it.postEvaluate()
+      it.printPostEvaluationResult()
+    }
+
+    // Plot the results of all Plottable metrics
+    if (writePlots) {
+      println("Creating Plots")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+    }
+
+    // Write CSV of the results of all Plottable metrics
+    if (writePlotDataCSV) {
+      println("Writing CSVs")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+    }
   }
 
   /**
