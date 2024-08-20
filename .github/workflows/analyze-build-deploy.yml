@@ -62,9 +62,9 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Discover Projects
-        run: |
-          ./gradlew projects --quiet | grep -E 'Project :(.+)' | awk '{print $2}' | tr -d ':' > projects.txt
-          projects=$(cat projects.txt | jq -R -s -c 'split("\n") | map(select(length > 0))')
+        run: | 
+          ./gradlew projects --quiet | grep "Project ':" | awk -F"'" '{print $2}' | sed 's/^://' > projects.txt
+          projects=$(cat projects.txt | sed '/^$/d' | awk '{print "\""$0"\""}' | paste -sd "," - | sed 's/^/[/' | sed 's/$/]/')
           echo "matrix=${projects}" >> $GITHUB_OUTPUT
         id: set-matrix
 
