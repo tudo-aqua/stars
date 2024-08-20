@@ -48,6 +48,7 @@ jobs:
 
   discover-projects:
     name: Discover Gradle Projects
+    needs: compile
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -79,11 +80,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ${{ fromJson(needs.discover-projects.outputs.matrix) }}
+        project: ${{ fromJson(needs.discover-projects.outputs.matrix) }} # Get gradle projects from previous step
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      
+      with:
+        fetch-depth: 0 # Required for version number generation
+
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
