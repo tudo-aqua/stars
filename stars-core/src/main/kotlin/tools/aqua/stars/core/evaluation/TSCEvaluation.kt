@@ -24,6 +24,9 @@ import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
+import tools.aqua.stars.core.metric.serialization.extensions.compareToGroundTruthResults
+import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
+import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.metric.utils.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -254,9 +257,6 @@ class TSCEvaluation<
     }
   }
 
-  private fun verdict(comparisons: List<SerializableResultComparison>): Boolean {
-    return comparisons.all {
-      it.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-    }
-  }
+  private fun verdict(comparisons: List<SerializableResultComparison>): Boolean =
+      comparisons.all { it.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER) }
 }

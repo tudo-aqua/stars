@@ -26,13 +26,13 @@ import tools.aqua.stars.core.metric.serialization.SerializableIntResult
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.EQUAL_RESULTS
+import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultDirectory
-import tools.aqua.stars.core.metric.utils.getJsonString
 import tools.aqua.stars.core.metric.utils.getPreviousSerializationResultDirectory
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 

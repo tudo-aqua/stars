@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fix `toString()` function of `TSCNode` to include the root node's label.
 
+### Changed
+- Rename `DataSaver` to `PlotDataSaver`.
+
 ## [0.4] - 02.08.2024
 ### Added
 - Add iterator for `TSC`.

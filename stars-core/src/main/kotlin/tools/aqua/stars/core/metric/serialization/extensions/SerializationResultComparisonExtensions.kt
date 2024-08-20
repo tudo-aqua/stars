@@ -15,24 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.utils
+package tools.aqua.stars.core.metric.serialization.extensions
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
 
-/** Returns a [Json] [String] of a [SerializableResult] using the project [jsonConfiguration]. */
-fun SerializableResult.getJsonString(): String = jsonConfiguration.encodeToString(this)
-
 /**
- * Compares the [List] of [SerializableResult]s with the given [otherResults] [List]. See
- * [compareTo] for implementation details.
- *
- * @see [compareTo]
+ * Returns a [Json] [String] of a [SerializableResultComparison] using the project
+ * [jsonConfiguration].
  */
-fun List<SerializableResult>.compareTo(
-    otherResults: List<SerializableResult>
-): List<SerializableResultComparison> =
-    groupBy { it.source }.compareTo(otherResults.groupBy { it.source })
+fun SerializableResultComparison.getJsonString(): String = jsonConfiguration.encodeToString(this)

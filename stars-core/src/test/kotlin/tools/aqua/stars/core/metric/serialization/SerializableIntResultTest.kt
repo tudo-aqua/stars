@@ -22,6 +22,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
+import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
+import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.metric.utils.*
 
 /**
