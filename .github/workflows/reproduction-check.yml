@@ -64,7 +64,7 @@ jobs:
         run: |
           cd stars-carla
           chmod +x ./gradlew
-          ./gradlew reproductionTestAll
+          ./gradlew reproductionTest
 
       - name: Save experiments data
         uses: actions/cache/save@v4
