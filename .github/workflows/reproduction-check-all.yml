@@ -56,7 +56,7 @@ jobs:
         run: |
           cd stars-carla
           chmod +x ./gradlew
-          ./gradlew run --args="--allEgo"
+          ./gradlew reproductionTest
 
       - name: Save experiments data
         uses: actions/cache/save@v4
