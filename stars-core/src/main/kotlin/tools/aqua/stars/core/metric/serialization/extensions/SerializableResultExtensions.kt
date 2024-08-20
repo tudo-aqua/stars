@@ -15,14 +15,28 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.utils
+package tools.aqua.stars.core.metric.serialization.extensions
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.MISSING_IDENTIFIER
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.MISSING_METRIC_SOURCE
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.NEW_IDENTIFIER
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.NEW_METRIC_SOURCE
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
+
+/** Returns a [Json] [String] of a [SerializableResult] using the project [jsonConfiguration]. */
+fun SerializableResult.getJsonString(): String = jsonConfiguration.encodeToString(this)
+
+/**
+ * Compares the [List] of [SerializableResult]s with the given [otherResults] [List]. See
+ * [compareTo] for implementation details.
+ *
+ * @see [compareTo]
+ */
+fun List<SerializableResult>.compareTo(
+    otherResults: List<SerializableResult>
+): List<SerializableResultComparison> =
+    groupBy { it.source }.compareTo(otherResults.groupBy { it.source })
 
 /**
  * Extension function for [Map] of [String] to [List] of [SerializableResult] that builds a

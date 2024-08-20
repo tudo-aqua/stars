@@ -19,7 +19,7 @@ package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
-import tools.aqua.stars.core.metric.utils.getJsonString
+import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
 
 /**
  * This interface defines the base structure for all [SerializableResult]s that are produced by

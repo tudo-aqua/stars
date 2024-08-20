@@ -15,12 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.utils
+package tools.aqua.stars.core.metric.serialization.extensions
 
 import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
+import tools.aqua.stars.core.metric.utils.groundTruth
+import tools.aqua.stars.core.metric.utils.previousResults
+import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
 /**
  * Extension function of [List] of [Serializable] that compares it to the previous evaluation
