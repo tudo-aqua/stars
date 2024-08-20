@@ -22,6 +22,8 @@ package tools.aqua.stars.core.evaluation
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
 import tools.aqua.stars.core.metric.utils.*
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -54,6 +56,32 @@ class TSCEvaluation<
     val projectionIgnoreList: List<String> = emptyList(),
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
+   * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
+   * be changed to 'true' again.
+   */
+  var resultsReproducedFromGroundTruth: Boolean? = null
+    set(value) {
+      when {
+        field == null -> field = value
+        field != null && value != null -> field = field ?: false && value
+      }
+    }
+
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
+   * results. Setting a new value will be conjugated with the old value such that a verdict 'false'
+   * may not be changed to 'true' again.
+   */
+  var resultsReproducedFromPreviousRun: Boolean? = null
+    set(value) {
+      when {
+        field == null -> field = value
+        field != null && value != null -> field = field ?: false && value
+      }
+    }
+
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProvider]. */
   private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 
@@ -200,18 +228,28 @@ class TSCEvaluation<
       // Compare the results to the ground truth
       if (compareToGroundTruth) {
         println("Comparing to ground truth")
-        serializableMetrics
-            .compareToGroundTruthResults(saveVerdict = true)
-            .saveAsJsonFiles(comparedToGroundTruth = true)
+        serializableMetrics.compareToGroundTruthResults().let {
+          resultsReproducedFromGroundTruth = verdict(it)
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = true)
+        }
       }
 
       // Compare the results to the latest run
       if (compareToPreviousRun) {
         println("Comparing to previous run")
-        serializableMetrics
-            .compareToPreviousResults(saveVerdict = true)
-            .saveAsJsonFiles(comparedToGroundTruth = false)
+        serializableMetrics.compareToPreviousResults().let {
+          resultsReproducedFromPreviousRun = verdict(it)
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = false)
+        }
       }
+    }
+  }
+
+  private fun verdict(comparisons: List<SerializableResultComparison>): Boolean {
+    return comparisons.all {
+      it.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
     }
   }
 }

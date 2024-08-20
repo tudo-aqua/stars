@@ -21,58 +21,29 @@ import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.resultsReproducedFromGroundTruth
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.resultsReproducedFromPreviousRun
 
 /**
  * Extension function of [List] of [Serializable] that compares it to the previous evaluation
  * results.
  *
- * @param saveVerdict (Default: false) Whether the verdict of the comparison should be saved in
- *   [ApplicationConstantsHolder.resultsReproducedFromPreviousRun].
  * @return Returns the [List] of [SerializableResultComparison]s that was created by comparing the
  *   [SerializableResult]s of the calling [Serializable] with the previous [SerializableResult]s.
  */
-fun List<Serializable>.compareToPreviousResults(
-    saveVerdict: Boolean = false
-): List<SerializableResultComparison> =
-    map { it.getSerializableResults() }
-        .flatten()
-        .groupBy { it.source }
-        .compareTo(previousResults)
-        .also {
-          if (saveVerdict)
-              resultsReproducedFromPreviousRun =
-                  it.all { t ->
-                    t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                  }
-        }
+fun List<Serializable>.compareToPreviousResults(): List<SerializableResultComparison> =
+    map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(previousResults)
 
 /**
  * Extension function of [List] of [Serializable] that compares it to the ground-truth evaluation
  * results.
  *
- * @param saveVerdict (Default: false) Whether the verdict of the comparison should be saved in
- *   [ApplicationConstantsHolder.resultsReproducedFromGroundTruth].
  * @return Returns the [List] of [SerializableResultComparison]s that was created by comparing the
  *   [SerializableResult]s of the calling [Serializable] with the ground-truth
  *   [SerializableResult]s.
  */
-fun List<Serializable>.compareToGroundTruthResults(
-    saveVerdict: Boolean = false
-): List<SerializableResultComparison> =
-    map { it.getSerializableResults() }
-        .flatten()
-        .groupBy { it.source }
-        .compareTo(groundTruth)
-        .also {
-          if (saveVerdict)
-              resultsReproducedFromGroundTruth =
-                  it.all { t ->
-                    t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                  }
-        }
+fun List<Serializable>.compareToGroundTruthResults(): List<SerializableResultComparison> {
+  check(groundTruth.isNotEmpty()) { "No ground-truth results found." }
+  return map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(groundTruth)
+}
 
 /**
  * Extension function for [Serializable] that writes all its [SerializableResult]s as [Json] files

@@ -75,65 +75,13 @@ object ApplicationConstantsHolder {
     isLenient = true
   }
 
-  /**
-   * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
-   * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
-   * be changed to 'true' again.
-   */
-  var resultsReproducedFromGroundTruth: Boolean? = null
-    set(value) {
-      when {
-        field == null -> field = value
-        field != null && value != null -> field = field ?: false && value
-      }
-    }
-
-  val resultsReproducedFromGroundTruthFile =
-      File("$comparedResultsFolder/latest-run-reproduced-from-ground-truth.verdict")
-
-  /**
-   * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
-   * results. Setting a new value will be conjugated with the old value such that a verdict 'false'
-   * may not be changed to 'true' again.
-   */
-  var resultsReproducedFromPreviousRun: Boolean? = null
-    set(value) {
-      when {
-        field == null -> field = value
-        field != null && value != null -> field = field ?: false && value
-      }
-    }
-
-  val resultsReproducedFromPreviousRunVerdictFile =
-      File("$comparedResultsFolder/latest-run-reproduced-from-previous-run.verdict")
-
   init {
-    resultsReproducedFromGroundTruthFile.delete()
-    resultsReproducedFromPreviousRunVerdictFile.delete()
-
     Runtime.getRuntime()
         .addShutdownHook(
             Thread {
               // Close loggers
               LogManager.getLogManager().reset()
               activeLoggers.forEach { it.handlers.forEach { handler -> handler.close() } }
-
-              // Save comparison verdicts
-              if (resultsReproducedFromGroundTruth != null) {
-                resultsReproducedFromGroundTruthFile.writeText(
-                    resultsReproducedFromGroundTruth.toString())
-                File(
-                        "$comparedResultsFolder/$applicationStartTimeString/verdicts/reproduced-from-ground-truth.verdict")
-                    .writeText(resultsReproducedFromGroundTruth.toString())
-              }
-
-              if (resultsReproducedFromPreviousRun != null) {
-                resultsReproducedFromPreviousRunVerdictFile.writeText(
-                    resultsReproducedFromPreviousRun.toString())
-                File(
-                        "$comparedResultsFolder/$applicationStartTimeString/verdicts/reproduced-from-previous-run.verdict")
-                    .writeText(resultsReproducedFromPreviousRun.toString())
-              }
 
               // Delete test log folders
               File(TEST_LOG_FOLDER).deleteRecursively()
