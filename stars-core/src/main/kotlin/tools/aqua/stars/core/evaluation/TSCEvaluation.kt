@@ -95,137 +95,123 @@ class TSCEvaluation<
       writePlotDataCSV: Boolean = false,
       writeSerializedResults: Boolean = true
   ) {
-    try {
-      require(metricProviders.any()) {
-        "There needs to be at least one registered MetricProviders."
+    require(metricProviders.any()) { "There needs to be at least one registered MetricProviders." }
+
+    val totalEvaluationTime = measureTime {
+      /** Holds the [List] of [TSCProjection] based on the base [tsc]. */
+      var tscProjections: List<TSCProjection<E, T, S, U, D>>
+
+      // Build all projections of the base TSC
+      val tscProjectionCalculationTime = measureTime {
+        tscProjections = tsc.buildProjections(projectionIgnoreList)
       }
 
-      val totalEvaluationTime = measureTime {
-        /** Holds the [List] of [TSCProjection] based on the base [tsc]. */
-        var tscProjections: List<TSCProjection<E, T, S, U, D>>
+      logFine(
+          "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
 
-        // Build all projections of the base TSC
-        val tscProjectionCalculationTime = measureTime {
-          tscProjections = tsc.buildProjections(projectionIgnoreList)
-        }
+      val segmentsEvaluationTime = measureTime {
+        segments
+            .forEachIndexed { index, segment ->
+              print("\rCurrently evaluating segment $index")
+              val segmentEvaluationTime = measureTime {
+                // Run the "evaluate" function for all SegmentMetricProviders on the current
+                // segment
+                metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
+                  it.evaluate(segment)
+                }
+                val projectionsEvaluationTime = measureTime {
+                  tscProjections.forEach { projection ->
+                    val projectionEvaluationTime = measureTime {
+                      // Run the "evaluate" function for all ProjectionMetricProviders on the
+                      // current
+                      // segment
+                      metricProviders
+                          .filterIsInstance<ProjectionMetricProvider<E, T, S, U, D>>()
+                          .forEach { it.evaluate(projection) }
+                      // Holds the PredicateContext for the current segment
+                      val context = PredicateContext(segment)
 
-        logFine(
-            "The calculation of the projections for the given tsc took: $tscProjectionCalculationTime")
+                      // Holds the [TSCInstanceNode] of the current [projection] using the
+                      // [PredicateContext], representing a whole TSC.
+                      val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
 
-        val segmentsEvaluationTime = measureTime {
-          segments
-              .forEachIndexed { index, segment ->
-                print("\rCurrently evaluating segment $index")
-                val segmentEvaluationTime = measureTime {
-                  // Run the "evaluate" function for all SegmentMetricProviders on the current
-                  // segment
-                  metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
-                    it.evaluate(segment)
-                  }
-                  val projectionsEvaluationTime = measureTime {
-                    tscProjections.forEach { projection ->
-                      val projectionEvaluationTime = measureTime {
-                        // Run the "evaluate" function for all ProjectionMetricProviders on the
-                        // current
-                        // segment
-                        metricProviders
-                            .filterIsInstance<ProjectionMetricProvider<E, T, S, U, D>>()
-                            .forEach { it.evaluate(projection) }
-                        // Holds the PredicateContext for the current segment
-                        val context = PredicateContext(segment)
+                      // Run the "evaluate" function for all TSCInstanceMetricProviders on the
+                      // current segment
+                      metricProviders
+                          .filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>()
+                          .forEach { it.evaluate(segmentProjectionTSCInstance) }
 
-                        // Holds the [TSCInstanceNode] of the current [projection] using the
-                        // [PredicateContext], representing a whole TSC.
-                        val segmentProjectionTSCInstance = projection.tsc.evaluate(context)
-
-                        // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-                        // current segment
-                        metricProviders
-                            .filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>()
-                            .forEach { it.evaluate(segmentProjectionTSCInstance) }
-
-                        // Run the "evaluate" function for all
-                        // ProjectionAndTSCInstanceNodeMetricProviders on the current projection and
-                        // instance
-                        metricProviders
-                            .filterIsInstance<
-                                ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
-                            .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
-                      }
-                      logFine(
-                          "The evaluation of projection '${projection.id}' for segment '$segment' took: $projectionEvaluationTime")
+                      // Run the "evaluate" function for all
+                      // ProjectionAndTSCInstanceNodeMetricProviders on the current projection and
+                      // instance
+                      metricProviders
+                          .filterIsInstance<
+                              ProjectionAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
+                          .forEach { it.evaluate(projection, segmentProjectionTSCInstance) }
                     }
+                    logFine(
+                        "The evaluation of projection '${projection.id}' for segment '$segment' took: $projectionEvaluationTime")
                   }
-                  logFine(
-                      "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
                 }
-                logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
+                logFine(
+                    "The evaluation of all projections for segment '$segment' took: $projectionsEvaluationTime")
               }
-              .also { println() }
+              logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
+            }
+            .also { println() }
+      }
+      logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
+    }
+    logInfo("The whole evaluation took: $totalEvaluationTime")
+
+    // Print the results of all Stateful metrics
+    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+
+    // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
+    println("Running post evaluation metrics")
+    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
+      it.postEvaluate()
+      it.printPostEvaluationResult()
+    }
+
+    // Plot the results of all Plottable metrics
+    if (writePlots) {
+      println("Creating Plots")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+    }
+
+    // Write CSV of the results of all Plottable metrics
+    if (writePlotDataCSV) {
+      println("Writing CSVs")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+    }
+
+    // Write JSON files of all Serializable metrics
+    if (writeSerializedResults) {
+      val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+      if (serializableMetrics.any()) {
+        println("Writing serialized results")
+        metricProviders.filterIsInstance<Serializable>().let {
+          it.forEach { t -> t.writeSerializedResults() }
+
+          it.compareToGroundTruthResults()
+              .also { comparisonResults ->
+                resultsReproducedFromGroundTruth =
+                    comparisonResults.all { t ->
+                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+                    }
+              }
+              .forEach { resultComparison -> resultComparison.saveAsJsonFile(true) }
+
+          it.compareToLatestResults()
+              .also { comparisonResults ->
+                resultsReproducedFromLatestRun =
+                    comparisonResults.all { t ->
+                      t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+                    }
+              }
+              .forEach { resultComparison -> resultComparison.saveAsJsonFile(false) }
         }
-        logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
-      }
-      logInfo("The whole evaluation took: $totalEvaluationTime")
-
-      // Print the results of all Stateful metrics
-      metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
-
-      // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-      println("Running post evaluation metrics")
-      metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
-        it.postEvaluate()
-        it.printPostEvaluationResult()
-      }
-
-      // Plot the results of all Plottable metrics
-      if (writePlots) {
-        println("Creating Plots")
-        metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
-      }
-
-      // Write CSV of the results of all Plottable metrics
-      if (writePlotDataCSV) {
-        println("Writing CSVs")
-        metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
-      }
-
-      // Write JSON files of all Serializable metrics
-      if (writeSerializedResults) {
-        val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
-        if (serializableMetrics.any()) {
-          println("Writing serialized results")
-          metricProviders.filterIsInstance<Serializable>().let {
-            it.forEach { t -> t.writeSerializedResults() }
-
-            it.compareToGroundTruthResults()
-                .also { comparisonResults ->
-                  resultsReproducedFromGroundTruth =
-                      comparisonResults.all { t ->
-                        t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                      }
-                }
-                .forEach { resultComparison -> resultComparison.saveAsJsonFile(true) }
-
-            it.compareToLatestResults()
-                .also { comparisonResults ->
-                  resultsReproducedFromLatestRun =
-                      comparisonResults.all { t ->
-                        t.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
-                      }
-                }
-                .forEach { resultComparison -> resultComparison.saveAsJsonFile(false) }
-          }
-        }
-      }
-    } finally {
-      // Close all logging handlers to prevent .lck files to remain
-      println("Closing Loggers")
-      metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
-      closeLogger()
-
-      if (writeSerializedResults) {
-        println("Results reproduced from ground truth: $resultsReproducedFromGroundTruth")
-        println("Results reproduced from latest run: $resultsReproducedFromLatestRun")
       }
     }
   }

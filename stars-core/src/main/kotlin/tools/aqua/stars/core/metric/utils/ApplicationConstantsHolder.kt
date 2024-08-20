@@ -21,6 +21,7 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.logging.LogManager
+import java.util.logging.Logger
 import kotlinx.serialization.json.Json
 
 /**
@@ -57,6 +58,9 @@ object ApplicationConstantsHolder {
   val logFolder: String
     get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
 
+  /** Holds the [MutableList] of all currently registered [Logger]s. */
+  val activeLoggers: MutableList<Logger> = mutableListOf()
+
   /** Holds the folder name for the logs. */
   val serializedResultsFolder: String
     get() = if (isTestRun()) "test-$SERIALIZED_RESULTS_FOLDER" else SERIALIZED_RESULTS_FOLDER
@@ -84,6 +88,7 @@ object ApplicationConstantsHolder {
         .addShutdownHook(
             Thread {
               LogManager.getLogManager().reset()
+              activeLoggers.forEach { it.handlers.forEach { handler -> handler.close() } }
               File(TEST_LOG_FOLDER).deleteRecursively()
               File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
               File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
