@@ -189,7 +189,9 @@ class TSCEvaluation<
    */
   private fun evaluateSegment(segment: S, tscList: List<TSC<E, T, S, U, D>>): Boolean {
     // Evaluate PreSegmentEvaluationHooks
-    runPreSegmentEvaluationHook(segment = segment)?.let { return it }
+    runPreSegmentEvaluationHook(segment = segment)?.let {
+      return it
+    }
 
     // Evaluate segment
     val segmentEvaluationTime = measureTime {
@@ -234,15 +236,13 @@ class TSCEvaluation<
     return true
   }
 
-  /**
-   * Executes all [preTSCEvaluationHookResults] on the [tscList] and returns all passing TSCs.
-   */
-  private fun runPreEvaluationHooks() : List<TSC<E, T, S, U, D>>? {
+  /** Executes all [preTSCEvaluationHookResults] on the [tscList] and returns all passing TSCs. */
+  private fun runPreEvaluationHooks(): List<TSC<E, T, S, U, D>>? {
     // Evaluate PreEvaluationHooks
     val hookResults =
-      tscList.associateWith { tsc ->
-        this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
-      }
+        tscList.associateWith { tsc ->
+          this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
+        }
 
     // Save results to preTSCEvaluationHookResults
     preTSCEvaluationHookResults.putAll(hookResults)
@@ -278,11 +278,12 @@ class TSCEvaluation<
   /**
    * Executes all [preSegmentEvaluationHookResults] on the [segment].
    *
-   * @return `true` if the segment should be skipped, `false` if the evaluation should be canceled, `null` if the evaluation should continue normally.
+   * @return `true` if the segment should be skipped, `false` if the evaluation should be canceled,
+   *   `null` if the evaluation should continue normally.
    */
-  private fun runPreSegmentEvaluationHook(segment: S) : Boolean? {
+  private fun runPreSegmentEvaluationHook(segment: S): Boolean? {
     val hookResults =
-      this.preSegmentEvaluationHooks.associateWith { it.evaluationFunction.invoke(segment) }
+        this.preSegmentEvaluationHooks.associateWith { it.evaluationFunction.invoke(segment) }
 
     // Save results to preSegmentEvaluationHookResults
     preSegmentEvaluationHookResults[segment] = hookResults
@@ -312,10 +313,11 @@ class TSCEvaluation<
   }
 
   /**
-   * Evaluates given [results] by grouping them by [EvaluationHookResult] and returning the most severe result.
+   * Evaluates given [results] by grouping them by [EvaluationHookResult] and returning the most
+   * severe result.
    */
   private fun <T : EvaluationHook<*>> evaluateHooks(
-    results: Map<T, EvaluationHookResult>
+      results: Map<T, EvaluationHookResult>
   ): Pair<EvaluationHookResult, Collection<EvaluationHook<*>>> {
     val groupedResults = results.toList().groupBy({ it.second }, { it.first })
 
@@ -334,9 +336,7 @@ class TSCEvaluation<
     return Pair(EvaluationHookResult.OK, results.keys)
   }
 
-  /**
-    * Runs post evaluation steps such as printing, logging and plotting.
-    */
+  /** Runs post evaluation steps such as printing, logging and plotting. */
   private fun postEvaluate() {
     // Print the results of all Stateful metrics
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
