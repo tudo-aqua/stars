@@ -43,7 +43,7 @@ class MinNodesInTSCHookTest {
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
-      registerPreEvaluationHooks(
+      registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.OK))
 
       runEvaluation(segments = segments())
@@ -66,7 +66,7 @@ class MinNodesInTSCHookTest {
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
-      registerPreEvaluationHooks(
+      registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.SKIP))
 
       runEvaluation(segments = segments())
@@ -89,7 +89,7 @@ class MinNodesInTSCHookTest {
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       setup()
-      registerPreEvaluationHooks(
+      registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT))
 
       assertThrows<EvaluationHookAbort> { runEvaluation(segments = segments()) }
@@ -110,7 +110,7 @@ class MinNodesInTSCHookTest {
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
-      registerPreEvaluationHooks(
+      registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
 
       runEvaluation(segments = segments())
@@ -133,7 +133,7 @@ class MinNodesInTSCHookTest {
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
-      registerPreEvaluationHooks(
+      registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
 
       runEvaluation(segments = segments())
