@@ -29,8 +29,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param identifier The identifier to be used in the error message.
- * @property evaluationFunction The function to be executed before the evaluation of the
- *   [SegmentType].
+ * @param evaluationFunction The function to be executed before the evaluation of the [SegmentType].
  */
 open class PreSegmentEvaluationHook<
     E : EntityType<E, T, S, U, D>,
