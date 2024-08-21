@@ -15,6 +15,13 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.5 - TBA
+### Added
+- Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.
+
+### Changed
+- `TSCEvaluation` noch accepts multiple `TSCs` instead of `TSCProjections`.
+- 
+
 ### Fixed
 - Fix `toString()` function of `TSCNode` to include the root node's label.
 
