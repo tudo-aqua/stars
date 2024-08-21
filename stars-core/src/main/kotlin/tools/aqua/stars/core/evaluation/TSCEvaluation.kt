@@ -164,79 +164,19 @@ class TSCEvaluation<
   fun runEvaluation(segments: Sequence<S>) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
-    try {
-      val totalEvaluationTime = measureTime {
-        // Evaluate PreEvaluationHooks
-        val hookResults =
-            tscList.associateWith { tsc ->
-              this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
-            }
+    val totalEvaluationTime = measureTime {
+      val tscListToEvaluate = runPreEvaluationHooks() ?: return
 
-        // Save results to preTSCEvaluationHookResults
-        preTSCEvaluationHookResults.putAll(hookResults)
-
-        // Filter out all TSCs that have not returned OK. Do not optimize by using
-        // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
-        val tscList = mutableListOf<TSC<E, T, S, U, D>>()
-        hookResults.forEach { (tsc, results) ->
-          val (result, hooks) = evaluateHooks(results)
-          when (result) {
-            // Abort evaluation using a EvaluationHookAbort exception
-            EvaluationHookResult.ABORT -> {
-              EvaluationHookStringWrapper.abort(tsc, hooks)
-            }
-            // Cancel evaluation by returning
-            EvaluationHookResult.CANCEL -> {
-              EvaluationHookStringWrapper.cancel(tsc, hooks)
-              return
-            }
-            // Don't include current TSC in the list
-            EvaluationHookResult.SKIP -> {
-              EvaluationHookStringWrapper.skip(tsc, hooks)
-            }
-            // Include current TSC in the list
-            EvaluationHookResult.OK -> {
-              tscList.add(tsc)
-            }
-          }
-        }
-
-        // Evaluate all segments
-        val segmentsEvaluationTime = measureTime {
-          if (tscList.isNotEmpty())
-              segments.computeWhile { evaluateSegment(segment = it, tscList = tscList) }
-        }
-        logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
+      // Evaluate all segments
+      val segmentsEvaluationTime = measureTime {
+        if (tscListToEvaluate.isNotEmpty())
+            segments.computeWhile { evaluateSegment(segment = it, tscList = tscListToEvaluate) }
       }
-      logInfo("The whole evaluation took: $totalEvaluationTime")
-
-      // Print the results of all Stateful metrics
-      metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
-
-      // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-      println("Running post evaluation metrics")
-      metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
-        it.postEvaluate()
-        it.printPostEvaluationResult()
-      }
-
-      // Plot the results of all Plottable metrics
-      if (writePlots) {
-        println("Creating Plots")
-        metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
-      }
-
-      // Write CSV of the results of all Plottable metrics
-      if (writePlotDataCSV) {
-        println("Writing CSVs")
-        metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
-      }
-    } finally {
-      // Close all logging handlers to prevent .lck files to remain
-      println("Closing Loggers")
-      metricProviders.filterIsInstance<Loggable>().forEach { it.closeLogger() }
-      closeLogger()
+      logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
     }
+    logInfo("The whole evaluation took: $totalEvaluationTime")
+
+    postEvaluate()
   }
 
   /**
@@ -249,31 +189,7 @@ class TSCEvaluation<
    */
   private fun evaluateSegment(segment: S, tscList: List<TSC<E, T, S, U, D>>): Boolean {
     // Evaluate PreSegmentEvaluationHooks
-    val hookResults =
-        this.preSegmentEvaluationHooks.associateWith { it.evaluationFunction.invoke(segment) }
-
-    // Save results to preSegmentEvaluationHookResults
-    preSegmentEvaluationHookResults[segment] = hookResults
-
-    val (result, hooks) = evaluateHooks(hookResults)
-    when (result) {
-      // Abort the evaluation using a EvaluationHookAbort exception
-      EvaluationHookResult.ABORT -> {
-        EvaluationHookStringWrapper.abort(segment, hooks)
-      }
-      // Cancel the evaluation by returning false
-      EvaluationHookResult.CANCEL -> {
-        EvaluationHookStringWrapper.cancel(segment, hooks)
-        return false
-      }
-      // Return without evaluating the segment
-      EvaluationHookResult.SKIP -> {
-        EvaluationHookStringWrapper.skip(segment, hooks)
-        return true
-      }
-      // Continue with evaluation
-      EvaluationHookResult.OK -> {}
-    }
+    runPreSegmentEvaluationHook(segment = segment)?.let { return it }
 
     // Evaluate segment
     val segmentEvaluationTime = measureTime {
@@ -318,8 +234,88 @@ class TSCEvaluation<
     return true
   }
 
+  /**
+   * Executes all [preTSCEvaluationHookResults] on the [tscList] and returns all passing TSCs.
+   */
+  private fun runPreEvaluationHooks() : List<TSC<E, T, S, U, D>>? {
+    // Evaluate PreEvaluationHooks
+    val hookResults =
+      tscList.associateWith { tsc ->
+        this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
+      }
+
+    // Save results to preTSCEvaluationHookResults
+    preTSCEvaluationHookResults.putAll(hookResults)
+
+    // Filter out all TSCs that have not returned OK. Do not optimize by using
+    // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
+    val tscList = mutableListOf<TSC<E, T, S, U, D>>()
+    hookResults.forEach { (tsc, results) ->
+      val (result, hooks) = evaluateHooks(results)
+      when (result) {
+        // Abort evaluation using a EvaluationHookAbort exception
+        EvaluationHookResult.ABORT -> {
+          EvaluationHookStringWrapper.abort(tsc, hooks)
+        }
+        // Cancel evaluation by returning
+        EvaluationHookResult.CANCEL -> {
+          EvaluationHookStringWrapper.cancel(tsc, hooks)
+          return null
+        }
+        // Don't include current TSC in the list
+        EvaluationHookResult.SKIP -> {
+          EvaluationHookStringWrapper.skip(tsc, hooks)
+        }
+        // Include current TSC in the list
+        EvaluationHookResult.OK -> {
+          tscList.add(tsc)
+        }
+      }
+    }
+    return tscList
+  }
+
+  /**
+   * Executes all [preSegmentEvaluationHookResults] on the [segment].
+   *
+   * @return `true` if the segment should be skipped, `false` if the evaluation should be canceled, `null` if the evaluation should continue normally.
+   */
+  private fun runPreSegmentEvaluationHook(segment: S) : Boolean? {
+    val hookResults =
+      this.preSegmentEvaluationHooks.associateWith { it.evaluationFunction.invoke(segment) }
+
+    // Save results to preSegmentEvaluationHookResults
+    preSegmentEvaluationHookResults[segment] = hookResults
+
+    val (result, hooks) = evaluateHooks(hookResults)
+    return when (result) {
+      // Abort the evaluation using a EvaluationHookAbort exception
+      EvaluationHookResult.ABORT -> {
+        EvaluationHookStringWrapper.abort(segment, hooks)
+        null
+      }
+      // Cancel the evaluation by returning false
+      EvaluationHookResult.CANCEL -> {
+        EvaluationHookStringWrapper.cancel(segment, hooks)
+        false
+      }
+      // Return without evaluating the segment
+      EvaluationHookResult.SKIP -> {
+        EvaluationHookStringWrapper.skip(segment, hooks)
+        true
+      }
+      // Continue with evaluation
+      EvaluationHookResult.OK -> {
+        null
+      }
+    }
+  }
+
+  /**
+   * Evaluates given [results] by grouping them by [EvaluationHookResult] and returning the most severe result.
+   */
   private fun <T : EvaluationHook<*>> evaluateHooks(
-      results: Map<T, EvaluationHookResult>
+    results: Map<T, EvaluationHookResult>
   ): Pair<EvaluationHookResult, Collection<EvaluationHook<*>>> {
     val groupedResults = results.toList().groupBy({ it.second }, { it.first })
 
@@ -336,5 +332,32 @@ class TSCEvaluation<
     if (skippingHooks.isNotEmpty()) return Pair(EvaluationHookResult.SKIP, skippingHooks)
 
     return Pair(EvaluationHookResult.OK, results.keys)
+  }
+
+  /**
+    * Runs post evaluation steps such as printing, logging and plotting.
+    */
+  private fun postEvaluate() {
+    // Print the results of all Stateful metrics
+    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+
+    // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
+    println("Running post evaluation metrics")
+    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
+      it.postEvaluate()
+      it.printPostEvaluationResult()
+    }
+
+    // Plot the results of all Plottable metrics
+    if (writePlots) {
+      println("Creating Plots")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+    }
+
+    // Write CSV of the results of all Plottable metrics
+    if (writePlotDataCSV) {
+      println("Writing CSVs")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+    }
   }
 }
