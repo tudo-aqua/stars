@@ -64,7 +64,9 @@ class TSCEvaluation<
           TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> =
       mutableMapOf()
 
-  /** Holds a [List] of all [PreTSCEvaluationHook]s registered by [registerPreTSCEvaluationHooks]. */
+  /**
+   * Holds a [List] of all [PreTSCEvaluationHook]s registered by [registerPreTSCEvaluationHooks].
+   */
   val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, S, U, D>> = mutableListOf()
 
   /** Holds the results of the [PreSegmentEvaluationHook]s after calling [runEvaluation]. */
