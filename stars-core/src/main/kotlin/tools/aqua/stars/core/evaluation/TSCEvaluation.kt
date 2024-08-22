@@ -238,7 +238,7 @@ class TSCEvaluation<
     return true
   }
 
-  /** Executes all [preTSCEvaluationHookResults] on the [tscList] and returns all passing TSCs. */
+  /** Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs. */
   private fun runPreEvaluationHooks(): List<TSC<E, T, S, U, D>>? {
     // Evaluate PreEvaluationHooks
     val hookResults =
@@ -278,7 +278,7 @@ class TSCEvaluation<
   }
 
   /**
-   * Executes all [preSegmentEvaluationHookResults] on the [segment].
+   * Executes all [PreSegmentEvaluationHook]s on the [segment].
    *
    * @return `true` if the segment should be skipped, `false` if the evaluation should be canceled,
    *   `null` if the evaluation should continue normally.
