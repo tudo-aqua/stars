@@ -35,6 +35,12 @@ object ApplicationConstantsHolder {
   val applicationStartTimeString: String =
       applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
 
+  /** Separator for console output. */
+  const val CONSOLE_SEPARATOR =
+      "===================================================================================================="
+  /** Indent for console output. */
+  const val CONSOLE_INDENT = "                         "
+
   /** Log folder directory for analysis result logs. */
   private const val ANALYSIS_LOG_FOLDER = "analysis-result-logs"
 

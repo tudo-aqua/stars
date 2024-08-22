@@ -18,22 +18,24 @@
 package tools.aqua.stars.core.metric.metrics.postEvaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
+import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.instance.*
 import tools.aqua.stars.core.tsc.node.TSCNode
-import tools.aqua.stars.core.tsc.projection.TSCProjection
 import tools.aqua.stars.core.types.*
 
 /**
  * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as
- * [TSCNode.monitorFunction]s that evaluate to 'false'.
+ * [TSCNode.monitors] that evaluate to 'false'.
  *
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
- * failing [TSCNode.monitorFunction]s for each [TSCProjection]. It logs the failing
- * [TSCFailedMonitorInstance]s for each [TSCProjection] and groups it by the [TSCInstanceNode].
+ * failing [TSCNode.monitors] for each [TSC]. It logs the failing [TSCFailedMonitorInstance]s for
+ * each [TSC] and groups it by the [TSCInstanceNode].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -42,7 +44,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @param onlyLeafNodes (Default: false) Whether the monitor should only be triggered for leaf
  *   nodes.
- * @property dependsOn The instance of a [ValidTSCInstancesPerProjectionMetric] on which this metric
+ * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
  * @property logger [Logger] instance.
  */
@@ -53,25 +55,23 @@ class FailedMonitorsGroupedByTSCNodeMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val dependsOn: ValidTSCInstancesPerProjectionMetric<E, T, S, U, D>,
+    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
     override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-node"),
     private val onlyLeafNodes: Boolean = false
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /**
-   * Holds a [Map] from a [TSCProjection] to a [Map] from a node label (as [String], representing
-   * the ID of the monitor) to a [Map] from a node label to a [List] of all occurring
-   * [TSCInstanceNode]s including the node label.
+   * Holds a [Map] from a [TSC] to a [Map] from a node label (as [String], representing the ID of
+   * the monitor) to a [Map] from a node label to a [List] of all occurring [TSCInstanceNode]s
+   * including the node label.
    */
   private val failedMonitors:
-      MutableMap<
-          TSCProjection<E, T, S, U, D>,
-          Map<String, Map<String, List<TSCInstance<E, T, S, U, D>>>>> =
+      MutableMap<TSC<E, T, S, U, D>, Map<String, Map<String, List<TSCInstance<E, T, S, U, D>>>>> =
       mutableMapOf()
 
   /**
    * Calculates a grouped [Map] of [TSCFailedMonitorInstance]s with grouped [TSCInstance]s for all
-   * [TSCProjection]s by validating all monitors for all valid [TSCInstance]s.
+   * [TSC]s by validating all monitors for all valid [TSCInstance]s.
    */
   override fun postEvaluate() {
     failedMonitors.clear()
@@ -106,12 +106,14 @@ class FailedMonitorsGroupedByTSCNodeMetric<
         })
   }
 
-  /** Prints the count of failed monitors for each [TSCProjection]. */
+  /** Prints the count of failed monitors for each [TSC]. */
   override fun printPostEvaluationResult() {
-    failedMonitors.forEach { (projection, failedMonitors) ->
+    println(
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Failed Monitors Grouped By TSC Node \n$CONSOLE_SEPARATOR")
+    failedMonitors.forEach { (tsc, failedMonitors) ->
       if (failedMonitors.isEmpty()) return@forEach
 
-      logInfo("Failed monitors for projection '$projection':")
+      logInfo("Failed monitors for tsc '${tsc.identifier}':")
 
       failedMonitors.forEach { monitor ->
         logInfo(

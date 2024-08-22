@@ -52,8 +52,8 @@ class TSCProjectionTest {
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.id == projection1 })
-    assert(projections.any { it.id == projection2 })
+    assert(projections.any { it.identifier == projection1 })
+    assert(projections.any { it.identifier == projection2 })
   }
 
   /**
@@ -83,40 +83,40 @@ class TSCProjectionTest {
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.id == projection1 })
-    assert(projections.any { it.id == projection2 })
+    assert(projections.any { it.identifier == projection1 })
+    assert(projections.any { it.identifier == projection2 })
 
     // Check empty ignore list. The projections should not be filtered
     projections = tsc.buildProjections(listOf())
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class
-    assert(projections.any { it.id == projection1 })
-    assert(projections.any { it.id == projection2 })
+    assert(projections.any { it.identifier == projection1 })
+    assert(projections.any { it.identifier == projection2 })
 
     // Check ignore list with projection 1 to be ignored
     projections = tsc.buildProjections(listOf(projection1))
     // Check that exactly one projection is produced
     assert(projections.size == 1)
     // Check that projection 1 is not included, while projection 2 is still in the result
-    assert(!projections.any { it.id == projection1 })
-    assert(projections.any { it.id == projection2 })
+    assert(!projections.any { it.identifier == projection1 })
+    assert(projections.any { it.identifier == projection2 })
 
     // Check ignore list with projection 2 to be ignored
     projections = tsc.buildProjections(listOf(projection2))
     // Check that exactly one projection is produced
     assert(projections.size == 1)
     // Check that projection 2 is not included, while projection 1 is still in the result
-    assert(projections.any { it.id == projection1 })
-    assert(!projections.any { it.id == projection2 })
+    assert(projections.any { it.identifier == projection1 })
+    assert(!projections.any { it.identifier == projection2 })
 
     // Check ignore list with both projections to be ignored
     projections = tsc.buildProjections(listOf(projection1, projection2))
     // Check that exactly zero projections are produced
     assert(projections.isEmpty())
     // Check that projection 2 is not included, while projection 1 is still in the result
-    assert(!projections.any { it.id == projection1 })
-    assert(!projections.any { it.id == projection2 })
+    assert(!projections.any { it.identifier == projection1 })
+    assert(!projections.any { it.identifier == projection2 })
   }
 
   /**
@@ -181,9 +181,9 @@ class TSCProjectionTest {
     val projections = tsc.buildProjections()
 
     // Check that the projections are correctly represented in their respective TSCProjection class
-    val projectionAllTSC = projections.find { it.id == projectionAll }
-    val projectionSub1TSC = projections.find { it.id == projectionSub1 }
-    val projectionSub2TSC = projections.find { it.id == projectionSub2 }
+    val projectionAllTSC = projections.find { it.identifier == projectionAll }
+    val projectionSub1TSC = projections.find { it.identifier == projectionSub1 }
+    val projectionSub2TSC = projections.find { it.identifier == projectionSub2 }
     assertNotNull(projectionAllTSC)
     assertNotNull(projectionSub1TSC)
     assertNotNull(projectionSub2TSC)
@@ -201,12 +201,12 @@ class TSCProjectionTest {
             "exclusive",
             "leaf_exclusive_1",
             "leaf_exclusive_2")
-    assert(projectionAllTSC.tsc.map { it.label } == expectedLabelsAll)
+    assert(projectionAllTSC.map { it.label } == expectedLabelsAll)
 
     val expectedLabelsSub1 = listOf("root", "all", "leaf_all_1", "leaf_all_2")
-    assert(projectionSub1TSC.tsc.map { it.label } == expectedLabelsSub1)
+    assert(projectionSub1TSC.map { it.label } == expectedLabelsSub1)
 
     val expectedLabelsSub2 = listOf("root", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2")
-    assert(projectionSub2TSC.tsc.map { it.label } == expectedLabelsSub2)
+    assert(projectionSub2TSC.map { it.label } == expectedLabelsSub2)
   }
 }

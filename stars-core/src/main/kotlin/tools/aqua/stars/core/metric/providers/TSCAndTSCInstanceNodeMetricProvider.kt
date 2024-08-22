@@ -18,12 +18,14 @@
 package tools.aqua.stars.core.metric.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.tsc.projection.TSCProjection
+import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.*
 
 /**
- * The [ProjectionMetricProvider] implements the [EvaluationMetricProvider] and provides an
- * [evaluate] function which gets a [TSCProjection] which is called during the evaluation phase.
+ * The [TSCAndTSCInstanceNodeMetricProvider] implements the [EvaluationMetricProvider] and provides
+ * an [evaluate] function which gets a [TSC] and a [TSCInstance] which is called during the
+ * evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -32,7 +34,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface ProjectionMetricProvider<
+interface TSCAndTSCInstanceNodeMetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -40,10 +42,10 @@ interface ProjectionMetricProvider<
     D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
 
   /**
-   * Evaluate the metric based on the given parameter.
+   * Evaluate the metric based on the given parameters.
    *
-   * @param projection The current [TSCProjection].
-   * @return The evaluation result.
+   * @param tsc The current [TSC].
+   * @param tscInstance The current [TSCInstance].
    */
-  fun evaluate(projection: TSCProjection<E, T, S, U, D>): Any?
+  fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>)
 }

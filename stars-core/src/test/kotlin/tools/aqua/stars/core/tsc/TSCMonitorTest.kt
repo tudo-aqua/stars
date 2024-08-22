@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerProjectionMetric
+import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
@@ -50,7 +50,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -58,10 +58,11 @@ class TSCMonitorTest {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tsc, segments(), emptyList()).apply {
-      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-      runEvaluation()
-    }
+    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
+        .apply {
+          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+          runEvaluation(segments = segments())
+        }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(1, failedMonitors.size)
@@ -92,7 +93,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -100,10 +101,11 @@ class TSCMonitorTest {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tsc, segments(), emptyList()).apply {
-      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-      runEvaluation()
-    }
+    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
+        .apply {
+          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+          runEvaluation(segments = segments())
+        }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(1, failedMonitors.size)
@@ -139,7 +141,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -147,10 +149,11 @@ class TSCMonitorTest {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tsc, segments(), emptyList()).apply {
-      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-      runEvaluation()
-    }
+    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
+        .apply {
+          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+          runEvaluation(segments = segments())
+        }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(2, failedMonitors.size)
@@ -191,7 +194,7 @@ class TSCMonitorTest {
         }
 
     val validInstancesMetric =
-        ValidTSCInstancesPerProjectionMetric<
+        ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
             SimpleSegment,
@@ -199,12 +202,16 @@ class TSCMonitorTest {
             SimpleTickDataDifference>()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tsc, segments(), emptyList()).apply {
-      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-      runEvaluation()
-    }
+    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
+        .apply {
+          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+          runEvaluation(segments = segments())
+        }
+
+    assertTrue { failedMonitorsMetric.failedMonitors.any() }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
+
     assertEquals(2, failedMonitors.size)
     assertTrue(failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "MonitorFalse" })
     assertTrue(failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "MonitorFalse" })

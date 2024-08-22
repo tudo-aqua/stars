@@ -85,3 +85,11 @@ fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
 
   return if (size == 2) nextLevelList else (listOf(nextLevelList) + subList(2, size)).crossProduct()
 }
+
+/**
+ * Evaluates the given [predicate] on each element of the sequence and stops the computation as soon
+ * as the predicate returns false.
+ */
+fun <T> Sequence<T>.computeWhile(predicate: (T) -> Boolean): Unit = forEach {
+  if (!predicate(it)) return
+}
