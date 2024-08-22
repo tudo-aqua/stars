@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Validate Gradle artifacts
-      uses: gradle/wrapper-validation-action@v3
+      uses: gradle/actions/wrapper-validation@v3
 
   detekt:
     name: Generate Detekt report
@@ -41,7 +41,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run Detekt
-      uses: gradle/gradle-build-action@v3.5.0
+      uses: gradle/actions/setup-gradle@v4
       with:
         arguments: detekt
 
@@ -75,7 +75,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run tests
-      uses: gradle/gradle-build-action@v3.5.0
+      uses: gradle/actions/setup-gradle@v4
       with:
         arguments: test
 
@@ -106,7 +106,7 @@ jobs:
         java-version: ${{ env.JDK_VERSION }}
 
     - name: Run tests
-      uses: gradle/gradle-build-action@v3.5.0
+      uses: gradle/actions/setup-gradle@v4
       with:
         arguments: test
 
@@ -128,13 +128,13 @@ jobs:
 
       - name: Run Spotless checks
         id: spotlessCheck
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/actions/setup-gradle@v4
         with:
           arguments: spotlessCheck
 
       - name: Apply Spotless fixes
         if: failure()
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/actions/setup-gradle@v4
         with:
           arguments: spotlessApply
 
