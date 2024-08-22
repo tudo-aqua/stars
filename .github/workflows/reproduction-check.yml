@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Validate Gradle artifacts
-      uses: gradle/wrapper-validation-action@v1
+      uses: gradle/actions/wrapper-validation@v3
 
   reproduction:
     name: Reproduction check
@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0 # Required for version number generation
 
       - name: Checkout STARS-CARLA
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: tudo-aqua/stars-carla-experiments
           ref: dev
@@ -45,7 +45,7 @@ jobs:
           fetch-depth: 0 # Required for version number generation
         
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
@@ -70,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reproduction-comparison
-          path: ./
+          path: stars-carla/compared-results/
 
       - name: Save experiments data
         uses: actions/cache/save@v4
