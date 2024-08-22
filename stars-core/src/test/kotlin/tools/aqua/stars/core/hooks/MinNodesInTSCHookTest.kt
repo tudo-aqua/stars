@@ -173,8 +173,7 @@ class MinNodesInTSCHookTest {
               SimpleTickDataDifference>()
           .also {
             // Clear hooks to test them individually
-            preTSCEvaluationHooks.clear()
-            preSegmentEvaluationHooks.clear()
+            clearHooks()
             registerMetricProviders(it)
           }
 
