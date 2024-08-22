@@ -92,7 +92,7 @@ class TSCEvaluation<
    */
   fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, S, U, D>) {
     metricProviders.forEach {
-      check(it.javaClass !in this.metricProviders.map { t -> t.javaClass }) {
+      require(it.javaClass !in this.metricProviders.map { t -> t.javaClass }) {
         "The MetricProvider ${it.javaClass.simpleName} is already registered."
       }
       this.metricProviders.add(it)

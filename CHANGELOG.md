@@ -19,8 +19,8 @@ All notable changes to this project will be documented in this file.
 - Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.
 
 ### Changed
-- `TSCEvaluation` noch accepts multiple `TSCs` instead of `TSCProjections`.
-- 
+- `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
+- `registerMetricProviders` now throws an `IllegalArgumentException` when multiple instances of the same `MetricProvider` class is registered.
 
 ### Fixed
 - Fix `toString()` function of `TSCNode` to include the root node's label.
