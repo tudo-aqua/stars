@@ -90,6 +90,7 @@ class TSCEvaluation<
    * Registers all [MetricProvider]s to the list of metrics that should be called during evaluation.
    *
    * @param metricProviders The [MetricProvider]s that should be registered.
+   * @throws IllegalArgumentException When a given [MetricProvider] is already added.
    */
   fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, S, U, D>) {
     metricProviders.forEach {
