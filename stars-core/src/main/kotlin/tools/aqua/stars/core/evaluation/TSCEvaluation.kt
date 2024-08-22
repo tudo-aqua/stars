@@ -168,7 +168,7 @@ class TSCEvaluation<
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
-      val tscListToEvaluate = runPreEvaluationHooks() ?: return
+      val tscListToEvaluate = runPreTSCEvaluationHooks() ?: return
 
       // Evaluate all segments
       val segmentsEvaluationTime = measureTime {
@@ -240,7 +240,7 @@ class TSCEvaluation<
   }
 
   /** Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs. */
-  private fun runPreEvaluationHooks(): List<TSC<E, T, S, U, D>>? {
+  private fun runPreTSCEvaluationHooks(): List<TSC<E, T, S, U, D>>? {
     // Evaluate PreEvaluationHooks
     val hookResults =
         tscList.associateWith { tsc ->
