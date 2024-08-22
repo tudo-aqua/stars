@@ -67,7 +67,8 @@ class TSCEvaluation<
   /**
    * Holds a [List] of all [PreTSCEvaluationHook]s registered by [registerPreTSCEvaluationHooks].
    */
-  val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, S, U, D>> = mutableListOf()
+  private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, S, U, D>> =
+      mutableListOf()
 
   /** Holds the results of the [PreSegmentEvaluationHook]s after calling [runEvaluation]. */
   val preSegmentEvaluationHookResults:
@@ -78,7 +79,7 @@ class TSCEvaluation<
    * Holds a [List] of all [PreSegmentEvaluationHook]s registered by
    * [registerPreSegmentEvaluationHooks].
    */
-  val preSegmentEvaluationHooks: MutableList<PreSegmentEvaluationHook<E, T, S, U, D>> =
+  private val preSegmentEvaluationHooks: MutableList<PreSegmentEvaluationHook<E, T, S, U, D>> =
       mutableListOf()
 
   init {
