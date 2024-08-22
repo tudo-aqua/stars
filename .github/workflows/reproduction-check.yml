@@ -66,6 +66,12 @@ jobs:
           chmod +x ./gradlew
           ./gradlew reproductionTest
 
+      - name: Save reproduction results
+        uses: actions/upload-artifact@v4
+        with:
+          name: reproduction-comparison
+          path: compared-results/
+
       - name: Save experiments data
         uses: actions/cache/save@v4
         with:
