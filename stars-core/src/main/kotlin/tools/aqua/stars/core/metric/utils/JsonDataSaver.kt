@@ -21,10 +21,10 @@ import java.io.File
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
 /**
@@ -78,7 +78,7 @@ fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean):
   val resultingPath =
       "$comparedResultsFolder/" +
           "$applicationStartTimeString/" +
-          "${if(comparedToGroundTruth){"/$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER"}else{"/$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}}/" +
+          "${if(comparedToGroundTruth){"/$groundTruthDirectory"}else{"/$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}}/" +
           "${source}/" +
           "[${verdict.shortString}]_comparison_${identifier}.json"
   getJsonString().saveAsJsonFile(resultingPath)

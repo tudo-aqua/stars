@@ -60,11 +60,18 @@ jobs:
           path: stars-carla/stars-reproduction-source/stars-experiments-data/simulation_runs
           key: ${{ runner.os }}-data
         
-      - name: Run experiments
+      - name: Run experiments (short)
         run: |
           cd stars-carla
           chmod +x ./gradlew
           ./gradlew reproductionTest
+
+      - name: Run experiments
+        if: ${{ !github.event.pull_request.draft }}
+        run: |
+          cd stars-carla
+          chmod +x ./gradlew
+          ./gradlew reproductionTestAll
 
       - name: Save reproduction results
         uses: actions/upload-artifact@v4

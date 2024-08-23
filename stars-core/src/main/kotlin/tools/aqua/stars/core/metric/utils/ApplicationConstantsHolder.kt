@@ -55,7 +55,7 @@ object ApplicationConstantsHolder {
   private const val COMPARED_RESULTS_FOLDER = "compared-results"
 
   /** Folder directory for serialized ground-truth result data set. */
-  const val GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER = "ground-truth"
+  var groundTruthDirectory = "ground-truth"
 
   /** Folder directory for serialized previous evaluation result. */
   const val PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "previous-evaluation"
@@ -93,7 +93,7 @@ object ApplicationConstantsHolder {
               File(TEST_LOG_FOLDER).deleteRecursively()
               File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
               File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
-              File("test-$GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER").deleteRecursively()
+              File("test-$groundTruthDirectory").deleteRecursively()
             })
   }
 

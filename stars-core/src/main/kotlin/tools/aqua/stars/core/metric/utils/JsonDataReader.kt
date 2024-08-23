@@ -20,8 +20,8 @@ package tools.aqua.stars.core.metric.utils
 import java.io.File
 import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
 /**
@@ -46,9 +46,7 @@ val groundTruth: Map<String, List<SerializableResult>>
  *   null.
  */
 fun getGroundTruthSerializationResultDirectory(): File? =
-    File(serializedResultsFolder).listFiles()?.firstOrNull {
-      it.name == GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER
-    }
+    File(serializedResultsFolder).listFiles()?.firstOrNull { it.name == groundTruthDirectory }
 // endregion
 
 // region previous Results
@@ -79,10 +77,7 @@ val previousResults: Map<String, List<SerializableResult>>
 fun getPreviousSerializationResultDirectory(): File? =
     File(serializedResultsFolder)
         .listFiles()
-        ?.filter {
-          it.name != GROUND_TRUTH_SERIALIZED_RESULT_IDENTIFIER &&
-              it.name != applicationStartTimeString
-        }
+        ?.filter { it.name != groundTruthDirectory && it.name != applicationStartTimeString }
         ?.maxByOrNull { it.name }
 
 /**
@@ -128,5 +123,5 @@ fun getJsonContentFromString(content: String): SerializableResult =
  */
 fun getSerializedResults(root: File?): Map<String, List<SerializableResult>> =
     root?.listFiles()?.associate { sourceDir ->
-      sourceDir.name to sourceDir.listFiles().map { getJsonContentOfFile(it) }
+      sourceDir.name to (sourceDir.listFiles()?.map { getJsonContentOfFile(it) } ?: emptyList())
     } ?: emptyMap()
