@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,33 +15,26 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.tsc.projection
+package tools.aqua.stars.core.hooks
 
-import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
-import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Holds the [tsc] in form of the root [TSCNode] for a projection [id].
+ * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
+ * evaluation of the [SegmentType].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property id Identifier.
- * @property tsc The [TSC] graph.
+ * @param identifier The identifier to be used in the error message.
+ * @param evaluationFunction The function to be executed before the evaluation of the [SegmentType].
  */
-data class TSCProjection<
+open class PreSegmentEvaluationHook<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val id: Any, val tsc: TSC<E, T, S, U, D>) {
-  /** Holds the [List] of all possible [TSCInstanceNode]s from the base [tsc]. */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, S, U, D>> =
-      tsc.rootNode.generateAllInstances()
-
-  override fun toString(): String = id.toString()
-}
+    D : TickDifference<D>>(identifier: String, evaluationFunction: (S) -> EvaluationHookResult) :
+    EvaluationHook<S>(identifier = identifier, evaluationFunction = evaluationFunction)

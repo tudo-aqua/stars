@@ -15,11 +15,27 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.5 - TBA
+### Added
+- Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.
+- Add pre-defined `MinNodesInTSCHook` and `MinTicksPerSegmentHook`.
+- Add `identifier` field to `TSC`.
+
+### Changed
+- `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
+- `registerMetricProviders` now throws an `IllegalArgumentException` when multiple instances of the same `MetricProvider` class is registered.
+- Rename `ProjectionMetricProvider` to `TSCMetricProvider`.
+- Rename `ProjectionAndTSCInstanceNodeMetricProvider` to `TSCAndTSCInstanceNodeMetricProvider`.
+- Rename `InvalidTSCInstancesPerProjectionMetric` to `InvalidTSCInstancesPerTSCMetric`.
+- Rename `ValidTSCInstancesPerProjectionMetric` to `ValidTSCInstancesPerTSCMetric`.
+- Rename `MissedTSCInstancesPerProjectionMetric` to `MissedTSCInstancesPerTSCMetric`.
+- Rename `MissingPredicateCombinationsPerProjectionMetric` to `MissingPredicateCombinationsPerTSCMetric`.
+- Rename `DataSaver` to `PlotDataSaver`.
+
 ### Fixed
 - Fix `toString()` function of `TSCNode` to include the root node's label.
 
-### Changed
-- Rename `DataSaver` to `PlotDataSaver`.
+### Removed
+- Remove `TSCProjection` class. Now, for each projection in a `TSC` a new `TSC` is created and evaluated.
 
 ## [0.4] - 02.08.2024
 ### Added
