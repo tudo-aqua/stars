@@ -142,7 +142,7 @@ jobs:
 
     - name: Upload test results
       uses: mikepenz/action-junit-report@v4
-      if: always() # Must execute after failed tests
+      if: ${{ !cancelled() }} # Must execute after failed tests
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
 
@@ -173,11 +173,11 @@ jobs:
         run: ./gradlew :${{ matrix.project }}:spotlessCheck
 
       - name: Apply Spotless fixes
-        if: failure()
+        if: ${{ failure() }}
         run: ./gradlew :${{ matrix.project }}:spotlessApply
 
       - name: Generate diff
-        if: failure()
+        if: ${{ failure() }}
         shell: sh
         run: |
           echo "# Spotless violations" >> $GITHUB_STEP_SUMMARY
