@@ -21,7 +21,6 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.test.*
-import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.metric.serialization.SerializableIntResult
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
@@ -79,20 +78,6 @@ class SerializationHelpersTest {
     assertTrue(resultPath.exists())
     assertEquals(actualFileContent, actualFile.readText())
     assertEquals(actualFile, resultPath)
-  }
-
-  /**
-   * Tests that an [IllegalStateException] is thrown by [saveAsJsonFile], when the specified file
-   * already exists.
-   */
-  @Test
-  fun `Test error when wanting to override SerializableResult with saveAsJsonFile()`() {
-    val actualFilePath = "$serializedResultsFolder/testFile.json"
-    val actualFileContent = "{}"
-    actualFileContent.saveAsJsonFile(actualFilePath)
-
-    assertTrue(File(actualFilePath).exists())
-    assertThrows<IllegalArgumentException> { actualFileContent.saveAsJsonFile(actualFilePath) }
   }
   // endregion
 

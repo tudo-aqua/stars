@@ -29,6 +29,7 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedR
 
 /**
  * Extension function for [String] to save it as a Json file at the [filePathWithExtension].
+ * Warning: Overrides existing files.
  *
  * @param filePathWithExtension The name of the file into which the calling [String] should be
  *   saved.
@@ -41,7 +42,6 @@ fun String.saveAsJsonFile(filePathWithExtension: String): File {
     filePath += ".json"
   }
   val file = File(filePath)
-  require(!file.exists()) { "The file already exists! File at path: '$file'" }
   file.apply {
     parentFile.mkdirs()
     createNewFile()
