@@ -44,6 +44,12 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare them
+ *   to previous runs after the analysis.
+ * @param compareToGroundTruth (Default: ``false``) Whether to compare the results to the ground
+ *   truth.
+ * @param compareToPreviousRun (Default: ``false``) Whether to compare the results to the previous
+ *   run.
  * @property tscList The list of [TSC]s to evaluate.
  * @property writePlots (Default: ``true``) Whether to write plots after the analysis.
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
@@ -58,6 +64,9 @@ class TSCEvaluation<
     val tscList: List<TSC<E, T, S, U, D>>,
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
+    val writeSerializedResults: Boolean = true,
+    val compareToGroundTruth: Boolean = false,
+    val compareToPreviousRun: Boolean = false,
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
 
@@ -201,22 +210,8 @@ class TSCEvaluation<
    * [MetricProvider].
    *
    * @param segments The [Sequence] of [SegmentType]s to evaluate.
-   * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare
-   *   them to previous runs after the analysis.
-   * @param compareToGroundTruth (Default: ``false``) Whether to compare the results to the ground
-   *   truth.
-   * @param compareToPreviousRun (Default: ``false``) Whether to compare the results to the previous
-   *   run.
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
-  fun runEvaluation(
-      writePlots: Boolean = true,
-      writePlotDataCSV: Boolean = false,
-      writeSerializedResults: Boolean = true,
-      compareToGroundTruth: Boolean = false,
-      compareToPreviousRun: Boolean = false,
-  ) {
-    require(metricProviders.any()) { "There needs to be at least one registered MetricProviders." }
   fun runEvaluation(segments: Sequence<S>) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
