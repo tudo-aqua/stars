@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
 
 /** This class defines the structure for all comparisons between two [SerializableResult]s. */
 @Serializable
@@ -31,5 +32,16 @@ data class SerializableResultComparison(
     /** The value of the old [SerializableResult]. */
     val oldValue: String,
     /** The value of the [SerializableResult] that was produced during this evaluation. */
-    val newValue: String,
-)
+    val newValue: String
+) {
+  companion object {
+    /**
+     * Returns whether all [SerializableResultComparison]s in this list have a verdict of
+     * [EQUAL_RESULTS], [NEW_METRIC_SOURCE] or [NEW_IDENTIFIER], i.e. there was no miss or mismatch
+     * against compared data.
+     */
+    fun List<SerializableResultComparison>.noMismatch(): Boolean = all {
+      it.verdict in listOf(EQUAL_RESULTS, NEW_METRIC_SOURCE, NEW_IDENTIFIER)
+    }
+  }
+}

@@ -28,4 +28,29 @@ package tools.aqua.stars.core.hooks
 sealed class EvaluationHook<T>(
     val identifier: String,
     val evaluationFunction: (T) -> EvaluationHookResult
-)
+) {
+  companion object {
+    /**
+     * Evaluates given the results map by grouping them by [EvaluationHookResult] and returning the
+     * most severe result.
+     */
+    fun <T : EvaluationHook<*>> Map<T, EvaluationHookResult>.evaluate():
+        Pair<EvaluationHookResult, Collection<EvaluationHook<*>>> {
+      val groupedResults = this.toList().groupBy({ it.second }, { it.first })
+
+      // Abort the evaluation and throw exception if any hook returns ABORT
+      val abortingHooks = groupedResults[EvaluationHookResult.ABORT] ?: emptyList()
+      if (abortingHooks.isNotEmpty()) return Pair(EvaluationHookResult.ABORT, abortingHooks)
+
+      // Cancel the evaluation if any hook returns CANCEL
+      val cancelingHooks = groupedResults[EvaluationHookResult.CANCEL] ?: emptyList()
+      if (cancelingHooks.isNotEmpty()) return Pair(EvaluationHookResult.CANCEL, cancelingHooks)
+
+      // Skip all TSCs that have a hook returning SKIP
+      val skippingHooks = groupedResults[EvaluationHookResult.SKIP] ?: emptyList()
+      if (skippingHooks.isNotEmpty()) return Pair(EvaluationHookResult.SKIP, skippingHooks)
+
+      return Pair(EvaluationHookResult.OK, this.keys)
+    }
+  }
+}

@@ -37,4 +37,52 @@ open class PreSegmentEvaluationHook<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(identifier: String, evaluationFunction: (S) -> EvaluationHookResult) :
-    EvaluationHook<S>(identifier = identifier, evaluationFunction = evaluationFunction)
+    EvaluationHook<S>(identifier = identifier, evaluationFunction = evaluationFunction) {
+  companion object {
+    /**
+     * Executes all [PreSegmentEvaluationHook]s on the [segment].
+     *
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param segment The segment to evaluate.
+     * @return `true` if the segment should be skipped, `false` if the evaluation should be
+     *   canceled, `null` if the evaluation should continue normally.
+     */
+    fun <
+        E : EntityType<E, T, S, U, D>,
+        T : TickDataType<E, T, S, U, D>,
+        S : SegmentType<E, T, S, U, D>,
+        U : TickUnit<U, D>,
+        D : TickDifference<D>> MutableList<PreSegmentEvaluationHook<E, T, S, U, D>>.evaluate(
+        segment: S
+    ): Pair<Boolean?, Map<PreSegmentEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> {
+      val hookResults = this.associateWith { it.evaluationFunction.invoke(segment) }
+
+      val (result, hooks) = hookResults.evaluate()
+      return when (result) {
+        // Abort the evaluation using a EvaluationHookAbort exception
+        EvaluationHookResult.ABORT -> {
+          EvaluationHookStringWrapper.abort(segment, hooks)
+          null to hookResults
+        }
+        // Cancel the evaluation by returning false
+        EvaluationHookResult.CANCEL -> {
+          EvaluationHookStringWrapper.cancel(segment, hooks)
+          false to hookResults
+        }
+        // Return without evaluating the segment
+        EvaluationHookResult.SKIP -> {
+          EvaluationHookStringWrapper.skip(segment, hooks)
+          true to hookResults
+        }
+        // Continue with evaluation
+        EvaluationHookResult.OK -> {
+          null to hookResults
+        }
+      }
+    }
+  }
+}
