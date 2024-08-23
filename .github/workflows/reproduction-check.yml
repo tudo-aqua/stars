@@ -66,6 +66,12 @@ jobs:
           chmod +x ./gradlew
           ./gradlew reproductionTest
 
+      - name: Save reproduction results
+        uses: actions/upload-artifact@v4
+        with:
+          name: reproduction-comparison
+          path: stars-carla/compared-results/
+
       - name: Run experiments
         if: ${{ !github.event.pull_request.draft }}
         run: |

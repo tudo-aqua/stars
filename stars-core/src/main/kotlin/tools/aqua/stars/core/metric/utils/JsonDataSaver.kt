@@ -76,11 +76,10 @@ fun SerializableResult.saveAsJsonFile(): File {
  */
 fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean): File {
   val resultingPath =
-      "$comparedResultsFolder/" +
-          "$applicationStartTimeString/" +
-          "${if(comparedToGroundTruth){"/$groundTruthDirectory"}else{"/$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}}/" +
-          "${source}/" +
-          "[${verdict.shortString}]_comparison_${identifier}.json"
+      "$comparedResultsFolder/$applicationStartTimeString/${
+            if(comparedToGroundTruth){"/${groundTruthDirectory.replace('/', '-')}"}
+            else{"/$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}
+          }/${source}/[${verdict.shortString}]_comparison_${identifier}.json"
   getJsonString().saveAsJsonFile(resultingPath)
   return File(resultingPath)
 }
