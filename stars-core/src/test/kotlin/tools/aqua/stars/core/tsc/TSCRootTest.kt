@@ -43,6 +43,21 @@ class TSCRootTest {
     assertEquals(label, tsc.rootNode.label)
   }
 
+  /** Test adding a condition to root node. */
+  @Test
+  fun `Test adding a condition to root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        all("rooted") { condition { true } }
+      }
+    }
+  }
+
   /** Test adding two nodes as root. */
   @Test
   fun `Test adding two nodes as root`() {
