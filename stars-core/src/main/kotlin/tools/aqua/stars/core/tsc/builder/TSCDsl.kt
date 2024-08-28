@@ -61,5 +61,9 @@ fun <
 
   check(rootEdge.destination.edges.isNotEmpty()) { "Init must add exactly one element to root." }
 
+  check(rootEdge.destination.edges[0].condition == CONST_TRUE) {
+    "Root node must not have a condition. Consider adding a fitting bounded parent node."
+  }
+
   return TSC(rootEdge.destination.edges[0].destination)
 }
