@@ -86,4 +86,94 @@ class TSCRootTest {
           SimpleTickDataDifference> {}
     }
   }
+
+  /** Test adding a condition to the 'all' root node. */
+  @Test
+  fun `Test throwing of exception with added condition at all root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        all("root") { condition { true } }
+      }
+    }
+  }
+
+  /** Test adding a condition to the 'any' root node. */
+  @Test
+  fun `Test throwing of exception with added condition at any root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        any("root") { condition { true } }
+      }
+    }
+  }
+
+  /** Test adding a condition to the 'optional' root node. */
+  @Test
+  fun `Test throwing of exception with added condition at optional root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        optional("root") { condition { true } }
+      }
+    }
+  }
+
+  /** Test adding a condition to the 'exclusive' root node. */
+  @Test
+  fun `Test throwing of exception with added condition at exclusive root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        exclusive("root") { condition { true } }
+      }
+    }
+  }
+
+  /** Test adding a condition to the 'leaf' root node. */
+  @Test
+  fun `Test throwing of exception with added condition at leaf root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        leaf("root") { condition { true } }
+      }
+    }
+  }
+
+  /** Test adding a condition to the 'bounded' root node. */
+  @Test
+  fun `Test throwing of exception with added condition at bounded root node`() {
+    assertFailsWith<IllegalStateException> {
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        bounded("root", 2 to 3) { condition { true } }
+      }
+    }
+  }
 }
