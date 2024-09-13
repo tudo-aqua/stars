@@ -19,6 +19,7 @@ package tools.aqua.stars.importer.carla
 
 import kotlin.math.abs
 import tools.aqua.stars.data.av.dataclasses.*
+import tools.aqua.stars.data.av.dataclasses.VehicleType.*
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 // region converter
@@ -97,18 +98,20 @@ fun convertJsonVehicleToVehicle(
     lane: Lane
 ): Vehicle =
     Vehicle(
-        typeId = vehicle.typeId,
-        acceleration = vehicle.acceleration.toVector3D(),
-        angularVelocity = vehicle.angularVelocity.toVector3D(),
-        isEgo = vehicle.egoVehicle,
-        forwardVector = vehicle.forwardVector.toVector3D(),
         id = vehicle.id,
-        lane = lane,
-        location = vehicle.location.toLocation(),
-        positionOnLane = positionOnLane,
-        rotation = vehicle.rotation.toRotation(),
         tickData = tickData,
-        velocity = vehicle.velocity.toVector3D())
+        positionOnLane = positionOnLane,
+        lane = lane,
+        typeId = vehicle.typeId,
+        vehicleType = getVehicleTypeFromTypeId(vehicle.typeId),
+        isEgo = vehicle.egoVehicle,
+        location = vehicle.location.toLocation(),
+        forwardVector = vehicle.forwardVector.toVector3D(),
+        rotation = vehicle.rotation.toRotation(),
+        velocity = vehicle.velocity.toVector3D(),
+        acceleration = vehicle.acceleration.toVector3D(),
+        angularVelocity = vehicle.angularVelocity.toVector3D()
+    )
 
 /**
  * Converts [JsonPedestrian] to [Pedestrian].
@@ -133,9 +136,9 @@ fun convertJsonPedestrianToPedestrian(
  * @param jsonBlock The [JsonBlock].
  * @param fileName The filename.
  */
-fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String): Block =
+fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String, roadTypeMap: Map<Int, RoadType>): Block =
     Block(id = jsonBlock.id, roads = emptyList(), fileName = fileName).apply {
-      roads = jsonBlock.roads.map { convertJsonRoadToRoad(it, this) }
+      roads = jsonBlock.roads.map { convertJsonRoadToRoad(it, this, roadTypeMap) }
     }
 
 /**
@@ -144,8 +147,13 @@ fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String): Block =
  * @param jsonRoad The [JsonRoad].
  * @param block The [Block].
  */
-fun convertJsonRoadToRoad(jsonRoad: JsonRoad, block: Block): Road =
-    Road(id = jsonRoad.roadId, block = block, lanes = emptyList(), isJunction = jsonRoad.isJunction)
+fun convertJsonRoadToRoad(jsonRoad: JsonRoad, block: Block, roadTypeMap: Map<Int, RoadType>): Road =
+    Road(
+      id = jsonRoad.roadId,
+      roadType = roadTypeMap[jsonRoad.roadId] ?: RoadType.UNKNOWN,
+      isJunction = jsonRoad.isJunction,
+      block = block,
+      lanes = emptyList())
         .apply { lanes = jsonRoad.lanes.map { lane -> convertJsonLaneToLane(lane, this) } }
 
 /**
@@ -248,15 +256,25 @@ fun getSpeedLimitsFromLandmarks(lane: Lane, landmarks: List<JsonLandmark>): List
   return speedLimits
 }
 
+fun getVehicleTypeFromTypeId(typeId: String): VehicleType = when (typeId) {
+  in cars -> CAR
+  in trucks -> TRUCK
+  in vans -> VAN
+  in buses -> BUS
+  in motorcycles -> MOTORCYCLE
+  in bicycles -> BICYCLE
+  else -> error("Unknown vehicle type: $typeId")
+}
+
 /**
  * Calculates static [JsonBlock]s to [Block]s.
  *
  * @param staticJsonBlocks List of [JsonBlock]s.
  * @param fileName File name.
  */
-fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String): List<Block> =
+fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String, roadTypeMap: Map<Int, RoadType>): List<Block> =
     staticJsonBlocks
-        .map { block -> convertJsonBlockToBlock(block, fileName) }
+        .map { block -> convertJsonBlockToBlock(block, fileName, roadTypeMap) }
         .also {
           updateLanes(
               jsonLanes = staticJsonBlocks.flatMap { b -> b.roads }.flatMap { b -> b.lanes },

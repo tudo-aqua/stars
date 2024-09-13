@@ -18,6 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 import tools.aqua.stars.core.types.TickDifference
+import kotlin.math.round
 
 /**
  * Implementation of the [TickDifference] interface for 'seconds' units.
@@ -36,7 +37,7 @@ class TickDataDifferenceSeconds(val differenceSeconds: Double) :
       TickDataDifferenceSeconds(this.differenceSeconds - other.differenceSeconds)
 
   override fun toString(): String =
-      "TickDataDifferenceSeconds(difference: ${this.differenceSeconds})"
+      "${round(this.differenceSeconds*10)/10.0}s"
 
   override fun equals(other: Any?): Boolean =
       if (other is TickDataDifferenceSeconds) this.differenceSeconds == other.differenceSeconds

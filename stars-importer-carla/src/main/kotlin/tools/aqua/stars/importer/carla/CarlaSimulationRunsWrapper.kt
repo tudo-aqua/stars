@@ -17,22 +17,29 @@
 
 package tools.aqua.stars.importer.carla
 
-import java.nio.file.Path
 import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.RoadType
+import java.io.File
 
 /**
  * Contains the information for all simulation runs for one specific map. Each
- * [CarlaSimulationRunsWrapper] contains a [Path] to the [mapDataFile] and a list of [Path]s for the
- * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [Path]s as an
+ * [CarlaSimulationRunsWrapper] contains a [File] to the [mapDataFile] and a list of [File]s for the
+ * [dynamicDataFiles]. It also holds properties for calculated [Block]s and the [File]s as an
  * [ArrayDeque] in [dynamicDataFilesArrayDeque]
  *
- * @property mapDataFile The [Path] to map data file containing all static information
- * @property dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state
- *   data for the simulation
+ * @property mapDataFile The [File] to map data file containing all static information.
+ * @property dynamicDataFiles A [List] of [File]s to the data files which contain the timed state
+ *   data for the simulation.
+ * @property roadTypeMap A [Map] of the [RoadType]s.
  */
-data class CarlaSimulationRunsWrapper(val mapDataFile: Path, val dynamicDataFiles: List<Path>) {
+data class CarlaSimulationRunsWrapper(
+  val mapDataFile: File,
+  val dynamicDataFiles: List<File>,
+  val roadTypeMap: Map<Int, RoadType>
+) {
   /** Holds a [List] of [Block]s. */
   var blocks: List<Block> = emptyList()
-  /** Holds an [ArrayDeque] of [Path]s. */
-  val dynamicDataFilesArrayDeque: ArrayDeque<Path> = ArrayDeque(dynamicDataFiles)
+
+  /** Holds an [ArrayDeque] of [File]s. */
+  val dynamicDataFilesArrayDeque: ArrayDeque<File> = ArrayDeque(dynamicDataFiles)
 }

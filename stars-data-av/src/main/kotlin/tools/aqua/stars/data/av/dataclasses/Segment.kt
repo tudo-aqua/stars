@@ -39,16 +39,22 @@ data class Segment(
   override val primaryEntityId: Int
     get() {
       val firstTick = tickData.first()
-      check(firstTick.entities.filterIsInstance<Vehicle>().any { it.isEgo }) {
+      val ego = firstTick.egoVehicle
+
+      checkNotNull(ego) {
         "There is no primary entity for tick $firstTick"
       }
-      val firstEgo = firstTick.egoVehicle
-      check(tickData.any { it.entities.filterIsInstance<Vehicle>().count { v -> v.isEgo } == 1 }) {
-        "There is at least one tick with multiple primary entities in segment ${this.toString(firstEgo.id)}"
+
+      val egoId = ego.id
+
+      check(tickData.any { it.vehicles.count { v -> v.isEgo } == 1 }) {
+        "There is at least one tick with multiple primary entities in segment ${this.toString(egoId)}"
       }
-      if (tickData.any { it.egoVehicle.id != firstEgo.id })
-          error("The ego id changes in Segment ${this.toString(firstEgo.id)}")
-      return firstEgo.id
+
+      if (tickData.any { it.egoVehicle?.id != egoId })
+          error("The ego id changes in Segment ${this.toString(egoId)}")
+
+      return egoId
     }
 
   /** Cache for all vehicle IDs. */

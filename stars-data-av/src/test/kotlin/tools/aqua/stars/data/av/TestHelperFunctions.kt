@@ -26,9 +26,11 @@ fun emptyBlock(id: String = ""): Block = Block(id = id, roads = listOf(), fileNa
 fun emptyRoad(id: Int = 0, isJunction: Boolean = false, block: Block = emptyBlock()): Road =
     Road(
         id = id,
-        block = block,
+        roadType = RoadType.UNKNOWN,
         isJunction = isJunction,
+        block = block,
         lanes = listOf(),
+
     )
 
 /** Empty [Lane]. */
@@ -139,6 +141,7 @@ fun emptyVehicle(
         positionOnLane = positionOnLane,
         tickData = tickData,
         typeId = "",
+        vehicleType = VehicleType.CAR,
         velocity = emptyVector3D())
 
 /** Empty [StaticTrafficLight]. */

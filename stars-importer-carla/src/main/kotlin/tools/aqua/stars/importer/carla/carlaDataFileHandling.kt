@@ -20,12 +20,7 @@
 package tools.aqua.stars.importer.carla
 
 import java.io.File
-import java.nio.file.Path
 import java.util.zip.ZipFile
-import kotlin.io.path.exists
-import kotlin.io.path.extension
-import kotlin.io.path.inputStream
-import kotlin.io.path.isDirectory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -33,6 +28,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.RoadType
 import tools.aqua.stars.data.av.dataclasses.Segment
 import tools.aqua.stars.importer.carla.dataclasses.*
 
@@ -51,10 +47,10 @@ val carlaDataSerializerModule: SerializersModule = SerializersModule {
  * ".json", ".zip". The generic parameter [T] specifies the class to which the content should be
  * parsed to.
  *
- * @return The parsed JSON content from the given [Path].
+ * @return The parsed JSON content from the given [File].
  */
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T> getJsonContentOfPath(file: Path): T {
+inline fun <reified T> getJsonContentOfFile(file: File): T {
   // Create JsonBuilder with correct settings
   val jsonBuilder = Json {
     prettyPrint = true
@@ -63,10 +59,10 @@ inline fun <reified T> getJsonContentOfPath(file: Path): T {
   }
 
   // Check if inputFilePath exists
-  check(file.exists()) { "The given file path does not exist: ${file.toUri()}" }
+  check(file.exists()) { "The given file does not exist: $file" }
 
   // Check whether the given inputFilePath is a directory
-  check(!file.isDirectory()) { "Cannot get InputStream for directory. Path: $file" }
+  check(!file.isDirectory()) { "Cannot get InputStream for directory. File: $file" }
 
   // If ".json"-file: Just return InputStream of file
   if (file.extension == "json") {
@@ -76,7 +72,7 @@ inline fun <reified T> getJsonContentOfPath(file: Path): T {
   // if ".zip"-file: Extract single archived file
   if (file.extension == "zip") {
     // https://stackoverflow.com/a/46644254
-    ZipFile(File(file.toUri())).use { zip ->
+    ZipFile(file).use { zip ->
       zip.entries().asSequence().forEach { entry ->
         // Add InputStream to inputStreamBuffer
         return jsonBuilder.decodeFromStream<T>(zip.getInputStream(entry))
@@ -91,27 +87,28 @@ inline fun <reified T> getJsonContentOfPath(file: Path): T {
 /**
  * Return a [Sequence] of [Block]s from a given [mapDataFile] path.
  *
- * @param mapDataFile The [Path] which points to the file that contains the static map data
- * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [Path]
+ * @param mapDataFile The [File] which points to the file that contains the static map data.
+ * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [File].
  */
-fun loadBlocks(mapDataFile: Path): Sequence<Block> =
+fun loadBlocks(mapDataFile: File, roadTypeMap: Map<Int, RoadType>): Sequence<Block> =
     calculateStaticBlocks(
-            getJsonContentOfPath<List<JsonBlock>>(mapDataFile), mapDataFile.fileName.toString())
+            getJsonContentOfFile<List<JsonBlock>>(mapDataFile), mapDataFile.name.toString(),
+      roadTypeMap)
         .asSequence()
 
 /**
  * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
  * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
- * data, each as [Path]s.
+ * data, each as [File]s.
  *
  * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
- *   to its dynamic data
+ *   to its dynamic data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- *   vehicle as the "ego" vehicle
- * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ *   vehicle as the "ego" vehicle.
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment].
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map
- * @return A [Sequence] of [Segment]s based on the given [simulationRunsWrappers]
+ *   the map.
+ * @return A [Sequence] of [Segment]s based on the given [simulationRunsWrappers].
  */
 fun loadSegments(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
@@ -123,8 +120,8 @@ fun loadSegments(
   // Check that every SimulationRunsWrapper has dynamic data files loaded
   simulationRunsWrapperList.forEach {
     check(it.dynamicDataFiles.any()) {
-      "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no dynamic files. Dynamic file " +
-          "paths: ${it.dynamicDataFiles.map { dynamicDataFilePath ->  dynamicDataFilePath.toUri() }}"
+      "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no dynamic files. Dynamic file: " +
+          it.dynamicDataFiles.map { dynamicDataFilePath ->  dynamicDataFilePath.toString() }
     }
   }
 
@@ -134,20 +131,20 @@ fun loadSegments(
     var sortedSimulationRunsWrapperList =
         simulationRunsWrapperList.flatMap { wrapper ->
           wrapper.dynamicDataFiles.map {
-            CarlaSimulationRunsWrapper(wrapper.mapDataFile, listOf(it))
+            CarlaSimulationRunsWrapper(wrapper.mapDataFile, listOf(it), wrapper.roadTypeMap)
           }
         }
     // Sort the list by the seed name in the dynamic file name
     sortedSimulationRunsWrapperList =
         sortedSimulationRunsWrapperList.sortedBy {
-          getSeed(it.dynamicDataFiles.first().fileName.toString())
+          getSeed(it.dynamicDataFiles.first().name)
         }
     // Set simulationRunsWrapperList to sorted list to proceed with the sorted list
     simulationRunsWrapperList = sortedSimulationRunsWrapperList
   }
 
   // Load Blocks and save in SimulationRunsWrapper
-  simulationRunsWrapperList.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
+  simulationRunsWrapperList.forEach { it.blocks = loadBlocks(it.mapDataFile, it.roadTypeMap).toList() }
 
   // Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters
   val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrapperList)
@@ -156,11 +153,11 @@ fun loadSegments(
 
   return generateSequence {
     // There currently is another Segment that was already calculated
-    if (segmentBuffer.size > 0) {
+    if (segmentBuffer.isNotEmpty()) {
       return@generateSequence segmentBuffer.removeFirst()
     }
     // No calculated Segment is left. Calculate new Segments
-    if (simulationRunsWrappersDeque.size > 0) {
+    while (simulationRunsWrappersDeque.isNotEmpty() && segmentBuffer.isEmpty()) {
       // Holds the current [CarlaSimulationRunsWrapper]
       val simulationRunsWrapper = simulationRunsWrappersDeque.first()
       // Remove current simulationRunsWrapper only if there is no dynamic data file left to analyze
@@ -170,10 +167,10 @@ fun loadSegments(
       // Holds the current [InputStream] of the next dynamic data file to be calculated
       val currentDynamicDataPath = simulationRunsWrapper.dynamicDataFilesArrayDeque.removeFirst()
 
-      println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
+      println("Reading simulation run file: $currentDynamicDataPath")
 
       // Holds the current simulationRun object
-      val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
+      val simulationRun = getJsonContentOfFile<List<JsonTickData>>(currentDynamicDataPath)
 
       // Calculate Blocks for current file and add each Segment to the Sequence
       segmentBuffer.addAll(
@@ -181,13 +178,17 @@ fun loadSegments(
               simulationRunsWrapper.blocks,
               simulationRun,
               useEveryVehicleAsEgo,
-              currentDynamicDataPath.fileName.toString(),
+              currentDynamicDataPath.name,
               minSegmentTickCount))
-      return@generateSequence segmentBuffer.removeFirst()
     }
+
+    // If there are Segments to process, return the next Segment
+    return@generateSequence if (segmentBuffer.isNotEmpty())
+      segmentBuffer.removeFirst()
     // If there are no Segments nor Files to process, return null to indicate the end of the
     // Sequence
-    return@generateSequence null
+    else
+      null
   }
 }
 
@@ -197,26 +198,28 @@ fun loadSegments(
  * used as the ego vehicle. This will multiply the size of the resulting sequence of [Segment]s by
  * the number of vehicles.
  *
- * @param mapDataFile The [Path] to map data file containing all static information
- * @param dynamicDataFile The [Path] to the data file which contains the timed state data for the
- *   simulation
+ * @param mapDataFile The [File] to map data file containing all static information.
+ * @param dynamicDataFile The [File] to the data file which contains the timed state data for the
+ *   simulation.
+ * @param roadTypeMap A [Map] of the [RoadType]s.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- *   vehicle as the "ego" vehicle
- * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ *   vehicle as the "ego" vehicle.
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment].
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map
- * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFile]
+ *   the map.
+ * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFile].
  */
 fun loadSegments(
-    mapDataFile: Path,
-    dynamicDataFile: Path,
+    mapDataFile: File,
+    dynamicDataFile: File,
+    roadTypeMap: Map<Int, RoadType>,
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> =
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
-        listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+        listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile), roadTypeMap)),
         useEveryVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
@@ -225,37 +228,40 @@ fun loadSegments(
  * Load [Segment]s for one specific map. The map data comes from the file [mapDataFile] and the
  * dynamic data from multiple files [dynamicDataFiles].
  *
- * @param mapDataFile The [Path] to map data file containing all static information
- * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state data
- *   for the simulation
+ * @param mapDataFile The [File] to map data file containing all static information.
+ * @param dynamicDataFiles A [List] of [File]s to the data files which contain the timed state data
+ *   for the simulation.
+ * @param roadTypeMap A [Map] of the [RoadType]s.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
- *   vehicle as the "ego" vehicle
- * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
+ *   vehicle as the "ego" vehicle.
+ * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment].
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map
- * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles]
+ *   the map.
+ * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles].
  */
 fun loadSegments(
-    mapDataFile: Path,
-    dynamicDataFiles: List<Path>,
+    mapDataFile: File,
+    dynamicDataFiles: List<File>,
+    roadTypeMap: Map<Int, RoadType>,
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> =
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
-        listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
+        listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles, roadTypeMap)),
         useEveryVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
 
 /**
- * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[Path],
- * List[Path]> with the semantics: Map<MapDataPath, List<DynamicDataPath>>. As each dynamic data is
+ * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[File],
+ * List[File]> with the semantics: Map<MapDataFile, List<DynamicDataFile>>. As each dynamic data is
  * linked to a map data, they are linked in the [Map].
  *
- * @param mapToDynamicDataFiles Maps the [Path] of the static file to a [List] of [Path]s of dynamic
+ * @param mapToDynamicDataFiles Maps the [File] of the static file to a [List] of [File]s of dynamic
  *   files related to the static file.
+ * @param roadTypeMap A [Map] of the [RoadType]s.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
@@ -265,14 +271,15 @@ fun loadSegments(
  * @return A [Sequence] of [Segment]s based on the given 'mapDataFile' and 'dynamicDataFiles'.
  */
 fun loadSegments(
-    mapToDynamicDataFiles: Map<Path, List<Path>>,
+    mapToDynamicDataFiles: Map<File, List<File>>,
+    roadTypeMap: Map<Int, RoadType>,
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> =
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
-        mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
+        mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value, roadTypeMap) },
         useEveryVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)

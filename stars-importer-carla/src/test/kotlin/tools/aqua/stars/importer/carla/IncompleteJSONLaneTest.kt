@@ -21,6 +21,7 @@ import kotlin.test.*
 import tools.aqua.stars.data.av.dataclasses.Block
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Road
+import tools.aqua.stars.data.av.dataclasses.RoadType
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 /** Tests behaviour on incomplete data from json. */
@@ -37,7 +38,13 @@ class IncompleteJSONLaneTest {
   @BeforeTest
   fun setupData() {
     incompleteBlock = Block(id = "1", fileName = "", roads = listOf())
-    incompleteRoad = Road(lanes = listOf(), id = 1, block = incompleteBlock, isJunction = false)
+    incompleteRoad = Road(
+      id = 1,
+      roadType = RoadType.UNKNOWN,
+      isJunction = false,
+      block = incompleteBlock,
+      lanes = listOf()
+    )
     incompleteJsonLane =
         JsonLane(
             laneId = 1,
