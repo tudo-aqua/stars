@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.
 - Add pre-defined `MinNodesInTSCHook` and `MinTicksPerSegmentHook`.
 - Add `identifier` field to `TSC`.
+- Add `euclideanDistance` function to `Location`.
 
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
