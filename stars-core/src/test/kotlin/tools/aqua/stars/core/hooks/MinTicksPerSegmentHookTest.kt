@@ -168,9 +168,9 @@ class MinTicksPerSegmentHookTest {
     val tick2 = SimpleTickDataUnit(1)
     val tick3 = SimpleTickDataUnit(2)
 
-    val tickData1 = SimpleTickData(tick1)
-    val tickData2 = SimpleTickData(tick2)
-    val tickData3 = SimpleTickData(tick3)
+    val tickData1 = SimpleTickData(tick1, entities)
+    val tickData2 = SimpleTickData(tick2, entities)
+    val tickData3 = SimpleTickData(tick3, entities)
 
     tickDataList1[tick1] = tickData1
     tickDataList2[tick2] = tickData2
