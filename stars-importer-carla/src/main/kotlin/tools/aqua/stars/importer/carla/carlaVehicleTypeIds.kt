@@ -23,7 +23,7 @@ package tools.aqua.stars.importer.carla
  * @see: https://carla.readthedocs.io/en/latest/catalogue_vehicles/
  */
 
-/** List for base type: CAR */
+/** List for base type: CAR. */
 val cars =
     listOf(
         "vehicle.audi.a2",
@@ -52,7 +52,7 @@ val cars =
         "vehicle.tesla.model3",
         "vehicle.toyota.prius")
 
-/** List for base type: TRUCK */
+/** List for base type: TRUCK. */
 val trucks =
     listOf(
         "vehicle.carlamotors.carlacola",
@@ -60,7 +60,7 @@ val trucks =
         "vehicle.carlamotors.firetruck",
         "vehicle.tesla.cybertruck")
 
-/** List for base type: VAN */
+/** List for base type: VAN. */
 val vans =
     listOf(
         "vehicle.ford.ambulance",
@@ -68,10 +68,10 @@ val vans =
         "vehicle.volkswagen.t2",
         "vehicle.volkswagen.t2_2021")
 
-/** List for base type: BUS */
+/** List for base type: BUS. */
 val buses = listOf("vehicle.mitsubishi.fusorosa")
 
-/** List for base type: MOTORCYCLE */
+/** List for base type: MOTORCYCLE. */
 val motorcycles =
     listOf(
         "vehicle.harley-davidson.low_rider",
@@ -79,6 +79,6 @@ val motorcycles =
         "vehicle.vespa.zx125",
         "vehicle.yamaha.yzf")
 
-/** List for base type: BICYCLE */
+/** List for base type: BICYCLE. */
 val bicycles =
     listOf("vehicle.bh.crossbike", "vehicle.diamondback.century", "vehicle.gazelle.omafiets")
