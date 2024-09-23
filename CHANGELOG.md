@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Add pre-defined `MinNodesInTSCHook` and `MinTicksPerSegmentHook`.
 - Add `identifier` field to `TSC`.
 - Add `euclideanDistance` function to `Location`.
+- Add `vehicleType` field to `Vehicle`.
 
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
