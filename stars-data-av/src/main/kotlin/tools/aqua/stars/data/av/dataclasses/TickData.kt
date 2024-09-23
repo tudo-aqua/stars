@@ -40,25 +40,17 @@ data class TickData(
 
   override lateinit var segment: Segment
 
-  /** Name-Alias for [entities]. */
-  val actors: List<Actor>
-    get() = entities
-
-  /** The ego vehicle. */
-  val egoVehicle: Vehicle
-    get() = actors.firstOrNull { it is Vehicle && it.isEgo } as Vehicle
+  /** All pedestrians. */
+  val pedestrians: List<Pedestrian>
+    get() = entities.filterIsInstance<Pedestrian>()
 
   /** All vehicles. */
   val vehicles: List<Vehicle>
-    get() = actors.filterIsInstance<Vehicle>()
+    get() = entities.filterIsInstance<Vehicle>()
 
-  /** All pedestrians. */
-  @Suppress("unused")
-  val pedestrians: List<Pedestrian>
-    get() = actors.filterIsInstance<Pedestrian>()
-
-  /** Returns [Actor] with given [actorID]. */
-  fun actor(actorID: Int): Actor? = actors.firstOrNull { it.id == actorID }
+  /** The ego vehicle. */
+  val egoVehicle: Vehicle?
+    get() = vehicles.firstOrNull { it.isEgo }
 
   /** Returns all [Vehicle]s in given [Block]. */
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
@@ -66,7 +58,7 @@ data class TickData(
   /** Clones current [TickData]. */
   fun clone(): TickData {
     val newTickData = TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime)
-    newTickData.entities = actors.map { it.clone(newTickData) }
+    newTickData.entities = entities.map { it.clone(newTickData) }
     return newTickData
   }
 

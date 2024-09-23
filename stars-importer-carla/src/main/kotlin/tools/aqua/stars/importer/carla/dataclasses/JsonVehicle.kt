@@ -28,7 +28,7 @@ import kotlinx.serialization.Serializable
  * @property id The identifier of the vehicle.
  * @property location The [JsonLocation] of the vehicle.
  * @property rotation The [JsonRotation] of the vehicle.
- * @property typeId The type identifier.
+ * @property typeId The type identifier, i.e. "vehicle.ford.mustang".
  * @property egoVehicle Whether this is the own vehicle.
  * @property forwardVector The current forward vector.
  * @property velocity The current velocity.
