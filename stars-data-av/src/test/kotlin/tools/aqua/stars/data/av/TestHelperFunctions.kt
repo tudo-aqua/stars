@@ -139,6 +139,7 @@ fun emptyVehicle(
         positionOnLane = positionOnLane,
         tickData = tickData,
         typeId = "",
+        vehicleType = VehicleType.CAR,
         velocity = emptyVector3D())
 
 /** Empty [StaticTrafficLight]. */
