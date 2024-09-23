@@ -22,7 +22,7 @@ import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreSegmentEvaluationHook] that checks if a [SegmentType] contains at least [minEntities] in
+ * [PreSegmentEvaluationHook] that checks if a [SegmentType] contains at least `minEntities` in
  * every tick.
  *
  * @param E [EntityType].
@@ -30,8 +30,8 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minEntities The minimum number of [EntityType]s each tick must contain.
- * @param failPolicy The [EvaluationHookResult] to return if the [SegmentType] is empty.
+ * @param minEntities The minimum number of [EntityType]s each tick must contain (must be >= 0).
+ * @param failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s is not reached.
  */
 open class MinEntitiesPerSegmentHook<
     E : EntityType<E, T, S, U, D>,
