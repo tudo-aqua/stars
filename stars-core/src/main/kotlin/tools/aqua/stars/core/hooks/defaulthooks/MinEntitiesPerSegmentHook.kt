@@ -31,7 +31,8 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param minEntities The minimum number of [EntityType]s each tick must contain (must be >= 0).
- * @param failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s is not reached.
+ * @param failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s is
+ *   not reached.
  */
 open class MinEntitiesPerSegmentHook<
     E : EntityType<E, T, S, U, D>,
