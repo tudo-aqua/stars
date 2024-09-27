@@ -160,7 +160,6 @@ jobs:
            -F variables[TARGET_BRANCH]=${{ github.head_ref || github.ref_name }} \
            -F variables[IS_DRAFT]=${{ github.event.pull_request.draft }} \
            -F variables[TARGET_SHA]=${{ github.event.pull_request.head.sha }} \
-           -s -o /dev/null/ \
            $REPRODUCTION_RUNNER_URL
         env:
           REPRODUCTION_RUNNER_TRIGGER_TOKEN: ${{ secrets.REPRODUCTION_RUNNER_TRIGGER_TOKEN }}
