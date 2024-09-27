@@ -146,115 +146,22 @@ jobs:
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
 
-  reproduction-short:
-    name: Reproduction check (short)
+  reproduction:
+    name: Trigger reproduction check
     needs: compile
     runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.draft }}
     steps:
-      - name: Checkout STARS
-        uses: actions/checkout@v4
-        with:
-          path: stars
-          fetch-depth: 0 # Required for version number generation
-
-      - name: Checkout STARS-CARLA
-        uses: actions/checkout@v4
-        with:
-          repository: tudo-aqua/stars-carla-experiments
-          ref: dev
-          path: stars-carla
-          fetch-depth: 0 # Required for version number generation
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ env.JDK_VERSION }}
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Restore experiments data
-        id: cache-data-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: stars-carla/stars-reproduction-source/stars-experiments-data/simulation_runs
-          key: ${{ runner.os }}-data
-
-      - name: Run experiments (short)
+      - name: Trigger GitLab
         run: |
-          cd stars-carla
-          chmod +x ./gradlew
-          ./gradlew reproductionTest
-
-      - name: Save reproduction results (short)
-        uses: actions/upload-artifact@v4
-        with:
-          name: reproduction-comparison
-          path: stars-carla/compared-results/
-
-      - name: Save experiments data
-        uses: actions/cache/save@v4
-        with:
-          path: stars-carla/stars-reproduction-source/stars-experiments-data/simulation_runs
-          key: ${{ runner.os }}-data
-        if: ${{ !cancelled() && steps.cache-data-restore.outputs.cache-hit != 'true' }}
-
-  reproduction:
-    name: Reproduction check
-    needs: reproduction-short
-    runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.draft }}
-    steps:
-      - name: Checkout STARS
-        uses: actions/checkout@v4
-        with:
-          path: stars
-          fetch-depth: 0 # Required for version number generation
-
-      - name: Checkout STARS-CARLA
-        uses: actions/checkout@v4
-        with:
-          repository: tudo-aqua/stars-carla-experiments
-          ref: dev
-          path: stars-carla
-          fetch-depth: 0 # Required for version number generation
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ env.JDK_VERSION }}
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Restore experiments data
-        id: cache-data-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: stars-carla/stars-reproduction-source/stars-experiments-data/simulation_runs
-          key: ${{ runner.os }}-data
-
-      - name: Run experiments
-        run: |
-          cd stars-carla
-          chmod +x ./gradlew
-          ./gradlew reproductionTestAll
-
-      - name: Save reproduction results
-        uses: actions/upload-artifact@v4
-        with:
-          name: reproduction-comparison
-          path: stars-carla/compared-results/
-
-      - name: Save experiments data
-        uses: actions/cache/save@v4
-        with:
-          path: stars-carla/stars-reproduction-source/stars-experiments-data/simulation_runs
-          key: ${{ runner.os }}-data
-        if: ${{ !cancelled() && steps.cache-data-restore.outputs.cache-hit != 'true' }}
+          curl -X POST \
+           --fail \
+           -F token=$REPRODUCTION_RUNNER_TRIGGER_TOKEN \
+           -F ref=main \
+           -F variables[TARGET_BRANCH]=${{ github.head_ref || github.ref_name }} \
+           -F variables[IS_DRAFT]=${{ github.event.pull_request.draft }} \
+           -F variables[TARGET_SHA]=${{ github.event.pull_request.head.sha }} \
+           -s -o /dev/null/
+           $REPRODUCTION_RUNNER_URL
 
   spotless:
     name: Run Spotless (${{ matrix.project }})
