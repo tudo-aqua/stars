@@ -146,6 +146,23 @@ jobs:
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
 
+  reproduction:
+    name: Trigger reproduction check
+    needs: compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger GitLab
+        run: |
+          curl -X POST \
+           --fail \
+           -F token=$REPRODUCTION_RUNNER_TRIGGER_TOKEN \
+           -F ref=main \
+           -F variables[TARGET_BRANCH]=${{ github.head_ref || github.ref_name }} \
+           -F variables[IS_DRAFT]=${{ github.event.pull_request.draft }} \
+           -F variables[TARGET_SHA]=${{ github.event.pull_request.head.sha }} \
+           -s -o /dev/null/ \
+           $REPRODUCTION_RUNNER_URL
+
   spotless:
     name: Run Spotless (${{ matrix.project }})
     needs: discover-projects
