@@ -153,6 +153,7 @@ jobs:
     steps:
       - name: Trigger GitLab
         run: |
+          echo $REPRODUCTION_RUNNER_URL
           curl -X POST \
            --fail \
            -F token=$REPRODUCTION_RUNNER_TRIGGER_TOKEN \
