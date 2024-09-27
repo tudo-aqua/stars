@@ -153,7 +153,6 @@ jobs:
     steps:
       - name: Trigger GitLab
         run: |
-          echo $REPRODUCTION_RUNNER_URL
           curl -X POST \
            --fail \
            -F token=$REPRODUCTION_RUNNER_TRIGGER_TOKEN \
@@ -163,6 +162,9 @@ jobs:
            -F variables[TARGET_SHA]=${{ github.event.pull_request.head.sha }} \
            -s -o /dev/null/ \
            $REPRODUCTION_RUNNER_URL
+        env:
+          REPRODUCTION_RUNNER_TRIGGER_TOKEN: ${{ secrets.REPRODUCTION_RUNNER_TRIGGER_TOKEN }}
+          REPRODUCTION_RUNNER_URL: ${{ secrets.REPRODUCTION_RUNNER_URL }}
 
   spotless:
     name: Run Spotless (${{ matrix.project }})
