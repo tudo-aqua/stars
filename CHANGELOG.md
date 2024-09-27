@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.
 - Add pre-defined `MinNodesInTSCHook` and `MinTicksPerSegmentHook`.
 - Add `identifier` field to `TSC`.
+- Add `euclideanDistance` function to `Location`.
+- Add `vehicleType` field to `Vehicle`.
 
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
@@ -30,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - Rename `MissedTSCInstancesPerProjectionMetric` to `MissedTSCInstancesPerTSCMetric`.
 - Rename `MissingPredicateCombinationsPerProjectionMetric` to `MissingPredicateCombinationsPerTSCMetric`.
 - Rename `DataSaver` to `PlotDataSaver`.
+- Root nodes in a `TSC` now must not have a condition.
 
 ### Fixed
 - Fix `toString()` function of `TSCNode` to include the root node's label.

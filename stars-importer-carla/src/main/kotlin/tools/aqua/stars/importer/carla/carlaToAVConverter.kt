@@ -19,6 +19,7 @@ package tools.aqua.stars.importer.carla
 
 import kotlin.math.abs
 import tools.aqua.stars.data.av.dataclasses.*
+import tools.aqua.stars.data.av.dataclasses.VehicleType.*
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 // region converter
@@ -97,18 +98,19 @@ fun convertJsonVehicleToVehicle(
     lane: Lane
 ): Vehicle =
     Vehicle(
-        typeId = vehicle.typeId,
-        acceleration = vehicle.acceleration.toVector3D(),
-        angularVelocity = vehicle.angularVelocity.toVector3D(),
-        isEgo = vehicle.egoVehicle,
-        forwardVector = vehicle.forwardVector.toVector3D(),
         id = vehicle.id,
-        lane = lane,
-        location = vehicle.location.toLocation(),
-        positionOnLane = positionOnLane,
-        rotation = vehicle.rotation.toRotation(),
         tickData = tickData,
-        velocity = vehicle.velocity.toVector3D())
+        positionOnLane = positionOnLane,
+        lane = lane,
+        typeId = vehicle.typeId,
+        vehicleType = getVehicleTypeFromTypeId(vehicle.typeId),
+        isEgo = vehicle.egoVehicle,
+        location = vehicle.location.toLocation(),
+        forwardVector = vehicle.forwardVector.toVector3D(),
+        rotation = vehicle.rotation.toRotation(),
+        velocity = vehicle.velocity.toVector3D(),
+        acceleration = vehicle.acceleration.toVector3D(),
+        angularVelocity = vehicle.angularVelocity.toVector3D())
 
 /**
  * Converts [JsonPedestrian] to [Pedestrian].
@@ -247,6 +249,22 @@ fun getSpeedLimitsFromLandmarks(lane: Lane, landmarks: List<JsonLandmark>): List
   }
   return speedLimits
 }
+
+/**
+ * Calculates the [VehicleType] from the type identifier.
+ *
+ * @param typeId The type identifier.
+ */
+fun getVehicleTypeFromTypeId(typeId: String): VehicleType =
+    when (typeId) {
+      in cars -> CAR
+      in trucks -> TRUCK
+      in vans -> VAN
+      in buses -> BUS
+      in motorcycles -> MOTORCYCLE
+      in bicycles -> BICYCLE
+      else -> error("Unknown vehicle type: $typeId")
+    }
 
 /**
  * Calculates static [JsonBlock]s to [Block]s.
