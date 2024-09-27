@@ -30,6 +30,7 @@ import kotlin.math.sqrt
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property lane The [Vehicle]'s [Lane].
  * @property typeId The type identifier.
+ * @property vehicleType The [VehicleType].
  * @property isEgo Whether this is the own vehicle.
  * @property location The [Location] of the vehicle.
  * @property forwardVector The current forward vector.
@@ -44,6 +45,7 @@ data class Vehicle(
     var positionOnLane: Double,
     var lane: Lane,
     val typeId: String,
+    val vehicleType: VehicleType,
     var isEgo: Boolean,
     val location: Location,
     val forwardVector: Vector3D,
@@ -52,6 +54,10 @@ data class Vehicle(
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
 ) : Actor() {
+
+  /** Whether the vehicle is of [VehicleType.BICYCLE]. */
+  val isBicycle: Boolean
+    get() = vehicleType == VehicleType.BICYCLE
 
   /** Effective velocity in m/s based on the [velocity] vector. */
   val effVelocityInMPerS: Double
@@ -83,6 +89,7 @@ data class Vehicle(
           positionOnLane,
           lane,
           typeId,
+          vehicleType,
           isEgo,
           location,
           forwardVector,

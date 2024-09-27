@@ -180,10 +180,15 @@ class MinNodesInTSCHookTest {
   private fun segments(): Sequence<SimpleSegment> {
     val entities = mutableListOf<SimpleEntity>()
     val tickDataList = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
+
     val segments = listOf(SimpleSegment(tickDataList)).asSequence()
+
     val tick = SimpleTickDataUnit(0)
-    val tickData = SimpleTickData(tick)
+
+    val tickData = SimpleTickData(tick, entities)
+
     tickDataList[tick] = tickData
+
     entities.add(SimpleEntity(0, tickData))
 
     return segments

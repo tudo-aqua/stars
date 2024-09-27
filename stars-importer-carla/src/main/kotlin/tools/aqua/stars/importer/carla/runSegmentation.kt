@@ -133,17 +133,14 @@ fun convertJsonData(
 
     // Remove all existing ego flags when useEveryVehicleAsEgo is set
     if (useEveryVehicleAsEgo) {
-      egoTickData.forEach { tickData ->
-        tickData.actors.filterIsInstance<Vehicle>().forEach { it.isEgo = false }
-      }
+      egoTickData.forEach { tickData -> tickData.vehicles.forEach { it.isEgo = false } }
     }
 
     // Set egoVehicle flag for each TickData
     var isTickWithoutEgo = false
     egoTickData.forEach { tickData ->
       if (!isTickWithoutEgo) {
-        val egoInTickData =
-            tickData.actors.firstOrNull { it is Vehicle && it.id == egoVehicle.id } as? Vehicle
+        val egoInTickData = tickData.vehicles.firstOrNull { it.id == egoVehicle.id }
         if (egoInTickData != null) {
           egoInTickData.isEgo = true
         } else {
@@ -172,11 +169,9 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
   for (i in 1 until simulationRun.size) {
     val currentTick = simulationRun[i]
     val previousTick = simulationRun[i - 1]
-    currentTick.actors.forEach { currentActor ->
-      if (currentActor is Vehicle) {
-        updateActorVelocityAndAcceleration(
-            currentActor, previousTick.actors.firstOrNull { it.id == currentActor.id })
-      }
+    currentTick.vehicles.forEach { currentActor ->
+      updateActorVelocityAndAcceleration(
+          currentActor, previousTick.vehicles.firstOrNull { it.id == currentActor.id })
     }
   }
 }
@@ -247,11 +242,11 @@ fun sliceRunIntoSegments(
 
   simulationRuns.forEach { (simulationRunId, simulationRun) ->
     val blockRanges = mutableListOf<Pair<TickDataUnitSeconds, TickDataUnitSeconds>>()
-    var prevBlockID = simulationRun.first().egoVehicle.lane.road.block.id
+    var prevBlockID = checkNotNull(simulationRun.first().egoVehicle).lane.road.block.id
     var firstTickInBlock = simulationRun.first().currentTick
 
     simulationRun.forEachIndexed { index, tick ->
-      val currentBlockID = tick.egoVehicle.lane.road.block.id
+      val currentBlockID = checkNotNull(tick.egoVehicle).lane.road.block.id
       if (currentBlockID != prevBlockID) {
         blockRanges += (firstTickInBlock to simulationRun[index - 1].currentTick)
         prevBlockID = currentBlockID
