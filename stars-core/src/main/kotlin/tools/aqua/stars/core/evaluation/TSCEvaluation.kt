@@ -108,8 +108,7 @@ class TSCEvaluation<
 
   /** Holds the results of the [PreTSCEvaluationHook]s after calling [runEvaluation]. */
   val preTSCEvaluationHookResults:
-      MutableMap<
-          TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> =
+      MutableMap<TSC<E, T, S, U, D>, Map<String, EvaluationHookResult>> =
       mutableMapOf()
 
   /**
@@ -118,9 +117,13 @@ class TSCEvaluation<
   private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, S, U, D>> =
       mutableListOf()
 
-  /** Holds the results of the [PreSegmentEvaluationHook]s after calling [runEvaluation]. */
-  val preSegmentEvaluationHookResults:
-      MutableMap<S, Map<PreSegmentEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> =
+  /**
+   * Holds the results (Map of [PreSegmentEvaluationHook.identifier] to [EvaluationHookResult]) of
+   * the [PreSegmentEvaluationHook]s after calling [runEvaluation] that did not return
+   * [EvaluationHookResult.OK] for each segment identifier obtained by
+   * [SegmentType.getSegmentIdentifier].
+   */
+  val preSegmentEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
       mutableMapOf()
 
   /**
@@ -219,7 +222,10 @@ class TSCEvaluation<
     val totalEvaluationTime = measureTime {
       val tscListToEvaluate =
           preTSCEvaluationHooks.evaluate(tscList).let { (passingTSCs, results) ->
-            preTSCEvaluationHookResults.putAll(results)
+            results.forEach { (tsc, results) ->
+              preTSCEvaluationHookResults[tsc] =
+                  results.map { it.key.identifier to it.value }.toMap()
+            }
             passingTSCs ?: return
           }
 
@@ -246,8 +252,12 @@ class TSCEvaluation<
   private fun evaluateSegment(segment: S, tscList: List<TSC<E, T, S, U, D>>): Boolean {
     // Evaluate PreSegmentEvaluationHooks
     preSegmentEvaluationHooks.evaluate(segment).let { (verdict, results) ->
-      preSegmentEvaluationHookResults[segment] = results
-      if (verdict != null) return verdict
+      if (verdict != null) {
+        preSegmentEvaluationHookResults[segment.getSegmentIdentifier()] =
+            results.map { it.key.identifier to it.value }.toMap()
+
+        return verdict
+      }
     }
 
     // Evaluate segment
