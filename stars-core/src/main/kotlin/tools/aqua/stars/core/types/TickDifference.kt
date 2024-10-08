@@ -20,9 +20,9 @@ package tools.aqua.stars.core.types
 /**
  * Interface for the relative difference between ticks. Implements the [Comparable] interface.
  *
- * @param U [TickUnit].
+ * @param D [TickDifference].
  */
-interface TickDifference<U : TickDifference<U>> : Comparable<U> {
+interface TickDifference<D : TickDifference<D>> : Comparable<D> {
 
   /**
    * Adds a [TickDifference] to this [TickDifference].
@@ -30,7 +30,7 @@ interface TickDifference<U : TickDifference<U>> : Comparable<U> {
    * @param other The [TickDifference] to add.
    * @return A new [TickDifference] object.
    */
-  operator fun plus(other: U): U
+  operator fun plus(other: D): D
 
   /**
    * Subtracts a [TickDifference] from this [TickDifference].
@@ -38,5 +38,9 @@ interface TickDifference<U : TickDifference<U>> : Comparable<U> {
    * @param other The [TickDifference] to subtract.
    * @return A new [TickDifference] object.
    */
-  operator fun minus(other: U): U
+  operator fun minus(other: D): D
+
+  fun serialize(): String
+
+  fun deserialize(str: String): TickDifference<D>
 }

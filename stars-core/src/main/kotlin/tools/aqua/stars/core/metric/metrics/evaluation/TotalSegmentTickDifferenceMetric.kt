@@ -21,7 +21,10 @@ import java.util.Optional
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.metric.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 
 /**
@@ -43,7 +46,7 @@ class TotalSegmentTickDifferenceMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val logger: Logger = Loggable.getLogger("total-segment-tick-difference")
-) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Loggable {
+) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /** Holds the current [TickDifference] for all already analyzed [SegmentType]s. */
   private var totalTickDifference: D? = null
 
@@ -87,4 +90,9 @@ class TotalSegmentTickDifferenceMetric<
   override fun printState() {
     logInfo("The analyzed segments yielded a total tick difference of $totalTickDifference.")
   }
+
+  override fun getSerializableResults(): List<SerializableResult> =
+    totalTickDifference?.let {
+      listOf(SerializableTickDifferenceResult(it.serialize(), "TotalSegmentTickDifferenceMetric", "TotalSegmentTickDifferenceMetric"))
+    } ?: emptyList()
 }
