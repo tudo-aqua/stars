@@ -21,6 +21,8 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.metric.utils.getCSVString
@@ -73,6 +75,7 @@ class ValidTSCInstancesPerTSCMetric<
     TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>,
     PostEvaluationMetricProvider<E, T, S, U, D>,
     Stateful,
+    Serializable,
     Loggable,
     Plottable {
   /**
@@ -121,13 +124,11 @@ class ValidTSCInstancesPerTSCMetric<
    * @param tscInstance The current [TSCInstance] which is checked for validity.
    */
   override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
-    validInstancesMap.putIfAbsent(tsc, mutableMapOf())
     // Get current count of unique and valid TSC instance for the current TSC
-    val validInstances = validInstancesMap.getValue(tsc)
+    val validInstances = validInstancesMap.getOrPut(tsc) { mutableMapOf() }
 
     // Track current TSC
-    uniqueTimedInstances.putIfAbsent(tsc, mutableListOf())
-    val validInstancesCount = uniqueTimedInstances.getValue(tsc)
+    val validInstancesCount = uniqueTimedInstances.getOrPut(tsc) { mutableListOf() }
 
     // Check if given tscInstance is valid
     if (!tsc.possibleTSCInstances.contains(tscInstance.rootNode)) {
@@ -135,11 +136,13 @@ class ValidTSCInstancesPerTSCMetric<
       validInstancesCount.add(validInstances.size)
       return
     }
-    validInstances.putIfAbsent(tscInstance.rootNode, mutableListOf())
+
     // Get already observed instances for current TSC
-    val validInstanceList = validInstances.getValue(tscInstance.rootNode)
+    val validInstanceList = validInstances.getOrPut(tscInstance.rootNode) { mutableListOf() }
+
     // Add current instance to list of observed instances
     validInstanceList.add(tscInstance)
+
     // Add current count of observed instances to list of timed instance counts
     validInstancesCount.add(validInstances.size)
   }
@@ -215,6 +218,16 @@ class ValidTSCInstancesPerTSCMetric<
     logFine(
         "Combined TSCs to occurred instances in percentages: $combinedTSCToOccurredInstancesPercentagesMap")
   }
+
+  override fun getSerializableResults(): List<SerializableResult> =
+    validInstancesMap.map { (tsc, validInstances) ->
+      SerializableTSCResult(
+        identifier = tsc.identifier,
+        source = "ValidTSCInstancesPerTSCMetric",
+        value = validInstances.map { (tscInstanceNode, tscInstances) ->
+          tscInstanceNode.tscNode.label to tscInstances.map { it.sourceSegmentIdentifier }
+        })
+    }
 
   // region Plot
 
