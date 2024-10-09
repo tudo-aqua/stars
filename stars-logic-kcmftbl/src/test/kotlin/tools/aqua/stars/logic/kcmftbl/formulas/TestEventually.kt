@@ -17,9 +17,7 @@
 
 package tools.aqua.stars.logic.kcmftbl.formulas
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.*
 import tools.aqua.stars.logic.kcmftbl.*
 
 /** This class tests the CMFTBL operator [eventually]. */
@@ -97,5 +95,39 @@ class TestEventually {
     assertFailsWith<IllegalArgumentException> {
       eventually(createTicks(phi)[0], createInterval(interval), phi = { it.phi1 })
     }
+  }
+
+  @Test
+  fun `Test when phi is never true`() {
+    val phi = listOf(0, 0, 0, 0, 0)
+
+    assertFalse { eventually(createTicks(phi)[0], null, phi = { it.phi1 }) }
+  }
+
+  @Test
+  fun `Test when phi is true only in first tick`() {
+    val phi =
+        listOf(
+            1,
+            0,
+            0,
+            0,
+        )
+
+    assertTrue { eventually(createTicks(phi)[0], null, phi = { it.phi1 }) }
+  }
+
+  @Test
+  fun `Test when phi is true only in middle of timeline`() {
+    val phi = listOf(0, 0, 1, 0, 0)
+
+    assertTrue { eventually(createTicks(phi)[0], null, phi = { it.phi1 }) }
+  }
+
+  @Test
+  fun `Test when phi is true only in last tick`() {
+    val phi = listOf(0, 0, 0, 0, 1)
+
+    assertTrue { eventually(createTicks(phi)[0], null, phi = { it.phi1 }) }
   }
 }
