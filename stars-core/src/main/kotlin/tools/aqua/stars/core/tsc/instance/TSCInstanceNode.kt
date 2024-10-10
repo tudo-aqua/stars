@@ -33,6 +33,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property tscNode Associated [TSCNode].
+ * @property label Label of this node.
  * @property monitorResults Monitor results of this node.
  * @property value Value of this node.
  */

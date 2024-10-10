@@ -40,7 +40,9 @@ interface TickDifference<D : TickDifference<D>> : Comparable<D> {
    */
   operator fun minus(other: D): D
 
+  /** Serializes the [TickDifference] to a [String]. */
   fun serialize(): String
 
+  /** Deserializes the [TickDifference] from a [String]. */
   fun deserialize(str: String): D
 }
