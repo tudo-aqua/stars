@@ -23,6 +23,8 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.metric.utils.getCSVString
@@ -220,14 +222,17 @@ class ValidTSCInstancesPerTSCMetric<
   }
 
   override fun getSerializableResults(): List<SerializableResult> =
-    validInstancesMap.map { (tsc, validInstances) ->
-      SerializableTSCResult(
-        identifier = tsc.identifier,
-        source = "ValidTSCInstancesPerTSCMetric",
-        value = validInstances.map { (tscInstanceNode, tscInstances) ->
-          tscInstanceNode.tscNode.label to tscInstances.map { it.sourceSegmentIdentifier }
-        })
-    }
+      validInstancesMap.map { (tsc, validInstances) ->
+        SerializableTSCResult(
+            identifier = tsc.identifier,
+            source = "ValidTSCInstancesPerTSCMetric",
+            value =
+                validInstances.map { (tscInstanceNode, tscInstances) ->
+                  SerializableTSCOccurrence(
+                      tscInstance = SerializableTSCNode(tscInstanceNode),
+                      segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
+                })
+      }
 
   // region Plot
 

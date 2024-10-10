@@ -92,10 +92,11 @@ class TotalSegmentTickDifferenceMetric<
   }
 
   override fun getSerializableResults(): List<SerializableResult> =
-    totalTickDifference?.let {
-      listOf(SerializableTickDifferenceResult(
-        identifier = "TotalSegmentTickDifferenceMetric",
-        source = "TotalSegmentTickDifferenceMetric",
-        value = it.serialize()))
-    } ?: emptyList()
+      totalTickDifference?.let {
+        listOf(
+            SerializableTickDifferenceResult(
+                identifier = "TotalSegmentTickDifferenceMetric",
+                source = "TotalSegmentTickDifferenceMetric",
+                value = it.serialize()))
+      } ?: emptyList()
 }

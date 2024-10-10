@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.metric.serialization.tsc
 
 import kotlinx.serialization.Serializable
 
 /**
- * This class implements the [SerializableResult] interface and stores one [Int] as a [value].
+ * This class stores a pair of the TSC instance as [String] and a [List] of segment identifiers in
+ * which the TSC instance occurred for serialization.
  *
- * @property identifier The identifier of this specific result.
- * @property source The source (i.e. the metric) which produced this result.
- * @property value The value that should be serialized.
+ * @property tscInstance The [List] of active TSC edges.
+ * @property segmentIdentifiers The [List] of segment identifiers in which the TSC instance
+ *   occurred.
  */
 @Serializable
-data class SerializableIntResult(
-    override val identifier: String,
-    override val source: String,
-    override val value: Int
-) : SerializableResult()
+data class SerializableTSCOccurrence(
+    val tscInstance: SerializableTSCNode,
+    val segmentIdentifiers: List<String>
+)

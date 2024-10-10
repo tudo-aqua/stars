@@ -70,6 +70,7 @@ sealed class TSCNode<
   ): TSCInstanceNode<E, T, S, U, D> =
       TSCInstanceNode(
               this,
+              this.label,
               this.monitors.mapValues { (_, monitor) -> monitor(ctx) },
               this.valueFunction(ctx))
           .also {
@@ -77,10 +78,7 @@ sealed class TSCNode<
                 this.edges
                     .filter { t -> t.condition(ctx) }
                     .map { tscEdge ->
-                      TSCInstanceEdge(
-                          tscEdge.destination.label,
-                          tscEdge.destination.evaluate(ctx, depth + 1),
-                          tscEdge)
+                      TSCInstanceEdge(tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
                     }
           }
 

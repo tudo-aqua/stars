@@ -37,7 +37,8 @@ data class TickDataDifferenceMilliseconds(val differenceMillis: Long) :
 
   override fun serialize(): String = this.differenceMillis.toString()
 
-  override fun deserialize(str: String): TickDataDifferenceMilliseconds = TickDataDifferenceMilliseconds(str.toLong())
+  override fun deserialize(str: String): TickDataDifferenceMilliseconds =
+      TickDataDifferenceMilliseconds(str.toLong())
 
   override fun toString(): String =
       "TickDataDifferenceMilliseconds(difference: ${this.differenceMillis})"

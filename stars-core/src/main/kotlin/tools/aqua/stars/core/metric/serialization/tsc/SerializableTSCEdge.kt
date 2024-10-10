@@ -15,20 +15,19 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.metric.serialization.tsc
 
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 
 /**
- * This class implements the [SerializableResult] interface and stores one [Int] as a [value].
+ * This class stores [TSCInstanceEdge] as the edges [destination] for serialization.
  *
- * @property identifier The identifier of this specific result.
- * @property source The source (i.e. the metric) which produced this result.
- * @property value The value that should be serialized.
+ * @property destination The destination [SerializableTSCNode] of the [TSCInstanceEdge].
  */
 @Serializable
-data class SerializableIntResult(
-    override val identifier: String,
-    override val source: String,
-    override val value: Int
-) : SerializableResult()
+data class SerializableTSCEdge(val destination: SerializableTSCNode) {
+  constructor(
+      tscEdge: TSCInstanceEdge<*, *, *, *, *>
+  ) : this(destination = SerializableTSCNode(tscEdge.destination))
+}

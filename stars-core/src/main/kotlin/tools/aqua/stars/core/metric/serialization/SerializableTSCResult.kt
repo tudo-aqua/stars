@@ -18,16 +18,20 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
 
-/** This class implements the [SerializableResult] interface and stores one [Int] as a [value].
+/**
+ * This class implements the [SerializableResult] interface and stores a [List] of
+ * [tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence]s.
  *
  * @property identifier The identifier of this specific result.
  * @property source The source (i.e. the metric) which produced this result.
- * @property value The value that should be serialized.
+ * @property value The [List] of
+ *   [tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence]s.
  */
 @Serializable
 data class SerializableTSCResult(
     override val identifier: String,
     override val source: String,
-    override val value: List<Pair<String, List<String>>>
+    override val value: List<SerializableTSCOccurrence>
 ) : SerializableResult()

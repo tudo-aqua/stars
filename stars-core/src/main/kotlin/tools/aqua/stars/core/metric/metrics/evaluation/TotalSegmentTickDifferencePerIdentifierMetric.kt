@@ -107,10 +107,10 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
   }
 
   override fun getSerializableResults(): List<SerializableResult> =
-    segmentIdentifierToTotalSegmentDurationMap.map { (identifier, tickDifference) ->
-      SerializableTickDifferenceResult(
-        identifier = identifier,
-        source = "TotalSegmentTickDifferenceMetric",
-        value = tickDifference.serialize())
-    }
+      segmentIdentifierToTotalSegmentDurationMap.map { (identifier, tickDifference) ->
+        SerializableTickDifferenceResult(
+            identifier = identifier,
+            source = "TotalSegmentTickDifferenceMetric",
+            value = tickDifference.serialize())
+      }
 }
