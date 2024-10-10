@@ -23,8 +23,15 @@ import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.computeWhile
 import tools.aqua.stars.core.hooks.*
+import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook.Companion.evaluate
+import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
+import tools.aqua.stars.core.metric.serialization.extensions.compareToGroundTruthResults
+import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
+import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
+import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -38,6 +45,12 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare them
+ *   to previous runs after the analysis.
+ * @param compareToGroundTruth (Default: ``false``) Whether to compare the results to the ground
+ *   truth.
+ * @param compareToPreviousRun (Default: ``false``) Whether to compare the results to the previous
+ *   run.
  * @property tscList The list of [TSC]s to evaluate.
  * @property writePlots (Default: ``true``) Whether to write plots after the analysis.
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
@@ -52,16 +65,50 @@ class TSCEvaluation<
     val tscList: List<TSC<E, T, S, U, D>>,
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
+    val writeSerializedResults: Boolean = true,
+    val compareToGroundTruth: Boolean = false,
+    val compareToPreviousRun: Boolean = false,
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
+
+  private val mutex: Any = Any()
+
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
+   * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
+   * be changed to 'true' again.
+   */
+  var resultsReproducedFromGroundTruth: Boolean? = null
+    set(value) {
+      synchronized(mutex) {
+        when {
+          field == null -> field = value
+          field != null && value != null -> field = field!! && value
+        }
+      }
+    }
+
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
+   * results. Setting a new value will be conjugated with the old value such that a verdict 'false'
+   * may not be changed to 'true' again.
+   */
+  var resultsReproducedFromPreviousRun: Boolean? = null
+    set(value) {
+      synchronized(mutex) {
+        when {
+          field == null -> field = value
+          field != null && value != null -> field = field!! && value
+        }
+      }
+    }
 
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
   private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 
   /** Holds the results of the [PreTSCEvaluationHook]s after calling [runEvaluation]. */
   val preTSCEvaluationHookResults:
-      MutableMap<
-          TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> =
+      MutableMap<TSC<E, T, S, U, D>, Map<String, EvaluationHookResult>> =
       mutableMapOf()
 
   /**
@@ -70,9 +117,13 @@ class TSCEvaluation<
   private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, S, U, D>> =
       mutableListOf()
 
-  /** Holds the results of the [PreSegmentEvaluationHook]s after calling [runEvaluation]. */
-  val preSegmentEvaluationHookResults:
-      MutableMap<S, Map<PreSegmentEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> =
+  /**
+   * Holds the results (Map of [PreSegmentEvaluationHook.identifier] to [EvaluationHookResult]) of
+   * the [PreSegmentEvaluationHook]s after calling [runEvaluation] that did not return
+   * [EvaluationHookResult.OK] for each segment identifier obtained by
+   * [SegmentType.getSegmentIdentifier].
+   */
+  val preSegmentEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
       mutableMapOf()
 
   /**
@@ -169,7 +220,14 @@ class TSCEvaluation<
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
-      val tscListToEvaluate = runPreTSCEvaluationHooks() ?: return
+      val tscListToEvaluate =
+          preTSCEvaluationHooks.evaluate(tscList).let { (passingTSCs, results) ->
+            results.forEach { (tsc, results) ->
+              preTSCEvaluationHookResults[tsc] =
+                  results.map { it.key.identifier to it.value }.toMap()
+            }
+            passingTSCs ?: return
+          }
 
       // Evaluate all segments
       val segmentsEvaluationTime = measureTime {
@@ -193,8 +251,13 @@ class TSCEvaluation<
    */
   private fun evaluateSegment(segment: S, tscList: List<TSC<E, T, S, U, D>>): Boolean {
     // Evaluate PreSegmentEvaluationHooks
-    runPreSegmentEvaluationHook(segment = segment)?.let {
-      return it
+    preSegmentEvaluationHooks.evaluate(segment).let { (verdict, results) ->
+      if (verdict != null) {
+        preSegmentEvaluationHookResults[segment.getSegmentIdentifier()] =
+            results.map { it.key.identifier to it.value }.toMap()
+
+        return verdict
+      }
     }
 
     // Evaluate segment
@@ -240,106 +303,6 @@ class TSCEvaluation<
     return true
   }
 
-  /** Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs. */
-  private fun runPreTSCEvaluationHooks(): List<TSC<E, T, S, U, D>>? {
-    // Evaluate PreEvaluationHooks
-    val hookResults =
-        tscList.associateWith { tsc ->
-          this.preTSCEvaluationHooks.associateWith { it.evaluationFunction.invoke(tsc) }
-        }
-
-    // Save results to preTSCEvaluationHookResults
-    preTSCEvaluationHookResults.putAll(hookResults)
-
-    // Filter out all TSCs that have not returned OK. Do not optimize by using
-    // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
-    val tscList = mutableListOf<TSC<E, T, S, U, D>>()
-    hookResults.forEach { (tsc, results) ->
-      val (result, hooks) = evaluateHooks(results)
-      when (result) {
-        // Abort evaluation using a EvaluationHookAbort exception
-        EvaluationHookResult.ABORT -> {
-          EvaluationHookStringWrapper.abort(tsc, hooks)
-        }
-        // Cancel evaluation by returning
-        EvaluationHookResult.CANCEL -> {
-          EvaluationHookStringWrapper.cancel(tsc, hooks)
-          return null
-        }
-        // Don't include current TSC in the list
-        EvaluationHookResult.SKIP -> {
-          EvaluationHookStringWrapper.skip(tsc, hooks)
-        }
-        // Include current TSC in the list
-        EvaluationHookResult.OK -> {
-          tscList.add(tsc)
-        }
-      }
-    }
-    return tscList
-  }
-
-  /**
-   * Executes all [PreSegmentEvaluationHook]s on the [segment].
-   *
-   * @return `true` if the segment should be skipped, `false` if the evaluation should be canceled,
-   *   `null` if the evaluation should continue normally.
-   */
-  private fun runPreSegmentEvaluationHook(segment: S): Boolean? {
-    val hookResults =
-        this.preSegmentEvaluationHooks.associateWith { it.evaluationFunction.invoke(segment) }
-
-    // Save results to preSegmentEvaluationHookResults
-    preSegmentEvaluationHookResults[segment] = hookResults
-
-    val (result, hooks) = evaluateHooks(hookResults)
-    return when (result) {
-      // Abort the evaluation using a EvaluationHookAbort exception
-      EvaluationHookResult.ABORT -> {
-        EvaluationHookStringWrapper.abort(segment, hooks)
-        null
-      }
-      // Cancel the evaluation by returning false
-      EvaluationHookResult.CANCEL -> {
-        EvaluationHookStringWrapper.cancel(segment, hooks)
-        false
-      }
-      // Return without evaluating the segment
-      EvaluationHookResult.SKIP -> {
-        EvaluationHookStringWrapper.skip(segment, hooks)
-        true
-      }
-      // Continue with evaluation
-      EvaluationHookResult.OK -> {
-        null
-      }
-    }
-  }
-
-  /**
-   * Evaluates given [results] by grouping them by [EvaluationHookResult] and returning the most
-   * severe result.
-   */
-  private fun <T : EvaluationHook<*>> evaluateHooks(
-      results: Map<T, EvaluationHookResult>
-  ): Pair<EvaluationHookResult, Collection<EvaluationHook<*>>> {
-    val groupedResults = results.toList().groupBy({ it.second }, { it.first })
-
-    // Abort the evaluation and throw exception if any hook returns ABORT
-    val abortingHooks = groupedResults[EvaluationHookResult.ABORT] ?: emptyList()
-    if (abortingHooks.isNotEmpty()) return Pair(EvaluationHookResult.ABORT, abortingHooks)
-
-    // Cancel the evaluation if any hook returns CANCEL
-    val cancelingHooks = groupedResults[EvaluationHookResult.CANCEL] ?: emptyList()
-    if (cancelingHooks.isNotEmpty()) return Pair(EvaluationHookResult.CANCEL, cancelingHooks)
-
-    // Skip all TSCs that have a hook returning SKIP
-    val skippingHooks = groupedResults[EvaluationHookResult.SKIP] ?: emptyList()
-    if (skippingHooks.isNotEmpty()) return Pair(EvaluationHookResult.SKIP, skippingHooks)
-
-    return Pair(EvaluationHookResult.OK, results.keys)
-  }
-
   /** Runs post evaluation steps such as printing, logging and plotting. */
   private fun postEvaluate() {
     // Print the results of all Stateful metrics
@@ -362,6 +325,35 @@ class TSCEvaluation<
     if (writePlotDataCSV) {
       println("Writing CSVs")
       metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+    }
+
+    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    if (serializableMetrics.any()) {
+      // Write JSON files of all Serializable metrics
+      if (writeSerializedResults) {
+        println("Writing serialized results")
+        serializableMetrics.forEach { t -> t.writeSerializedResults() }
+      }
+
+      // Compare the results to the ground truth
+      if (compareToGroundTruth) {
+        println("Comparing to ground truth")
+        serializableMetrics.compareToGroundTruthResults().let {
+          resultsReproducedFromGroundTruth = it.noMismatch()
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = true)
+        }
+      }
+
+      // Compare the results to the latest run
+      if (compareToPreviousRun) {
+        println("Comparing to previous run")
+        serializableMetrics.compareToPreviousResults().let {
+          resultsReproducedFromPreviousRun = it.noMismatch()
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = false)
+        }
+      }
     }
   }
 }

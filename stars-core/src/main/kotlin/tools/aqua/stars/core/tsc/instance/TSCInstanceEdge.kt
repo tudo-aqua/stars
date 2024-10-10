@@ -28,7 +28,6 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property label Label of this edge.
  * @property destination Destination [TSCInstanceNode].
  * @property tscEdge Associated [TSCEdge].
  */
@@ -38,17 +37,12 @@ data class TSCInstanceEdge<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val label: String,
     val destination: TSCInstanceNode<E, T, S, U, D>,
     val tscEdge: TSCEdge<E, T, S, U, D>,
 ) {
 
-  override fun toString(): String = "--${label}->"
-
   override fun equals(other: Any?): Boolean =
-      other is TSCInstanceEdge<*, *, *, *, *> &&
-          label == other.label &&
-          destination == other.destination
+      other is TSCInstanceEdge<*, *, *, *, *> && destination == other.destination
 
-  override fun hashCode(): Int = label.hashCode() + destination.hashCode()
+  override fun hashCode(): Int = destination.hashCode()
 }

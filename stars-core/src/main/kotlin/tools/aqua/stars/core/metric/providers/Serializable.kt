@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The STARS Project Authors
+ * Copyright 2024 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +15,18 @@
  * limitations under the License.
  */
 
-plugins {
-  id("tools.aqua.stars.library-conventions")
-  kotlin("plugin.serialization") version "2.0.10"
-}
+package tools.aqua.stars.core.metric.providers
 
-mavenMetadata {
-  name.set("STARS Core Library")
-  description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Core Library")
-}
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 
-dependencies {
-  implementation(libs.letsplot.kotlinjvm)
-  implementation(libs.letsplot.imageexport)
-  implementation(libs.slf4j.api)
-  implementation(libs.slf4j.simple)
-  implementation(libs.kotlinx.serialization.json)
+/**
+ * This interface should be implemented when a metric has a results that should be compared in
+ * later/previous evaluations.
+ */
+interface Serializable {
+  /**
+   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
+   * later/previous evaluations.
+   */
+  fun getSerializableResults(): List<SerializableResult>
 }

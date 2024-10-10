@@ -31,4 +31,8 @@ class TestDifference(val diff: Int) : TickDifference<TestDifference> {
   override fun plus(other: TestDifference): TestDifference = TestDifference(diff + other.diff)
 
   override fun minus(other: TestDifference): TestDifference = TestDifference(diff - other.diff)
+
+  override fun serialize(): String = diff.toString()
+
+  override fun deserialize(str: String): TestDifference = TestDifference(str.toInt())
 }

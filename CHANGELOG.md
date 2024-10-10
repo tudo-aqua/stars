@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - Rename `ValidTSCInstancesPerProjectionMetric` to `ValidTSCInstancesPerTSCMetric`.
 - Rename `MissedTSCInstancesPerProjectionMetric` to `MissedTSCInstancesPerTSCMetric`.
 - Rename `MissingPredicateCombinationsPerProjectionMetric` to `MissingPredicateCombinationsPerTSCMetric`.
+- Rename `DataSaver` to `PlotDataSaver`.
 - Root nodes in a `TSC` now must not have a condition.
 
 ### Fixed

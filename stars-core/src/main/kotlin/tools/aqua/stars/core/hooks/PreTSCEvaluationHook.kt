@@ -42,4 +42,58 @@ open class PreTSCEvaluationHook<
     evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult
 ) :
     EvaluationHook<TSC<E, T, S, U, D>>(
-        identifier = identifier, evaluationFunction = evaluationFunction)
+        identifier = identifier, evaluationFunction = evaluationFunction) {
+  companion object {
+    /**
+     * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs.
+     *
+     * @param E [EntityType].
+     * @param T [TickDataType].
+     * @param S [SegmentType].
+     * @param U [TickUnit].
+     * @param D [TickDifference].
+     * @param tscList The list of TSCs to evaluate.
+     */
+    fun <
+        E : EntityType<E, T, S, U, D>,
+        T : TickDataType<E, T, S, U, D>,
+        S : SegmentType<E, T, S, U, D>,
+        U : TickUnit<U, D>,
+        D : TickDifference<D>> List<PreTSCEvaluationHook<E, T, S, U, D>>.evaluate(
+        tscList: List<TSC<E, T, S, U, D>>
+    ): Pair<
+        List<TSC<E, T, S, U, D>>?,
+        Map<TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>>> {
+      // Evaluate PreEvaluationHooks
+      val hookResults =
+          tscList.associateWith { tsc -> this.associateWith { it.evaluationFunction.invoke(tsc) } }
+
+      // Filter out all TSCs that have not returned OK. Do not optimize by using
+      // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
+      val resultingList = mutableListOf<TSC<E, T, S, U, D>>()
+      hookResults.forEach { (tsc, results) ->
+        val (result, hooks) = results.evaluate()
+        when (result) {
+          // Abort evaluation using a EvaluationHookAbort exception
+          EvaluationHookResult.ABORT -> {
+            EvaluationHookStringWrapper.abort(tsc, hooks)
+          }
+          // Cancel evaluation by returning
+          EvaluationHookResult.CANCEL -> {
+            EvaluationHookStringWrapper.cancel(tsc, hooks)
+            return null to hookResults
+          }
+          // Don't include current TSC in the list
+          EvaluationHookResult.SKIP -> {
+            EvaluationHookStringWrapper.skip(tsc, hooks)
+          }
+          // Include current TSC in the list
+          EvaluationHookResult.OK -> {
+            resultingList.add(tsc)
+          }
+        }
+      }
+      return resultingList to hookResults
+    }
+  }
+}
