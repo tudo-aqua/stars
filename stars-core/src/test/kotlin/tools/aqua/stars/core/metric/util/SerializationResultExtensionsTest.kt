@@ -29,7 +29,8 @@ class SerializationResultExtensionsTest {
   @Test
   fun `Test compareTo to emptyList with SerializationResult`() {
     val currentResults = emptyList<SerializableIntResult>()
-    val compareToResult = listOf(SerializableIntResult(1, "result 1", "Test case 2"))
+    val compareToResult =
+        listOf(SerializableIntResult(identifier = "result 1", source = "Test case 2", value = 1))
 
     val compareResult = currentResults.compareTo(compareToResult)
 
@@ -40,7 +41,8 @@ class SerializationResultExtensionsTest {
   /** Tests the correct functionality of [compareTo] where the previous result list is empty. */
   @Test
   fun `Test compareTo with multiple elements lists of SerializationResults with empty calling list`() {
-    val currentResults = listOf(SerializableIntResult(1, "result 2", "Test case 1"))
+    val currentResults =
+        listOf(SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
     val previousResults: List<SerializableIntResult> = emptyList()
 
     val compareResults = currentResults.compareTo(previousResults)
@@ -60,8 +62,10 @@ class SerializationResultExtensionsTest {
   /** Tests the correct functionality of [compareTo] where both [SerializableResult]s are equal. */
   @Test
   fun `Test compareTo with single element lists of SerializationResult that matches`() {
-    val currentResults = listOf(SerializableIntResult(1, "result 1", "Test case 1"))
-    val previousResults = listOf(SerializableIntResult(1, "result 1", "Test case 1"))
+    val currentResults =
+        listOf(SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
+    val previousResults =
+        listOf(SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -78,12 +82,12 @@ class SerializationResultExtensionsTest {
   fun `Test compareTo with multiple elements lists of SerializationResult that matches`() {
     val currentResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
     val previousResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -100,12 +104,12 @@ class SerializationResultExtensionsTest {
   fun `Test compareTo with multiple elements lists of different order of SerializationResult that matches`() {
     val currentResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
     val previousResults =
         listOf(
-            SerializableIntResult(1, "result 2", "Test case 1"),
-            SerializableIntResult(1, "result 1", "Test case 1"))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -122,9 +126,10 @@ class SerializationResultExtensionsTest {
   fun `Test compareTo with multiple elements lists of different order of SerializationResult where one element is missing`() {
     val currentResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
-    val previousResults = listOf(SerializableIntResult(1, "result 1", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+    val previousResults =
+        listOf(SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -148,11 +153,12 @@ class SerializationResultExtensionsTest {
    */
   @Test
   fun `Test compareTo with multiple elements lists of different order of SerializationResult where one element is missing case 2`() {
-    val currentResults = listOf(SerializableIntResult(1, "result 1", "Test case 1"))
+    val currentResults =
+        listOf(SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
     val previousResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -178,12 +184,12 @@ class SerializationResultExtensionsTest {
   fun `Test compareTo with multiple elements lists of SerializationResult where one does not match`() {
     val currentResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
     val previousResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(2, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 2))
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -209,12 +215,12 @@ class SerializationResultExtensionsTest {
   fun `Test compareTo with multiple elements lists of SerializationResult where both do not match`() {
     val currentResults =
         listOf(
-            SerializableIntResult(1, "result 1", "Test case 1"),
-            SerializableIntResult(1, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
     val previousResults =
         listOf(
-            SerializableIntResult(2, "result 1", "Test case 1"),
-            SerializableIntResult(2, "result 2", "Test case 1"))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 2),
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 2))
 
     val compareResults = currentResults.compareTo(previousResults)
 

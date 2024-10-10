@@ -30,8 +30,9 @@ class SerializationResultTest {
    */
   @Test
   fun `Test compareTo with SerializationResult that matches`() {
-    val result = SerializableIntResult(1, "result 1", "Test case 1")
-    val compareToResult = SerializableIntResult(1, "result 1", "Test case 1")
+    val result = SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1)
+    val compareToResult =
+        SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1)
 
     val compareResult = result.compareTo(compareToResult)
 
@@ -49,8 +50,9 @@ class SerializationResultTest {
    */
   @Test
   fun `Test compareTo with SerializationResult that has different value`() {
-    val result = SerializableIntResult(1, "result 1", "Test case 1")
-    val compareToResult = SerializableIntResult(2, "result 1", "Test case 1")
+    val result = SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1)
+    val compareToResult =
+        SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 2)
 
     val compareResult = result.compareTo(compareToResult)
 
@@ -68,8 +70,9 @@ class SerializationResultTest {
    */
   @Test
   fun `Test compareTo with SerializationResult that has different identifier`() {
-    val result = SerializableIntResult(1, "result 1", "Test case 1")
-    val compareToResult = SerializableIntResult(1, "result 2", "Test case 1")
+    val result = SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1)
+    val compareToResult =
+        SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1)
 
     val compareResult = result.compareTo(compareToResult)
 
@@ -82,8 +85,9 @@ class SerializationResultTest {
    */
   @Test
   fun `Test compareTo with SerializationResult that has different source`() {
-    val result = SerializableIntResult(1, "result 1", "Test case 1")
-    val compareToResult = SerializableIntResult(1, "result 1", "Test case 2")
+    val result = SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1)
+    val compareToResult =
+        SerializableIntResult(identifier = "result 1", source = "Test case 2", value = 1)
 
     val compareResult = result.compareTo(compareToResult)
 

@@ -87,7 +87,8 @@ class SerializationHelpersTest {
   fun `Test correct saving of simple SerializableResult object`() {
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
+    val actualSerializableResult =
+        SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val resultPath = actualSerializableResult.saveAsJsonFile()
 
     // Check that the returned path really exists and contains the necessary keywords
@@ -195,7 +196,8 @@ class SerializationHelpersTest {
         LocalDateTime.now()
             .minusMinutes(2)
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
+    val actualSerializableResult =
+        SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val actualFileContent = actualSerializableResult.getJsonString()
     val actualFilePath =
         "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
@@ -223,7 +225,8 @@ class SerializationHelpersTest {
           LocalDateTime.now()
               .minusMinutes(i.toLong())
               .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
-      val actualSerializableResult = SerializableIntResult(i, actualIdentifier, actualSource)
+      val actualSerializableResult =
+          SerializableIntResult(identifier = actualIdentifier, source = actualSource, i)
       val actualFilePath =
           "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
       // The element i == 0 should be not considered, but the one before.
@@ -250,7 +253,8 @@ class SerializationHelpersTest {
     // Setup of previous SerializationResults for testing
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
+    val actualSerializableResult =
+        SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val actualFilePath =
         "$serializedResultsFolder/$groundTruthDirectory/${actualSource}/${actualIdentifier}.json"
     actualSerializableResult.getJsonString().saveAsJsonFile(actualFilePath)
@@ -272,7 +276,8 @@ class SerializationHelpersTest {
     // Setup of ground truth SerializationResults for testing
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
+    val actualSerializableResult =
+        SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val actualFile =
         "$serializedResultsFolder/" +
             "$groundTruthDirectory/" +
@@ -296,7 +301,8 @@ class SerializationHelpersTest {
     // Setup of previous SerializationResult for testing
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
-    val actualSerializableResult = SerializableIntResult(2, actualIdentifier, actualSource)
+    val actualSerializableResult =
+        SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val actualFileContent = actualSerializableResult.getJsonString()
     val timeOfLatestState =
         LocalDateTime.now()

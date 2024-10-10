@@ -86,4 +86,9 @@ class SimpleTickDataDifference(val tickDifference: Long) :
 
   override fun minus(other: SimpleTickDataDifference): SimpleTickDataDifference =
       SimpleTickDataDifference(tickDifference - other.tickDifference)
+
+  override fun serialize(): String = tickDifference.toString()
+
+  override fun deserialize(str: String): SimpleTickDataDifference =
+      SimpleTickDataDifference(str.toLong())
 }

@@ -111,7 +111,7 @@ class TSCInstanceNode<
    */
   private fun validateMonitorsRec(label: String): List<Pair<String, String>> =
       this.monitorResults.filterValues { !it }.keys.map { it to label } +
-          edges.flatMap { it.destination.validateMonitorsRec(label) }
+          edges.flatMap { it.destination.validateMonitorsRec(it.destination.label) }
 
   /**
    * Prints [TSCInstanceNode] up to given [depth].

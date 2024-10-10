@@ -42,5 +42,5 @@ interface TickDifference<D : TickDifference<D>> : Comparable<D> {
 
   fun serialize(): String
 
-  fun deserialize(str: String): TickDifference<D>
+  fun deserialize(str: String): D
 }
