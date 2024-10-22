@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.core.types.TickDifference
 
 /**
  * This class implements the [SerializableResult] interface and stores one [String] as a [value].
@@ -28,7 +27,7 @@ import tools.aqua.stars.core.types.TickDifference
  * @property value The value that should be serialized.
  */
 @Serializable
-data class SerializableTickDifferenceResult<D : TickDifference<D>>(
+data class SerializableTickDifferenceResult(
     override val identifier: String,
     override val source: String,
     override val value: String
