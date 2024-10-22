@@ -23,7 +23,6 @@ import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 
@@ -106,7 +105,7 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
     }
   }
 
-  override fun getSerializableResults(): List<SerializableResult> =
+  override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
       segmentIdentifierToTotalSegmentDurationMap.map { (identifier, tickDifference) ->
         SerializableTickDifferenceResult(
             identifier = identifier,

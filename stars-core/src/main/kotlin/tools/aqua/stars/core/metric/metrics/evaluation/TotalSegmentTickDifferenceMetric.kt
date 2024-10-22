@@ -23,7 +23,6 @@ import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 
@@ -91,7 +90,7 @@ class TotalSegmentTickDifferenceMetric<
     logInfo("The analyzed segments yielded a total tick difference of $totalTickDifference.")
   }
 
-  override fun getSerializableResults(): List<SerializableResult> =
+  override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
       totalTickDifference?.let {
         listOf(
             SerializableTickDifferenceResult(

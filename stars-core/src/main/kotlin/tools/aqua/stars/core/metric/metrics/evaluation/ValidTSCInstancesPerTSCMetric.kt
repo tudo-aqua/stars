@@ -21,7 +21,6 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.*
-import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
@@ -221,7 +220,7 @@ class ValidTSCInstancesPerTSCMetric<
         "Combined TSCs to occurred instances in percentages: $combinedTSCToOccurredInstancesPercentagesMap")
   }
 
-  override fun getSerializableResults(): List<SerializableResult> =
+  override fun getSerializableResults(): List<SerializableTSCResult> =
       validInstancesMap.map { (tsc, validInstances) ->
         SerializableTSCResult(
             identifier = tsc.identifier,

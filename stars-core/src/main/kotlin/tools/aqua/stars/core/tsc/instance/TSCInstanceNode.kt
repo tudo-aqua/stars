@@ -107,7 +107,7 @@ class TSCInstanceNode<
    * [TSCNode<E,T,S,U,D>.monitorFunction] results and collects incoming edge labels for results !=
    * true.
    *
-   * @param label the label added to the return list if the monitor results was `false`.
+   * @param label the label added to the return list if the monitor result was `false`.
    * @return List of [Pair]s of the failed monitor to the node label.
    */
   private fun validateMonitorsRec(label: String): List<Pair<String, String>> =
