@@ -5,6 +5,26 @@ echo "------------"
 
 git stash -q --keep-index
 
+echo "--------------------"
+echo "Compiling classes..."
+echo "--------------------"
+
+./gradlew assemble
+compile_status=$?
+
+if [ "$compile_status" = 0 ] ; then
+    echo "Classes compiled successfully."
+else
+    echo "------------"
+    echo 1>&2 "Compilation of classes failed."
+    echo "Fix the compilation issues before trying to push again."
+    echo "------------"
+fi
+
+echo "--------------------"
+echo "Running spotless..."
+echo "--------------------"
+
 ./gradlew spotlessCheck
 spotless_status=$?
 
@@ -14,22 +34,6 @@ else
     echo "------------"
     echo 1>&2 "Spotless Check found violations."
     echo "Run spotless apply in your terminal and fix the issues before trying to push again."
-    echo "------------"
-fi
-
-echo "------------"
-echo "Compiling test classes..."
-echo "------------"
-
-./gradlew compileTestKotlin
-compile_status=$?
-
-if [ "$compile_status" = 0 ] ; then
-    echo "Test classes compiled successfully."
-else
-    echo "------------"
-    echo 1>&2 "Compilation of test classes failed."
-    echo "Fix the compilation issues before trying to push again."
     echo "------------"
 fi
 
