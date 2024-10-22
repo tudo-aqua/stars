@@ -21,10 +21,15 @@ All notable changes to this project will be documented in this file.
 - Add `identifier` field to `TSC`.
 - Add `euclideanDistance` function to `Location`.
 - Add `vehicleType` field to `Vehicle`.
+- Add `Serializable` interface.
+  - This adds the functionality to compare your current analysis results with the previous run or a specified ground-truth. 
 
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
 - `registerMetricProviders` now throws an `IllegalArgumentException` when multiple instances of the same `MetricProvider` class is registered.
+- Root nodes in a `TSC` now must not have a condition.
+- Move `label` from `TSCEdge` to `TSCNode`.
+- All default metrics now implement the new `Serializable` interface.
 - Rename `ProjectionMetricProvider` to `TSCMetricProvider`.
 - Rename `ProjectionAndTSCInstanceNodeMetricProvider` to `TSCAndTSCInstanceNodeMetricProvider`.
 - Rename `InvalidTSCInstancesPerProjectionMetric` to `InvalidTSCInstancesPerTSCMetric`.
@@ -32,7 +37,6 @@ All notable changes to this project will be documented in this file.
 - Rename `MissedTSCInstancesPerProjectionMetric` to `MissedTSCInstancesPerTSCMetric`.
 - Rename `MissingPredicateCombinationsPerProjectionMetric` to `MissingPredicateCombinationsPerTSCMetric`.
 - Rename `DataSaver` to `PlotDataSaver`.
-- Root nodes in a `TSC` now must not have a condition.
 
 ### Fixed
 - Fix `toString()` function of `TSCNode` to include the root node's label.
