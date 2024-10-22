@@ -6,10 +6,9 @@ echo "------------"
 git stash -q --keep-index
 
 ./gradlew spotlessCheck
+spotless_status=$?
 
-status=$?
-
-if [ "$status" = 0 ] ; then
+if [ "$spotless_status" = 0 ] ; then
     echo "Static analysis found no problems."
 else
     echo "------------"
@@ -18,6 +17,22 @@ else
     echo "------------"
 fi
 
+echo "------------"
+echo "Compiling test classes..."
+echo "------------"
+
+./gradlew compileTestKotlin
+compile_status=$?
+
+if [ "$compile_status" = 0 ] ; then
+    echo "Test classes compiled successfully."
+else
+    echo "------------"
+    echo 1>&2 "Compilation of test classes failed."
+    echo "Fix the compilation issues before trying to push again."
+    echo "------------"
+fi
+
 git stash pop -q
 
-exit $status
+exit $((spotless_status + compile_status))
