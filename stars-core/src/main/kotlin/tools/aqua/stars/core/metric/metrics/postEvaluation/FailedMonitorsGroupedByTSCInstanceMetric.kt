@@ -31,11 +31,11 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as
- * [TSCNode.monitorFunction]s that evaluate to 'false'.
+ * [TSCNode.monitors] that evaluate to 'false'.
  *
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
- * failing [TSCNode.monitorFunction]s for each [TSC]. It logs the failing
- * [TSCFailedMonitorInstance]s for each [TSC] and groups it by the [TSCInstance].
+ * failing [TSCNode.monitors] for each [TSC]. It logs the failing [TSCFailedMonitorInstance]s for
+ * each [TSC] and groups it by the [TSCInstance].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
