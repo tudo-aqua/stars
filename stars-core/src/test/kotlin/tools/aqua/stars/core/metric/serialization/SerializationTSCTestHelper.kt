@@ -122,7 +122,7 @@ val simpleTSCInvalidInstance =
 /** Holds a simple [TSC] with one mandatory leaf nodes. */
 val simpleTSC2 =
     tsc<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
-      any("root") { leaf("leaf1") }
+      any("root") { leaf("leaf1") { monitors { monitor("leaf1monitor") { true } } } }
     }
 
 /** Holds the root node of the [simpleTSC2]. */
@@ -146,7 +146,11 @@ val simpleTSC2ValidInstance =
         rootNode =
             TSCInstanceNode(simpleTSC2.rootNode).apply {
               edges +=
-                  listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC2LeafNode), simpleTSC2LeafEdge))
+                  listOf(
+                      TSCInstanceEdge(
+                          TSCInstanceNode(
+                              simpleTSC2LeafNode, monitorResults = mapOf("leaf1monitor" to true)),
+                          simpleTSC2LeafEdge))
             },
         sourceSegmentIdentifier = "")
 
@@ -307,7 +311,19 @@ val simpleTSC4ValidInstance2 =
         rootNode =
             TSCInstanceNode(simpleTSC4.rootNode).apply {
               edges +=
-                  listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC4LeafNode), simpleTSC4LeafEdge))
+                  listOf(
+                      TSCInstanceEdge(
+                          TSCInstanceNode(
+                              simpleTSC4LeafNode, monitorResults = mapOf("leaf1monitor" to true)),
+                          simpleTSC4LeafEdge),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(
+                              simpleTSC4LeafNode2, monitorResults = mapOf("leaf1monitor" to false)),
+                          simpleTSC4LeafEdge2),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(
+                              simpleTSC4LeafNode3, monitorResults = mapOf("leaf1monitor" to false)),
+                          simpleTSC4LeafEdge3))
             },
         sourceSegmentIdentifier = "file 1")
 
