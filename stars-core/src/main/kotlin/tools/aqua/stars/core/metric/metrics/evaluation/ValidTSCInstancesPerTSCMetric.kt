@@ -53,6 +53,9 @@ private const val VALID_TSC_INSTANCE_OCCURRENCES_PER_TSC_METRIC_NAME: String =
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
  * [List] of valid [TSCInstance]s.
  *
+ * This class implements the [Serializable] interface. It serializes all valid [TSCInstance] for
+ * their respective [TSC].
+ *
  * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for [TSC]s.
  *
  * This class implements [Plottable] and plots the distribution and temporal change of valid

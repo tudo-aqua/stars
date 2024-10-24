@@ -30,6 +30,9 @@ import tools.aqua.stars.core.types.*
  * This class implements the [SegmentMetricProvider] and tracks the total [TickDifference] of all
  * [SegmentType]s.
  *
+ * This class implements the [Serializable] interface. It serializes the [totalTickDifference] for
+ * all analyzed [SegmentType]s.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].

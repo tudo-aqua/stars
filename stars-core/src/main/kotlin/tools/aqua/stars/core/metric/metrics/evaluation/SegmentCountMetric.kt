@@ -31,9 +31,9 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements the [Stateful] interface. Its state contains the [segmentCount].
  *
- * This class implements [Loggable] and logs the final [segmentCount].
- *
  * This class implements [Serializable] and stores, and compares its evaluation results.
+ *
+ * This class implements [Loggable] and logs the final [segmentCount].
  *
  * @param E [EntityType].
  * @param T [TickDataType].

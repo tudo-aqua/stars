@@ -32,6 +32,9 @@ import tools.aqua.stars.core.types.*
  * [SegmentType.segmentSource] defines the source of the [SegmentType] (e.g. a map name, analysis
  * name).
  *
+ * This class implements the [Serializable] interface. It serializes the total tick difference for
+ * all analyzed [SegmentType]s grouped by the segment.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
