@@ -18,9 +18,12 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.tsc.TSC
 
 /**
- * This class implements the [SerializableResult] interface and stores a [Pair] of [String]s.
+ * This class implements the [SerializableResult] interface and stores a [Pair] of [String]s
+ * (representing predicate names) and the [TSC] in which they did not occur.
  *
  * @property identifier The identifier of this specific result.
  * @property source The source (i.e. the metric) which produced this result.
@@ -30,5 +33,6 @@ import kotlinx.serialization.Serializable
 data class SerializablePredicateCombinationResult(
     override val identifier: String,
     override val source: String,
-    override val value: List<Pair<String, String>>
+    val tsc: SerializableTSCNode,
+    override val value: List<Pair<String, String>>,
 ) : SerializableResult()

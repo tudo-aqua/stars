@@ -19,6 +19,7 @@ package tools.aqua.stars.core.metric.serialization.tsc
 
 import kotlinx.serialization.Serializable
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.node.TSCNode
 
 /**
  * This class stores [TSCInstanceNode] as the [Pair] of [label] and [outgoingEdges] for
@@ -30,6 +31,12 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 @Serializable
 data class SerializableTSCNode(val label: String, val outgoingEdges: List<SerializableTSCEdge>) {
   constructor(
-      tscNode: TSCInstanceNode<*, *, *, *, *>
+      tscInstanceNode: TSCInstanceNode<*, *, *, *, *>
+  ) : this(
+      label = tscInstanceNode.label,
+      outgoingEdges = tscInstanceNode.edges.map { SerializableTSCEdge(it) })
+
+  constructor(
+      tscNode: TSCNode<*, *, *, *, *>
   ) : this(label = tscNode.label, outgoingEdges = tscNode.edges.map { SerializableTSCEdge(it) })
 }

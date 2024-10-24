@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.metric.serialization.tsc
 
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 
 /**
@@ -29,5 +30,9 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 data class SerializableTSCEdge(val destination: SerializableTSCNode) {
   constructor(
       tscEdge: TSCInstanceEdge<*, *, *, *, *>
+  ) : this(destination = SerializableTSCNode(tscEdge.destination))
+
+  constructor(
+      tscEdge: TSCEdge<*, *, *, *, *>
   ) : this(destination = SerializableTSCNode(tscEdge.destination))
 }

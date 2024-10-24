@@ -28,7 +28,7 @@ import tools.aqua.stars.core.metric.metrics.evaluation.MissedTSCInstancesPerTSCM
 class SerializableTSCResultTest {
 
   /**
-   * Test the correct calculation and return of [SerializableTSCOccurrenceResult] for one missed TSC
+   * Test the correct calculation and return of [SerializableTSCResultTest] for one missed TSC
    * instance.
    */
   @Test
@@ -50,7 +50,7 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Test the correct calculation and return of [SerializableTSCOccurrenceResult] for all missed TSC
+   * Test the correct calculation and return of [SerializableTSCResultTest] for all missed TSC
    * instances.
    */
   @Test
@@ -72,7 +72,7 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Test the correct calculation and return of [SerializableTSCOccurrenceResult] for no missed TSC
+   * Test the correct calculation and return of [SerializableTSCResultTest] for no missed TSC
    * instance.
    */
   @Test

@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.metric.serialization
 
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
 import tools.aqua.stars.core.SimpleSegment
@@ -26,7 +27,6 @@ import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.postEvaluation.MissedPredicateCombinationsPerTSCMetric
-import kotlin.test.assertContains
 
 /**
  * Tests the [SerializableResult] sealed class implementation for the
@@ -159,12 +159,12 @@ class SerializablePredicateCombinationResultTest {
   fun `Test multiple missing predicate combinations with valid empty TSC instance`() {
     // Initialize base metric
     val validTSCInstancesPerTSCMetric =
-      ValidTSCInstancesPerTSCMetric<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference>()
+        ValidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
 
     // Evaluate and populate base metric
     // Uses a valid TSC instance where none of three leaf nodes is present
@@ -172,13 +172,13 @@ class SerializablePredicateCombinationResultTest {
 
     // Initialize actual metric
     val missedPredicateCombinationsPerTSCMetric =
-      MissedPredicateCombinationsPerTSCMetric<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference>(
-        validTSCInstancesPerTSCMetric)
+        MissedPredicateCombinationsPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>(
+            validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     missedPredicateCombinationsPerTSCMetric.postEvaluate()

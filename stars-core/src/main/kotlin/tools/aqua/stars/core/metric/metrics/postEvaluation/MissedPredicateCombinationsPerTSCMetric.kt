@@ -24,6 +24,7 @@ import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.serialization.SerializablePredicateCombinationResult
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -150,6 +151,7 @@ class MissedPredicateCombinationsPerTSCMetric<
         SerializablePredicateCombinationResult(
             identifier = tsc.identifier,
             source = "MissedPredicateCombinationsPerTSCMetric",
+            tsc = SerializableTSCNode(tsc.rootNode),
             value = predicates.map { it.predicate1 to it.predicate2 })
       } ?: emptyList()
 }
