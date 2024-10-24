@@ -61,9 +61,8 @@ class FailedMonitorsGroupedByTSCNodeMetric<
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /**
-   * Holds a [Map] from a [TSC] to a [Map] from a node label (as [String], representing the ID of
-   * the monitor) to a [Map] from a node label to a [List] of all occurring [TSCInstanceNode]s
-   * including the node label.
+   * Holds a [Map] from a [TSC] to a [Map] from the monitor label to a [Map] from a node label to a
+   * [List] of all occurring [TSCInstanceNode]s including the node label.
    */
   private val failedMonitors:
       MutableMap<TSC<E, T, S, U, D>, Map<String, Map<String, List<TSCInstance<E, T, S, U, D>>>>> =

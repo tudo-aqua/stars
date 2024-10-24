@@ -27,6 +27,11 @@ import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
+import tools.aqua.stars.core.metric.serialization.extensions.compareToGroundTruthResults
+import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
+import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
+import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -40,6 +45,12 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare them
+ *   to previous runs after the analysis.
+ * @param compareToGroundTruth (Default: ``false``) Whether to compare the results to the ground
+ *   truth.
+ * @param compareToPreviousRun (Default: ``false``) Whether to compare the results to the previous
+ *   run.
  * @property tscList The list of [TSC]s to evaluate.
  * @property writePlots (Default: ``true``) Whether to write plots after the analysis.
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
@@ -54,8 +65,43 @@ class TSCEvaluation<
     val tscList: List<TSC<E, T, S, U, D>>,
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
+    val writeSerializedResults: Boolean = true,
+    val compareToGroundTruth: Boolean = false,
+    val compareToPreviousRun: Boolean = false,
     override val logger: Logger = Loggable.getLogger("evaluation-time")
 ) : Loggable {
+
+  private val mutex: Any = Any()
+
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
+   * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
+   * be changed to 'true' again.
+   */
+  var resultsReproducedFromGroundTruth: Boolean? = null
+    set(value) {
+      synchronized(mutex) {
+        when {
+          field == null -> field = value
+          field != null && value != null -> field = field!! && value
+        }
+      }
+    }
+
+  /**
+   * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
+   * results. Setting a new value will be conjugated with the old value such that a verdict 'false'
+   * may not be changed to 'true' again.
+   */
+  var resultsReproducedFromPreviousRun: Boolean? = null
+    set(value) {
+      synchronized(mutex) {
+        when {
+          field == null -> field = value
+          field != null && value != null -> field = field!! && value
+        }
+      }
+    }
 
   /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
   private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
@@ -71,7 +117,12 @@ class TSCEvaluation<
   private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, S, U, D>> =
       mutableListOf()
 
-  /** Holds the results of the [PreSegmentEvaluationHook]s after calling [runEvaluation]. */
+  /**
+   * Holds the results (Map of [PreSegmentEvaluationHook.identifier] to [EvaluationHookResult]) of
+   * the [PreSegmentEvaluationHook]s after calling [runEvaluation] that did not return
+   * [EvaluationHookResult.OK] for each segment identifier obtained by
+   * [SegmentType.getSegmentIdentifier].
+   */
   val preSegmentEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
       mutableMapOf()
 
@@ -274,6 +325,35 @@ class TSCEvaluation<
     if (writePlotDataCSV) {
       println("Writing CSVs")
       metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+    }
+
+    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    if (serializableMetrics.any()) {
+      // Write JSON files of all Serializable metrics
+      if (writeSerializedResults) {
+        println("Writing serialized results")
+        serializableMetrics.forEach { t -> t.writeSerializedResults() }
+      }
+
+      // Compare the results to the ground truth
+      if (compareToGroundTruth) {
+        println("Comparing to ground truth")
+        serializableMetrics.compareToGroundTruthResults().let {
+          resultsReproducedFromGroundTruth = it.noMismatch()
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = true)
+        }
+      }
+
+      // Compare the results to the latest run
+      if (compareToPreviousRun) {
+        println("Comparing to previous run")
+        serializableMetrics.compareToPreviousResults().let {
+          resultsReproducedFromPreviousRun = it.noMismatch()
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = false)
+        }
+      }
     }
   }
 }
