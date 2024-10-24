@@ -22,6 +22,7 @@ import kotlin.test.assertEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.InvalidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metric.serialization.extensions.compareTo
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.tsc
 import tools.aqua.stars.core.tsc.edge.TSCEdge
@@ -32,8 +33,8 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 
 class SerializableTSCResultTest {
 
-  // region TSC definition
-  /** Defines a simple [TSC]. */
+  // region TSC 1 definition
+  /** Holds a simple [TSC] with two mandatory leaf nodes. */
   private val simpleTSC =
       tsc<
           SimpleEntity,
@@ -46,6 +47,8 @@ class SerializableTSCResultTest {
           leaf("leaf2")
         }
       }
+
+  /** Holds the root node of the [simpleTSC]. */
   private val simpleTSCRootNode:
       TSCNode<
           SimpleEntity,
@@ -54,6 +57,8 @@ class SerializableTSCResultTest {
           SimpleTickDataUnit,
           SimpleTickDataDifference> =
       simpleTSC.rootNode
+
+  /** Holds the edge to the first leaf node of the [simpleTSC]. */
   private val simpleTSCLeafEdge:
       TSCEdge<
           SimpleEntity,
@@ -62,6 +67,8 @@ class SerializableTSCResultTest {
           SimpleTickDataUnit,
           SimpleTickDataDifference> =
       simpleTSCRootNode.edges[0]
+
+  /** Holds the node of the first leaf node of the [simpleTSC]. */
   private val simpleTSCLeafNode:
       TSCNode<
           SimpleEntity,
@@ -70,6 +77,8 @@ class SerializableTSCResultTest {
           SimpleTickDataUnit,
           SimpleTickDataDifference> =
       simpleTSCLeafEdge.destination
+
+  /** Holds the edge to the second leaf node of the [simpleTSC]. */
   private val simpleTSCLeafEdge2:
       TSCEdge<
           SimpleEntity,
@@ -78,6 +87,8 @@ class SerializableTSCResultTest {
           SimpleTickDataUnit,
           SimpleTickDataDifference> =
       simpleTSCRootNode.edges[1]
+
+  /** Holds the node of the second leaf node of the [simpleTSC]. */
   private val simpleTSCLeafNode2:
       TSCNode<
           SimpleEntity,
@@ -97,7 +108,31 @@ class SerializableTSCResultTest {
                         TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
                         TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
               },
-          sourceSegmentIdentifier = "")
+          sourceSegmentIdentifier = "file 1")
+
+  /** Holds a valid [TSCInstance] for the [simpleTSC]. */
+  private val simpleTSCValidInstance2 =
+      TSCInstance(
+          rootNode =
+              TSCInstanceNode(simpleTSC.rootNode).apply {
+                edges +=
+                    listOf(
+                        TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
+                        TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
+              },
+          sourceSegmentIdentifier = "file 1")
+
+  /** Holds a valid [TSCInstance] for the [simpleTSC]. */
+  private val simpleTSCValidInstance3 =
+      TSCInstance(
+          rootNode =
+              TSCInstanceNode(simpleTSC.rootNode).apply {
+                edges +=
+                    listOf(
+                        TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
+                        TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
+              },
+          sourceSegmentIdentifier = "file 2")
 
   /** Holds an invalid [TSCInstance] for the [simpleTSC]. */
   private val simpleTSCInvalidInstance =
@@ -107,9 +142,12 @@ class SerializableTSCResultTest {
                 edges +=
                     listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge))
               },
-          sourceSegmentIdentifier = "")
+          sourceSegmentIdentifier = "file 1")
 
-  /** Defines a simple [TSC]. */
+  // endregion
+
+  // region TSC 2 definition
+  /** Holds a simple [TSC] with one mandatory leaf nodes. */
   private val simpleTSC2 =
       tsc<
           SimpleEntity,
@@ -119,9 +157,29 @@ class SerializableTSCResultTest {
           SimpleTickDataDifference> {
         any("root") { leaf("leaf1") }
       }
-  private val simpleTSC2RootNode = simpleTSC2.rootNode
+
+  /** Holds the root node of the [simpleTSC2]. */
+  private val simpleTSC2RootNode:
+      TSCNode<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> =
+      simpleTSC2.rootNode
+
+  /** Holds the edge to the first leaf node of the [simpleTSC2]. */
   private val simpleTSC2LeafEdge = simpleTSC2RootNode.edges[0]
-  private val simpleTSC2LeafNode = simpleTSC2LeafEdge.destination
+
+  /** Holds the node of the first leaf node of the [simpleTSC2]. */
+  private val simpleTSC2LeafNode:
+      TSCNode<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> =
+      simpleTSC2LeafEdge.destination
 
   /** Holds a valid [TSCInstance] for the [simpleTSC2]. */
   private val simpleTSC2ValidInstance =
@@ -133,15 +191,10 @@ class SerializableTSCResultTest {
               },
           sourceSegmentIdentifier = "")
 
-  /** Holds an invalid [TSCInstance] for the [simpleTSC2]. */
-  private val simpleTSC2InvalidInstance =
-      TSCInstance(rootNode = TSCInstanceNode(simpleTSC.rootNode), sourceSegmentIdentifier = "")
-
   // endregion
 
   /**
-   * Tests the correct calculation and setting of a [SerializableTSCResult] for a valid TSC
-   * instance.
+   * Tests the correct calculation and return of a [SerializableTSCResult] for a valid TSC instance.
    */
   @Test
   fun `Test return of valid TSC Result`() {
@@ -170,7 +223,7 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Tests the correct calculation and setting of a [SerializableTSCResult] for an invalid TSC
+   * Tests the correct calculation and return of a [SerializableTSCResult] for an invalid TSC
    * instance.
    */
   @Test
@@ -197,8 +250,9 @@ class SerializableTSCResultTest {
     assertEquals(1, serializedResult.size)
   }
 
+  /** Tests the correct comparison of two valid [SerializableTSCResult] with different results. */
   @Test
-  fun `Test correct comparison of two different TSC results`() {
+  fun `Test correct comparison of two different valid TSC results`() {
     val currentMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
@@ -214,5 +268,124 @@ class SerializableTSCResultTest {
             SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
+
+    currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
+    groundTruthMetric.evaluate(simpleTSC2, simpleTSC2ValidInstance)
+
+    val currentResult = currentMetric.getSerializableResults()
+    val groundTruthResult = groundTruthMetric.getSerializableResults()
+
+    val comparison = currentResult.compareTo(groundTruthResult)
+
+    assertEquals(1, comparison.size)
+    assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
+  }
+
+  /** Tests the correct comparison of two invalid [SerializableTSCResult] with different results. */
+  @Test
+  fun `Test correct comparison of two different invalid TSC results`() {
+    val currentMetric =
+        InvalidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    val groundTruthMetric =
+        InvalidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    currentMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
+    groundTruthMetric.evaluate(simpleTSC2, simpleTSCInvalidInstance)
+
+    val currentResult = currentMetric.getSerializableResults()
+    assertEquals(1, currentResult.size)
+
+    val groundTruthResult = groundTruthMetric.getSerializableResults()
+    assertEquals(1, groundTruthResult.size)
+
+    val comparison = currentResult.compareTo(groundTruthResult)
+
+    assertEquals(1, comparison.size)
+    assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
+  }
+
+  /**
+   * Tests the correct comparison of two valid [SerializableTSCResult] with the same content from
+   * the same segment source.
+   */
+  @Test
+  fun `Test correct comparison of two same valid TSC results from equal segment sources`() {
+    val currentMetric =
+        ValidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    val groundTruthMetric =
+        ValidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
+    groundTruthMetric.evaluate(simpleTSC, simpleTSCValidInstance2)
+
+    val currentResult = currentMetric.getSerializableResults()
+    assertEquals(1, currentResult.size)
+
+    val groundTruthResult = groundTruthMetric.getSerializableResults()
+    assertEquals(1, groundTruthResult.size)
+
+    val comparison = currentResult.compareTo(groundTruthResult)
+
+    assertEquals(1, comparison.size)
+    assertEquals(SerializableResultComparisonVerdict.EQUAL_RESULTS, comparison[0].verdict)
+  }
+
+  /**
+   * Tests the correct comparison of two valid [SerializableTSCResult] with the same content from
+   * different segment sources.
+   */
+  @Test
+  fun `Test correct comparison of two same valid TSC results from different segment sources`() {
+    val currentMetric =
+        ValidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    val groundTruthMetric =
+        ValidTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
+    groundTruthMetric.evaluate(simpleTSC, simpleTSCValidInstance3)
+
+    val currentResult = currentMetric.getSerializableResults()
+    assertEquals(1, currentResult.size)
+
+    val groundTruthResult = groundTruthMetric.getSerializableResults()
+    assertEquals(1, groundTruthResult.size)
+
+    val comparison = currentResult.compareTo(groundTruthResult)
+
+    assertEquals(1, comparison.size)
+    assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
   }
 }
