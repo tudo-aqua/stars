@@ -32,6 +32,9 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 
+/**
+ * Tests the [SerializableResult] sealed class implementation for the [SerializableTSCResultTest].
+ */
 class SerializableTSCResultTest {
 
   // region TSC 1 definition
