@@ -18,9 +18,15 @@
 package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
+import kotlin.collections.component1
+import kotlin.collections.component2
 import tools.aqua.stars.core.metric.providers.Loggable
+import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -52,7 +58,7 @@ class MissedTSCInstancesPerTSCMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val logger: Logger = Loggable.getLogger("missed-tsc-instances-per-tsc")
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Loggable {
+) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /**
    * Map a [TSC] to a map in which the missed valid [TSCInstanceNode]s are stored:
    * Map<tsc,Map<referenceInstance,missed>>.
@@ -110,4 +116,19 @@ class MissedTSCInstancesPerTSCMetric<
       missedInstances.forEach { logFine(it) }
     }
   }
+
+  override fun getSerializableResults(): List<SerializableTSCResult> =
+      missedInstancesMap.map { (tsc, missedInstances) ->
+        SerializableTSCResult(
+            identifier = tsc.identifier,
+            source = "MissedTSCInstancesPerTSCMetric",
+            value =
+                missedInstances
+                    .filter { it.value }
+                    .map { (tscInstanceNode, _) ->
+                      SerializableTSCOccurrence(
+                          tscInstance = SerializableTSCNode(tscInstanceNode),
+                          segmentIdentifiers = emptyList())
+                    })
+      }
 }

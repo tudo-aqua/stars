@@ -21,6 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.InvalidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metric.metrics.evaluation.MissedTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.serialization.extensions.compareTo
 import tools.aqua.stars.core.tsc.TSC
@@ -190,6 +191,23 @@ class SerializableTSCResultTest {
                     listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC2LeafNode), simpleTSC2LeafEdge))
               },
           sourceSegmentIdentifier = "")
+
+  // endregion
+
+  // region TSC 3 definition
+  /** Holds a simple [TSC] with one mandatory leaf nodes. */
+  private val simpleTSC3 =
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> {
+        optional("root") {
+          leaf("leaf1")
+          leaf("leaf2")
+        }
+      }
 
   // endregion
 
@@ -387,5 +405,69 @@ class SerializableTSCResultTest {
 
     assertEquals(1, comparison.size)
     assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
+  }
+
+  /**
+   * Test the correct calculation and return of [SerializableTSCResult] for one missed TSC instance.
+   */
+  @Test
+  fun `Test return of one missed TSC instance`() {
+    val missedInstancesMetric =
+        MissedTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    missedInstancesMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
+
+    val missedInstancesResult = missedInstancesMetric.getSerializableResults()
+    assertEquals(1, missedInstancesResult.size)
+
+    assertEquals(1, missedInstancesResult[0].value.size)
+  }
+
+  /**
+   * Test the correct calculation and return of [SerializableTSCResult] for all missed TSC
+   * instances.
+   */
+  @Test
+  fun `Test return of all missed TSC instanced`() {
+    val missedInstancesMetric =
+        MissedTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    missedInstancesMetric.evaluate(simpleTSC3, simpleTSCInvalidInstance)
+
+    val missedInstancesResult = missedInstancesMetric.getSerializableResults()
+    assertEquals(1, missedInstancesResult.size)
+
+    assertEquals(3, missedInstancesResult[0].value.size)
+  }
+
+  /**
+   * Test the correct calculation and return of [SerializableTSCResult] for no missed TSC instance.
+   */
+  @Test
+  fun `Test return of no missed TSC instances`() {
+    val missedInstancesMetric =
+        MissedTSCInstancesPerTSCMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference>()
+
+    missedInstancesMetric.evaluate(simpleTSC, simpleTSCValidInstance)
+
+    val missedInstancesResult = missedInstancesMetric.getSerializableResults()
+    assertEquals(1, missedInstancesResult.size)
+
+    assertEquals(0, missedInstancesResult[0].value.size)
   }
 }
