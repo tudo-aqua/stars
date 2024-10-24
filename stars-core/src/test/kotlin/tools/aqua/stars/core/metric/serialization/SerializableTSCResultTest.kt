@@ -22,7 +22,6 @@ import kotlin.test.assertEquals
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metric.metrics.evaluation.InvalidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.serialization.extensions.compareTo
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.tsc
 import tools.aqua.stars.core.tsc.instance.TSCInstance
