@@ -22,7 +22,7 @@ import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
-import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
+import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
@@ -132,9 +132,9 @@ class InvalidTSCInstancesPerTSCMetric<
     }
   }
 
-  override fun getSerializableResults(): List<SerializableTSCResult> =
+  override fun getSerializableResults(): List<SerializableTSCOccurrenceResult> =
       invalidInstancesMap.map { (tsc, invalidInstances) ->
-        SerializableTSCResult(
+        SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
             source = "InvalidTSCInstancesPerTSCMetric",
             value =

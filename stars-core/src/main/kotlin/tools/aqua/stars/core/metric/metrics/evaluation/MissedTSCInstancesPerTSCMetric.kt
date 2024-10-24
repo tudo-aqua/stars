@@ -26,7 +26,6 @@ import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -128,10 +127,6 @@ class MissedTSCInstancesPerTSCMetric<
             value =
                 missedInstances
                     .filter { it.value }
-                    .map { (tscInstanceNode, _) ->
-                      SerializableTSCOccurrence(
-                          tscInstance = SerializableTSCNode(tscInstanceNode),
-                          segmentIdentifiers = emptyList())
-                    })
+                    .map { (tscInstanceNode, _) -> SerializableTSCNode(tscInstanceNode) })
       }
 }

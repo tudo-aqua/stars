@@ -215,7 +215,8 @@ class SerializableTSCResultTest {
   // endregion
 
   /**
-   * Tests the correct calculation and return of a [SerializableTSCResult] for a valid TSC instance.
+   * Tests the correct calculation and return of a [SerializableTSCOccurrenceResult] for a valid TSC
+   * instance.
    */
   @Test
   fun `Test return of valid TSC Result`() {
@@ -244,8 +245,8 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [SerializableTSCResult] for an invalid TSC
-   * instance.
+   * Tests the correct calculation and return of a [SerializableTSCOccurrenceResult] for an invalid
+   * TSC instance.
    */
   @Test
   fun `Test return of invalid TSC Result`() {
@@ -271,7 +272,10 @@ class SerializableTSCResultTest {
     assertEquals(1, serializedResult.size)
   }
 
-  /** Tests the correct comparison of two valid [SerializableTSCResult] with different results. */
+  /**
+   * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with different
+   * results.
+   */
   @Test
   fun `Test correct comparison of two different valid TSC results`() {
     val currentMetric =
@@ -302,7 +306,10 @@ class SerializableTSCResultTest {
     assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
   }
 
-  /** Tests the correct comparison of two invalid [SerializableTSCResult] with different results. */
+  /**
+   * Tests the correct comparison of two invalid [SerializableTSCOccurrenceResult] with different
+   * results.
+   */
   @Test
   fun `Test correct comparison of two different invalid TSC results`() {
     val currentMetric =
@@ -337,8 +344,8 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Tests the correct comparison of two valid [SerializableTSCResult] with the same content from
-   * the same segment source.
+   * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with the same
+   * content from the same segment source.
    */
   @Test
   fun `Test correct comparison of two same valid TSC results from equal segment sources`() {
@@ -374,8 +381,8 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Tests the correct comparison of two valid [SerializableTSCResult] with the same content from
-   * different segment sources.
+   * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with the same
+   * content from different segment sources.
    */
   @Test
   fun `Test correct comparison of two same valid TSC results from different segment sources`() {
@@ -411,7 +418,8 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Test the correct calculation and return of [SerializableTSCResult] for one missed TSC instance.
+   * Test the correct calculation and return of [SerializableTSCOccurrenceResult] for one missed TSC
+   * instance.
    */
   @Test
   fun `Test return of one missed TSC instance`() {
@@ -432,7 +440,7 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Test the correct calculation and return of [SerializableTSCResult] for all missed TSC
+   * Test the correct calculation and return of [SerializableTSCOccurrenceResult] for all missed TSC
    * instances.
    */
   @Test
@@ -454,7 +462,8 @@ class SerializableTSCResultTest {
   }
 
   /**
-   * Test the correct calculation and return of [SerializableTSCResult] for no missed TSC instance.
+   * Test the correct calculation and return of [SerializableTSCOccurrenceResult] for no missed TSC
+   * instance.
    */
   @Test
   fun `Test return of no missed TSC instances`() {
