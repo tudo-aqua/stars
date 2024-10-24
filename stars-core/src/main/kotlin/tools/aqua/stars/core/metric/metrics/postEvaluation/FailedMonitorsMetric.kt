@@ -21,6 +21,10 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorInstance
+import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorsResult
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -31,11 +35,11 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as
- * [TSCNode.monitorFunction]s that evaluate to 'false'.
+ * [TSCNode.monitors] that evaluate to 'false'.
  *
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
- * failing [TSCNode.monitorFunction]s for each [TSC]. It logs the failing
- * [TSCFailedMonitorInstance]s for each [TSC].
+ * failing [TSCNode.monitors] for each [TSC]. It logs the failing [TSCFailedMonitorInstance]s for
+ * each [TSC].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -55,7 +59,7 @@ class FailedMonitorsMetric<
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
     override val logger: Logger = Loggable.getLogger("failed-monitors")
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
+) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
   val failedMonitors:
@@ -96,4 +100,20 @@ class FailedMonitorsMetric<
       logFine()
     }
   }
+
+  override fun getSerializableResults(): List<SerializableFailedMonitorsResult> =
+      failedMonitors.map { (tsc, failedMonitorInstances) ->
+        SerializableFailedMonitorsResult(
+            identifier = tsc.identifier,
+            source = "FailedMonitorsMetric",
+            tsc = SerializableTSCNode(tsc.rootNode),
+            value =
+                failedMonitorInstances.map {
+                  SerializableFailedMonitorInstance(
+                      segmentIdentifier = it.segmentIdentifier,
+                      tscInstance = SerializableTSCNode(it.tscInstance),
+                      monitorLabel = it.monitorLabel,
+                      nodeLabel = it.nodeLabel)
+                })
+      }
 }
