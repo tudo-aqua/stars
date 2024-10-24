@@ -60,36 +60,44 @@ class SerializableTSCResultTest {
           SimpleTickDataDifference>(
           rootNode =
               TSCInstanceNode<
-                  SimpleEntity,
-                  SimpleTickData,
-                  SimpleSegment,
-                  SimpleTickDataUnit,
-                  SimpleTickDataDifference>(simpleTSC.rootNode).apply {
-                edges +=
-                    listOf(
-                        TSCInstanceEdge<
-                            SimpleEntity,
-                            SimpleTickData,
-                            SimpleSegment,
-                            SimpleTickDataUnit,
-                            SimpleTickDataDifference>(TSCInstanceNode<
-                            SimpleEntity,
-                            SimpleTickData,
-                            SimpleSegment,
-                            SimpleTickDataUnit,
-                            SimpleTickDataDifference>(simpleTSCLeafNode), simpleTSCLeafEdge),
-                        TSCInstanceEdge<
-                            SimpleEntity,
-                            SimpleTickData,
-                            SimpleSegment,
-                            SimpleTickDataUnit,
-                            SimpleTickDataDifference>(TSCInstanceNode<
-                            SimpleEntity,
-                            SimpleTickData,
-                            SimpleSegment,
-                            SimpleTickDataUnit,
-                            SimpleTickDataDifference>(simpleTSCLeafNode2), simpleTSCLeafEdge2))
-              },
+                      SimpleEntity,
+                      SimpleTickData,
+                      SimpleSegment,
+                      SimpleTickDataUnit,
+                      SimpleTickDataDifference>(
+                      simpleTSC.rootNode)
+                  .apply {
+                    edges +=
+                        listOf(
+                            TSCInstanceEdge<
+                                SimpleEntity,
+                                SimpleTickData,
+                                SimpleSegment,
+                                SimpleTickDataUnit,
+                                SimpleTickDataDifference>(
+                                TSCInstanceNode<
+                                    SimpleEntity,
+                                    SimpleTickData,
+                                    SimpleSegment,
+                                    SimpleTickDataUnit,
+                                    SimpleTickDataDifference>(
+                                    simpleTSCLeafNode),
+                                simpleTSCLeafEdge),
+                            TSCInstanceEdge<
+                                SimpleEntity,
+                                SimpleTickData,
+                                SimpleSegment,
+                                SimpleTickDataUnit,
+                                SimpleTickDataDifference>(
+                                TSCInstanceNode<
+                                    SimpleEntity,
+                                    SimpleTickData,
+                                    SimpleSegment,
+                                    SimpleTickDataUnit,
+                                    SimpleTickDataDifference>(
+                                    simpleTSCLeafNode2),
+                                simpleTSCLeafEdge2))
+                  },
           sourceSegmentIdentifier = "")
 
   /** Holds an invalid [TSCInstance] for the [simpleTSC]. */
@@ -102,24 +110,30 @@ class SerializableTSCResultTest {
           SimpleTickDataDifference>(
           rootNode =
               TSCInstanceNode<
-                  SimpleEntity,
-                  SimpleTickData,
-                  SimpleSegment,
-                  SimpleTickDataUnit,
-                  SimpleTickDataDifference>(simpleTSC.rootNode).apply {
-                edges +=
-                    listOf(TSCInstanceEdge<
-                        SimpleEntity,
-                        SimpleTickData,
-                        SimpleSegment,
-                        SimpleTickDataUnit,
-                        SimpleTickDataDifference>(TSCInstanceNode<
-                        SimpleEntity,
-                        SimpleTickData,
-                        SimpleSegment,
-                        SimpleTickDataUnit,
-                        SimpleTickDataDifference>(simpleTSCLeafNode), simpleTSCLeafEdge))
-              },
+                      SimpleEntity,
+                      SimpleTickData,
+                      SimpleSegment,
+                      SimpleTickDataUnit,
+                      SimpleTickDataDifference>(
+                      simpleTSC.rootNode)
+                  .apply {
+                    edges +=
+                        listOf(
+                            TSCInstanceEdge<
+                                SimpleEntity,
+                                SimpleTickData,
+                                SimpleSegment,
+                                SimpleTickDataUnit,
+                                SimpleTickDataDifference>(
+                                TSCInstanceNode<
+                                    SimpleEntity,
+                                    SimpleTickData,
+                                    SimpleSegment,
+                                    SimpleTickDataUnit,
+                                    SimpleTickDataDifference>(
+                                    simpleTSCLeafNode),
+                                simpleTSCLeafEdge))
+                  },
           sourceSegmentIdentifier = "")
 
   /** Defines a simple [TSC]. */
@@ -141,24 +155,30 @@ class SerializableTSCResultTest {
       TSCInstance(
           rootNode =
               TSCInstanceNode<
-                  SimpleEntity,
-                  SimpleTickData,
-                  SimpleSegment,
-                  SimpleTickDataUnit,
-                  SimpleTickDataDifference>(simpleTSC2.rootNode).apply {
-                edges +=
-                    listOf(TSCInstanceEdge<
-                        SimpleEntity,
-                        SimpleTickData,
-                        SimpleSegment,
-                        SimpleTickDataUnit,
-                        SimpleTickDataDifference>(TSCInstanceNode<
-                        SimpleEntity,
-                        SimpleTickData,
-                        SimpleSegment,
-                        SimpleTickDataUnit,
-                        SimpleTickDataDifference>(simpleTSC2LeafNode), simpleTSC2LeafEdge))
-              },
+                      SimpleEntity,
+                      SimpleTickData,
+                      SimpleSegment,
+                      SimpleTickDataUnit,
+                      SimpleTickDataDifference>(
+                      simpleTSC2.rootNode)
+                  .apply {
+                    edges +=
+                        listOf(
+                            TSCInstanceEdge<
+                                SimpleEntity,
+                                SimpleTickData,
+                                SimpleSegment,
+                                SimpleTickDataUnit,
+                                SimpleTickDataDifference>(
+                                TSCInstanceNode<
+                                    SimpleEntity,
+                                    SimpleTickData,
+                                    SimpleSegment,
+                                    SimpleTickDataUnit,
+                                    SimpleTickDataDifference>(
+                                    simpleTSC2LeafNode),
+                                simpleTSC2LeafEdge))
+                  },
           sourceSegmentIdentifier = "")
 
   /** Holds an invalid [TSCInstance] for the [simpleTSC2]. */
