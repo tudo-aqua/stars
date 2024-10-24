@@ -22,6 +22,8 @@ import tools.aqua.stars.core.evaluation.PredicateCombination
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.serialization.SerializablePredicateCombinationResult
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -47,15 +49,18 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
-class MissingPredicateCombinationsPerTSCMetric<
+class MissedPredicateCombinationsPerTSCMetric<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
+    override val logger: Logger = Loggable.getLogger("missed-predicate-combinations")
+) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
+
+  /** Holds the evaluation result after calling [postEvaluate]. */
+  private var evaluationResult: Map<TSC<E, T, S, U, D>, Set<PredicateCombination>>? = null
 
   /**
    * Returns a [Map] of all missing [PredicateCombination]s for all [TSC]s that are calculated by
@@ -64,9 +69,13 @@ class MissingPredicateCombinationsPerTSCMetric<
    * @return The [Map] of all missing [PredicateCombination]s to its associated [TSC].
    */
   override fun postEvaluate(): Map<TSC<E, T, S, U, D>, Set<PredicateCombination>> =
-      dependsOn.getState().mapValues {
-        getAllMissingPredicateCombinationsForTSC(it.key, it.value.map { t -> t.key })
-      }
+      evaluationResult
+          ?: dependsOn
+              .getState()
+              .mapValues {
+                getAllMissingPredicateCombinationsForTSC(it.key, it.value.map { t -> t.key })
+              }
+              .also { evaluationResult = it }
 
   /**
    * Prints the count of missed [PredicateCombination]s for each [TSC] and then the actual list of
@@ -135,4 +144,12 @@ class MissingPredicateCombinationsPerTSCMetric<
     }
     return predicateCombinations
   }
+
+  override fun getSerializableResults(): List<SerializablePredicateCombinationResult> =
+      evaluationResult?.map { (tsc, predicates) ->
+        SerializablePredicateCombinationResult(
+            identifier = tsc.identifier,
+            source = "MissedPredicateCombinationsPerTSCMetric",
+            value = predicates.map { it.predicate1 to it.predicate2 })
+      } ?: emptyList()
 }
