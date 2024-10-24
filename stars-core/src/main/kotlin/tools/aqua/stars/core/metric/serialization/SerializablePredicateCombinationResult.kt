@@ -27,6 +27,7 @@ import tools.aqua.stars.core.tsc.TSC
  *
  * @property identifier The identifier of this specific result.
  * @property source The source (i.e. the metric) which produced this result.
+ * @property tsc The evaluated [TSC].
  * @property value The value that should be serialized.
  */
 @Serializable

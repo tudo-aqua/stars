@@ -27,6 +27,7 @@ import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
 
+/** Tests the [Serializable] interface implementation for the [FailedMonitorsMetric]. */
 class SerializableFailedMonitorResultTest {
 
   /**
