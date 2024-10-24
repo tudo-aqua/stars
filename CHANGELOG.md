@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
 - `registerMetricProviders` now throws an `IllegalArgumentException` when multiple instances of the same `MetricProvider` class is registered.
-- Root nodes in a `TSC` now must not have a condition.
+- Root nodes in a `TSC` now **must not** have a condition.
 - Move `label` from `TSCEdge` to `TSCNode`.
 - All default metrics now implement the new `Serializable` interface.
 - Rename `ProjectionMetricProvider` to `TSCMetricProvider`.
