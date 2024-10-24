@@ -24,9 +24,11 @@ import tools.aqua.stars.core.metric.metrics.evaluation.InvalidTSCInstancesPerTSC
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.tsc
+import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.node.TSCNode
 
 class SerializableTSCResultTest {
 
@@ -44,96 +46,67 @@ class SerializableTSCResultTest {
           leaf("leaf2")
         }
       }
-  private val simpleTSCRootNode = simpleTSC.rootNode
-  private val simpleTSCLeafEdge = simpleTSCRootNode.edges[0]
-  private val simpleTSCLeafNode = simpleTSCLeafEdge.destination
-  private val simpleTSCLeafEdge2 = simpleTSCRootNode.edges[1]
-  private val simpleTSCLeafNode2 = simpleTSCLeafEdge2.destination
-
-  /** Holds a valid [TSCInstance] for the [simpleTSC]. */
-  private val simpleTSCValidInstance =
-      TSCInstance<
+  private val simpleTSCRootNode:
+      TSCNode<
           SimpleEntity,
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference>(
+          SimpleTickDataDifference> =
+      simpleTSC.rootNode
+  private val simpleTSCLeafEdge:
+      TSCEdge<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> =
+      simpleTSCRootNode.edges[0]
+  private val simpleTSCLeafNode:
+      TSCNode<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> =
+      simpleTSCLeafEdge.destination
+  private val simpleTSCLeafEdge2:
+      TSCEdge<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> =
+      simpleTSCRootNode.edges[1]
+  private val simpleTSCLeafNode2:
+      TSCNode<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference> =
+      simpleTSCLeafEdge2.destination
+
+  /** Holds a valid [TSCInstance] for the [simpleTSC]. */
+  private val simpleTSCValidInstance =
+      TSCInstance(
           rootNode =
-              TSCInstanceNode<
-                      SimpleEntity,
-                      SimpleTickData,
-                      SimpleSegment,
-                      SimpleTickDataUnit,
-                      SimpleTickDataDifference>(
-                      simpleTSC.rootNode)
-                  .apply {
-                    edges +=
-                        listOf(
-                            TSCInstanceEdge<
-                                SimpleEntity,
-                                SimpleTickData,
-                                SimpleSegment,
-                                SimpleTickDataUnit,
-                                SimpleTickDataDifference>(
-                                TSCInstanceNode<
-                                    SimpleEntity,
-                                    SimpleTickData,
-                                    SimpleSegment,
-                                    SimpleTickDataUnit,
-                                    SimpleTickDataDifference>(
-                                    simpleTSCLeafNode),
-                                simpleTSCLeafEdge),
-                            TSCInstanceEdge<
-                                SimpleEntity,
-                                SimpleTickData,
-                                SimpleSegment,
-                                SimpleTickDataUnit,
-                                SimpleTickDataDifference>(
-                                TSCInstanceNode<
-                                    SimpleEntity,
-                                    SimpleTickData,
-                                    SimpleSegment,
-                                    SimpleTickDataUnit,
-                                    SimpleTickDataDifference>(
-                                    simpleTSCLeafNode2),
-                                simpleTSCLeafEdge2))
-                  },
+              TSCInstanceNode(simpleTSC.rootNode).apply {
+                edges +=
+                    listOf(
+                        TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
+                        TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
+              },
           sourceSegmentIdentifier = "")
 
   /** Holds an invalid [TSCInstance] for the [simpleTSC]. */
   private val simpleTSCInvalidInstance =
-      TSCInstance<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference>(
+      TSCInstance(
           rootNode =
-              TSCInstanceNode<
-                      SimpleEntity,
-                      SimpleTickData,
-                      SimpleSegment,
-                      SimpleTickDataUnit,
-                      SimpleTickDataDifference>(
-                      simpleTSC.rootNode)
-                  .apply {
-                    edges +=
-                        listOf(
-                            TSCInstanceEdge<
-                                SimpleEntity,
-                                SimpleTickData,
-                                SimpleSegment,
-                                SimpleTickDataUnit,
-                                SimpleTickDataDifference>(
-                                TSCInstanceNode<
-                                    SimpleEntity,
-                                    SimpleTickData,
-                                    SimpleSegment,
-                                    SimpleTickDataUnit,
-                                    SimpleTickDataDifference>(
-                                    simpleTSCLeafNode),
-                                simpleTSCLeafEdge))
-                  },
+              TSCInstanceNode(simpleTSC.rootNode).apply {
+                edges +=
+                    listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge))
+              },
           sourceSegmentIdentifier = "")
 
   /** Defines a simple [TSC]. */
@@ -154,31 +127,10 @@ class SerializableTSCResultTest {
   private val simpleTSC2ValidInstance =
       TSCInstance(
           rootNode =
-              TSCInstanceNode<
-                      SimpleEntity,
-                      SimpleTickData,
-                      SimpleSegment,
-                      SimpleTickDataUnit,
-                      SimpleTickDataDifference>(
-                      simpleTSC2.rootNode)
-                  .apply {
-                    edges +=
-                        listOf(
-                            TSCInstanceEdge<
-                                SimpleEntity,
-                                SimpleTickData,
-                                SimpleSegment,
-                                SimpleTickDataUnit,
-                                SimpleTickDataDifference>(
-                                TSCInstanceNode<
-                                    SimpleEntity,
-                                    SimpleTickData,
-                                    SimpleSegment,
-                                    SimpleTickDataUnit,
-                                    SimpleTickDataDifference>(
-                                    simpleTSC2LeafNode),
-                                simpleTSC2LeafEdge))
-                  },
+              TSCInstanceNode(simpleTSC2.rootNode).apply {
+                edges +=
+                    listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC2LeafNode), simpleTSC2LeafEdge))
+              },
           sourceSegmentIdentifier = "")
 
   /** Holds an invalid [TSCInstance] for the [simpleTSC2]. */
