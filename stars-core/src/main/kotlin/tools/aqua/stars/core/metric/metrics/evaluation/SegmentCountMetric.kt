@@ -55,14 +55,23 @@ class SegmentCountMetric<
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
+  /** Holds the count of [SegmentType]s grouped by [SegmentType.segmentIdentifier]. */
+  private val segmentIdentifierToSegmentCountMap: MutableMap<String, Int> = mutableMapOf()
+
   /**
    * Increases the count of evaluated [SegmentType]s.
    *
    * @param segment The current [SegmentType] that is evaluated.
    * @return The number of analyzed [SegmentType]s so far.
    */
-  override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int =
-      (++segmentCount).also { logFiner("==== Segment $segmentCount: $segment ====") }
+  override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int {
+    ++segmentCount
+    logFiner("==== Segment $segmentCount: $segment ====")
+    val segmentIdentifier = segment.getSegmentIdentifier()
+    segmentIdentifierToSegmentCountMap[segmentIdentifier] =
+        segmentIdentifierToSegmentCountMap.getOrPut(segmentIdentifier) { 0 } + 1
+    return segmentCount
+  }
 
   /**
    * Returns the current [segmentCount].
@@ -77,7 +86,11 @@ class SegmentCountMetric<
   }
 
   override fun getSerializableResults(): List<SerializableIntResult> =
-      listOf(
-          SerializableIntResult(
-              identifier = loggerIdentifier, source = loggerIdentifier, value = segmentCount))
+      segmentIdentifierToSegmentCountMap.map { (segmentIdentifier, segmentCount) ->
+        SerializableIntResult(
+            identifier = loggerIdentifier, source = segmentIdentifier, value = segmentCount)
+      } +
+          listOf(
+              SerializableIntResult(
+                  identifier = loggerIdentifier, source = loggerIdentifier, value = segmentCount))
 }

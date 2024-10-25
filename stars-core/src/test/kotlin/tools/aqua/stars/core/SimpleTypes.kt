@@ -39,6 +39,8 @@ class SimpleSegment(
         SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
   override fun toString(): String =
       "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentSource'"
+
+  override fun getSegmentIdentifier(): String = this.toString()
 }
 
 /** Simple tick data. */
