@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Add `identifier` field to `TSC`.
 - Add `euclideanDistance` function to `Location`.
 - Add `vehicleType` field to `Vehicle`.
+- Add `loggerIdentifier` field to `Loggable` interface.
 - Add `Serializable` interface.
   - This adds the functionality to compare your current analysis results with the previous run or a specified ground-truth. 
 

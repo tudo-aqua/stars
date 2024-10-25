@@ -47,6 +47,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -57,7 +58,8 @@ class MissedPredicateCombinationsPerTSCMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("missed-predicate-combinations")
+    override val loggerIdentifier: String = "missed-predicate-combinations",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
 
   /** Holds the evaluation result after calling [postEvaluate]. */
@@ -150,7 +152,7 @@ class MissedPredicateCombinationsPerTSCMetric<
       evaluationResult?.map { (tsc, predicates) ->
         SerializablePredicateCombinationResult(
             identifier = tsc.identifier,
-            source = "MissedPredicateCombinationsPerTSCMetric",
+            source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
             value = predicates.map { it.predicate1 to it.predicate2 })
       } ?: emptyList()

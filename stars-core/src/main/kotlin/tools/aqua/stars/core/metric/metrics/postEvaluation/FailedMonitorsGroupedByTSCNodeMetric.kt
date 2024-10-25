@@ -46,6 +46,7 @@ import tools.aqua.stars.core.types.*
  *   nodes.
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -56,7 +57,8 @@ class FailedMonitorsGroupedByTSCNodeMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-node"),
+    override val loggerIdentifier: String = "failed-monitors-grouped-by-node",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
     private val onlyLeafNodes: Boolean = false
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 

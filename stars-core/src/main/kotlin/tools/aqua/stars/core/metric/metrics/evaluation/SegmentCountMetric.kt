@@ -40,6 +40,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 class SegmentCountMetric<
@@ -47,8 +48,10 @@ class SegmentCountMetric<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(override val logger: Logger = Loggable.getLogger("segment-count")) :
-    SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
+    D : TickDifference<D>>(
+    override val loggerIdentifier: String = "segment-count",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
@@ -76,7 +79,5 @@ class SegmentCountMetric<
   override fun getSerializableResults(): List<SerializableIntResult> =
       listOf(
           SerializableIntResult(
-              identifier = "SegmentCountMetric",
-              source = "SegmentCountMetric",
-              value = segmentCount))
+              identifier = loggerIdentifier, source = loggerIdentifier, value = segmentCount))
 }

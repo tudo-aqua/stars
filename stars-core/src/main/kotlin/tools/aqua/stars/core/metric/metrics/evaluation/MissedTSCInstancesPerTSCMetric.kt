@@ -50,6 +50,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -59,7 +60,8 @@ class MissedTSCInstancesPerTSCMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger("missed-tsc-instances-per-tsc")
+    override val loggerIdentifier: String = "missed-tsc-instances-per-tsc",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /**
    * Map a [TSC] to a map in which the missed valid [TSCInstanceNode]s are stored:
@@ -123,7 +125,7 @@ class MissedTSCInstancesPerTSCMetric<
       missedInstancesMap.map { (tsc, missedInstances) ->
         SerializableTSCResult(
             identifier = tsc.identifier,
-            source = "MissedTSCInstancesPerTSCMetric",
+            source = loggerIdentifier,
             value =
                 missedInstances
                     .filter { it.value }

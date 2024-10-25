@@ -48,6 +48,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -58,7 +59,8 @@ class FailedMonitorsMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("failed-monitors")
+    override val loggerIdentifier: String = "failed-monitors",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
@@ -105,7 +107,7 @@ class FailedMonitorsMetric<
       failedMonitors.map { (tsc, failedMonitorInstances) ->
         SerializableFailedMonitorsResult(
             identifier = tsc.identifier,
-            source = "FailedMonitorsMetric",
+            source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
             value =
                 failedMonitorInstances.map {

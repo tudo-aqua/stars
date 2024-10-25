@@ -36,13 +36,6 @@ import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 
-/** Valid instances tsc name. */
-private const val VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME: String = "valid-tsc-instances-per-tsc"
-
-/** Valid instances occurrences name. */
-private const val VALID_TSC_INSTANCE_OCCURRENCES_PER_TSC_METRIC_NAME: String =
-    "valid-tsc-instance-occurrences-per-tsc"
-
 /**
  * This class implements the [TSCAndTSCInstanceNodeMetricProvider] and tracks the occurred valid
  * [TSCInstance] for each [TSC].
@@ -66,6 +59,7 @@ private const val VALID_TSC_INSTANCE_OCCURRENCES_PER_TSC_METRIC_NAME: String =
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 class ValidTSCInstancesPerTSCMetric<
@@ -74,7 +68,8 @@ class ValidTSCInstancesPerTSCMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger(VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME)
+    override val loggerIdentifier: String = "valid-tsc-instances-per-tsc",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) :
     TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>,
     PostEvaluationMetricProvider<E, T, S, U, D>,
@@ -227,7 +222,7 @@ class ValidTSCInstancesPerTSCMetric<
       validInstancesMap.map { (tsc, validInstances) ->
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
-            source = "ValidTSCInstancesPerTSCMetric",
+            source = this@ValidTSCInstancesPerTSCMetric.loggerIdentifier,
             value =
                 validInstances.map { (tscInstanceNode, tscInstances) ->
                   SerializableTSCOccurrence(
@@ -281,7 +276,7 @@ class ValidTSCInstancesPerTSCMetric<
       plotDataAsLineChart(
           plot = uniqueInstancesPlot,
           yAxisScaleMaxValue = possibleTscInstancesForTSC,
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           fileName = "${fileName}_scaled",
           subFolder = tsc.identifier)
 
@@ -289,7 +284,7 @@ class ValidTSCInstancesPerTSCMetric<
       // y-axis is scaled to the occurred instances
       plotDataAsLineChart(
           plot = uniqueInstancesPlot,
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           fileName = fileName,
           subFolder = tsc.identifier)
 
@@ -308,14 +303,14 @@ class ValidTSCInstancesPerTSCMetric<
       // Plot the timed percentage count of unique TSC instances for the current tsc
       plotDataAsLineChart(
           plot = percentagePlot,
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           fileName = fileNamePercentage,
           subFolder = tsc.identifier)
 
       // Plot the timed percentage count of unique TSC instances for the current tsc
       plotDataAsLineChart(
           plot = percentagePlot,
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           fileName = "${fileNamePercentage}_scaled",
           yAxisScaleMaxValue = 100,
           subFolder = tsc.identifier)
@@ -349,7 +344,7 @@ class ValidTSCInstancesPerTSCMetric<
       plotDataAsBarChart(
           plot = plot,
           fileName = fileName,
-          folder = VALID_TSC_INSTANCE_OCCURRENCES_PER_TSC_METRIC_NAME,
+          folder = "$loggerIdentifier-occurrences",
           subFolder = tsc.identifier)
 
       // Plot the occurrences of unique TSC instances for the current tsc in which the x-axis
@@ -357,7 +352,7 @@ class ValidTSCInstancesPerTSCMetric<
       plotDataAsBarChart(
           plot = plot,
           fileName = "${fileName}_scaled",
-          folder = VALID_TSC_INSTANCE_OCCURRENCES_PER_TSC_METRIC_NAME,
+          folder = "$loggerIdentifier-occurrences",
           xAxisScaleMaxValue = tsc.possibleTSCInstances.size,
           subFolder = tsc.identifier)
     }
@@ -381,21 +376,19 @@ class ValidTSCInstancesPerTSCMetric<
 
     // Plot the timed total count of unique TSC instances for all TSCs combined
     plotDataAsLineChart(
-        plot = combinedTotalPlot,
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
-        fileName = plotFileNameCombined)
+        plot = combinedTotalPlot, folder = loggerIdentifier, fileName = plotFileNameCombined)
 
     // Plot the timed percentage count of unique TSC instances for all TSCs combined
     plotDataAsLineChart(
         plot = combinedPercentagePlot,
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+        folder = loggerIdentifier,
         fileName = plotFileNameCombinedPercentage)
 
     // Plot the timed percentage count of unique TSC instances for all TSCs combined and a
     // y-axis scaled to 100%
     plotDataAsLineChart(
         plot = combinedPercentagePlot,
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+        folder = loggerIdentifier,
         yAxisScaleMaxValue = 100,
         fileName = "${plotFileNameCombinedPercentage}_scaled")
   }
@@ -439,7 +432,7 @@ class ValidTSCInstancesPerTSCMetric<
       saveAsCSVFile(
           csvString = getCSVString(legendEntry, instances),
           fileName = fileName,
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           subFolder = tsc.identifier)
 
       // Save the timed absolute count of unique TSC instances data as CSV file, but only every
@@ -447,7 +440,7 @@ class ValidTSCInstancesPerTSCMetric<
       saveAsCSVFile(
           csvString = getCSVString(legendEntry, instances, 100),
           fileName = "${fileName}_slice100",
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           subFolder = tsc.identifier)
 
       // Calculate the percentage of the occurred instances against the count of possible instances
@@ -458,7 +451,7 @@ class ValidTSCInstancesPerTSCMetric<
       saveAsCSVFile(
           csvString = getCSVString(legendEntry, yValuesPercentage),
           fileName = fileNamePercentage,
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           subFolder = tsc.identifier)
 
       // Save the timed percentage count of unique TSC instances data as CSV file but only take
@@ -466,7 +459,7 @@ class ValidTSCInstancesPerTSCMetric<
       saveAsCSVFile(
           csvString = getCSVString(legendEntry, yValuesPercentage, 100),
           fileName = "${fileNamePercentage}_slice100",
-          folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME,
+          folder = loggerIdentifier,
           subFolder = tsc.identifier)
     }
   }
@@ -490,7 +483,7 @@ class ValidTSCInstancesPerTSCMetric<
       saveAsCSVFile(
           csvString = getCSVString(legendEntry, instanceCounts),
           fileName = fileName,
-          folder = VALID_TSC_INSTANCE_OCCURRENCES_PER_TSC_METRIC_NAME,
+          folder = "$loggerIdentifier-occurrences",
           subFolder = tsc.identifier)
     }
   }
@@ -501,28 +494,28 @@ class ValidTSCInstancesPerTSCMetric<
     saveAsCSVFile(
         csvString = getCSVString(combinedTSCToOccurredInstancesMap),
         fileName = plotFileNameCombined,
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME)
+        folder = loggerIdentifier)
 
     // Save the timed total count of unique TSC instances for all TSCs combined as a CSV file
     // but only take every 100th entry
     saveAsCSVFile(
         csvString = getCSVString(combinedTSCToOccurredInstancesMap, sliceValue = 100),
         fileName = "${plotFileNameCombined}_slice100",
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME)
+        folder = loggerIdentifier)
 
     // Save the timed percentage count of unique TSC instances for all TSCs combined as a CSV
     // file
     saveAsCSVFile(
         csvString = getCSVString(combinedTSCToOccurredInstancesPercentagesMap),
         fileName = plotFileNameCombinedPercentage,
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME)
+        folder = loggerIdentifier)
 
     // Save the timed percentage count of unique TSC instances for all TSCs combined as a CSV
     // file but only take every 100th entry
     saveAsCSVFile(
         csvString = getCSVString(combinedTSCToOccurredInstancesPercentagesMap, sliceValue = 100),
         fileName = "${plotFileNameCombinedPercentage}_slice100",
-        folder = VALID_TSC_INSTANCES_PER_TSC_METRIC_NAME)
+        folder = loggerIdentifier)
   }
   // endregion
 }

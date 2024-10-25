@@ -49,6 +49,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -58,7 +59,8 @@ class InvalidTSCInstancesPerTSCMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-tsc")
+    override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
@@ -136,7 +138,7 @@ class InvalidTSCInstancesPerTSCMetric<
       invalidInstancesMap.map { (tsc, invalidInstances) ->
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
-            source = "InvalidTSCInstancesPerTSCMetric",
+            source = loggerIdentifier,
             value =
                 invalidInstances.map { (tscInstanceNode, tscInstances) ->
                   SerializableTSCOccurrence(
