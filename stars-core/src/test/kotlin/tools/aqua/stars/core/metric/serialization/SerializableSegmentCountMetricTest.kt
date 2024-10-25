@@ -76,21 +76,22 @@ class SerializableSegmentCountMetricTest {
 
     // Test that for each segmentSource a result exists and one total result exists
     assertEquals(3, segmentCountResults.size)
-    assertTrue(segmentCountResults.any { it.source.contains(simpleSegment.segmentSource) })
-    assertTrue(segmentCountResults.any { it.source.contains(simpleSegment2.segmentSource) })
-    assertTrue(segmentCountResults.any { it.source.contains(segmentCountMetric.loggerIdentifier) })
+    assertTrue(segmentCountResults.any { it.identifier.contains(simpleSegment.segmentSource) })
+    assertTrue(segmentCountResults.any { it.identifier.contains(simpleSegment2.segmentSource) })
+    assertTrue(
+        segmentCountResults.any { it.identifier.contains(segmentCountMetric.loggerIdentifier) })
 
     // Check concrete values
     val simpleSegmentResult =
-        segmentCountResults.first { it.source.contains(simpleSegment.segmentSource) }
+        segmentCountResults.first { it.identifier.contains(simpleSegment.segmentSource) }
     assertEquals(1, simpleSegmentResult.value)
 
     val simpleSegment2Result =
-        segmentCountResults.first { it.source.contains(simpleSegment2.segmentSource) }
+        segmentCountResults.first { it.identifier.contains(simpleSegment2.segmentSource) }
     assertEquals(1, simpleSegment2Result.value)
 
     val totalSegmentCountResult =
-        segmentCountResults.first { it.source.contains(segmentCountMetric.loggerIdentifier) }
+        segmentCountResults.first { it.identifier.contains(segmentCountMetric.loggerIdentifier) }
     assertEquals(2, totalSegmentCountResult.value)
   }
 }
