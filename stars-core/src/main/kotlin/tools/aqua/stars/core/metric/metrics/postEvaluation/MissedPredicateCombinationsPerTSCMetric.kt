@@ -63,7 +63,7 @@ class MissedPredicateCombinationsPerTSCMetric<
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
 
   /** Holds the evaluation result after calling [postEvaluate]. */
-  private var evaluationResult: Map<TSC<E, T, S, U, D>, Set<PredicateCombination>>? = null
+  private var evaluationResultCache: Map<TSC<E, T, S, U, D>, Set<PredicateCombination>>? = null
 
   /**
    * Returns a [Map] of all missing [PredicateCombination]s for all [TSC]s that are calculated by
@@ -72,13 +72,13 @@ class MissedPredicateCombinationsPerTSCMetric<
    * @return The [Map] of all missing [PredicateCombination]s to its associated [TSC].
    */
   override fun postEvaluate(): Map<TSC<E, T, S, U, D>, Set<PredicateCombination>> =
-      evaluationResult
+      evaluationResultCache
           ?: dependsOn
               .getState()
               .mapValues {
                 getAllMissingPredicateCombinationsForTSC(it.key, it.value.map { t -> t.key })
               }
-              .also { evaluationResult = it }
+              .also { evaluationResultCache = it }
 
   /**
    * Prints the count of missed [PredicateCombination]s for each [TSC] and then the actual list of
@@ -149,7 +149,7 @@ class MissedPredicateCombinationsPerTSCMetric<
   }
 
   override fun getSerializableResults(): List<SerializablePredicateCombinationResult> =
-      evaluationResult?.map { (tsc, predicates) ->
+      evaluationResultCache?.map { (tsc, predicates) ->
         SerializablePredicateCombinationResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
