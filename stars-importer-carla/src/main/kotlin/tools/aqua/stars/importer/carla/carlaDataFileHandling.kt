@@ -35,6 +35,7 @@ import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.data.av.dataclasses.Block
 import tools.aqua.stars.data.av.dataclasses.Segment
 import tools.aqua.stars.importer.carla.dataclasses.*
+import kotlin.io.path.nameWithoutExtension
 
 /** Carla data serializer module. */
 val carlaDataSerializerModule: SerializersModule = SerializersModule {
@@ -181,7 +182,7 @@ fun loadSegments(
               simulationRunsWrapper.blocks,
               simulationRun,
               useEveryVehicleAsEgo,
-              currentDynamicDataPath.fileName.toString(),
+              currentDynamicDataPath.nameWithoutExtension,
               minSegmentTickCount))
       return@generateSequence segmentBuffer.removeFirst()
     }
