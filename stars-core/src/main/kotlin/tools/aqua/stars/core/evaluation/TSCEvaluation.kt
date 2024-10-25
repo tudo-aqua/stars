@@ -54,6 +54,7 @@ import tools.aqua.stars.core.types.*
  * @property tscList The list of [TSC]s to evaluate.
  * @property writePlots (Default: ``true``) Whether to write plots after the analysis.
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 class TSCEvaluation<
@@ -68,7 +69,8 @@ class TSCEvaluation<
     val writeSerializedResults: Boolean = true,
     val compareToGroundTruth: Boolean = false,
     val compareToPreviousRun: Boolean = false,
-    override val logger: Logger = Loggable.getLogger("evaluation-time")
+    override val loggerIdentifier: String = "evaluation-time",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : Loggable {
 
   private val mutex: Any = Any()
