@@ -26,6 +26,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
+import kotlin.io.path.nameWithoutExtension
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -35,7 +36,6 @@ import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.data.av.dataclasses.Block
 import tools.aqua.stars.data.av.dataclasses.Segment
 import tools.aqua.stars.importer.carla.dataclasses.*
-import kotlin.io.path.nameWithoutExtension
 
 /** Carla data serializer module. */
 val carlaDataSerializerModule: SerializersModule = SerializersModule {

@@ -67,9 +67,9 @@ class SegmentCountMetric<
   override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int {
     ++segmentCount
     logFiner("==== Segment $segmentCount: $segment ====")
-    val segmentIdentifier = segment.getSegmentIdentifier()
-    segmentIdentifierToSegmentCountMap[segmentIdentifier] =
-        segmentIdentifierToSegmentCountMap.getOrPut(segmentIdentifier) { 0 } + 1
+    val segmentSource = segment.segmentSource
+    segmentIdentifierToSegmentCountMap[segmentSource] =
+        segmentIdentifierToSegmentCountMap.getOrPut(segmentSource) { 0 } + 1
     return segmentCount
   }
 
@@ -86,9 +86,9 @@ class SegmentCountMetric<
   }
 
   override fun getSerializableResults(): List<SerializableIntResult> =
-      segmentIdentifierToSegmentCountMap.map { (segmentIdentifier, segmentCount) ->
+      segmentIdentifierToSegmentCountMap.map { (segmentSource, segmentCount) ->
         SerializableIntResult(
-            identifier = loggerIdentifier, source = segmentIdentifier, value = segmentCount)
+            identifier = segmentSource, source = loggerIdentifier, value = segmentCount)
       } +
           listOf(
               SerializableIntResult(
