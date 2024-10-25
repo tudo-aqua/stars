@@ -151,10 +151,12 @@ class MissedPredicateCombinationsPerTSCMetric<
 
   override fun getSerializableResults(): List<SerializablePredicateCombinationResult> =
       evaluationResultCache?.map { (tsc, predicates) ->
+        val resultList = predicates.map { it.predicate1 to it.predicate2 }
         SerializablePredicateCombinationResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
-            value = predicates.map { it.predicate1 to it.predicate2 })
+            count = resultList.size,
+            value = resultList)
       } ?: emptyList()
 }

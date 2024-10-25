@@ -123,12 +123,14 @@ class MissedTSCInstancesPerTSCMetric<
 
   override fun getSerializableResults(): List<SerializableTSCResult> =
       missedInstancesMap.map { (tsc, missedInstances) ->
+        val resultList =
+            missedInstances
+                .filter { it.value }
+                .map { (tscInstanceNode, _) -> SerializableTSCNode(tscInstanceNode) }
         SerializableTSCResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
-            value =
-                missedInstances
-                    .filter { it.value }
-                    .map { (tscInstanceNode, _) -> SerializableTSCNode(tscInstanceNode) })
+            count = resultList.size,
+            value = resultList)
       }
 }

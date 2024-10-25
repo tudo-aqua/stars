@@ -28,6 +28,7 @@ import tools.aqua.stars.core.tsc.TSC
  * @property identifier The identifier of this specific result.
  * @property source The source (i.e. the metric) which produced this result.
  * @property tsc The root note of the evaluated [TSC].
+ * @property count The size of the [value].
  * @property value The value that should be serialized.
  */
 @Serializable
@@ -35,5 +36,6 @@ data class SerializableFailedMonitorsResult(
     override val identifier: String,
     override val source: String,
     val tsc: SerializableTSCNode,
+    val count: Int,
     override val value: List<SerializableFailedMonitorInstance>
 ) : SerializableResult()

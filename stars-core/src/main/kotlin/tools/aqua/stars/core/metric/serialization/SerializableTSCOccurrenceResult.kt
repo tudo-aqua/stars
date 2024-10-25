@@ -26,11 +26,13 @@ import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
  *
  * @property identifier The identifier of this specific result.
  * @property source The source (i.e. the metric) which produced this result.
+ * @property count The size of the [value].
  * @property value The [List] of [SerializableTSCOccurrence]s.
  */
 @Serializable
 data class SerializableTSCOccurrenceResult(
     override val identifier: String,
     override val source: String,
-    override val value: List<SerializableTSCOccurrence>
+    val count: Int,
+    override val value: List<SerializableTSCOccurrence>,
 ) : SerializableResult()

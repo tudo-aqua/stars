@@ -220,15 +220,17 @@ class ValidTSCInstancesPerTSCMetric<
 
   override fun getSerializableResults(): List<SerializableTSCOccurrenceResult> =
       validInstancesMap.map { (tsc, validInstances) ->
+        val resultList =
+            validInstances.map { (tscInstanceNode, tscInstances) ->
+              SerializableTSCOccurrence(
+                  tscInstance = SerializableTSCNode(tscInstanceNode),
+                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
+            }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
             source = this@ValidTSCInstancesPerTSCMetric.loggerIdentifier,
-            value =
-                validInstances.map { (tscInstanceNode, tscInstances) ->
-                  SerializableTSCOccurrence(
-                      tscInstance = SerializableTSCNode(tscInstanceNode),
-                      segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
-                })
+            count = resultList.size,
+            value = resultList)
       }
 
   // region Plot

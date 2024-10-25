@@ -105,17 +105,19 @@ class FailedMonitorsMetric<
 
   override fun getSerializableResults(): List<SerializableFailedMonitorsResult> =
       failedMonitors.map { (tsc, failedMonitorInstances) ->
+        val resultList =
+            failedMonitorInstances.map {
+              SerializableFailedMonitorInstance(
+                  segmentIdentifier = it.segmentIdentifier,
+                  tscInstance = SerializableTSCNode(it.tscInstance),
+                  monitorLabel = it.monitorLabel,
+                  nodeLabel = it.nodeLabel)
+            }
         SerializableFailedMonitorsResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
-            value =
-                failedMonitorInstances.map {
-                  SerializableFailedMonitorInstance(
-                      segmentIdentifier = it.segmentIdentifier,
-                      tscInstance = SerializableTSCNode(it.tscInstance),
-                      monitorLabel = it.monitorLabel,
-                      nodeLabel = it.nodeLabel)
-                })
+            count = resultList.size,
+            value = resultList)
       }
 }
