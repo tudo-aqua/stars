@@ -48,13 +48,55 @@ class TSCInstanceNode<
     val monitorResults: Map<String, Boolean> = emptyMap(),
     val value: Any = Unit
 ) {
-
   /** Edges of this [TSCInstanceNode]. */
   val edges: MutableList<TSCInstanceEdge<E, T, S, U, D>> = mutableListOf()
 
   /** Returns all edges. */
   fun getAllEdges(): List<TSCEdge<E, T, S, U, D>> =
       edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
+
+  /** Returns a [List] of all [TSCInstanceNode]s that are leaf nodes in the given [currentNode]. */
+  fun getLeafNodeEdges(
+      currentNode: TSCInstanceNode<E, T, S, U, D>,
+      currentNodeEdge: TSCInstanceEdge<E, T, S, U, D>? = null
+  ): List<TSCInstanceEdge<E, T, S, U, D>> =
+      if (currentNodeEdge == null && currentNode.edges.isEmpty()) {
+        listOf()
+      } else if (currentNodeEdge != null && currentNode.edges.isEmpty()) {
+        listOf(currentNodeEdge)
+      } else {
+        currentNode.edges.flatMap { edge ->
+          edge.destination.getLeafNodeEdges(edge.destination, edge)
+        }
+      }
+
+  /**
+   * Returns a [List] of [TSCInstanceNode]s. Each [TSCInstanceNode] represents one traversal of the
+   * tree.
+   */
+  fun traverse(
+      currentNode: TSCInstanceNode<E, T, S, U, D> = this
+  ): List<TSCInstanceNode<E, T, S, U, D>> =
+      listOf(
+          TSCInstanceNode<E, T, S, U, D>(
+              currentNode.tscNode,
+              currentNode.label,
+              currentNode.monitorResults,
+              currentNode.value)) +
+          if (currentNode.edges.isNotEmpty()) {
+            currentNode.edges.flatMap { edge ->
+              traverse(edge.destination).map { child ->
+                TSCInstanceNode<E, T, S, U, D>(
+                        currentNode.tscNode,
+                        currentNode.label,
+                        currentNode.monitorResults,
+                        currentNode.value)
+                    .apply { this.edges += TSCInstanceEdge<E, T, S, U, D>(child, edge.tscEdge) }
+              }
+            }
+          } else {
+            emptyList()
+          }
 
   /**
    * Validates own (and recursively all children's) successor constraints imposed by the
@@ -123,12 +165,9 @@ class TSCInstanceNode<
       StringBuilder()
           .apply {
             append(if (value is Unit) "\n" else "($value)\n")
-
-            edges.forEach { instanceEdge ->
-              append("  ".repeat(depth))
-              append("--> $label")
-              append(instanceEdge.destination.toString(depth + 1))
-            }
+            append("  ".repeat(depth))
+            append("--> $label")
+            edges.forEach { instanceEdge -> append(instanceEdge.destination.toString(depth + 1)) }
           }
           .toString()
 

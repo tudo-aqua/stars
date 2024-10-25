@@ -131,17 +131,18 @@ class MissedPredicateCombinationsPerTSCMetric<
     // Create set for storage of all combinations
     val predicateCombinations = mutableSetOf<PredicateCombination>()
     tscInstances.forEach { t ->
-      // Get all TSCEdges that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
-      // as they do not
-      // represent a predicate
-      val allEdgesInValidInstances = t.getAllEdges().filter { it.condition != CONST_TRUE }
+      // Get all traversals that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
+      // as they do not represent a predicate
+      val predicateTraversals =
+          t.traverse()
+              .filter { it.getLeafNodeEdges(it).any { it.tscEdge.condition != CONST_TRUE } }
+              .map { it.toString() }
       // Combine all TSCEdges with each other
-      allEdgesInValidInstances.forEach { edge1 ->
-        allEdgesInValidInstances
-            .filter { it != edge1 }
-            .forEach { edge2 ->
-              predicateCombinations +=
-                  PredicateCombination(edge1.destination.label, edge2.destination.label)
+      predicateTraversals.forEach { predicatePath1 ->
+        predicateTraversals
+            .filter { it != predicatePath1 }
+            .forEach { predicatePath2 ->
+              predicateCombinations += PredicateCombination(predicatePath1, predicatePath2)
             }
       }
     }
