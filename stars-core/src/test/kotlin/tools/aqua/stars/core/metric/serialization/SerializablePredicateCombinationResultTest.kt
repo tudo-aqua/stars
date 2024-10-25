@@ -108,7 +108,7 @@ class SerializablePredicateCombinationResultTest {
     assertEquals(1, result.size)
 
     assertEquals(1, result[0].value.size)
-    assertEquals("leaf1" to "leaf2", result[0].value.first())
+    assertEquals("\n--> root\n  --> leaf1" to "\n--> root\n  --> leaf2", result[0].value.first())
   }
 
   /**
@@ -148,7 +148,7 @@ class SerializablePredicateCombinationResultTest {
     assertEquals(1, result.size)
 
     assertEquals(1, result[0].value.size)
-    assertEquals("leaf1" to "leaf2", result[0].value.first())
+    assertEquals("\n--> root\n  --> leaf1" to "\n--> root\n  --> leaf2", result[0].value.first())
   }
 
   /**
@@ -188,8 +188,8 @@ class SerializablePredicateCombinationResultTest {
     assertEquals(1, result.size)
 
     assertEquals(3, result[0].value.size)
-    assertContains(result[0].value, "leaf1" to "leaf2")
-    assertContains(result[0].value, "leaf1" to "leaf3")
-    assertContains(result[0].value, "leaf2" to "leaf3")
+    assertContains(result[0].value, "\n--> root\n  --> leaf1" to "\n--> root\n  --> leaf2")
+    assertContains(result[0].value, "\n--> root\n  --> leaf1" to "\n--> root\n  --> leaf3")
+    assertContains(result[0].value, "\n--> root\n  --> leaf2" to "\n--> root\n  --> leaf3")
   }
 }
