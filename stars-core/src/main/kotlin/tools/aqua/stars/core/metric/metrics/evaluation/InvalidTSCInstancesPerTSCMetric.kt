@@ -19,8 +19,12 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
+import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -35,6 +39,9 @@ import tools.aqua.stars.core.types.*
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
  * [List] of invalid [TSCInstance]s.
  *
+ * This class implements the [Serializable] interface. It serializes all invalid [TSCInstance] for
+ * their respective [TSC].
+ *
  * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for [TSC]s.
  *
  * @param E [EntityType].
@@ -42,6 +49,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -51,8 +59,9 @@ class InvalidTSCInstancesPerTSCMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger("invalid-tsc-instances-per-tsc")
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Loggable {
+    override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<
@@ -124,4 +133,19 @@ class InvalidTSCInstancesPerTSCMetric<
       }
     }
   }
+
+  override fun getSerializableResults(): List<SerializableTSCOccurrenceResult> =
+      invalidInstancesMap.map { (tsc, invalidInstances) ->
+        val resultList =
+            invalidInstances.map { (tscInstanceNode, tscInstances) ->
+              SerializableTSCOccurrence(
+                  tscInstance = SerializableTSCNode(tscInstanceNode),
+                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
+            }
+        SerializableTSCOccurrenceResult(
+            identifier = tsc.identifier,
+            source = loggerIdentifier,
+            count = resultList.size,
+            value = resultList)
+      }
 }

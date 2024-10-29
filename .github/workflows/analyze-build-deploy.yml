@@ -2,7 +2,7 @@ name: Analyze, Build and Deploy
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review]
     branches:
       - main
   push:
@@ -68,7 +68,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Discover Projects and save into matrix
-        run: | 
+        run: |
           ./gradlew projects --quiet | grep "Project ':" | awk -F"'" '{print $2}' | sed 's/^://' > projects.txt
           projects=$(cat projects.txt | sed '/^$/d' | awk '{print "\""$0"\""}' | paste -sd "," - | sed 's/^/[/' | sed 's/$/]/')
           echo "matrix=${projects}" >> $GITHUB_OUTPUT
@@ -106,7 +106,7 @@ jobs:
         mkdir sarif &&
         find * -name detekt.sarif -print0 |
         xargs -n1 -0 bash -c 'cp "$1" "sarif/${1//\//-}"' '{}'
-      
+
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
       with:
@@ -142,9 +142,29 @@ jobs:
 
     - name: Upload test results
       uses: mikepenz/action-junit-report@v4
-      if: always() # Must execute after failed tests
+      if: ${{ !cancelled() }} # Must execute after failed tests
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
+
+  reproduction:
+    name: Trigger reproduction check
+    needs: compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger GitLab
+        run: |
+          curl -X POST \
+           --fail \
+           -F token=$REPRODUCTION_RUNNER_TRIGGER_TOKEN \
+           -F ref=main \
+           -F variables[TARGET_BRANCH]=${{ github.head_ref || github.ref_name }} \
+           -F variables[IS_DRAFT]=${{ github.event.pull_request.draft }} \
+           -F variables[TARGET_SHA]=${{ github.event.pull_request.head.sha }} \
+           -s -o /dev/null \
+           $REPRODUCTION_RUNNER_URL
+        env:
+          REPRODUCTION_RUNNER_TRIGGER_TOKEN: ${{ secrets.REPRODUCTION_RUNNER_TRIGGER_TOKEN }}
+          REPRODUCTION_RUNNER_URL: ${{ secrets.REPRODUCTION_RUNNER_URL }}
 
   spotless:
     name: Run Spotless (${{ matrix.project }})
@@ -173,11 +193,11 @@ jobs:
         run: ./gradlew :${{ matrix.project }}:spotlessCheck
 
       - name: Apply Spotless fixes
-        if: failure()
+        if: ${{ failure() }}
         run: ./gradlew :${{ matrix.project }}:spotlessApply
 
       - name: Generate diff
-        if: failure()
+        if: ${{ failure() }}
         shell: sh
         run: |
           echo "# Spotless violations" >> $GITHUB_STEP_SUMMARY

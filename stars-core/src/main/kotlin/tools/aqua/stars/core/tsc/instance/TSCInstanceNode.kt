@@ -33,6 +33,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property tscNode Associated [TSCNode].
+ * @property label Label of this node.
  * @property monitorResults Monitor results of this node.
  * @property value Value of this node.
  */
@@ -43,10 +44,10 @@ class TSCInstanceNode<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val tscNode: TSCNode<E, T, S, U, D>,
+    val label: String = tscNode.label,
     val monitorResults: Map<String, Boolean> = emptyMap(),
     val value: Any = Unit
 ) {
-
   /** Edges of this [TSCInstanceNode]. */
   val edges: MutableList<TSCInstanceEdge<E, T, S, U, D>> = mutableListOf()
 
@@ -54,13 +55,55 @@ class TSCInstanceNode<
   fun getAllEdges(): List<TSCEdge<E, T, S, U, D>> =
       edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
 
+  /** Returns a [List] of all [TSCInstanceNode]s that are leaf nodes in the given [currentNode]. */
+  fun getLeafNodeEdges(
+      currentNode: TSCInstanceNode<E, T, S, U, D>,
+      currentNodeEdge: TSCInstanceEdge<E, T, S, U, D>? = null
+  ): List<TSCInstanceEdge<E, T, S, U, D>> =
+      if (currentNodeEdge == null && currentNode.edges.isEmpty()) {
+        listOf()
+      } else if (currentNodeEdge != null && currentNode.edges.isEmpty()) {
+        listOf(currentNodeEdge)
+      } else {
+        currentNode.edges.flatMap { edge ->
+          edge.destination.getLeafNodeEdges(edge.destination, edge)
+        }
+      }
+
+  /**
+   * Returns a [List] of [TSCInstanceNode]s. Each [TSCInstanceNode] represents one traversal of the
+   * tree.
+   */
+  fun traverse(
+      currentNode: TSCInstanceNode<E, T, S, U, D> = this
+  ): List<TSCInstanceNode<E, T, S, U, D>> =
+      listOf(
+          TSCInstanceNode<E, T, S, U, D>(
+              currentNode.tscNode,
+              currentNode.label,
+              currentNode.monitorResults,
+              currentNode.value)) +
+          if (currentNode.edges.isNotEmpty()) {
+            currentNode.edges.flatMap { edge ->
+              traverse(edge.destination).map { child ->
+                TSCInstanceNode<E, T, S, U, D>(
+                        currentNode.tscNode,
+                        currentNode.label,
+                        currentNode.monitorResults,
+                        currentNode.value)
+                    .apply { this.edges += TSCInstanceEdge<E, T, S, U, D>(child, edge.tscEdge) }
+              }
+            }
+          } else {
+            emptyList()
+          }
+
   /**
    * Validates own (and recursively all children's) successor constraints imposed by the
    * [TSCNode<E,T,S>] types the instances were built from (e.g. exactly one for 'TSCXorNode' or
    * correct range for [TSCBoundedNode]).
    *
-   * @param label the label used to build the human-readable string; uses [TSCEdge.label] in
-   *   recursive call.
+   * @param label the label used to build the human-readable string.
    * @return non-validating nodes; first element of pair is the node that failed to validate; second
    *   element is a human-readable explanation for the failure.
    */
@@ -76,7 +119,7 @@ class TSCInstanceNode<
                       "[$label] TSCBoundedNode successor count must be within " +
                           "[${tscNode.bounds.first},${tscNode.bounds.second}], but ${edges.size} successor(s) found."
     }
-    returnList += edges.flatMap { it.destination.validate(it.label) }
+    returnList += edges.flatMap { it.destination.validate(label) }
     return returnList
   }
 
@@ -106,13 +149,12 @@ class TSCInstanceNode<
    * [TSCNode<E,T,S,U,D>.monitorFunction] results and collects incoming edge labels for results !=
    * true.
    *
-   * @param label the label added to the return list if [monitorResult] == `false`; uses
-   *   [TSCEdge.label] in recursive call.
+   * @param label the label added to the return list if the monitor result was `false`.
    * @return List of [Pair]s of the failed monitor to the node label.
    */
   private fun validateMonitorsRec(label: String): List<Pair<String, String>> =
       this.monitorResults.filterValues { !it }.keys.map { it to label } +
-          edges.flatMap { it.destination.validateMonitorsRec(it.label) }
+          edges.flatMap { it.destination.validateMonitorsRec(it.destination.label) }
 
   /**
    * Prints [TSCInstanceNode] up to given [depth].
@@ -123,12 +165,9 @@ class TSCInstanceNode<
       StringBuilder()
           .apply {
             append(if (value is Unit) "\n" else "($value)\n")
-
-            edges.forEach { instanceEdge ->
-              append("  ".repeat(depth))
-              append("-> ${instanceEdge.label} ")
-              append(instanceEdge.destination.toString(depth + 1))
-            }
+            append("  ".repeat(depth))
+            append("--> $label")
+            edges.forEach { instanceEdge -> append(instanceEdge.destination.toString(depth + 1)) }
           }
           .toString()
 
@@ -136,8 +175,9 @@ class TSCInstanceNode<
 
   override fun equals(other: Any?): Boolean =
       other is TSCInstanceNode<*, *, *, *, *> &&
+          label == other.label &&
           edges.size == other.edges.size &&
           edges.withIndex().all { iv -> iv.value == other.edges[iv.index] }
 
-  override fun hashCode(): Int = edges.sumOf { it.hashCode() }
+  override fun hashCode(): Int = label.hashCode() + edges.sumOf { it.hashCode() }
 }

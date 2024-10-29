@@ -31,11 +31,11 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as
- * [TSCNode.monitorFunction]s that evaluate to 'false'.
+ * [TSCNode.monitors] that evaluate to 'false'.
  *
  * This class implements the [Loggable] interface. It logs and prints the count and names of all
- * failing [TSCNode.monitorFunction]s for each [TSC]. It logs the failing
- * [TSCFailedMonitorInstance]s for each [TSC] and groups it by the [TSCInstance].
+ * failing [TSCNode.monitors] for each [TSC]. It logs the failing [TSCFailedMonitorInstance]s for
+ * each [TSC] and groups it by the [TSCInstance].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -44,6 +44,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -54,7 +55,8 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("failed-monitors-grouped-by-tsc-instance")
+    override val loggerIdentifier: String = "failed-monitors-grouped-by-tsc-instance",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
 
   /**

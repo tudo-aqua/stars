@@ -25,6 +25,9 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.activeLogge
 /** This interface can be implemented to be able to log data into the stdout and log files. */
 @Suppress("unused")
 interface Loggable {
+  /** Holds the identifier (name) for this logger. */
+  val loggerIdentifier: String
+
   /** Holds the [Logger] reference for this class. */
   val logger: Logger
 
@@ -99,6 +102,7 @@ interface Loggable {
     logger.handlers.forEach { it.close() }
   }
 
+  /** Provides static function for the creation of [Logger]s. */
   companion object {
     /**
      * Creates a [Logger] with a [FileHandler] each for [Level.SEVERE], [Level.WARNING],
