@@ -79,6 +79,7 @@ class SerializationHelpersTest {
     assertEquals(actualFileContent, actualFile.readText())
     assertEquals(actualFile, resultPath)
   }
+
   // endregion
 
   // region Tests for saveAsJsonFile(SerializableResult)
@@ -108,6 +109,7 @@ class SerializationHelpersTest {
     // Check that the content of the file is actually the Json string of the SerializableResult
     assertEquals(actualSerializableResult.getJsonString(), resultPath.readText())
   }
+
   // endregion
 
   // region Tests for saveAsJsonFile(SerializableResultComparison,Boolean)
@@ -180,6 +182,7 @@ class SerializationHelpersTest {
     // Check that the content of the file is actually the Json string of the SerializableResult
     assertEquals(actualSerializableResultComparison.getJsonString(), resultPath.readText())
   }
+
   // endregion
 
   // region Tests for getLatestSerializationResultPath()
@@ -264,6 +267,7 @@ class SerializationHelpersTest {
 
     assertNull(latestResult)
   }
+
   // endregion
 
   // region Tests for getBaselineSerializationResultPath()

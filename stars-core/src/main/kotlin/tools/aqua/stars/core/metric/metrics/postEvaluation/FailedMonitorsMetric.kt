@@ -67,6 +67,7 @@ class FailedMonitorsMetric<
   val failedMonitors:
       MutableMap<TSC<E, T, S, U, D>, List<TSCFailedMonitorInstance<E, T, S, U, D>>> =
       mutableMapOf()
+
   /**
    * Calculates a [Map] of [TSCFailedMonitorInstance]s for all [TSC]s by validating all monitors for
    * all valid [TSCInstance]s.
