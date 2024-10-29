@@ -28,7 +28,7 @@ import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
-import tools.aqua.stars.core.metric.serialization.extensions.compareToGroundTruthResults
+import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
 import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
@@ -45,15 +45,15 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param writeSerializedResults (Default: ``true``) Whether to write result files and compare them
- *   to previous runs after the analysis.
- * @param compareToGroundTruth (Default: ``false``) Whether to compare the results to the ground
- *   truth.
- * @param compareToPreviousRun (Default: ``false``) Whether to compare the results to the previous
- *   run.
  * @property tscList The list of [TSC]s to evaluate.
  * @property writePlots (Default: ``true``) Whether to write plots after the analysis.
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
+ * @property writeSerializedResults (Default: ``true``) Whether to write result files and compare
+ *   them to previous runs after the analysis.
+ * @property compareToBaselineResults (Default: ``false``) Whether to compare the results to the
+ *   baseline results.
+ * @property compareToPreviousRun (Default: ``false``) Whether to compare the results to the
+ *   previous run.
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
@@ -67,20 +67,21 @@ class TSCEvaluation<
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
     val writeSerializedResults: Boolean = true,
-    val compareToGroundTruth: Boolean = false,
+    val compareToBaselineResults: Boolean = false,
     val compareToPreviousRun: Boolean = false,
     override val loggerIdentifier: String = "evaluation-time",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : Loggable {
 
+  /** Test. */
   private val mutex: Any = Any()
 
   /**
-   * Holds the aggregated [Boolean] verdict of all compared results with the ground-truth data.
-   * Setting a new value will be conjugated with the old value such that a verdict 'false' may not
-   * be changed to 'true' again.
+   * Holds the aggregated [Boolean] verdict of all compared results with the baseline data. Setting
+   * a new value will be conjugated with the old value such that a verdict 'false' may not be
+   * changed to 'true' again.
    */
-  var resultsReproducedFromGroundTruth: Boolean? = null
+  var resultsReproducedFromBaseline: Boolean? = null
     set(value) {
       synchronized(mutex) {
         when {
@@ -337,13 +338,13 @@ class TSCEvaluation<
         serializableMetrics.forEach { t -> t.writeSerializedResults() }
       }
 
-      // Compare the results to the ground truth
-      if (compareToGroundTruth) {
-        println("Comparing to ground truth")
-        serializableMetrics.compareToGroundTruthResults().let {
-          resultsReproducedFromGroundTruth = it.noMismatch()
+      // Compare the results to the baseline
+      if (compareToBaselineResults) {
+        println("Comparing to baseline")
+        serializableMetrics.compareToBaselineResults().let {
+          resultsReproducedFromBaseline = it.noMismatch()
 
-          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = true)
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
         }
       }
 
@@ -353,7 +354,7 @@ class TSCEvaluation<
         serializableMetrics.compareToPreviousResults().let {
           resultsReproducedFromPreviousRun = it.noMismatch()
 
-          if (writeSerializedResults) it.saveAsJsonFiles(comparedToGroundTruth = false)
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = false)
         }
       }
     }

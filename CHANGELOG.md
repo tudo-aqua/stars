@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file.
 - Add `vehicleType` field to `Vehicle`.
 - Add `loggerIdentifier` field to `Loggable` interface.
 - Add `Serializable` interface.
-  - This adds the functionality to compare your current analysis results with the previous run or a specified ground-truth. 
+  - This adds the functionality to compare your current analysis results with the previous run or a specified baseline. 
 
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.

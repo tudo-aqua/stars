@@ -21,7 +21,7 @@ import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.utils.groundTruth
+import tools.aqua.stars.core.metric.utils.baseline
 import tools.aqua.stars.core.metric.utils.previousResults
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
@@ -36,16 +36,15 @@ fun List<Serializable>.compareToPreviousResults(): List<SerializableResultCompar
     map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(previousResults)
 
 /**
- * Extension function of [List] of [Serializable] that compares it to the ground-truth evaluation
+ * Extension function of [List] of [Serializable] that compares it to the baseline evaluation
  * results.
  *
  * @return Returns the [List] of [SerializableResultComparison]s that was created by comparing the
- *   [SerializableResult]s of the calling [Serializable] with the ground-truth
- *   [SerializableResult]s.
+ *   [SerializableResult]s of the calling [Serializable] with the baseline [SerializableResult]s.
  */
-fun List<Serializable>.compareToGroundTruthResults(): List<SerializableResultComparison> {
-  check(groundTruth.isNotEmpty()) { "No ground-truth results found." }
-  return map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(groundTruth)
+fun List<Serializable>.compareToBaselineResults(): List<SerializableResultComparison> {
+  check(baseline.isNotEmpty()) { "No baseline results found." }
+  return map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(baseline)
 }
 
 /**

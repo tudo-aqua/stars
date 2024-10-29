@@ -23,8 +23,8 @@ import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.baselineDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
 /**
@@ -69,15 +69,15 @@ fun SerializableResult.saveAsJsonFile(): File {
  * builds the resulting file path by the values in the calling [SerializableResultComparison] and
  * passes it to [saveAsJsonFile] for [String]s.
  *
- * @param comparedToGroundTruth Sets whether the [SerializableResultComparison] were created by the
- *   comparison to ground the ground truth result set, or to the previous evaluation run. This
- *   alters the resulting folder.
+ * @param comparedToBaseline Sets whether the [SerializableResultComparison] were created by the
+ *   comparison to the baseline result set, or to the previous evaluation run. This alters the
+ *   resulting folder.
  * @return The created [File].
  */
-fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean): File {
+fun SerializableResultComparison.saveAsJsonFile(comparedToBaseline: Boolean): File {
   val resultingPath =
       "$comparedResultsFolder/$applicationStartTimeString/${
-            if(comparedToGroundTruth){"/${groundTruthDirectory.replace('/', '-')}"}
+            if(comparedToBaseline){"/${baselineDirectory.replace('/', '-')}"}
             else{"/$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER"}
           }/${source}/[${verdict.shortString}]_comparison_${identifier}.json"
   getJsonString().saveAsJsonFile(resultingPath)
@@ -87,13 +87,13 @@ fun SerializableResultComparison.saveAsJsonFile(comparedToGroundTruth: Boolean):
 /**
  * Extension function for [SerializableResultComparison]s to save them as Json files.
  *
- * @param comparedToGroundTruth Sets whether the [SerializableResultComparison]s were created by the
- *   comparison to ground the ground truth result set, or to the previous evaluation run. This
- *   alters the resulting folder.
+ * @param comparedToBaseline Sets whether the [SerializableResultComparison]s were created by the
+ *   comparison to the baseline result set, or to the previous evaluation run. This alters the
+ *   resulting folder.
  * @return The created [File]s.
  * @see SerializableResultComparison.saveAsJsonFile
  */
-fun List<SerializableResultComparison>.saveAsJsonFiles(comparedToGroundTruth: Boolean): List<File> =
+fun List<SerializableResultComparison>.saveAsJsonFiles(comparedToBaseline: Boolean): List<File> =
     map {
-      it.saveAsJsonFile(comparedToGroundTruth)
+      it.saveAsJsonFile(comparedToBaseline)
     }

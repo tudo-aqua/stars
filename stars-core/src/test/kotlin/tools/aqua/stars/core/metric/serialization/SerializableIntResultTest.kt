@@ -63,15 +63,15 @@ class SerializableIntResultTest {
             SimpleTickDataDifference>()
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
-    val serializedResultGroundTruth = segmentCountMetric.getSerializableResults()
-    val deserializedResultGroundTruth =
-        serializedResultGroundTruth.map { getJsonContentFromString(it.getJsonString()) }
+    val serializedResultBaseline = segmentCountMetric.getSerializableResults()
+    val deserializedResultBaseline =
+        serializedResultBaseline.map { getJsonContentFromString(it.getJsonString()) }
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
     val serializedResultCompare = segmentCountMetric.getSerializableResults()
     val deserializedResultCompare =
         serializedResultCompare.map { getJsonContentFromString(it.getJsonString()) }
 
-    assertNotEquals(deserializedResultGroundTruth, deserializedResultCompare)
+    assertNotEquals(deserializedResultBaseline, deserializedResultCompare)
   }
 }

@@ -21,32 +21,31 @@ import java.io.File
 import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthDirectory
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.baselineDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 
 /**
- * Holds the [Map] of all ground-truth sources with their deserialized [SerializableResult]s, or
- * null when the ground truth was not demanded.
+ * Holds the [Map] of all baseline sources with their deserialized [SerializableResult]s, or null
+ * when the baseline was not demanded.
  */
-private var groundTruthCache: Map<String, List<SerializableResult>>? = null
+private var baselineCache: Map<String, List<SerializableResult>>? = null
 
-/** Holds the [Map] of all ground-truth sources with their deserialized [SerializableResult]s. */
-val groundTruth: Map<String, List<SerializableResult>>
+/** Holds the [Map] of all baseline sources with their deserialized [SerializableResult]s. */
+val baseline: Map<String, List<SerializableResult>>
   get() =
-      groundTruthCache
-          ?: getSerializedResults(getGroundTruthSerializationResultDirectory()).also {
-            groundTruthCache = it
+      baselineCache
+          ?: getSerializedResults(getBaselineSerializationResultDirectory()).also {
+            baselineCache = it
           }
 
 /**
- * Returns the [File] pointing to the root directory of the ground truth result data set. When no
- * such directory was found, `null` is returned.
+ * Returns the [File] pointing to the root directory of the baseline result data set. When no such
+ * directory was found, `null` is returned.
  *
- * @return A [File] pointing to the root directory of the ground truth result data set. Otherwise,
- *   null.
+ * @return A [File] pointing to the root directory of the baseline result data set. Otherwise, null.
  */
-fun getGroundTruthSerializationResultDirectory(): File? =
-    File(serializedResultsFolder).listFiles()?.firstOrNull { it.name == groundTruthDirectory }
+fun getBaselineSerializationResultDirectory(): File? =
+    File(serializedResultsFolder).listFiles()?.firstOrNull { it.name == baselineDirectory }
 // endregion
 
 // region previous Results
@@ -77,7 +76,7 @@ val previousResults: Map<String, List<SerializableResult>>
 fun getPreviousSerializationResultDirectory(): File? =
     File(serializedResultsFolder)
         .listFiles()
-        ?.filter { it.name != groundTruthDirectory && it.name != applicationStartTimeString }
+        ?.filter { it.name != baselineDirectory && it.name != applicationStartTimeString }
         ?.maxByOrNull { it.name }
 
 /**
@@ -118,7 +117,7 @@ fun getJsonContentFromString(content: String): SerializableResult =
  * [SerializableResult.source]s in the given [root] directory. To each source, all deserialized
  * [SerializableResult]s are stored in the [List].
  *
- * @param root The root folder to search for serialized results, i.e. "/ground-truth/".
+ * @param root The root folder to search for serialized results, i.e. "/baseline/".
  * @return A map of [SerializableResult.source]s and their respective serialized results.
  */
 fun getSerializedResults(root: File?): Map<String, List<SerializableResult>> =

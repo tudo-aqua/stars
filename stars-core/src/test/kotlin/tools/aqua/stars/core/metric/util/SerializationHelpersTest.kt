@@ -28,10 +28,10 @@ import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVe
 import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.baselineDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.groundTruthDirectory
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
-import tools.aqua.stars.core.metric.utils.getGroundTruthSerializationResultDirectory
+import tools.aqua.stars.core.metric.utils.getBaselineSerializationResultDirectory
 import tools.aqua.stars.core.metric.utils.getPreviousSerializationResultDirectory
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
@@ -43,7 +43,7 @@ class SerializationHelpersTest {
   fun `Clean up all existing test folders`() {
     File(serializedResultsFolder).deleteRecursively()
     File(comparedResultsFolder).deleteRecursively()
-    File(groundTruthDirectory).deleteRecursively()
+    File(baselineDirectory).deleteRecursively()
   }
 
   // region Tests for saveAsJsonFile(String, String)
@@ -148,10 +148,10 @@ class SerializationHelpersTest {
 
   /**
    * Tests the correct saving of a [SerializableResultComparison] that was created by comparing a
-   * current result with the ground truth result set.
+   * current result with the baseline result set.
    */
   @Test
-  fun `Test correct saving of SerializableResultComparison object compared with ground truth`() {
+  fun `Test correct saving of SerializableResultComparison object compared with baseline`() {
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
     val actualSerializableResultComparison =
@@ -170,7 +170,7 @@ class SerializationHelpersTest {
         File(
             "$comparedResultsFolder/" +
                 "$applicationStartTimeString/" +
-                "$groundTruthDirectory/" +
+                "$baselineDirectory/" +
                 "$actualSource/" +
                 "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json")
     assertTrue(actualFile.exists())
@@ -256,48 +256,48 @@ class SerializationHelpersTest {
     val actualSerializableResult =
         SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val actualFilePath =
-        "$serializedResultsFolder/$groundTruthDirectory/${actualSource}/${actualIdentifier}.json"
+        "$serializedResultsFolder/$baselineDirectory/${actualSource}/${actualIdentifier}.json"
     actualSerializableResult.getJsonString().saveAsJsonFile(actualFilePath)
 
-    // Get Path to latest SerializationResult (ground truth SerializationResult should be ignored)
+    // Get Path to latest SerializationResult (baseline SerializationResult should be ignored)
     val latestResult = getPreviousSerializationResultDirectory()
 
     assertNull(latestResult)
   }
   // endregion
 
-  // region Tests for getGroundTruthSerializationResultPath()
+  // region Tests for getBaselineSerializationResultPath()
   /**
-   * Tests that the [getGroundTruthSerializationResultDirectory] function returns the correct
-   * directory, when the ground truth result set exists.
+   * Tests that the [getBaselineSerializationResultDirectory] function returns the correct
+   * directory, when the baseline result set exists.
    */
   @Test
-  fun `Test correct getting of ground truth SerializationResult`() {
-    // Setup of ground truth SerializationResults for testing
+  fun `Test correct getting of baseline SerializationResult`() {
+    // Setup of baseline SerializationResults for testing
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
     val actualSerializableResult =
         SerializableIntResult(identifier = actualIdentifier, source = actualSource, value = 2)
     val actualFile =
         "$serializedResultsFolder/" +
-            "$groundTruthDirectory/" +
+            "$baselineDirectory/" +
             "${actualSource}/" +
             "${actualIdentifier}.json"
     val latestActualSavedPath = actualSerializableResult.getJsonString().saveAsJsonFile(actualFile)
 
     // Get Path to latest SerializationResult
-    val latestResult = getGroundTruthSerializationResultDirectory()
+    val latestResult = getBaselineSerializationResultDirectory()
 
     assertNotNull(latestResult)
     assertEquals(latestActualSavedPath.parentFile.parentFile, latestResult)
   }
 
   /**
-   * Tests that the [getGroundTruthSerializationResultDirectory] function returns no directory, when
-   * the ground truth result set does not exist.
+   * Tests that the [getBaselineSerializationResultDirectory] function returns no directory, when
+   * the baseline result set does not exist.
    */
   @Test
-  fun `Test getting of ground truth SerializationResult with no results`() {
+  fun `Test getting of baseline SerializationResult with no results`() {
     // Setup of previous SerializationResult for testing
     val actualIdentifier = "actualIdentifier"
     val actualSource = "actualSource"
@@ -312,8 +312,8 @@ class SerializationHelpersTest {
         "${serializedResultsFolder}/${timeOfLatestState}/${actualSource}/${actualIdentifier}.json"
     actualFileContent.saveAsJsonFile(actualFilePath)
 
-    // Get Path to ground truth SerializationResult (latest SerializationResult should be ignored)
-    val latestResult = getGroundTruthSerializationResultDirectory()
+    // Get Path to baseline SerializationResult (latest SerializationResult should be ignored)
+    val latestResult = getBaselineSerializationResultDirectory()
 
     assertNull(latestResult)
   }

@@ -102,7 +102,7 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
 
-    val groundTruthMetric =
+    val baselineMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
@@ -111,12 +111,12 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataDifference>()
 
     currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
-    groundTruthMetric.evaluate(simpleTSC2, simpleTSC2ValidInstance)
+    baselineMetric.evaluate(simpleTSC2, simpleTSC2ValidInstance)
 
     val currentResult = currentMetric.getSerializableResults()
-    val groundTruthResult = groundTruthMetric.getSerializableResults()
+    val baselineResult = baselineMetric.getSerializableResults()
 
-    val comparison = currentResult.compareTo(groundTruthResult)
+    val comparison = currentResult.compareTo(baselineResult)
 
     assertEquals(1, comparison.size)
     assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
@@ -136,7 +136,7 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
 
-    val groundTruthMetric =
+    val baselineMetric =
         InvalidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
@@ -145,15 +145,15 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataDifference>()
 
     currentMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
-    groundTruthMetric.evaluate(simpleTSC2, simpleTSCInvalidInstance)
+    baselineMetric.evaluate(simpleTSC2, simpleTSCInvalidInstance)
 
     val currentResult = currentMetric.getSerializableResults()
     assertEquals(1, currentResult.size)
 
-    val groundTruthResult = groundTruthMetric.getSerializableResults()
-    assertEquals(1, groundTruthResult.size)
+    val baselineResult = baselineMetric.getSerializableResults()
+    assertEquals(1, baselineResult.size)
 
-    val comparison = currentResult.compareTo(groundTruthResult)
+    val comparison = currentResult.compareTo(baselineResult)
 
     assertEquals(1, comparison.size)
     assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)
@@ -173,7 +173,7 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
 
-    val groundTruthMetric =
+    val baselineMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
@@ -182,15 +182,15 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataDifference>()
 
     currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
-    groundTruthMetric.evaluate(simpleTSC, simpleTSCValidInstance2)
+    baselineMetric.evaluate(simpleTSC, simpleTSCValidInstance2)
 
     val currentResult = currentMetric.getSerializableResults()
     assertEquals(1, currentResult.size)
 
-    val groundTruthResult = groundTruthMetric.getSerializableResults()
-    assertEquals(1, groundTruthResult.size)
+    val baselineResult = baselineMetric.getSerializableResults()
+    assertEquals(1, baselineResult.size)
 
-    val comparison = currentResult.compareTo(groundTruthResult)
+    val comparison = currentResult.compareTo(baselineResult)
 
     assertEquals(1, comparison.size)
     assertEquals(SerializableResultComparisonVerdict.EQUAL_RESULTS, comparison[0].verdict)
@@ -210,7 +210,7 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
 
-    val groundTruthMetric =
+    val baselineMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
@@ -219,15 +219,15 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickDataDifference>()
 
     currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
-    groundTruthMetric.evaluate(simpleTSC, simpleTSCValidInstance3)
+    baselineMetric.evaluate(simpleTSC, simpleTSCValidInstance3)
 
     val currentResult = currentMetric.getSerializableResults()
     assertEquals(1, currentResult.size)
 
-    val groundTruthResult = groundTruthMetric.getSerializableResults()
-    assertEquals(1, groundTruthResult.size)
+    val baselineResult = baselineMetric.getSerializableResults()
+    assertEquals(1, baselineResult.size)
 
-    val comparison = currentResult.compareTo(groundTruthResult)
+    val comparison = currentResult.compareTo(baselineResult)
 
     assertEquals(1, comparison.size)
     assertEquals(SerializableResultComparisonVerdict.NOT_EQUAL_RESULTS, comparison[0].verdict)

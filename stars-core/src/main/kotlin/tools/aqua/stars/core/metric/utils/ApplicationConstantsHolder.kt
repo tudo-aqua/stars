@@ -54,8 +54,8 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized compared results produced in evaluation. */
   private const val COMPARED_RESULTS_FOLDER = "compared-results"
 
-  /** Folder directory for serialized ground-truth result data set. */
-  var groundTruthDirectory = "ground-truth"
+  /** Folder directory for serialized baseline result data set. */
+  var baselineDirectory = "baseline"
 
   /** Folder directory for serialized previous evaluation result. */
   const val PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "previous-evaluation"
@@ -93,7 +93,7 @@ object ApplicationConstantsHolder {
               File(TEST_LOG_FOLDER).deleteRecursively()
               File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
               File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
-              File("test-$groundTruthDirectory").deleteRecursively()
+              File("test-$baselineDirectory").deleteRecursively()
             })
   }
 
@@ -102,7 +102,7 @@ object ApplicationConstantsHolder {
       try {
         Class.forName("org.junit.jupiter.api.Test")
         true
-      } catch (e: ClassNotFoundException) {
+      } catch (_: ClassNotFoundException) {
         false
       }
 }
