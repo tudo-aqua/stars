@@ -35,6 +35,11 @@ class TickDataDifferenceSeconds(val differenceSeconds: Double) :
   override fun minus(other: TickDataDifferenceSeconds): TickDataDifferenceSeconds =
       TickDataDifferenceSeconds(this.differenceSeconds - other.differenceSeconds)
 
+  override fun serialize(): String = this.differenceSeconds.toString()
+
+  override fun deserialize(str: String): TickDataDifferenceSeconds =
+      TickDataDifferenceSeconds(str.toDouble())
+
   override fun toString(): String =
       "TickDataDifferenceSeconds(difference: ${this.differenceSeconds})"
 

@@ -21,18 +21,24 @@ import java.util.Optional
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 
 /**
  * This class implements the [SegmentMetricProvider] and tracks the total [TickDifference] of all
  * [SegmentType]s.
  *
+ * This class implements the [Serializable] interface. It serializes the [totalTickDifference] for
+ * all analyzed [SegmentType]s.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -42,8 +48,9 @@ class TotalSegmentTickDifferenceMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger("total-segment-tick-difference")
-) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Loggable {
+    override val loggerIdentifier: String = "total-segment-tick-difference",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /** Holds the current [TickDifference] for all already analyzed [SegmentType]s. */
   private var totalTickDifference: D? = null
 
@@ -87,4 +94,11 @@ class TotalSegmentTickDifferenceMetric<
   override fun printState() {
     logInfo("The analyzed segments yielded a total tick difference of $totalTickDifference.")
   }
+
+  override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
+      totalTickDifference?.let {
+        listOf(
+            SerializableTickDifferenceResult(
+                identifier = loggerIdentifier, source = loggerIdentifier, value = it.serialize()))
+      } ?: emptyList()
 }

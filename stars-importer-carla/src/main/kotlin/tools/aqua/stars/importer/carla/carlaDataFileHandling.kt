@@ -26,6 +26,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
+import kotlin.io.path.nameWithoutExtension
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -181,7 +182,7 @@ fun loadSegments(
               simulationRunsWrapper.blocks,
               simulationRun,
               useEveryVehicleAsEgo,
-              currentDynamicDataPath.fileName.toString(),
+              currentDynamicDataPath.nameWithoutExtension,
               minSegmentTickCount))
       return@generateSequence segmentBuffer.removeFirst()
     }

@@ -22,6 +22,9 @@ import tools.aqua.stars.core.evaluation.PredicateCombination
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.serialization.SerializablePredicateCombinationResult
+import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 import tools.aqua.stars.core.tsc.TSC
@@ -44,18 +47,23 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
-class MissingPredicateCombinationsPerTSCMetric<
+class MissedPredicateCombinationsPerTSCMetric<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val logger: Logger = Loggable.getLogger("missing-predicate-combinations")
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
+    override val loggerIdentifier: String = "missed-predicate-combinations",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
+
+  /** Holds the evaluation result after calling [postEvaluate]. */
+  private var evaluationResultCache: Map<TSC<E, T, S, U, D>, Set<PredicateCombination>>? = null
 
   /**
    * Returns a [Map] of all missing [PredicateCombination]s for all [TSC]s that are calculated by
@@ -64,9 +72,13 @@ class MissingPredicateCombinationsPerTSCMetric<
    * @return The [Map] of all missing [PredicateCombination]s to its associated [TSC].
    */
   override fun postEvaluate(): Map<TSC<E, T, S, U, D>, Set<PredicateCombination>> =
-      dependsOn.getState().mapValues {
-        getAllMissingPredicateCombinationsForTSC(it.key, it.value.map { t -> t.key })
-      }
+      evaluationResultCache
+          ?: dependsOn
+              .getState()
+              .mapValues {
+                getAllMissingPredicateCombinationsForTSC(it.key, it.value.map { t -> t.key })
+              }
+              .also { evaluationResultCache = it }
 
   /**
    * Prints the count of missed [PredicateCombination]s for each [TSC] and then the actual list of
@@ -119,20 +131,32 @@ class MissingPredicateCombinationsPerTSCMetric<
     // Create set for storage of all combinations
     val predicateCombinations = mutableSetOf<PredicateCombination>()
     tscInstances.forEach { t ->
-      // Get all TSCEdges that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
-      // as they do not
-      // represent a predicate
-      val allEdgesInValidInstances = t.getAllEdges().filter { it.condition != CONST_TRUE }
+      // Get all traversals that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
+      // as they do not represent a predicate
+      val predicateTraversals =
+          t.traverse()
+              .filter { it.getLeafNodeEdges(it).any { it.tscEdge.condition != CONST_TRUE } }
+              .map { it.toString() }
       // Combine all TSCEdges with each other
-      allEdgesInValidInstances.forEach { edge1 ->
-        allEdgesInValidInstances
-            .filter { it != edge1 }
-            .forEach { edge2 ->
-              predicateCombinations +=
-                  PredicateCombination(edge1.destination.label, edge2.destination.label)
+      predicateTraversals.forEach { predicatePath1 ->
+        predicateTraversals
+            .filter { it != predicatePath1 }
+            .forEach { predicatePath2 ->
+              predicateCombinations += PredicateCombination(predicatePath1, predicatePath2)
             }
       }
     }
     return predicateCombinations
   }
+
+  override fun getSerializableResults(): List<SerializablePredicateCombinationResult> =
+      evaluationResultCache?.map { (tsc, predicates) ->
+        val resultList = predicates.map { it.predicate1 to it.predicate2 }
+        SerializablePredicateCombinationResult(
+            identifier = tsc.identifier,
+            source = loggerIdentifier,
+            tsc = SerializableTSCNode(tsc.rootNode),
+            count = resultList.size,
+            value = resultList)
+      } ?: emptyList()
 }

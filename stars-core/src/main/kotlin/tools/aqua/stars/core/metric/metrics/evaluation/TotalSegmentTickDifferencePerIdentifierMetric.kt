@@ -21,7 +21,9 @@ import java.util.Optional
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.providers.Serializable
 import tools.aqua.stars.core.metric.providers.Stateful
+import tools.aqua.stars.core.metric.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 
 /**
@@ -30,11 +32,15 @@ import tools.aqua.stars.core.types.*
  * [SegmentType.segmentSource] defines the source of the [SegmentType] (e.g. a map name, analysis
  * name).
  *
+ * This class implements the [Serializable] interface. It serializes the total tick difference for
+ * all analyzed [SegmentType]s grouped by the segment.
+ *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 @Suppress("unused")
@@ -44,8 +50,9 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val logger: Logger = Loggable.getLogger("total-segment-tick-difference-per-identifier")
-) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Loggable {
+    override val loggerIdentifier: String = "total-segment-tick-difference-per-identifier",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
   /**
    * Holds the Map of [SegmentType.segmentSource] to total [TickDifference] of all [SegmentType]s
    * for the [SegmentType.segmentSource].
@@ -102,4 +109,10 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
           "The analyzed segments with source '$identifier' yielded a total tick difference of $totalDifference.")
     }
   }
+
+  override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
+      segmentIdentifierToTotalSegmentDurationMap.map { (identifier, tickDifference) ->
+        SerializableTickDifferenceResult(
+            identifier = identifier, source = loggerIdentifier, value = tickDifference.serialize())
+      }
 }

@@ -41,7 +41,7 @@ class SegmentCountMetricTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
 
-    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
+    assertEquals(1, segmentCountMetric.evaluate(simpleSegment1))
   }
 
   /**
@@ -62,7 +62,7 @@ class SegmentCountMetricTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference>()
 
-    assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
-    assertEquals(segmentCountMetric.evaluate(simpleSegment2), 2)
+    assertEquals(1, segmentCountMetric.evaluate(simpleSegment1))
+    assertEquals(2, segmentCountMetric.evaluate(simpleSegment2))
   }
 }

@@ -15,7 +15,10 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.stars.library-conventions") }
+plugins {
+  id("tools.aqua.stars.library-conventions")
+  kotlin("plugin.serialization") version "2.0.10"
+}
 
 mavenMetadata {
   name.set("STARS Core Library")
@@ -27,4 +30,5 @@ dependencies {
   implementation(libs.letsplot.imageexport)
   implementation(libs.slf4j.api)
   implementation(libs.slf4j.simple)
+  implementation(libs.kotlinx.serialization.json)
 }
