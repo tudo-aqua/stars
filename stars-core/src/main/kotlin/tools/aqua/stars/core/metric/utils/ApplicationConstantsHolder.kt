@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.logging.LogManager
 import java.util.logging.Logger
+import kotlin.time.Duration
 import kotlinx.serialization.json.Json
 
 /**
@@ -30,7 +31,16 @@ import kotlinx.serialization.json.Json
  */
 object ApplicationConstantsHolder {
   /** Holds the [LocalDateTime] at the start of the application. */
-  private val applicationStartTime: LocalDateTime = LocalDateTime.now()
+  val applicationStartTime: LocalDateTime = LocalDateTime.now()
+
+  /** Holds the [LocalDateTime] at the end of the experiment. */
+  var experimentEndTime: LocalDateTime? = null
+
+  /** Holds the total time spent on evaluation. */
+  var totalEvaluationTime: Duration = Duration.ZERO
+
+  /** Holds the total time spent on segment evaluation. */
+  var totalSegmentEvaluationTime: Duration = Duration.ZERO
 
   /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
   val applicationStartTimeString: String =
@@ -54,26 +64,41 @@ object ApplicationConstantsHolder {
   /** Folder directory for serialized compared results produced in evaluation. */
   private const val COMPARED_RESULTS_FOLDER = "compared-results"
 
+  /** File name for the metadata file. */
+  private const val METADATA_FILE_NAME = "experiment_run_metadata"
+
   /** Folder directory for serialized baseline result data set. */
   var baselineDirectory = "baseline"
+
+  /** May hold the command that was used to execute the application. */
+  var executionCommand: String = ""
 
   /** Folder directory for serialized previous evaluation result. */
   const val PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "previous-evaluation"
 
+  /** Indicates whether the application is running in test mode. */
+  val isTestRun: Boolean
+    get() =
+        try {
+          Class.forName("org.junit.jupiter.api.Test")
+          true
+        } catch (_: ClassNotFoundException) {
+          false
+        }
+
   /** Holds the folder name for the logs. */
-  val logFolder: String
-    get() = if (isTestRun()) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
+  val logFolder: String = if (isTestRun) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
 
   /** Holds the [MutableList] of all currently registered [Logger]s. */
   val activeLoggers: MutableList<Logger> = mutableListOf()
 
   /** Holds the folder name for the logs. */
-  val serializedResultsFolder: String
-    get() = if (isTestRun()) "test-$SERIALIZED_RESULTS_FOLDER" else SERIALIZED_RESULTS_FOLDER
+  val serializedResultsFolder: String =
+      if (isTestRun) "test-$SERIALIZED_RESULTS_FOLDER" else SERIALIZED_RESULTS_FOLDER
 
   /** Holds the folder name for the logs. */
-  val comparedResultsFolder: String
-    get() = if (isTestRun()) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
+  val comparedResultsFolder: String =
+      if (isTestRun) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
 
   /** Holds the [Json] configuration that is used throughout the project. */
   val jsonConfiguration = Json {
@@ -97,12 +122,38 @@ object ApplicationConstantsHolder {
             })
   }
 
-  /** Indicates whether the application is running in test mode. */
-  private fun isTestRun(): Boolean =
-      try {
-        Class.forName("org.junit.jupiter.api.Test")
-        true
-      } catch (_: ClassNotFoundException) {
-        false
+  /**
+   * Writes the experiment run metadata into the file [METADATA_FILE_NAME] in the serialization
+   * folders
+   */
+  fun writeMetaInfo(directory: String): File =
+      File("$directory$METADATA_FILE_NAME.txt").apply {
+        parentFile.mkdirs()
+        createNewFile()
+        writeText(
+            """
+        ====================================================================================================
+        Experiment run metadata
+        ====================================================================================================
+        Experiment start              : ${applicationStartTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))}
+        Experiment end                : ${experimentEndTime?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) ?: "Not finished"}
+        Total evaluation time         : $totalEvaluationTime
+        Total segment evaluation time : $totalSegmentEvaluationTime
+        Execution command             : ${executionCommand
+          .prependIndent("                                        ").trimStart()}
+                                                  
+        
+        ====================================================================================================
+        System information
+        ====================================================================================================
+        User                          : ${System.getProperty("user.name")}
+        Hostname                      : ${java.net.InetAddress.getLocalHost().hostName}
+        OS                            : ${System.getProperty("os.name")} ${System.getProperty("os.arch")} ${System.getProperty("os.version")}
+        CPU                           : ${Runtime.getRuntime().availableProcessors()} cores
+        Memory                        : ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB
+        Java version                  : ${System.getProperty("java.version")}
+        Java vendor                   : ${System.getProperty("java.vendor")}
+      """
+                .trimIndent())
       }
 }
