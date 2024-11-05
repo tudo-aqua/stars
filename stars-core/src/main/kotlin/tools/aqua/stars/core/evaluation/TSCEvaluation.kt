@@ -19,6 +19,7 @@
 
 package tools.aqua.stars.core.evaluation
 
+import java.time.LocalDateTime
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.computeWhile
@@ -31,6 +32,11 @@ import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.C
 import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
 import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.logFolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
 import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -240,6 +246,8 @@ class TSCEvaluation<
       logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
     }
     logInfo("The whole evaluation took: $totalEvaluationTime")
+    ApplicationConstantsHolder.totalEvaluationTime += totalEvaluationTime
+    ApplicationConstantsHolder.experimentEndTime = LocalDateTime.now()
 
     postEvaluate()
   }
@@ -302,6 +310,7 @@ class TSCEvaluation<
       logFine("The evaluation of all TSCs for segment '$segment' took: $allTSCEvaluationTime")
     }
     logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
+    ApplicationConstantsHolder.totalSegmentEvaluationTime += segmentEvaluationTime
 
     return true
   }
@@ -332,15 +341,21 @@ class TSCEvaluation<
 
     val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
     if (serializableMetrics.any()) {
+      ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
+
       // Write JSON files of all Serializable metrics
       if (writeSerializedResults) {
         println("Writing serialized results")
+        ApplicationConstantsHolder.writeMetaInfo(
+            "$serializedResultsFolder/$applicationStartTimeString/")
         serializableMetrics.forEach { t -> t.writeSerializedResults() }
       }
 
       // Compare the results to the baseline
       if (compareToBaselineResults) {
         println("Comparing to baseline")
+        ApplicationConstantsHolder.writeMetaInfo(
+            "$comparedResultsFolder/$applicationStartTimeString/")
         serializableMetrics.compareToBaselineResults().let {
           resultsReproducedFromBaseline = it.noMismatch()
 
@@ -351,6 +366,8 @@ class TSCEvaluation<
       // Compare the results to the latest run
       if (compareToPreviousRun) {
         println("Comparing to previous run")
+        ApplicationConstantsHolder.writeMetaInfo(
+            "$comparedResultsFolder/$applicationStartTimeString/")
         serializableMetrics.compareToPreviousResults().let {
           resultsReproducedFromPreviousRun = it.noMismatch()
 
