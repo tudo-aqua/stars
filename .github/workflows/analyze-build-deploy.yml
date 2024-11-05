@@ -159,8 +159,8 @@ jobs:
            -F token=$REPRODUCTION_RUNNER_TRIGGER_TOKEN \
            -F ref=main \
            -F variables[TARGET_BRANCH]=${{ github.head_ref || github.ref_name }} \
-           -F variables[IS_DRAFT]=${{ github.event.pull_request ? github.event.pull_request.draft : false }} \
-           -F variables[TARGET_SHA]=${{ github.event.pull_request ? github.event.pull_request.head.sha : github.sha }}
+           -F variables[IS_DRAFT]=${{ github.event.pull_request.draft || false }} \
+           -F variables[TARGET_SHA]=${{ github.event.pull_request.head.sha || github.sha }}
            -s -o /dev/null \
            $REPRODUCTION_RUNNER_URL
         env:
