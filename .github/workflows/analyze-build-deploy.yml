@@ -10,7 +10,6 @@ on:
         - main
   workflow_dispatch:
 
-
 env:
   JDK_VERSION: 17
 
