@@ -109,4 +109,13 @@ data class Vehicle(
     }
     return super.equals(other)
   }
+
+  override fun hashCode(): Int {
+    var result = id
+    result = 31 * result + tickData.currentTick.hashCode()
+    result = 31 * result + positionOnLane.hashCode()
+    result = 31 * result + lane.laneId.hashCode()
+    result = 31 * result + lane.road.id.hashCode()
+    return result
+  }
 }
