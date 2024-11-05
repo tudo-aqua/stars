@@ -41,7 +41,6 @@ import tools.aqua.stars.core.types.*
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
-@Suppress("unused")
 class TotalSegmentTickDifferenceMetric<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,

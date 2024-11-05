@@ -44,7 +44,6 @@ class PredicateContext<
   private val entityIdsCache = mutableListOf<Int>()
 
   /** All entity IDs of the current context state. */
-  @Suppress("unused")
   val entityIds: List<Int>
     get() {
       if (entityIdsCache.isEmpty()) {

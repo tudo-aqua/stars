@@ -74,7 +74,6 @@ data class Segment(
   private val pedestrianIdsCache = mutableListOf<Int>()
 
   /** All pedestrian IDs of the segment. */
-  @Suppress("unused")
   val pedestrianIds: List<Int>
     get() {
       if (pedestrianIdsCache.isEmpty()) {

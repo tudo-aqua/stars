@@ -25,7 +25,6 @@ import kotlinx.serialization.Serializable
  *
  * @property value Json value.
  */
-@Suppress("unused")
 @Serializable
 enum class JsonLandmarkOrientation(val value: Int) {
   @SerialName("0") Positive(0),

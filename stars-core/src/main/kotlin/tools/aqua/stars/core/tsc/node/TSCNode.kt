@@ -198,7 +198,6 @@ sealed class TSCNode<
    *
    * @return The [String] representation of the [TSCNode] with labels on the edges.
    */
-  @Suppress("unused")
   fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, S, U, D>, Int>): String =
       toStringWithEdgeLabels(0, labels)
 

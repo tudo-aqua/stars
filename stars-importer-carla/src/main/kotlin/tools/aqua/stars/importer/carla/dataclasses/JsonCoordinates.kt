@@ -27,7 +27,6 @@ import kotlinx.serialization.Serializable
  * @property y The y ordinate.
  * @property z The z ordinate.
  */
-@Suppress("unused")
 @Serializable
 data class JsonCoordinates(
     @SerialName("x") val x: Double,

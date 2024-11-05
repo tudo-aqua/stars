@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
-
 package tools.aqua.stars.data.av.dataclasses
 
 import kotlin.math.pow

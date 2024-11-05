@@ -25,7 +25,6 @@ import kotlinx.serialization.Serializable
  *
  * @property value Json value.
  */
-@Suppress("unused")
 @Serializable
 enum class JsonLaneType(val value: Int) {
   @SerialName("-2") Any(-2),

@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate")
-
 package tools.aqua.stars.core.evaluation
 
 import java.time.LocalDateTime

@@ -23,7 +23,6 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.activeLoggers
 
 /** This interface can be implemented to be able to log data into the stdout and log files. */
-@Suppress("unused")
 interface Loggable {
   /** Holds the identifier (name) for this logger. */
   val loggerIdentifier: String

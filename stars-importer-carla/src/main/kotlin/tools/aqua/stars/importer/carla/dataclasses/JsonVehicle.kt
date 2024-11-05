@@ -50,7 +50,6 @@ data class JsonVehicle(
 ) : JsonActor() {
 
   /** The effective velocity. */
-  @Suppress("unused")
   val effVelocity: Double
     get() = sqrt(this.velocity.x.pow(2) + this.velocity.y.pow(2) + this.velocity.z.pow(2))
 }

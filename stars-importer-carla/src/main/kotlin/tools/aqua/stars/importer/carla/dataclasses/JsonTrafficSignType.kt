@@ -25,7 +25,6 @@ import kotlinx.serialization.Serializable
  *
  * @property value Json value.
  */
-@Suppress("unused")
 @Serializable
 enum class JsonTrafficSignType(val value: Int) {
   @SerialName("0") INVALID(0),

@@ -28,7 +28,6 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
  * @throws IllegalStateException When the [fileName] is not empty and does not include "static_data"
  *   or "dynamic_data".
  */
-@Suppress("unused")
 fun getMapName(fileName: String): String =
     when {
       fileName.isEmpty() -> "test_case"
@@ -95,7 +94,7 @@ fun getLaneProgressionForVehicle(
  * @param simulationRunId Identifier of the simulation run.
  */
 // @Suppress("LABEL_NAME_CLASH")
-@Suppress("unused")
+
 fun convertJsonData(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
