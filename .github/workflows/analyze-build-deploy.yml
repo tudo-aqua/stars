@@ -8,7 +8,6 @@ on:
   push:
     branches:
         - main
-        - 191-reproduction-check-does-not-work-on-main-branch
   workflow_dispatch:
 
 env:
