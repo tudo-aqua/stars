@@ -1,3 +1,4 @@
+[0.5]: https://github.com/tudo-aqua/stars/releases/tag/v0.5
 [0.4]: https://github.com/tudo-aqua/stars/releases/tag/v0.4
 [0.3]: https://github.com/tudo-aqua/stars/releases/tag/v0.3
 [0.2.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.2
@@ -14,7 +15,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.5 - TBA
+## [0.5] - 06.11.2024
 ### Added
 - Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.
 - Add pre-defined `MinNodesInTSCHook` and `MinTicksPerSegmentHook`.
@@ -24,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Add `loggerIdentifier` field to `Loggable` interface.
 - Add `Serializable` interface.
   - This adds the functionality to compare your current analysis results with the previous run or a specified baseline. 
+- Add experiment run metadata file containing the experiment run configuration and system information.
 
 ### Changed
 - `TSCEvaluation` now accepts multiple `TSCs` instead of `TSCProjections`.
