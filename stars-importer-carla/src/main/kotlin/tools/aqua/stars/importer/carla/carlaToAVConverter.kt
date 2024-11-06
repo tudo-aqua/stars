@@ -223,6 +223,7 @@ fun convertJsonContactAreaToContactArea(
         lane2StartPos = jsonContactArea.lane2StartPos,
         lane1 = lane1,
         lane2 = lane2)
+
 // endregion
 
 // region helper

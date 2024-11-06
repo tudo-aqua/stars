@@ -46,6 +46,7 @@ val baseline: Map<String, List<SerializableResult>>
  */
 fun getBaselineSerializationResultDirectory(): File? =
     File(serializedResultsFolder).listFiles()?.firstOrNull { it.name == baselineDirectory }
+
 // endregion
 
 // region previous Results

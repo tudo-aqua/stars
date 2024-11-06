@@ -88,6 +88,7 @@ class TSCRootTest {
           SimpleTickDataDifference> {}
     }
   }
+
   // endregion
 
   // region Test adding simple true conditions to root note
@@ -180,6 +181,7 @@ class TSCRootTest {
       }
     }
   }
+
   // endregion
 
   // region Test adding simple false conditions to root note
@@ -272,6 +274,7 @@ class TSCRootTest {
       }
     }
   }
+
   // endregion
 
   // region Test adding complex true conditions to root note
@@ -364,6 +367,7 @@ class TSCRootTest {
       }
     }
   }
+
   // endregion
 
   // region Test adding complex false conditions to root note

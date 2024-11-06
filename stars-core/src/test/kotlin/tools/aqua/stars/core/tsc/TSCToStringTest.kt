@@ -243,6 +243,7 @@ class TSCToStringTest {
         }
     assertEquals("optional(0..3)\n-T-> leaf_1\n-T-> leaf_2\n-T-> leaf_3", tsc.toString())
   }
+
   // endregion
 
   // region TSC with multiple layers of hierarchy

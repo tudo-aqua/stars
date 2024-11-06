@@ -394,6 +394,7 @@ class ValidTSCInstancesPerTSCMetric<
         yAxisScaleMaxValue = 100,
         fileName = "${plotFileNameCombinedPercentage}_scaled")
   }
+
   // endregion
 
   // region CSV files

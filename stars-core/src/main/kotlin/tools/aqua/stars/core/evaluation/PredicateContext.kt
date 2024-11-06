@@ -65,6 +65,7 @@ class PredicateContext<
   private val binaryPredicateCache:
       MutableMap<Pair<BinaryPredicate<*, *, E, T, S, U, D>, Triple<U, Int, Int>>, Boolean> =
       mutableMapOf()
+
   // TODO: Check if the caches are still "useful" and actually used.
 
   /**

@@ -124,7 +124,7 @@ object ApplicationConstantsHolder {
 
   /**
    * Writes the experiment run metadata into the file [METADATA_FILE_NAME] in the serialization
-   * folders
+   * folders.
    */
   fun writeMetaInfo(directory: String): File =
       File("$directory$METADATA_FILE_NAME.txt").apply {

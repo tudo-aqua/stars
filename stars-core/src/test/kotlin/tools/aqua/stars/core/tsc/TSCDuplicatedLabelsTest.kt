@@ -57,6 +57,7 @@ class TSCDuplicatedLabelsTest {
       }
     }
   }
+
   // endregion
   // region projection labels
   /** Test duplicated projection labels on same level throwing exception. */
@@ -98,6 +99,7 @@ class TSCDuplicatedLabelsTest {
       }
     }
   }
+
   // endregion
   // region monitor labels
   /** Test duplicated monitor labels on same level throwing exception. */

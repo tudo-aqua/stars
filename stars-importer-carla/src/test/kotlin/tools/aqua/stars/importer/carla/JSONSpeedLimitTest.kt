@@ -118,6 +118,7 @@ class JSONSpeedLimitTest {
 
     assertEquals(0, getSpeedLimitsFromLandmarks(speedLimitLane, invalidLandmarks).size)
   }
+
   /** Tests [getSpeedLimitsFromLandmarks] returns 0 if no landmark is given. */
   @Test
   fun testEmptyLandmarksList() {
