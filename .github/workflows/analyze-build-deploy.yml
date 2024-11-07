@@ -141,7 +141,7 @@ jobs:
       run: ./gradlew :${{ matrix.project }}:test
 
     - name: Upload test results
-      uses: mikepenz/action-junit-report@v4
+      uses: mikepenz/action-junit-report@v5
       if: ${{ !cancelled() }} # Must execute after failed tests
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
