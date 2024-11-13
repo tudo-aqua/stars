@@ -37,6 +37,7 @@ open class TSCEdge<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val condition: (T) -> Boolean = CONST_TRUE,
+    val inverseCondition: ((T) -> Boolean)? = null,
     val destination: TSCNode<E, T, U, D>,
 ) {
 
