@@ -38,7 +38,7 @@ import tools.aqua.stars.core.types.*
  * @property monitorResults Monitor results of this node.
  * @property value Value of this node.
  */
-class TSCInstanceNode<
+open class TSCInstanceNode<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
@@ -95,7 +95,14 @@ class TSCInstanceNode<
                         currentNode.monitorResults,
                         currentNode.value,
                     )
-                    .apply { this.edges += TSCInstanceEdge(child, edge.tscEdge) }
+                    .apply {
+                      this.edges +=
+                          TSCInstanceEdge(
+                              destination = child,
+                              tscEdge = edge.tscEdge,
+                              isUnknown = false,
+                          )
+                    }
               }
             }
           } else {
@@ -162,7 +169,7 @@ class TSCInstanceNode<
    *
    * @param depth Depth to print up to.
    */
-  fun toString(depth: Int): String =
+  open fun toString(depth: Int): String =
       StringBuilder()
           .apply {
             append(if (value is Unit) "\n" else "($value)\n")
