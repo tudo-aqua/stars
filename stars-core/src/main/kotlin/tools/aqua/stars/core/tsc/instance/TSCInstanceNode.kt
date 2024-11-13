@@ -37,7 +37,7 @@ import tools.aqua.stars.core.types.*
  * @property monitorResults Monitor results of this node.
  * @property value Value of this node.
  */
-class TSCInstanceNode<
+open class TSCInstanceNode<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -161,7 +161,7 @@ class TSCInstanceNode<
    *
    * @param depth Depth to print up to.
    */
-  fun toString(depth: Int): String =
+  open fun toString(depth: Int): String =
       StringBuilder()
           .apply {
             append(if (value is Unit) "\n" else "($value)\n")
