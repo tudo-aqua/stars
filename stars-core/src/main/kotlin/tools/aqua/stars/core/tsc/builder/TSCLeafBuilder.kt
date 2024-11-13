@@ -73,6 +73,24 @@ open class TSCLeafBuilder<
   }
 
   /**
+   * DSL function for inverse edge conditions.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param inverseCondition The inverse edge condition.
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, U, D>.inverseCondition(inverseCondition: (T) -> Boolean) {
+    this.inverseCondition = inverseCondition
+  }
+
+  /**
    * DSL function for a value function.
    *
    * @param E [EntityType].

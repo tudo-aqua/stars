@@ -72,20 +72,49 @@ sealed class TSCNode<
           )
           .also {
             it.edges +=
-                this.edges
-                    .filter { t -> t.condition(tick) }
-                    .map { tscEdge ->
-                      TSCInstanceEdge(tscEdge.destination.evaluate(tick, depth + 1), tscEdge)
-                    }
+                this.edges.mapNotNull { edge ->
+                  val condition = edge.condition.invoke(tick)
+                  val inverseCondition = edge.inverseCondition?.invoke(tick)
+
+                  /*
+                   * Decisions based on the condition and inverseCondition:
+                   * [T = true, F = false, N = null]
+                   *
+                   * Condition InverseCondition -> Result
+                   * T T -> Fail
+                   * T F || T N -> OK
+                   * F T || F N -> SKIP
+                   * F F -> OK, but unknown
+                   */
+
+                  // Assert that not both condition and inverseCondition are true
+                  check(!condition || inverseCondition != true) {
+                    "Encountered TSCEdge where both condition and inverseCondition are true "
+                  }
+
+                  // Skip if condition is false and inverseCondition is not false
+                  if (!condition && inverseCondition != false) null
+                  else
+                  // Create TSCInstanceEdge if condition is true. Flag as unknown if condition is
+                  // false (inverseCondition must be false too at this point)
+                  TSCInstanceEdge(
+                          edge.destination.evaluate(tick, depth + 1),
+                          edge,
+                          isUnknown = !condition,
+                      )
+                }
           }
 
   /** Deeply clones [TSCNode]. */
   private fun deepClone(): TSCNode<E, T, U, D> {
     val outgoingEdges =
-        edges
-            .map { it to it.destination.deepClone() }
-            .map { TSCEdge(it.first.condition, it.second) }
-            .toList()
+        edges.map {
+          TSCEdge(
+              condition = it.condition,
+              inverseCondition = it.inverseCondition,
+              destination = it.destination.deepClone(),
+          )
+        }
 
     return when (this) {
       is TSCLeafNode ->
