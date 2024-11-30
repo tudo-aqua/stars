@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import kotlin.math.sqrt
+
 /**
  * Data class for 3D vector.
  *
@@ -53,4 +55,11 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
           x = this.x / scalar.toDouble(),
           y = this.y / scalar.toDouble(),
           z = this.z / scalar.toDouble())
+
+  fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
+  fun magnitude(): Double = sqrt(x * x + y * y + z * z)
+  fun normalize(): Vector3D {
+    val mag = magnitude()
+    return Vector3D(x / mag, y / mag, z / mag)
+  }
 }
