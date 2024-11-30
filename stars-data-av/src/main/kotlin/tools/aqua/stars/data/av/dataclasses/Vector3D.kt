@@ -57,7 +57,9 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
           z = this.z / scalar.toDouble())
 
   fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
+
   fun magnitude(): Double = sqrt(x * x + y * y + z * z)
+
   fun normalize(): Vector3D {
     val mag = magnitude()
     return Vector3D(x / mag, y / mag, z / mag)

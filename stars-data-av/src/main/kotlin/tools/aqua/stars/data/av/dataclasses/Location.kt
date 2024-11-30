@@ -27,14 +27,15 @@ import kotlin.math.sqrt
  * @property y The y ordinate.
  * @property z The z ordinate.
  */
-data class Location(val x: Double, val y: Double, val z: Double){
+data class Location(val x: Double, val y: Double, val z: Double) {
   fun toVector3D() = Vector3D(x, y, z)
+
   companion object {
     /**
      * Calculates the Euclidean distance between two locations, i.e., the square root of the sum of
      * the squared ordinates.
      */
     fun euclideanDistance(loc1: Location, loc2: Location): Double =
-      sqrt((loc1.x - loc2.x).pow(2) + (loc1.y - loc2.y).pow(2) + (loc1.z - loc2.z).pow(2))
+        sqrt((loc1.x - loc2.x).pow(2) + (loc1.y - loc2.y).pow(2) + (loc1.z - loc2.z).pow(2))
   }
 }
