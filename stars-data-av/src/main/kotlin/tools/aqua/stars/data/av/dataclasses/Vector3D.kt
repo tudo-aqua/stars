@@ -40,7 +40,7 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
   /** Negation operator. */
   operator fun unaryMinus(): Vector3D = Vector3D(x = -this.x, y = -this.y, z = -this.z)
 
-  /** Division with scalar operator. */
+  /** Multiplication with scalar operator. */
   operator fun times(scalar: Number): Vector3D =
       Vector3D(
           x = this.x * scalar.toDouble(),
