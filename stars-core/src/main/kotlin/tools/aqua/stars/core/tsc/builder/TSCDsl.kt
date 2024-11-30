@@ -47,6 +47,7 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> tsc(
+    identifier: String = "TSC",
     init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
 ): TSC<E, T, S, U, D> {
   val rootEdge =
@@ -65,5 +66,5 @@ fun <
     "Root node must not have a condition. Consider adding a fitting bounded parent node."
   }
 
-  return TSC(rootEdge.destination.edges[0].destination)
+  return TSC(rootEdge.destination.edges[0].destination, identifier)
 }
