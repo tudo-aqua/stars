@@ -107,8 +107,7 @@ class InvalidTSCInstancesPerTSCMetric<
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR")
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
-          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size} (of " +
-              "${tsc.possibleTSCInstances.size} possible instances).")
+          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size}")
 
       logFine(
           "Count of unique invalid instances for tsc '${tsc.identifier}' per instance: " +
