@@ -26,8 +26,8 @@ import kotlinx.serialization.Serializable
 sealed class JsonActor {
   /** Identifier of the actor. */
   abstract val id: Int
-  abstract val typeId: String
 
+  abstract val typeId: String // TODO: Documentation needed
   abstract val attributes: Map<String, String>
   abstract val isAlive: Boolean
   abstract val isActive: Boolean

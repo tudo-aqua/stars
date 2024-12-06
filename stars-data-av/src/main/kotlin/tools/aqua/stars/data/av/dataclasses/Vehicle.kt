@@ -41,18 +41,24 @@ import kotlin.math.sqrt
  */
 data class Vehicle(
     override val id: Int,
-    override val tickData: TickData,
-    var positionOnLane: Double,
-    var lane: Lane,
-    val typeId: String,
-    val vehicleType: VehicleType,
+    override val typeId: String,
+    override val attributes: Map<String, String>,
+    override val isAlive: Boolean,
+    override val isActive: Boolean,
+    override val isDormant: Boolean,
+    override val semanticTags: List<Int>,
+    override val boundingBox: BoundingBox,
+    override val location: Location,
+    override val rotation: Rotation,
     var isEgo: Boolean,
-    val location: Location,
     val forwardVector: Vector3D,
-    val rotation: Rotation,
     var velocity: Vector3D,
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
+    var lane: Lane,
+    var positionOnLane: Double,
+    val vehicleType: VehicleType,
+    override val tickData: TickData,
 ) : Actor() {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
@@ -78,25 +84,31 @@ data class Vehicle(
   /** SpeedLimit of the road/lane for the current location of this [Vehicle]. */
   val applicableSpeedLimit: SpeedLimit?
     get() =
-        this.lane.speedLimits.firstOrNull { speedLimit ->
-          this.positionOnLane in (speedLimit.fromDistanceFromStart..speedLimit.toDistanceFromStart)
+        lane.speedLimits.firstOrNull { speedLimit ->
+          positionOnLane in (speedLimit.fromDistanceFromStart..speedLimit.toDistanceFromStart)
         }
 
   override fun clone(newTickData: TickData): Actor =
       Vehicle(
-          id,
-          newTickData,
-          positionOnLane,
-          lane,
-          typeId,
-          vehicleType,
-          isEgo,
-          location,
-          forwardVector,
-          rotation,
-          velocity,
-          acceleration,
-          angularVelocity)
+          id = id,
+          typeId = typeId,
+          attributes = attributes,
+          isAlive = isAlive,
+          isActive = isActive,
+          isDormant = isDormant,
+          semanticTags = semanticTags,
+          boundingBox = boundingBox,
+          location = location,
+          rotation = rotation,
+          isEgo = isEgo,
+          forwardVector = forwardVector,
+          velocity = velocity,
+          acceleration = acceleration,
+          angularVelocity = angularVelocity,
+          lane = lane,
+          positionOnLane = positionOnLane,
+          vehicleType = vehicleType,
+          tickData = newTickData)
 
   override fun toString(): String =
       "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
@@ -110,5 +122,14 @@ data class Vehicle(
           lane.road.id == other.lane.road.id
     }
     return super.equals(other)
+  }
+
+  override fun hashCode(): Int {
+    var result = id
+    result = 31 * result + tickData.currentTick.hashCode()
+    result = 31 * result + positionOnLane.hashCode()
+    result = 31 * result + lane.laneId.hashCode()
+    result = 31 * result + lane.road.id.hashCode()
+    return result
   }
 }

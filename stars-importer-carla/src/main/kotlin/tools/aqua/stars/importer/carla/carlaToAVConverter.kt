@@ -97,18 +97,24 @@ fun convertJsonVehicleToVehicle(
 ): Vehicle =
     Vehicle(
         id = vehicle.id,
-        tickData = tickData,
-        positionOnLane = positionOnLane,
-        lane = lane,
         typeId = vehicle.typeId,
-        vehicleType = getVehicleTypeFromTypeId(vehicle.typeId),
-        isEgo = vehicle.egoVehicle,
+        attributes = vehicle.attributes,
+        isAlive = vehicle.isAlive,
+        isActive = vehicle.isActive,
+        isDormant = vehicle.isDormant,
+        semanticTags = vehicle.semanticTags,
+        boundingBox = vehicle.boundingBox.toBoundingBox(),
         location = vehicle.location.toLocation(),
-        forwardVector = vehicle.forwardVector.toVector3D(),
         rotation = vehicle.rotation.toRotation(),
+        isEgo = vehicle.egoVehicle,
+        forwardVector = vehicle.forwardVector.toVector3D(),
         velocity = vehicle.velocity.toVector3D(),
         acceleration = vehicle.acceleration.toVector3D(),
-        angularVelocity = vehicle.angularVelocity.toVector3D())
+        angularVelocity = vehicle.angularVelocity.toVector3D(),
+        lane = lane,
+        positionOnLane = positionOnLane,
+        vehicleType = getVehicleTypeFromTypeId(vehicle.typeId),
+        tickData = tickData)
 
 /**
  * Converts [JsonPedestrian] to [Pedestrian].
@@ -125,7 +131,20 @@ fun convertJsonPedestrianToPedestrian(
     lane: Lane
 ): Pedestrian =
     Pedestrian(
-        id = pedestrian.id, tickData = tickData, positionOnLane = positionOnLane, lane = lane)
+        id = pedestrian.id,
+        typeId = pedestrian.typeId,
+        attributes = pedestrian.attributes,
+        isAlive = pedestrian.isAlive,
+        isActive = pedestrian.isActive,
+        isDormant = pedestrian.isDormant,
+        semanticTags = pedestrian.semanticTags,
+        boundingBox = pedestrian.boundingBox.toBoundingBox(),
+        location = pedestrian.location.toLocation(),
+        rotation = pedestrian.rotation.toRotation(),
+        lane = lane,
+        positionOnLane = positionOnLane,
+        tickData = tickData,
+    )
 
 /**
  * Converts [JsonBlock] to [Block].

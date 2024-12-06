@@ -17,26 +17,6 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-import tools.aqua.stars.core.types.EntityType
-
-/** Abstract actor data class. */
-sealed class Actor :
-    EntityType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
-
-  abstract val typeId: String // TODO: Documentation needed
-  abstract val attributes: Map<String, String>
-  abstract val isAlive: Boolean
-  abstract val isActive: Boolean
-  abstract val isDormant: Boolean
-  abstract val semanticTags: List<Int>
-  abstract val boundingBox: BoundingBox
-  abstract val location: Location
-  abstract val rotation: Rotation
-
-  /**
-   * Clones the actor.
-   *
-   * @param newTickData New [TickData] to copy to new object.
-   */
-  abstract fun clone(newTickData: TickData): Actor
+data class BoundingBox(val extent: Vector3D, val location: Location, val rotation: Rotation) {
+  val vertices: List<Location> = TODO()
 }

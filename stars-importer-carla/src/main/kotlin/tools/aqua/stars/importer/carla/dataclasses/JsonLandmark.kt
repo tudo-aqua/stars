@@ -48,7 +48,7 @@ import tools.aqua.stars.data.av.dataclasses.LandmarkType
  * @property rotation The [JsonRotation] of the landmark.
  */
 @Serializable
-data class JsonLandmark(
+data class JsonLandmark( // TODO: Add bounding box
     @SerialName("id") var id: Int,
     @SerialName("road_id") val roadId: Int,
     @SerialName("name") val name: String,

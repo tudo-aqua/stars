@@ -118,7 +118,20 @@ fun emptyPedestrian(
     positionOnLane: Double = 0.0,
     tickData: TickData = emptyTickData()
 ): Pedestrian =
-    Pedestrian(id = id, positionOnLane = positionOnLane, tickData = tickData, lane = lane)
+    Pedestrian(
+        id = id,
+        typeId = "",
+        attributes = mapOf(),
+        isAlive = true,
+        isActive = true,
+        isDormant = false,
+        semanticTags = listOf(),
+        boundingBox = defaultBoundingBox(),
+        location = emptyLocation(),
+        rotation = emptyRotation(),
+        lane = lane,
+        positionOnLane = positionOnLane,
+        tickData = tickData)
 
 /** Empty non-ego [Vehicle]. */
 fun emptyVehicle(
@@ -131,18 +144,24 @@ fun emptyVehicle(
 ): Vehicle =
     Vehicle(
         id = id,
-        rotation = emptyRotation(),
+        typeId = "",
+        attributes = mapOf(),
+        isAlive = true,
+        isActive = true,
+        isDormant = false,
+        semanticTags = listOf(),
+        boundingBox = defaultBoundingBox(),
         location = location,
+        rotation = emptyRotation(),
         isEgo = egoVehicle,
+        forwardVector = emptyVector3D(),
+        velocity = emptyVector3D(),
         acceleration = emptyVector3D(),
         angularVelocity = emptyVector3D(),
-        forwardVector = emptyVector3D(),
         lane = lane,
         positionOnLane = positionOnLane,
-        tickData = tickData,
-        typeId = "",
         vehicleType = VehicleType.CAR,
-        velocity = emptyVector3D())
+        tickData = tickData)
 
 /** Empty [StaticTrafficLight]. */
 fun emptyStaticTrafficLight(): StaticTrafficLight =
@@ -155,3 +174,9 @@ fun emptyTrafficLight(
     relatedOpenDriveId: Int = 0,
     state: TrafficLightState = TrafficLightState.Unknown
 ): TrafficLight = TrafficLight(id = id, state = state, relatedOpenDriveId = relatedOpenDriveId)
+
+fun defaultBoundingBox(): BoundingBox =
+    BoundingBox(
+        extent = Vector3D(1.0, 1.0, 1.0),
+        location = Location(0.0, 0.0, 0.0),
+        rotation = Rotation(0.0, 0.0, 0.0))

@@ -19,6 +19,7 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.data.av.dataclasses.BoundingBox
 
 /** Abstract Json bounding box. */
 @Serializable
@@ -27,4 +28,8 @@ data class JsonBoundingBox(
     @SerialName("extent") val extent: JsonVector3D,
     @SerialName("location") val location: JsonLocation,
     @SerialName("rotation") val rotation: JsonRotation
-)
+) {
+  /** Converts [JsonBoundingBox] to [BoundingBox]. */
+  fun toBoundingBox(): BoundingBox =
+      BoundingBox(extent.toVector3D(), location.toLocation(), rotation.toRotation())
+}
