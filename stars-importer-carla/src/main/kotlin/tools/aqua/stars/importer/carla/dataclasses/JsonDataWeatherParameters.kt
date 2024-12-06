@@ -40,7 +40,7 @@ import tools.aqua.stars.data.av.dataclasses.WeatherParameters
  * @property rayleighScatteringScale The scale of rayleigh scattering.
  */
 @Serializable
-data class JSonDataWeatherParameters(
+data class JsonDataWeatherParameters(
     @SerialName("type") val type: JsonDataWeatherParametersType,
     @SerialName("dust_storm") val dustStorm: Double,
     @SerialName("cloudiness") val cloudiness: Double,
@@ -58,7 +58,7 @@ data class JSonDataWeatherParameters(
     @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double,
 ) {
 
-  /** Converts [JSonDataWeatherParameters] to [WeatherParameters]. */
+  /** Converts [JsonDataWeatherParameters] to [WeatherParameters]. */
   fun toWeatherParameters(): WeatherParameters =
       WeatherParameters(
           type = this.type.toWeatherType(),
