@@ -37,6 +37,7 @@ package tools.aqua.stars.data.av.dataclasses
  */
 data class WeatherParameters(
     val type: WeatherType,
+    val dustStorm: Double,
     val cloudiness: Double,
     val precipitation: Double,
     val precipitationDeposits: Double,

@@ -128,13 +128,8 @@ class JSONTrafficLightTest {
   /** Tests ignoring of JSONTrafficLights as actors. */
   @Test
   fun testIgnoringJsonTrafficLightAsActorPosition() {
-    val jsonTrafficLight = emptyJsonTrafficLight()
-    jsonTrafficLight.id = 100
-    jsonTrafficLight.state = 2
-    val jsonActorPosition = emptyJsonActorPosition()
-    jsonActorPosition.actor = jsonTrafficLight
-    jsonActorPosition.laneId = 1
-    jsonActorPosition.roadId = 1
+    val jsonTrafficLight = emptyJsonTrafficLight(id = 100, state = 2)
+    val jsonActorPosition = emptyJsonActorPosition(actor = jsonTrafficLight, laneId = 1, roadId = 1)
 
     val road = emptyRoad(jsonActorPosition.roadId)
     val lane = emptyLane(jsonActorPosition.laneId, road)
@@ -149,32 +144,29 @@ class JSONTrafficLightTest {
   /** Tests TrafficLight conversion from StaticTrafficLight. */
   @Test
   fun testTrafficLightConversion() {
-    val jsonTrafficLight = emptyJsonTrafficLight()
-    jsonTrafficLight.id = 1
-    jsonTrafficLight.state = 0 // Red
+    emptyJsonTrafficLight(id = 1, state = 0).toTrafficLight().run {
+      assertEquals(1, id)
+      assertEquals(TrafficLightState.Red, state)
+    }
 
-    var trafficLight = jsonTrafficLight.toTrafficLight()
-    assertEquals(jsonTrafficLight.id, trafficLight.id)
-    assertEquals(TrafficLightState.Red, trafficLight.state)
+    emptyJsonTrafficLight(id = 1, state = 1).toTrafficLight().run {
+      assertEquals(1, id)
+      assertEquals(TrafficLightState.Yellow, state)
+    }
 
-    jsonTrafficLight.state = 1 // Yellow
-    trafficLight = jsonTrafficLight.toTrafficLight()
-    assertEquals(jsonTrafficLight.id, trafficLight.id)
-    assertEquals(TrafficLightState.Yellow, trafficLight.state)
+    emptyJsonTrafficLight(id = 1, state = 2).toTrafficLight().run {
+      assertEquals(1, id)
+      assertEquals(TrafficLightState.Green, state)
+    }
 
-    jsonTrafficLight.state = 2 // Green
-    trafficLight = jsonTrafficLight.toTrafficLight()
-    assertEquals(jsonTrafficLight.id, trafficLight.id)
-    assertEquals(TrafficLightState.Green, trafficLight.state)
+    emptyJsonTrafficLight(id = 1, state = 3).toTrafficLight().run {
+      assertEquals(1, id)
+      assertEquals(TrafficLightState.Off, state)
+    }
 
-    jsonTrafficLight.state = 3 // Off
-    trafficLight = jsonTrafficLight.toTrafficLight()
-    assertEquals(jsonTrafficLight.id, trafficLight.id)
-    assertEquals(TrafficLightState.Off, trafficLight.state)
-
-    jsonTrafficLight.state = 4 // Unknown
-    trafficLight = jsonTrafficLight.toTrafficLight()
-    assertEquals(jsonTrafficLight.id, trafficLight.id)
-    assertEquals(TrafficLightState.Unknown, trafficLight.state)
+    emptyJsonTrafficLight(id = 1, state = 4).toTrafficLight().run {
+      assertEquals(1, id)
+      assertEquals(TrafficLightState.Unknown, state)
+    }
   }
 }

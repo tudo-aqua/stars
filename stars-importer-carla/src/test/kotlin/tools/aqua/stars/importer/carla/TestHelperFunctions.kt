@@ -24,18 +24,31 @@ import tools.aqua.stars.importer.carla.dataclasses.*
 fun emptyJsonVehicle(): JsonVehicle =
     JsonVehicle(
         id = 0,
-        rotation = emptyJsonRotation(),
-        velocity = emptyJsonVector3D(),
+        typeId = "",
+        attributes = mapOf(),
+        isAlive = true,
+        isActive = true,
+        isDormant = false,
+        semanticTags = listOf(),
+        boundingBox = defaultJsonBoundingBox(),
         location = emptyJsonLocation(),
-        acceleration = emptyJsonVector3D(),
+        rotation = emptyJsonRotation(),
         egoVehicle = false,
-        angularVelocity = emptyJsonVector3D(),
         forwardVector = emptyJsonVector3D(),
-        typeId = "")
+        velocity = emptyJsonVector3D(),
+        acceleration = emptyJsonVector3D(),
+        angularVelocity = emptyJsonVector3D(),
+    )
 
 /** Empty [JsonActorPosition]. */
-fun emptyJsonActorPosition(): JsonActorPosition =
-    JsonActorPosition(actor = emptyJsonVehicle(), positionOnLane = 0.0, laneId = 0, roadId = 0)
+fun emptyJsonActorPosition(
+    actor: JsonActor = emptyJsonVehicle(),
+    positionOnLane: Double = 0.0,
+    laneId: Int = 0,
+    roadId: Int = 0
+): JsonActorPosition =
+    JsonActorPosition(
+        actor = actor, positionOnLane = positionOnLane, laneId = laneId, roadId = roadId)
 
 /** Empty [Block]. */
 fun emptyBlock(id: String = ""): Block = Block(id = id, roads = listOf(), fileName = "")
@@ -77,14 +90,21 @@ fun emptyJsonStaticTrafficLight(): JsonStaticTrafficLight =
         positionDistance = 0.0f)
 
 /** Empty [JsonTrafficLight]. */
-fun emptyJsonTrafficLight(): JsonTrafficLight =
+fun emptyJsonTrafficLight(id: Int = 0, state: Int = 0): JsonTrafficLight =
     JsonTrafficLight(
-        id = 0,
-        state = 0,
+        id = id,
         typeId = "",
-        relatedOpenDriveId = 0,
+        attributes = mapOf(),
+        isAlive = true,
+        isActive = true,
+        isDormant = false,
+        semanticTags = listOf(),
+        boundingBox = defaultJsonBoundingBox(),
+        location = emptyJsonLocation(),
         rotation = emptyJsonRotation(),
-        location = emptyJsonLocation())
+        state = state,
+        relatedOpenDriveId = 0,
+    )
 
 /** Empty [JsonLandmark]. */
 fun emptyJsonLandmark(): JsonLandmark =
@@ -110,3 +130,10 @@ fun emptyJsonLandmark(): JsonLandmark =
         subType = "",
         width = 0.0,
         zOffset = 0.0)
+
+/** Default [JsonBoundingBox]. */
+fun defaultJsonBoundingBox(): JsonBoundingBox =
+    JsonBoundingBox(
+        extent = JsonVector3D(1.0, 1.0, 1.0),
+        location = JsonLocation(0.0, 0.0, 0.0),
+        rotation = JsonRotation(0.0, 0.0, 0.0))

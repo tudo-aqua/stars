@@ -20,24 +20,11 @@ package tools.aqua.stars.importer.carla.dataclasses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** Abstract Json actor. */
+/** Abstract Json bounding box. */
 @Serializable
 @SerialName("Actor")
-sealed class JsonActor {
-  /** Identifier of the actor. */
-  abstract val id: Int
-  abstract val typeId: String
-
-  abstract val attributes: Map<String, String>
-  abstract val isAlive: Boolean
-  abstract val isActive: Boolean
-  abstract val isDormant: Boolean
-  abstract val semanticTags: List<Int>
-  abstract val boundingBox: JsonBoundingBox
-
-  /** Current [JsonLocation]. */
-  abstract val location: JsonLocation
-
-  /** Current [JsonRotation]. */
-  abstract val rotation: JsonRotation
-}
+data class JsonBoundingBox(
+    @SerialName("extent") val extent: JsonVector3D,
+    @SerialName("location") val location: JsonLocation,
+    @SerialName("rotation") val rotation: JsonRotation
+)

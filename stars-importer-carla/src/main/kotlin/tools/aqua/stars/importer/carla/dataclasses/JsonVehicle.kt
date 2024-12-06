@@ -39,9 +39,15 @@ import kotlinx.serialization.Serializable
 @SerialName("Vehicle")
 data class JsonVehicle(
     @SerialName("id") override val id: Int,
+    @SerialName("type_id") override val typeId: String,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
-    @SerialName("type_id") val typeId: String,
     @SerialName("ego_vehicle") val egoVehicle: Boolean,
     @SerialName("forward_vector") val forwardVector: JsonVector3D,
     @SerialName("velocity") val velocity: JsonVector3D,

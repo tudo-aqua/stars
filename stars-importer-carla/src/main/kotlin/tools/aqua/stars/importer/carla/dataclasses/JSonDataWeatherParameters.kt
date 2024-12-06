@@ -42,6 +42,7 @@ import tools.aqua.stars.data.av.dataclasses.WeatherParameters
 @Serializable
 data class JSonDataWeatherParameters(
     @SerialName("type") val type: JsonDataWeatherParametersType,
+    @SerialName("dust_storm") val dustStorm: Double,
     @SerialName("cloudiness") val cloudiness: Double,
     @SerialName("precipitation") val precipitation: Double,
     @SerialName("precipitation_deposits") val precipitationDeposits: Double,
@@ -61,6 +62,7 @@ data class JSonDataWeatherParameters(
   fun toWeatherParameters(): WeatherParameters =
       WeatherParameters(
           type = this.type.toWeatherType(),
+          dustStorm = this.dustStorm,
           cloudiness = this.cloudiness,
           precipitation = this.precipitation,
           precipitationDeposits = this.precipitationDeposits,

@@ -78,19 +78,21 @@ fun emptyVector3D(): Vector3D = Vector3D(0.0, 0.0, 0.0)
 fun emptyWeatherParameters(weatherType: WeatherType = WeatherType.Clear): WeatherParameters =
     WeatherParameters(
         type = weatherType,
+        dustStorm = 0.0,
         cloudiness = 0.0,
-        rayleighScatteringScale = 0.0,
-        mieScatteringScale = 0.0,
-        scatteringIntensity = 0.0,
-        fogFalloff = 0.0,
-        wetness = 0.0,
-        fogDistance = 0.0,
-        fogDensity = 0.0,
-        sunAltitudeAngle = 0.0,
-        sunAzimuthAngle = 0.0,
-        windIntensity = 0.0,
+        precipitation = 0.0,
         precipitationDeposits = 0.0,
-        precipitation = 0.0)
+        windIntensity = 0.0,
+        sunAzimuthAngle = 0.0,
+        sunAltitudeAngle = 0.0,
+        fogDensity = 0.0,
+        fogDistance = 0.0,
+        wetness = 0.0,
+        fogFalloff = 0.0,
+        scatteringIntensity = 0.0,
+        mieScatteringScale = 0.0,
+        rayleighScatteringScale = 0.0,
+    )
 
 /** Empty [TickData]. */
 fun emptyTickData(
