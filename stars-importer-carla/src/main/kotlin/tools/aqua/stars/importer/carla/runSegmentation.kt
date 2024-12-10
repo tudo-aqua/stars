@@ -184,7 +184,6 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
 fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) {
-
   // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousActor == null) {
     vehicle.velocity = Vector3D(0.0, 0.0, 0.0)

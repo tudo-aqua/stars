@@ -27,7 +27,7 @@ package tools.aqua.stars.data.av.dataclasses
 data class Block(
     val fileName: String,
     val id: String,
-    var roads: List<Road>,
+    val roads: List<Road>,
 ) {
   override fun toString(): String = id
 

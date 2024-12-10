@@ -24,6 +24,6 @@ package tools.aqua.stars.data.av.dataclasses
  * @property state The current state oif the traffic light.
  * @property relatedOpenDriveId The related open drive identifier.
  */
-data class TrafficLight(var id: Int, var state: TrafficLightState, val relatedOpenDriveId: Int) {
+data class TrafficLight(val id: Int, var state: TrafficLightState, val relatedOpenDriveId: Int) {
   override fun toString(): String = "TrafficLight($id, $state)"
 }

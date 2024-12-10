@@ -20,6 +20,7 @@ package tools.aqua.stars.data.av.dataclasses
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import tools.aqua.stars.data.av.emptyLane
 import tools.aqua.stars.data.av.emptyTickData
 import tools.aqua.stars.data.av.emptyVehicle
 
@@ -34,8 +35,8 @@ class SegmentPrimaryEntityTest {
    */
   @Test
   fun testNoEgoVehicle() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = false)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+    val vehicle1 = emptyVehicle(id = 0, lane = emptyLane(), egoVehicle = false)
+    val vehicle2 = emptyVehicle(id = 1, lane = emptyLane(), egoVehicle = false)
     val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
     val segment =
         Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
@@ -48,8 +49,8 @@ class SegmentPrimaryEntityTest {
    */
   @Test
   fun testHasEgoVehicle() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+    val vehicle1 = emptyVehicle(id = 0, lane = emptyLane(), egoVehicle = true)
+    val vehicle2 = emptyVehicle(id = 1, lane = emptyLane(), egoVehicle = false)
     val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
     val segment =
         Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
@@ -62,8 +63,8 @@ class SegmentPrimaryEntityTest {
    */
   @Test
   fun testHasMultipleEgoVehicles() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = true)
+    val vehicle1 = emptyVehicle(id = 0, lane = emptyLane(), egoVehicle = true)
+    val vehicle2 = emptyVehicle(id = 1, lane = emptyLane(), egoVehicle = true)
     val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
     val segment =
         Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
@@ -76,13 +77,13 @@ class SegmentPrimaryEntityTest {
    */
   @Test
   fun testChangingEgoVehicles() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+    val vehicle1 = emptyVehicle(id = 0, lane = emptyLane(), egoVehicle = true)
+    val vehicle2 = emptyVehicle(id = 1, lane = emptyLane(), egoVehicle = false)
     val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
 
     // Change egoVehicle flag
-    val changedVehicle1 = emptyVehicle(id = 0, egoVehicle = false)
-    val changedVehicle2 = emptyVehicle(id = 1, egoVehicle = true)
+    val changedVehicle1 = emptyVehicle(id = 0, lane = emptyLane(), egoVehicle = false)
+    val changedVehicle2 = emptyVehicle(id = 1, lane = emptyLane(), egoVehicle = true)
     val tickData2 = emptyTickData(actors = listOf(changedVehicle1, changedVehicle2))
 
     val segment =

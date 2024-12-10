@@ -20,31 +20,35 @@ package tools.aqua.stars.data.av
 import tools.aqua.stars.data.av.dataclasses.*
 
 /** Empty [Block]. */
-fun emptyBlock(id: String = ""): Block = Block(id = id, roads = listOf(), fileName = "")
+fun emptyBlock(id: String = "", roads: List<Road> = emptyList()): Block =
+    Block(id = id, roads = roads, fileName = "")
 
 /** Empty [Road]. */
-fun emptyRoad(id: Int = 0, isJunction: Boolean = false, block: Block = emptyBlock()): Road =
+fun emptyRoad(
+    id: Int = 0,
+    isJunction: Boolean = false,
+    block: Block = emptyBlock(),
+    lanes: List<Lane> = emptyList()
+): Road =
     Road(
-        id = id,
-        block = block,
-        isJunction = isJunction,
-        lanes = listOf(),
-    )
+            id = id,
+            isJunction = isJunction,
+            lanes = lanes,
+        )
+        .apply { this.block = block }
 
 /** Empty [Lane]. */
 fun emptyLane(
     laneId: Int = 1,
-    road: Road = emptyRoad(),
     laneLength: Double = 0.0,
     speedLimits: List<SpeedLimit> = listOf(),
-    staticTrafficLights: List<StaticTrafficLight> = listOf(),
+    trafficLights: List<StaticTrafficLight> = listOf(),
     successorLanes: List<ContactLaneInfo> = listOf(),
     landmarks: List<Landmark> = emptyList(),
     laneDirection: LaneDirection = LaneDirection.UNKNOWN
 ): Lane =
     Lane(
         laneId = laneId,
-        road = road,
         intersectingLanes = listOf(),
         laneLength = laneLength,
         laneMidpoints = listOf(),
@@ -54,7 +58,7 @@ fun emptyLane(
         contactAreas = listOf(),
         successorLanes = successorLanes,
         speedLimits = speedLimits,
-        trafficLights = staticTrafficLights,
+        trafficLights = trafficLights,
         landmarks = landmarks,
         laneDirection = laneDirection,
         yieldLanes = listOf())
@@ -137,7 +141,7 @@ fun emptyPedestrian(
 fun emptyVehicle(
     egoVehicle: Boolean = false,
     id: Int = 0,
-    lane: Lane = emptyLane(),
+    lane: Lane,
     positionOnLane: Double = 0.0,
     tickData: TickData = emptyTickData(),
     location: Location = emptyLocation()
@@ -163,10 +167,14 @@ fun emptyVehicle(
         vehicleType = VehicleType.CAR,
         tickData = tickData)
 
-/** Empty [StaticTrafficLight]. */
-fun emptyStaticTrafficLight(): StaticTrafficLight =
+/**
+ * Empty [StaticTrafficLight].
+ *
+ * @param id (Default: 0) The ID of the [StaticTrafficLight].
+ */
+fun emptyStaticTrafficLight(id: Int = 0): StaticTrafficLight =
     StaticTrafficLight(
-        id = 0, rotation = emptyRotation(), location = emptyLocation(), stopLocations = listOf())
+        id = id, rotation = emptyRotation(), location = emptyLocation(), stopLocations = listOf())
 
 /** Empty [TrafficLight] with state [TrafficLightState.Unknown]. */
 fun emptyTrafficLight(

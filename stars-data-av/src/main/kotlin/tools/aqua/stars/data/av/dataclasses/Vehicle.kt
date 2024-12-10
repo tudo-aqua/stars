@@ -55,8 +55,8 @@ data class Vehicle(
     var velocity: Vector3D,
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
-    var lane: Lane,
-    var positionOnLane: Double,
+    val lane: Lane,
+    val positionOnLane: Double,
     val vehicleType: VehicleType,
     override val tickData: TickData,
 ) : Actor() {

@@ -21,7 +21,6 @@ package tools.aqua.stars.data.av.dataclasses
  * Data class for lanes.
  *
  * @property laneId The identifier of the [Lane].
- * @property road The identifier of the [Road].
  * @property laneType The [LaneType] of the [Lane].
  * @property laneWidth The width of the [Lane].
  * @property laneLength The length of the [Lane].
@@ -41,7 +40,6 @@ package tools.aqua.stars.data.av.dataclasses
 @Suppress("MemberVisibilityCanBePrivate")
 data class Lane(
     val laneId: Int,
-    var road: Road,
     val laneType: LaneType,
     val laneWidth: Double,
     val laneLength: Double,
@@ -50,12 +48,15 @@ data class Lane(
     var intersectingLanes: List<ContactLaneInfo>,
     var yieldLanes: List<ContactLaneInfo>,
     val laneMidpoints: List<LaneMidpoint>,
-    var speedLimits: List<SpeedLimit>,
+    val speedLimits: List<SpeedLimit>,
     val landmarks: List<Landmark>,
     var contactAreas: List<ContactArea>,
-    var trafficLights: List<StaticTrafficLight>,
-    var laneDirection: LaneDirection,
+    val trafficLights: List<StaticTrafficLight>,
+    val laneDirection: LaneDirection,
 ) {
+
+  /** The [Road]. */
+  lateinit var road: Road
 
   /** Whether this [Lane] turns left. */
   val isTurningLeft: Boolean

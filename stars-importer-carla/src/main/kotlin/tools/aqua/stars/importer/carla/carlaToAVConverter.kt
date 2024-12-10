@@ -153,71 +153,50 @@ fun convertJsonPedestrianToPedestrian(
  * @param fileName The filename.
  */
 fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String): Block =
-    Block(id = jsonBlock.id, roads = emptyList(), fileName = fileName).apply {
-      roads = jsonBlock.roads.map { convertJsonRoadToRoad(it, this) }
-    }
+    Block(
+            id = jsonBlock.id,
+            roads = jsonBlock.roads.map { convertJsonRoadToRoad(it) },
+            fileName = fileName)
+        .apply { roads.forEach { it.block = this } }
 
 /**
  * Converts [JsonRoad] to [Road].
  *
  * @param jsonRoad The [JsonRoad].
- * @param block The [Block].
  */
-fun convertJsonRoadToRoad(jsonRoad: JsonRoad, block: Block): Road =
-    Road(id = jsonRoad.roadId, block = block, lanes = emptyList(), isJunction = jsonRoad.isJunction)
-        .apply { lanes = jsonRoad.lanes.map { lane -> convertJsonLaneToLane(lane, this) } }
+fun convertJsonRoadToRoad(jsonRoad: JsonRoad): Road =
+    Road(
+            id = jsonRoad.roadId,
+            lanes = jsonRoad.lanes.map { convertJsonLaneToLane(it, jsonRoad.isJunction) },
+            isJunction = jsonRoad.isJunction)
+        .apply { lanes.forEach { it.road = this } }
 
 /**
  * Converts [JsonLane] to [Lane].
  *
  * @param jsonLane The [JsonLane].
- * @param road The [Road].
+ * @param isJunction Whether this lane is part of a junction.
  */
-fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane =
+fun convertJsonLaneToLane(jsonLane: JsonLane, isJunction: Boolean): Lane =
     Lane(
-            laneId = jsonLane.laneId,
-            road = road,
-            laneType = LaneType.getByValue(jsonLane.laneType.value),
-            laneWidth = jsonLane.laneWidth,
-            laneLength = jsonLane.laneLength,
-            predecessorLanes = emptyList(),
-            successorLanes = emptyList(),
-            intersectingLanes = emptyList(),
-            yieldLanes = emptyList(),
-            laneMidpoints = jsonLane.laneMidpoints.map { it.toLaneMidpoint() },
-            speedLimits = emptyList(),
-            landmarks =
-                jsonLane.landmarks
-                    .filter { it.type != JsonLandmarkType.LightPost }
-                    .map { it.toLandmark() },
-            contactAreas = emptyList(),
-            trafficLights = emptyList(),
-            laneDirection = LaneDirection.UNKNOWN,
-        )
-        .apply {
-          trafficLights = jsonLane.trafficLights.map { it.toStaticTrafficLight() }
-          speedLimits = getSpeedLimitsFromLandmarks(this, jsonLane.landmarks)
-
-          if (road.isJunction) {
-            val firstYaw = laneMidpoints.first().rotation.yaw
-            val lastYaw = laneMidpoints.last().rotation.yaw
-
-            /** relative yaw change from first to last midpoint of lane. Is in range [-180..180] */
-            val angleDiff =
-                ((((lastYaw - firstYaw) % 360) + 540) % 360) -
-                    180 // Thanks to https://stackoverflow.com/a/25269402
-            laneDirection =
-                when (angleDiff) {
-                  in (-150.0..-30.0) -> LaneDirection.LEFT_TURN
-                  in -30.0..30.0 -> LaneDirection.STRAIGHT
-                  in 30.0..150.0 -> LaneDirection.RIGHT_TURN
-                  else -> LaneDirection.UNKNOWN
-                }
-          } else {
-            // road is not junction (i.e. multi-lane road)
-            laneDirection = LaneDirection.STRAIGHT
-          }
-        }
+        laneId = jsonLane.laneId,
+        laneType = LaneType.getByValue(jsonLane.laneType.value),
+        laneWidth = jsonLane.laneWidth,
+        laneLength = jsonLane.laneLength,
+        predecessorLanes = emptyList(),
+        successorLanes = emptyList(),
+        intersectingLanes = emptyList(),
+        yieldLanes = emptyList(),
+        laneMidpoints = jsonLane.laneMidpoints.map { it.toLaneMidpoint() },
+        speedLimits = jsonLane.getSpeedLimitsFromLandmarks(),
+        landmarks =
+            jsonLane.landmarks
+                .filter { it.type != JsonLandmarkType.LightPost }
+                .map { it.toLandmark() },
+        contactAreas = emptyList(),
+        trafficLights = jsonLane.trafficLights.map { it.toStaticTrafficLight() },
+        laneDirection = jsonLane.getLaneDirection(isJunction),
+    )
 
 /**
  * Converts [JsonContactArea] to [ContactArea].
@@ -244,21 +223,16 @@ fun convertJsonContactAreaToContactArea(
 // endregion
 
 // region helper
-/**
- * Extracts the speed limit from [JsonLandmark]s.
- *
- * @param lane The [Lane].
- * @param landmarks The list of [JsonLandmark]s.
- */
-fun getSpeedLimitsFromLandmarks(lane: Lane, landmarks: List<JsonLandmark>): List<SpeedLimit> {
+/** Extracts the speed limit from [JsonLandmark]s. */
+fun JsonLane.getSpeedLimitsFromLandmarks(): List<SpeedLimit> {
   val speedSigns = landmarks.filter { it.type == JsonLandmarkType.MaximumSpeed }.sortedBy { it.s }
   val speedLimits = mutableListOf<SpeedLimit>()
 
   speedSigns.forEachIndexed { index, sign ->
-    check(sign.s < lane.laneLength) { "The position of the sign is at/after the end of the road" }
+    check(sign.s < laneLength) { "The position of the sign is at/after the end of the road" }
 
     val speedLimitValue = sign.value
-    var nextSignLocation = lane.laneLength
+    var nextSignLocation = laneLength
     if (index < speedSigns.size - 1) {
       val nextSpeedSign = speedSigns[index + 1]
       nextSignLocation = nextSpeedSign.s
@@ -267,6 +241,25 @@ fun getSpeedLimitsFromLandmarks(lane: Lane, landmarks: List<JsonLandmark>): List
   }
   return speedLimits
 }
+
+private fun JsonLane.getLaneDirection(isJunction: Boolean): LaneDirection =
+    if (isJunction) {
+      val firstYaw = laneMidpoints.first().rotation.yaw
+      val lastYaw = laneMidpoints.last().rotation.yaw
+
+      /** Relative yaw change from first to last midpoint of lane. Is in range [-180..180] */
+      val angleDiff =
+          ((((lastYaw - firstYaw) % 360) + 540) % 360) -
+              180 // Thanks to https://stackoverflow.com/a/25269402
+      when (angleDiff) {
+        in (-150.0..-30.0) -> LaneDirection.LEFT_TURN
+        in -30.0..30.0 -> LaneDirection.STRAIGHT
+        in 30.0..150.0 -> LaneDirection.RIGHT_TURN
+        else -> LaneDirection.UNKNOWN
+      }
+    } else {
+      LaneDirection.STRAIGHT // road is not junction (i.e. multi-lane road)
+    }
 
 /**
  * Calculates the [VehicleType] from the type identifier.

@@ -26,7 +26,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property stopLocations List of stop locations as [Location]s.
  */
 data class StaticTrafficLight(
-    var id: Int,
+    val id: Int,
     val location: Location,
     val rotation: Rotation,
     val stopLocations: List<Location>,

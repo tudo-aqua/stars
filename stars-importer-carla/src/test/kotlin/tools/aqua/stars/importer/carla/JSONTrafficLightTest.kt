@@ -61,24 +61,20 @@ class JSONTrafficLightTest {
   @Test
   fun testJsonTrafficLightToTrafficLightConversion() {
     val openDriveTrafficLightId = 100
-    val lane = emptyLane()
-    val staticTrafficLight = emptyStaticTrafficLight()
-    staticTrafficLight.id = openDriveTrafficLightId
-    lane.trafficLights = listOf(staticTrafficLight)
-    val road = emptyRoad()
-    road.lanes = listOf(lane)
-    val block = emptyBlock()
-    block.roads = listOf(road)
+    val staticTrafficLight = emptyStaticTrafficLight(id = openDriveTrafficLightId)
+    val lane = emptyLane(trafficLights = listOf(staticTrafficLight))
+    val road = emptyRoad(lanes = listOf(lane))
+    val block = emptyBlock(roads = listOf(road))
     val blocks = listOf(block)
 
-    val trafficLight = emptyTrafficLight(relatedOpenDriveId = openDriveTrafficLightId)
-    trafficLight.id = 0
-    trafficLight.state = TrafficLightState.Red
+    val trafficLight =
+        emptyTrafficLight(
+            id = 0, state = TrafficLightState.Red, relatedOpenDriveId = openDriveTrafficLightId)
     val tickData1 = emptyTickData(blocks = blocks, trafficLights = listOf(trafficLight))
 
-    val trafficLight2 = emptyTrafficLight(relatedOpenDriveId = openDriveTrafficLightId)
-    trafficLight2.id = 1
-    trafficLight2.state = TrafficLightState.Green
+    val trafficLight2 =
+        emptyTrafficLight(
+            id = 1, state = TrafficLightState.Green, relatedOpenDriveId = openDriveTrafficLightId)
     val tickData2 = emptyTickData(blocks = blocks, trafficLights = listOf(trafficLight2))
 
     assertNotNull(tickData1.blocks[0].roads[0].lanes[0].trafficLights[0].getStateInTick(tickData1))
@@ -104,7 +100,7 @@ class JSONTrafficLightTest {
     val stopLocation = JsonLocation(10.0, 10.0, 0.0)
     staticJsonTrafficLight.stopLocations = listOf(stopLocation)
     jsonLane.trafficLights = listOf(staticJsonTrafficLight)
-    val lane = convertJsonLaneToLane(jsonLane, road)
+    val lane = convertJsonLaneToLane(jsonLane, road.isJunction)
 
     val staticTrafficLight = lane.trafficLights.firstOrNull { it.id == staticJsonTrafficLight.id }
     assertNotNull(staticTrafficLight)
@@ -131,12 +127,10 @@ class JSONTrafficLightTest {
     val jsonTrafficLight = emptyJsonTrafficLight(id = 100, state = 2)
     val jsonActorPosition = emptyJsonActorPosition(actor = jsonTrafficLight, laneId = 1, roadId = 1)
 
-    val road = emptyRoad(jsonActorPosition.roadId)
-    val lane = emptyLane(jsonActorPosition.laneId, road)
-    road.lanes = listOf(lane)
-
-    val block = emptyBlock()
-    block.roads = listOf(road)
+    val lane = emptyLane(laneId = jsonActorPosition.laneId)
+    val road =
+        emptyRoad(id = jsonActorPosition.roadId, lanes = listOf(lane)).apply { lane.road = this }
+    val block = emptyBlock(roads = listOf(road)).apply { road.block = this }
 
     assertNull(convertJsonActorPositionToEntity(jsonActorPosition, emptyTickData(), listOf(block)))
   }

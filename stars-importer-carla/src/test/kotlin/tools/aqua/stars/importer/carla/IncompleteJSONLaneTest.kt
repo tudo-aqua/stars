@@ -36,8 +36,6 @@ class IncompleteJSONLaneTest {
   /** Creates block, road and lane. */
   @BeforeTest
   fun setupData() {
-    incompleteBlock = Block(id = "1", fileName = "", roads = listOf())
-    incompleteRoad = Road(lanes = listOf(), id = 1, block = incompleteBlock, isJunction = false)
     incompleteJsonLane =
         JsonLane(
             laneId = 1,
@@ -89,7 +87,13 @@ class IncompleteJSONLaneTest {
                         subType = "",
                         width = 1.0,
                         zOffset = 0.0)))
-    incompleteLane = convertJsonLaneToLane(incompleteJsonLane, incompleteRoad)
+
+    incompleteLane = convertJsonLaneToLane(incompleteJsonLane, false)
+    incompleteRoad =
+        Road(lanes = listOf(), id = 1, isJunction = false).apply { incompleteLane.road = this }
+    incompleteBlock =
+        Block(id = "1", fileName = "", roads = listOf()).apply { incompleteRoad.block = this }
+
     // The jsonLanes are not sufficiently filled out, as the connecting lanes are missing
     jsonLanes = listOf(incompleteJsonLane)
     lanes = listOf(incompleteLane)
