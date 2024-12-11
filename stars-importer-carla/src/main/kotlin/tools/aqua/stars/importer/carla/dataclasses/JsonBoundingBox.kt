@@ -32,15 +32,16 @@ import tools.aqua.stars.data.av.dataclasses.BoundingBox
 @Serializable
 @SerialName("Actor")
 data class JsonBoundingBox(
-  @SerialName("extent") val extent: JsonVector3D,
-  @SerialName("location") val location: JsonLocation,
-  @SerialName("rotation") val rotation: JsonRotation,
-  @SerialName("vertices") val vertices: List<JsonLocation>,
+    @SerialName("extent") val extent: JsonVector3D,
+    @SerialName("location") val location: JsonLocation,
+    @SerialName("rotation") val rotation: JsonRotation,
+    @SerialName("vertices") val vertices: List<JsonLocation>,
 ) {
   /** Converts [JsonBoundingBox] to [BoundingBox]. */
-  fun toBoundingBox(): BoundingBox = BoundingBox(
-    extent = extent.toVector3D(),
-    location = location.toLocation(),
-    rotation = rotation.toRotation(),
-    vertices = vertices.map { it.toLocation() })
+  fun toBoundingBox(): BoundingBox =
+      BoundingBox(
+          extent = extent.toVector3D(),
+          location = location.toLocation(),
+          rotation = rotation.toRotation(),
+          vertices = vertices.map { it.toLocation() })
 }
