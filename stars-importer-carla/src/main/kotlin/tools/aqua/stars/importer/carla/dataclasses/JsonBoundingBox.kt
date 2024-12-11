@@ -21,15 +21,26 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import tools.aqua.stars.data.av.dataclasses.BoundingBox
 
-/** Abstract Json bounding box. */
+/**
+ * Json object for bounding boxes.
+ *
+ * @property extent: Vector from the center of the box to one vertex.
+ * @property location: Location of the center of the bounding box.
+ * @property rotation: Rotation of the bounding box.
+ * @property vertices: Vertices of the bounding box.
+ */
 @Serializable
 @SerialName("Actor")
 data class JsonBoundingBox(
-    @SerialName("extent") val extent: JsonVector3D,
-    @SerialName("location") val location: JsonLocation,
-    @SerialName("rotation") val rotation: JsonRotation
+  @SerialName("extent") val extent: JsonVector3D,
+  @SerialName("location") val location: JsonLocation,
+  @SerialName("rotation") val rotation: JsonRotation,
+  @SerialName("vertices") val vertices: List<JsonLocation>,
 ) {
   /** Converts [JsonBoundingBox] to [BoundingBox]. */
-  fun toBoundingBox(): BoundingBox =
-      BoundingBox(extent.toVector3D(), location.toLocation(), rotation.toRotation())
+  fun toBoundingBox(): BoundingBox = BoundingBox(
+    extent = extent.toVector3D(),
+    location = location.toLocation(),
+    rotation = rotation.toRotation(),
+    vertices = vertices.map { it.toLocation() })
 }
