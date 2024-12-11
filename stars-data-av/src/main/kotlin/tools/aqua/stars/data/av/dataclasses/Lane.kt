@@ -37,7 +37,6 @@ package tools.aqua.stars.data.av.dataclasses
  * @property trafficLights List of [StaticTrafficLight]s on this [Lane].
  * @property laneDirection The [LaneDirection] of this [Lane].
  */
-@Suppress("MemberVisibilityCanBePrivate")
 data class Lane(
     val laneId: Int,
     val laneType: LaneType,

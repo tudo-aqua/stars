@@ -17,6 +17,17 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-data class BoundingBox(val extent: Vector3D, val location: Location, val rotation: Rotation) {
-  val vertices: List<Location> = TODO()
-}
+/**
+ * Data class for bounding boxes of [Actor]s.
+ *
+ * @property extent Vector from the center of the box to one vertex.
+ * @property location: Location of the center of the bounding box.
+ * @property rotation: Rotation of the bounding box.
+ * @property vertices: Vertices of the bounding box.
+ */
+data class BoundingBox(
+  val extent: Vector3D,
+  val location: Location,
+  val rotation: Rotation,
+  val vertices: List<Location>
+)

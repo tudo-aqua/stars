@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for road touching points.
+ * Data class for [Road] touching points.
  *
  * @property id Identifier of the road touching point.
  * @property contactLocation The [Location] of the touching point.

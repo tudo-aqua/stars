@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for road blocks.
+ * Data class for [Road] blocks.
  *
  * @property fileName The filename.
  * @property id Identifier of the road block.

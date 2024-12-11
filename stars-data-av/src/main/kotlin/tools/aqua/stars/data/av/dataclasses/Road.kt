@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Json object for roads.
+ * Data class for roads.
  *
  * @property id The identifier of the road.
  * @property isJunction Whether this is a junction.

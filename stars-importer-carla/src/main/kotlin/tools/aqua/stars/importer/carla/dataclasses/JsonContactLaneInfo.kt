@@ -23,8 +23,8 @@ import kotlinx.serialization.Serializable
 /**
  * Json object for contact lane info.
  *
- * @property roadId Road identifier of the lane.
- * @property laneId Identifier of the lane.
+ * @property roadId [JsonRoad] identifier of the [JsonLane].
+ * @property laneId Identifier of the [JsonLane].
  */
 @Serializable
 data class JsonContactLaneInfo(

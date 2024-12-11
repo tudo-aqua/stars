@@ -20,7 +20,7 @@ package tools.aqua.stars.data.av.dataclasses
 import tools.aqua.stars.core.types.SegmentType
 
 /**
- * Evaluation segment.
+ * Data class for segments.
  *
  * @property mainInitList [TickData] of the [Segment].
  * @property simulationRunId Identifier of the simulation run.

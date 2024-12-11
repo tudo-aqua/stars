@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for road blocks.
+ * Json object for [JsonRoad] blocks.
  *
  * @property id Identifier of the road block.
  * @property roads Roads incorporated in this block.
