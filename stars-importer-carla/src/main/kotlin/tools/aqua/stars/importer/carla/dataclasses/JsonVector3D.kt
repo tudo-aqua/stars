@@ -27,6 +27,7 @@ import tools.aqua.stars.data.av.dataclasses.Vector3D
  * @property x The x ordinate.
  * @property y The y ordinate.
  * @property z The z ordinate.
+ * @see JsonLocation
  */
 @Serializable
 data class JsonVector3D(

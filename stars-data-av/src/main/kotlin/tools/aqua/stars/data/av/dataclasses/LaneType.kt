@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for lane types.
+ * Data class for [Lane] types.
  *
  * @property value Internal json value.
  */

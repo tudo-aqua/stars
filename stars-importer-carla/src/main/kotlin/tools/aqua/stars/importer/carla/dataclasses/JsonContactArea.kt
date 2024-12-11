@@ -23,16 +23,16 @@ import kotlinx.serialization.Serializable
 /**
  * Json object for road touching points.
  *
- * @property id Identifier of the road touching point.
+ * @property id Identifier of the [JsonRoad] touching point.
  * @property contactLocation The [JsonLocation] of the touching point.
- * @property lane1RoadId Road identifier of lane 1.
- * @property lane1Id Identifier of lane 1.
- * @property lane1StartPos Start position on lane 1.
- * @property lane1EndPos End position on lane 1.
- * @property lane2RoadId Road identifier of lane 2.
- * @property lane2Id Identifier of lane 2.
- * @property lane2StartPos Start position on lane 2.
- * @property lane2EndPos End position on lane 2.
+ * @property lane1RoadId [JsonRoad] identifier of [JsonLane] 1.
+ * @property lane1Id Identifier of [JsonLane] 1.
+ * @property lane1StartPos Start position on [JsonLane] 1.
+ * @property lane1EndPos End position on [JsonLane] 1.
+ * @property lane2RoadId [JsonRoad] identifier of [JsonLane] 2.
+ * @property lane2Id Identifier of [JsonLane] 2.
+ * @property lane2StartPos Start position on [JsonLane] 2.
+ * @property lane2EndPos End position on [JsonLane] 2.
  */
 @Serializable
 data class JsonContactArea(

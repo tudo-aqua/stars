@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Enum class for vehicle types present in CARLA. */
+/** Enum for vehicle types. */
 enum class VehicleType {
   CAR,
   TRUCK,
