@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Data class for weather types. */
+/** Enum for weather types. */
 enum class WeatherType {
   Clear,
   Cloudy,

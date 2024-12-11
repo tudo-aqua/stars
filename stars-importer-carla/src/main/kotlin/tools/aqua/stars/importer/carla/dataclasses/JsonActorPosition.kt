@@ -21,11 +21,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for actor positions.
+ * Json object for [JsonActor] positions.
  *
- * @property positionOnLane Current position on the lane.
- * @property laneId The lane's identifier.
- * @property roadId The road's identifier.
+ * @property positionOnLane Current position on the [JsonLane].
+ * @property laneId The [JsonLane]'s identifier.
+ * @property roadId The [JsonRoad]'s identifier.
  * @property actor The [JsonActor].
  */
 @Serializable

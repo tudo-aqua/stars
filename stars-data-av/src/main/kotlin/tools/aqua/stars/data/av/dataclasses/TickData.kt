@@ -20,7 +20,7 @@ package tools.aqua.stars.data.av.dataclasses
 import tools.aqua.stars.core.types.TickDataType
 
 /**
- * Json format containing data for current tick.
+ * Data class for tick data.
  *
  * @property currentTick Current tick value.
  * @property entities List of all [Actor]s.
