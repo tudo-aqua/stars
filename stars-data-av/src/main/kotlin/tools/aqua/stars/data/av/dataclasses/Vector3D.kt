@@ -17,8 +17,10 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import kotlin.math.sqrt
+
 /**
- * Data class for 3D vector.
+ * Data class for 3D vectors.
  *
  * @property x The x ordinate.
  * @property y The y ordinate.
@@ -40,7 +42,7 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
   /** Negation operator. */
   operator fun unaryMinus(): Vector3D = Vector3D(x = -this.x, y = -this.y, z = -this.z)
 
-  /** Division with scalar operator. */
+  /** Multiplication with scalar operator. */
   operator fun times(scalar: Number): Vector3D =
       Vector3D(
           x = this.x * scalar.toDouble(),
@@ -53,4 +55,20 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
           x = this.x / scalar.toDouble(),
           y = this.y / scalar.toDouble(),
           z = this.z / scalar.toDouble())
+
+  /** Dot product with another vector. */
+  fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
+
+  /** Cross (Vector) product with another vector. */
+  fun cross(other: Vector3D): Vector3D =
+      Vector3D(
+          x = y * other.z - z * other.y,
+          y = z * other.x - x * other.z,
+          z = x * other.y - y * other.x)
+
+  /** Length of the vector. */
+  fun magnitude(): Double = sqrt(x * x + y * y + z * z)
+
+  /** Normalized vector with the same direction and length 1. */
+  fun normalized(): Vector3D = magnitude().let { Vector3D(x / it, y / it, z / it) }
 }

@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for lane midpoints.
+ * Data class for [Lane] midpoints.
  *
  * @property distanceToStart The distance to the starting point.
  * @property location The [Location] of the midpoint.
