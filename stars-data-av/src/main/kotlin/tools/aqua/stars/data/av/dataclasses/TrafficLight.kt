@@ -23,7 +23,6 @@ package tools.aqua.stars.data.av.dataclasses
  * @property id The identifier of the traffic light.
  * @property state The current state oif the traffic light.
  * @property relatedOpenDriveId The related open drive identifier.
- *
  * @see StaticTrafficLight
  */
 data class TrafficLight(val id: Int, var state: TrafficLightState, val relatedOpenDriveId: Int) {

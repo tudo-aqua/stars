@@ -26,8 +26,8 @@ package tools.aqua.stars.data.av.dataclasses
  * @property vertices: Vertices of the bounding box.
  */
 data class BoundingBox(
-  val extent: Vector3D,
-  val location: Location,
-  val rotation: Rotation,
-  val vertices: List<Location>
+    val extent: Vector3D,
+    val location: Location,
+    val rotation: Rotation,
+    val vertices: List<Location>
 )

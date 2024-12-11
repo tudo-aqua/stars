@@ -26,7 +26,6 @@ import kotlin.math.sqrt
  * @property x The x ordinate.
  * @property y The y ordinate.
  * @property z The z ordinate.
- *
  * @see Vector3D
  */
 data class Location(val x: Double, val y: Double, val z: Double) {
