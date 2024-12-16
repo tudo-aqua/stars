@@ -21,21 +21,33 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
- * Data class for 3D locations.
+ * Data class for 2D locations.
  *
  * @property x The x ordinate.
  * @property y The y ordinate.
  * @see Vector2D
  */
 data class Location2D(val x: Double, val y: Double) {
+
+  constructor(location: Vector2D) : this(location.x, location.y)
+
+  /** Converts this [Location2D] to a 2D [Vector2D]. */
   fun toVector2D() = Vector2D(x, y)
 
   /** Addition operator. */
   operator fun plus(other: Location2D): Vector2D =
       Vector2D(x = this.x + other.x, y = this.y + other.y)
 
+  /** Addition operator. */
+  operator fun plus(other: Vector2D): Vector2D =
+      Vector2D(x = this.x + other.x, y = this.y + other.y)
+
   /** Subtraction operator. */
   operator fun minus(other: Location2D): Vector2D =
+      Vector2D(x = this.x - other.x, y = this.y - other.y)
+
+  /** Subtraction operator. */
+  operator fun minus(other: Vector2D): Vector2D =
       Vector2D(x = this.x - other.x, y = this.y - other.y)
 
   companion object {

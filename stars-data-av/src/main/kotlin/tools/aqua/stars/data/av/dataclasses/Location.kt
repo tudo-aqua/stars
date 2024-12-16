@@ -35,8 +35,16 @@ data class Location(val x: Double, val y: Double, val z: Double) {
   operator fun plus(other: Location): Vector3D =
       Vector3D(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
 
+  /** Addition operator. */
+  operator fun plus(other: Vector3D): Vector3D =
+      Vector3D(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
+
   /** Subtraction operator. */
   operator fun minus(other: Location): Vector3D =
+      Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
+
+  /** Subtraction operator. */
+  operator fun minus(other: Vector3D): Vector3D =
       Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
 
   companion object {
