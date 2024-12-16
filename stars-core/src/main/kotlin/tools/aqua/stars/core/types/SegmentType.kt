@@ -43,8 +43,12 @@ interface SegmentType<
   /** Segment source String. */
   val segmentSource: String
 
+  val primaryEntity: E
+    get() = tickData.first().entities.first { it.isPrimary }
+
   /** Identifier of primary entity. */
   val primaryEntityId: Int
+    get() = primaryEntity.id
 
   /**
    * Returns an Identifier for this segment.

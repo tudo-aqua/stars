@@ -133,7 +133,7 @@ fun convertJsonData(
 
     // Remove all existing ego flags when useEveryVehicleAsEgo is set
     if (useEveryVehicleAsEgo) {
-      egoTickData.forEach { tickData -> tickData.vehicles.forEach { it.isEgo = false } }
+      egoTickData.forEach { tickData -> tickData.vehicles.forEach { it.isPrimary = false } }
     }
 
     // Set egoVehicle flag for each TickData
@@ -142,7 +142,7 @@ fun convertJsonData(
       if (!isTickWithoutEgo) {
         val egoInTickData = tickData.vehicles.firstOrNull { it.id == egoVehicle.id }
         if (egoInTickData != null) {
-          egoInTickData.isEgo = true
+          egoInTickData.isPrimary = true
         } else {
           isTickWithoutEgo = true
         }

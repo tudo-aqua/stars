@@ -106,7 +106,7 @@ fun convertJsonVehicleToVehicle(
         boundingBox = vehicle.boundingBox.toBoundingBox(),
         location = vehicle.location.toLocation(),
         rotation = vehicle.rotation.toRotation(),
-        isEgo = vehicle.egoVehicle,
+        isPrimary = vehicle.egoVehicle,
         forwardVector = vehicle.forwardVector.toVector3D(),
         velocity = vehicle.velocity.toVector3D(),
         acceleration = vehicle.acceleration.toVector3D(),

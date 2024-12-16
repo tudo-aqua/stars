@@ -157,7 +157,7 @@ fun emptyVehicle(
         boundingBox = defaultBoundingBox(),
         location = location,
         rotation = emptyRotation(),
-        isEgo = egoVehicle,
+        isPrimary = egoVehicle,
         forwardVector = emptyVector3D(),
         velocity = emptyVector3D(),
         acceleration = emptyVector3D(),
@@ -185,6 +185,11 @@ fun emptyTrafficLight(
 
 fun defaultBoundingBox(): BoundingBox =
     BoundingBox(
-        extent = Vector3D(1.0, 1.0, 1.0),
-        location = Location(0.0, 0.0, 0.0),
-        rotation = Rotation(0.0, 0.0, 0.0))
+        bottomLeftFront = emptyLocation(),
+        bottomRightFront = emptyLocation(),
+        bottomRightBack = emptyLocation(),
+        bottomLeftBack = emptyLocation(),
+        topLeftFront = emptyLocation(),
+        topRightFront = emptyLocation(),
+        topRightBack = emptyLocation(),
+        topLeftBack = emptyLocation())

@@ -41,6 +41,8 @@ data class Pedestrian(
     override val tickData: TickData,
 ) : Actor() {
 
+  override val isPrimary: Boolean = false
+
   override fun clone(newTickData: TickData): Actor =
       Pedestrian(
           id = id,

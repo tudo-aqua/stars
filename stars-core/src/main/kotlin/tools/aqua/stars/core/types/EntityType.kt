@@ -37,6 +37,9 @@ interface EntityType<
   /** Entity identifier. */
   val id: Int
 
+  /** Whether this entity is the primary entity. */
+  val isPrimary: Boolean
+
   /** Tick data. */
   val tickData: T
 }

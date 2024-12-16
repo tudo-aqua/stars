@@ -40,8 +40,12 @@ data class JsonBoundingBox(
   /** Converts [JsonBoundingBox] to [BoundingBox]. */
   fun toBoundingBox(): BoundingBox =
       BoundingBox(
-          extent = extent.toVector3D(),
-          location = location.toLocation(),
-          rotation = rotation.toRotation(),
-          vertices = vertices.map { it.toLocation() })
+          bottomLeftBack = vertices[0].toLocation(),
+          topLeftBack = vertices[1].toLocation(),
+          bottomRightBack = vertices[2].toLocation(),
+          topRightBack = vertices[3].toLocation(),
+          bottomLeftFront = vertices[4].toLocation(),
+          topLeftFront = vertices[5].toLocation(),
+          bottomRightFront = vertices[6].toLocation(),
+          topRightFront = vertices[7].toLocation())
 }

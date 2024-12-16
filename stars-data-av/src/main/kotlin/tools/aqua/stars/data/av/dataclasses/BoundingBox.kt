@@ -20,14 +20,35 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for bounding boxes of [Actor]s.
  *
- * @property extent Vector from the center of the box to one vertex.
- * @property location: Location of the center of the bounding box.
- * @property rotation: Rotation of the bounding box.
- * @property vertices: Vertices of the bounding box.
+ * @property bottomLeftFront The bottom left front vertex of the [BoundingBox].
+ * @property bottomRightFront The bottom right front vertex of the [BoundingBox].
+ * @property bottomRightBack The bottom right back vertex of the [BoundingBox].
+ * @property bottomLeftBack The bottom left back vertex of the [BoundingBox].
+ * @property topLeftFront The top left front vertex of the [BoundingBox].
+ * @property topRightFront The top right front vertex of the [BoundingBox].
+ * @property topRightBack The top right back vertex of the [BoundingBox].
+ * @property topLeftBack The top left back vertex of the [BoundingBox].
  */
 data class BoundingBox(
-    val extent: Vector3D,
-    val location: Location,
-    val rotation: Rotation,
-    val vertices: List<Location>
-)
+    val bottomLeftFront: Location,
+    val bottomRightFront: Location,
+    val bottomRightBack: Location,
+    val bottomLeftBack: Location,
+    val topLeftFront: Location,
+    val topRightFront: Location,
+    val topRightBack: Location,
+    val topLeftBack: Location,
+) {
+
+  /**
+   * Converts this [BoundingBox] to a 2D [BoundingBox2D] by setting the z value of all [Location]s
+   * to 0.
+   */
+  fun toBoundingBox2D() =
+      BoundingBox2D(
+          leftFront = Location2D(x = bottomLeftFront.x, y = bottomLeftFront.y),
+          rightFront = Location2D(x = bottomRightFront.x, y = bottomRightFront.y),
+          rightBack = Location2D(x = bottomRightBack.x, y = bottomRightBack.y),
+          leftBack = Location2D(x = bottomLeftBack.x, y = bottomLeftBack.y),
+      )
+}

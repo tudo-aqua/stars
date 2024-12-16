@@ -50,7 +50,7 @@ data class TickData(
 
   /** The ego vehicle. */
   val egoVehicle: Vehicle?
-    get() = vehicles.firstOrNull { it.isEgo }
+    get() = vehicles.firstOrNull { it.isPrimary }
 
   /** Returns all [Vehicle]s in given [Block]. */
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }

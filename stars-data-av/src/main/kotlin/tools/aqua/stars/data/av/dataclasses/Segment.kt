@@ -45,7 +45,7 @@ data class Segment(
 
       val egoId = ego.id
 
-      check(tickData.any { it.vehicles.count { v -> v.isEgo } == 1 }) {
+      check(tickData.any { it.vehicles.count { v -> v.isPrimary } == 1 }) {
         "There is at least one tick with multiple primary entities in segment ${this.toString(egoId)}"
       }
 
