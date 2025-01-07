@@ -23,5 +23,3 @@ include(
     "stars-data-av",
     "stars-importer-carla",
 )
-
-plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0" }
