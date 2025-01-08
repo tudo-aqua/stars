@@ -65,11 +65,13 @@ fun convertJsonActorPositionToEntity(
 
   return when (position.actor) {
     is JsonPedestrian ->
-        convertJsonPedestrianToPedestrian(position.actor, tickData, position.positionOnLane, lane)
+        convertJsonPedestrianToPedestrian(
+            position.actor as JsonPedestrian, tickData, position.positionOnLane, lane)
     is JsonTrafficLight -> null
     is JsonTrafficSign -> null
     is JsonVehicle ->
-        convertJsonVehicleToVehicle(position.actor, tickData, position.positionOnLane, lane)
+        convertJsonVehicleToVehicle(
+            position.actor as JsonVehicle, tickData, position.positionOnLane, lane)
   }
 }
 
