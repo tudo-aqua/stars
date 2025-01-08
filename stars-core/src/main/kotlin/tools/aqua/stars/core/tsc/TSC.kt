@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc
 
+import java.math.BigInteger
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -49,7 +50,7 @@ class TSC<
   }
 
   /** Holds the [List] of all possible [TSCInstanceNode]s. */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, S, U, D>> = rootNode.generateAllInstances()
+  val possibleTSCInstances: BigInteger = rootNode.countAllInstances()
 
   /**
    * Evaluates [PredicateContext] on [TSC].

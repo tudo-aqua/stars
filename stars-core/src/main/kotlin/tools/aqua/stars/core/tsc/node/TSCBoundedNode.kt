@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.node
 
+import java.math.BigInteger
 import tools.aqua.stars.core.crossProduct
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.powerlist
@@ -99,5 +100,23 @@ open class TSCBoundedNode<
     }
 
     return returnList
+  }
+
+  override fun countAllInstances(): BigInteger {
+    val edgeCount = edges.map { it.destination.countAllInstances() }
+
+    val boundedSuccessors =
+        edgeCount
+            .powerlist()
+            .filter { subset -> subset.size in bounds.first..bounds.second }
+            .toList()
+
+    return boundedSuccessors.sumOf { subset ->
+      when (subset.size) {
+        0 -> BigInteger.ONE
+        1 -> subset.first()
+        else -> subset.reduce { acc, possibleCombinations -> acc * possibleCombinations }
+      }
+    }
   }
 }

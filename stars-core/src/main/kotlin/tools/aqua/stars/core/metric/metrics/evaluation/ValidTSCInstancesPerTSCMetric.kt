@@ -88,10 +88,20 @@ class ValidTSCInstancesPerTSCMetric<
       mutableMapOf()
 
   /**
+   * Map a [TSC] to a map in which the occurrences of invalid [TSCInstanceNode]s are stored:
+   * - Map<tsc,Map<referenceInstance,List<TSCInstance>>>.
+   */
+  private val invalidInstancesMap:
+      MutableMap<
+          TSC<E, T, S, U, D>,
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
+      mutableMapOf()
+
+  /**
    * Maps [TSC] to a list of increasing counts of occurrences of valid [TSCInstanceNode]s:
    * - Map<tsc,List<increasing count>>.
    */
-  private val uniqueTimedInstances: MutableMap<TSC<E, T, S, U, D>, MutableList<Int>> =
+  private val uniqueValidTimedInstances: MutableMap<TSC<E, T, S, U, D>, MutableList<Int>> =
       mutableMapOf()
 
   /** Maps the name of a [TSC] the a list of timed [TSCInstance] occurrences. */
@@ -125,25 +135,31 @@ class ValidTSCInstancesPerTSCMetric<
   override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
     // Get current count of unique and valid TSC instance for the current TSC
     val validInstances = validInstancesMap.getOrPut(tsc) { mutableMapOf() }
+    val invalidInstances = invalidInstancesMap.getOrPut(tsc) { mutableMapOf() }
 
     // Track current TSC
-    val validInstancesCount = uniqueTimedInstances.getOrPut(tsc) { mutableListOf() }
+    val uniqueInstancesCount = uniqueValidTimedInstances.getOrPut(tsc) { mutableListOf() }
 
     // Check if given tscInstance is valid
-    if (!tsc.possibleTSCInstances.contains(tscInstance.rootNode)) {
-      // Add current count of observed instances to list of timed instance counts
-      validInstancesCount.add(validInstances.size)
-      return
-    }
+    val valid =
+        when {
+          // Check valid instances cache
+          validInstances.containsKey(tscInstance.rootNode) -> true
 
-    // Get already observed instances for current TSC
-    val validInstanceList = validInstances.getOrPut(tscInstance.rootNode) { mutableListOf() }
+          // Check invalid instances cache
+          invalidInstances.containsKey(tscInstance.rootNode) -> false
 
-    // Add current instance to list of observed instances
-    validInstanceList.add(tscInstance)
+          // Validate the TSC instance
+          else -> tscInstance.rootNode.validate().isEmpty()
+        }
+
+    // Add instance to valid or invalid instances cache
+    (if (valid) validInstances else invalidInstances)
+        .getOrPut(tscInstance.rootNode) { mutableListOf() }
+        .add(tscInstance)
 
     // Add current count of observed instances to list of timed instance counts
-    validInstancesCount.add(validInstances.size)
+    uniqueInstancesCount.add(validInstances.size)
   }
 
   /**
@@ -165,7 +181,7 @@ class ValidTSCInstancesPerTSCMetric<
     validInstancesMap.forEach { (tsc, validInstancesMap) ->
       logInfo(
           "Count of unique valid instances for tsc '${tsc.identifier}' is: ${validInstancesMap.size} (of " +
-              "${tsc.possibleTSCInstances.size} possible instances)")
+              "${tsc.possibleTSCInstances} possible instances)")
 
       logFine("Count of valid instances per instance: " + validInstancesMap.map { it.value.size })
       logFine()
@@ -188,9 +204,9 @@ class ValidTSCInstancesPerTSCMetric<
    * calculated beforehand.
    */
   override fun postEvaluate() {
-    uniqueTimedInstances.forEach { (tsc, instances) ->
+    uniqueValidTimedInstances.forEach { (tsc, instances) ->
       // Get the count of all possible TSC instances for the current tsc
-      val possibleTscInstancesForTSC = tsc.possibleTSCInstances.size
+      val possibleTscInstancesForTSC = tsc.possibleTSCInstances
 
       // Get the count of occurred TSC instances
       val lastYValue = instances.last()
@@ -199,7 +215,7 @@ class ValidTSCInstancesPerTSCMetric<
 
       // Calculate the percentage of the occurred instances against the count of possible instances
       val yValuesPercentage: List<Float> =
-          instances.map { (it.toFloat() / possibleTscInstancesForTSC) * 100 }
+          instances.map { (it.toBigInteger() / possibleTscInstancesForTSC).toFloat() * 100 }
 
       // Save values of current tsc to combined map
       combinedTSCToOccurredInstancesMap[legendEntry] = List(instances.size) { it } to instances
@@ -256,9 +272,9 @@ class ValidTSCInstancesPerTSCMetric<
 
   /** Plots the occurrence progression of [TSCInstance]s for each [TSC]. */
   private fun plotOccurrencesProgressionPerTSC() {
-    uniqueTimedInstances.forEach { (tsc, instances) ->
+    uniqueValidTimedInstances.forEach { (tsc, instances) ->
       // Get the count of all possible TSC instances for the current tsc
-      val possibleTscInstancesForTSC = tsc.possibleTSCInstances.size
+      val possibleTscInstancesForTSC = tsc.possibleTSCInstances
 
       // Get the count of occurred TSC instances
       val lastYValue = instances.last()
@@ -292,7 +308,7 @@ class ValidTSCInstancesPerTSCMetric<
 
       // Calculate the percentage of the occurred instances against the count of possible instances
       val yValuesPercentage: List<Float> =
-          instances.map { (it.toFloat() / possibleTscInstancesForTSC) * 100 }
+          instances.map { (it.toBigInteger() / possibleTscInstancesForTSC).toFloat() * 100 }
 
       val percentagePlot =
           getPlot(
@@ -330,7 +346,7 @@ class ValidTSCInstancesPerTSCMetric<
       // Get the count of occurred TSC instances
       val lastYValue = instanceCounts.size
 
-      val legendEntry = "${tsc.identifier} ($lastYValue/${tsc.possibleTSCInstances.size})"
+      val legendEntry = "${tsc.identifier} ($lastYValue/${tsc.possibleTSCInstances})"
 
       val plot =
           getPlot(
@@ -355,7 +371,7 @@ class ValidTSCInstancesPerTSCMetric<
           plot = plot,
           fileName = "${fileName}_scaled",
           folder = "$loggerIdentifier-occurrences",
-          xAxisScaleMaxValue = tsc.possibleTSCInstances.size,
+          xAxisScaleMaxValue = tsc.possibleTSCInstances,
           subFolder = tsc.identifier)
     }
   }
@@ -419,9 +435,9 @@ class ValidTSCInstancesPerTSCMetric<
 
   /** Saves CSV files for the occurrence progression of [TSCInstance]s for each [TSC]. */
   private fun saveOccurrencesProgressionPerTSC() {
-    uniqueTimedInstances.forEach { (tsc, instances) ->
+    uniqueValidTimedInstances.forEach { (tsc, instances) ->
       // Get the count of all possible TSC instances for the current tsc
-      val possibleTscInstancesForTSC = tsc.possibleTSCInstances.size
+      val possibleTscInstancesForTSC = tsc.possibleTSCInstances
 
       // Get the count of occurred TSC instances
       val lastYValue = instances.last()
@@ -448,7 +464,7 @@ class ValidTSCInstancesPerTSCMetric<
 
       // Calculate the percentage of the occurred instances against the count of possible instances
       val yValuesPercentage: List<Float> =
-          instances.map { (it.toFloat() / possibleTscInstancesForTSC) * 100 }
+          instances.map { (it.toBigInteger() / possibleTscInstancesForTSC).toFloat() * 100 }
 
       // Save the timed percentage count of unique TSC instances data as CSV file
       saveAsCSVFile(
@@ -478,7 +494,7 @@ class ValidTSCInstancesPerTSCMetric<
       // Get the count of occurred TSC instances
       val lastYValue = instanceCounts.size
 
-      val legendEntry = "${tsc.identifier} ($lastYValue/${tsc.possibleTSCInstances.size})"
+      val legendEntry = "${tsc.identifier} ($lastYValue/${tsc.possibleTSCInstances})"
 
       val fileName = "${barPlotName}_${tsc.identifier}"
 

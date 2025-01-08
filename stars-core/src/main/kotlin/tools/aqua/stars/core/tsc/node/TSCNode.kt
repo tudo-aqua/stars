@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.node
 
+import java.math.BigInteger
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
@@ -62,6 +63,9 @@ sealed class TSCNode<
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
+
+  /** Counts all TSC instances. */
+  abstract fun countAllInstances(): BigInteger
 
   /** Evaluates this TSC in the given context. */
   fun evaluate(
