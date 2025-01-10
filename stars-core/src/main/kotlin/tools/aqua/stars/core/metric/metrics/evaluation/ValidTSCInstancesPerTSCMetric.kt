@@ -380,14 +380,14 @@ class ValidTSCInstancesPerTSCMetric<
   private fun plotCombinedOccurrencesProgression() {
     val combinedTotalPlot =
         getPlot(
-            nameToValuesMap = combinedTSCToOccurredInstancesMap,
+            nameToValuesMap = combinedTSCToOccurredInstancesMap.toSortedMap(),
             xAxisName = xAxisName,
             yAxisName = yAxisName,
             legendHeader = legendHeader)
 
     val combinedPercentagePlot =
         getPlot(
-            nameToValuesMap = combinedTSCToOccurredInstancesPercentagesMap,
+            nameToValuesMap = combinedTSCToOccurredInstancesPercentagesMap.toSortedMap(),
             xAxisName = xAxisName,
             yAxisName = yAxisNamePercentage,
             legendHeader = legendHeader)

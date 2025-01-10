@@ -105,6 +105,13 @@ open class TSCBoundedNode<
   override fun countAllInstances(): BigInteger {
     val edgeCount = edges.map { it.destination.countAllInstances() }
 
+    // Shortcut any node with only leafs
+    if (bounds.first == 0 &&
+        bounds.second == edges.size &&
+        edgeCount.all { it == BigInteger.ONE }) {
+      return BigInteger.valueOf(2).pow(edges.size)
+    }
+
     val boundedSuccessors =
         edgeCount
             .powerlist()
