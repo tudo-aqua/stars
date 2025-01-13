@@ -83,10 +83,10 @@ data class BoundingBox2D(
           rightBack = rightBack + vectorRight * amount + vectorBack * amount,
           leftBack = leftBack + vectorLeft * amount + vectorBack * amount)
 
-  /** Checks if this [BoundingBox2D] collides with another [BoundingBox2D]. */
-  fun collidesWith(other: BoundingBox2D): Boolean =
-      other.getVertices().any { containsPoint(it) } || getVertices().any { other.containsPoint(it) }
-
+  /**
+   * Checks if this [BoundingBox2D] contains a given [Location2D]. Points on the edge or on a vertex
+   * are considered inside.
+   */
   fun containsPoint(location: Location2D): Boolean {
     val vertices = getVertices()
 
@@ -97,6 +97,22 @@ data class BoundingBox2D(
       val pointToVertex = vertex - location
 
       if (edge.cross(pointToVertex) < 0.0) {
+        return false
+      }
+    }
+    return true
+  }
+
+  /**
+   * Checks if this [BoundingBox2D] collides with another [BoundingBox2D]. Touching at an edge or
+   * point is considered a collision.
+   */
+  fun collidesWith(other: BoundingBox2D): Boolean {
+    listOf(vectorLeft, vectorFront, other.vectorLeft, other.vectorFront).forEach { axis ->
+      val vertices1 = this.getVertices().map { axis.dot(it.toVector2D()) }
+      val vertices2 = other.getVertices().map { axis.dot(it.toVector2D()) }
+
+      if (vertices1.max() < vertices2.min() || vertices2.max() < vertices1.min()) {
         return false
       }
     }
