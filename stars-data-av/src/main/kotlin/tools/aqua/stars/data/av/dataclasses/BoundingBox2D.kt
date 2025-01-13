@@ -32,10 +32,10 @@ data class BoundingBox2D(
     val leftBack: Location2D,
 ) {
 
-  val vectorLeft = (leftFront - rightFront).normalize()
-  val vectorRight = (rightFront - leftFront).normalize()
-  val vectorFront = (leftFront - leftBack).normalize()
-  val vectorBack = (leftBack - leftFront).normalize()
+  val vectorLeft = (leftFront.toVector2D() - rightFront.toVector2D()).normalize()
+  val vectorRight = (rightFront.toVector2D() - leftFront.toVector2D()).normalize()
+  val vectorFront = (leftFront.toVector2D() - leftBack.toVector2D()).normalize()
+  val vectorBack = (leftBack.toVector2D() - leftFront.toVector2D()).normalize()
 
   /**
    * Returns the vertices of this [BoundingBox2D] in the order leftFront, rightFront, rightBack,
@@ -46,24 +46,24 @@ data class BoundingBox2D(
   /** Extends this [BoundingBox2D] to the left by the given amount. */
   fun extendLeft(amount: Double) =
       BoundingBox2D(
-          leftFront = Location2D(leftFront + vectorLeft * amount),
+          leftFront = leftFront + vectorLeft * amount,
           rightFront = rightFront,
           rightBack = rightBack,
-          leftBack = Location2D(leftBack + vectorLeft * amount))
+          leftBack = leftBack + vectorLeft * amount)
 
   /** Extends this [BoundingBox2D] to the right by the given amount. */
   fun extendRight(amount: Double) =
       BoundingBox2D(
           leftFront = leftFront,
-          rightFront = Location2D(rightFront + vectorRight * amount),
-          rightBack = Location2D(rightBack + vectorRight * amount),
+          rightFront = rightFront + vectorRight * amount,
+          rightBack = rightBack + vectorRight * amount,
           leftBack = leftBack)
 
   /** Extends this [BoundingBox2D] to the front by the given amount. */
   fun extendFront(amount: Double) =
       BoundingBox2D(
-          leftFront = Location2D(leftFront + vectorLeft * amount),
-          rightFront = Location2D(rightFront + vectorRight * amount),
+          leftFront = leftFront + vectorLeft * amount,
+          rightFront = rightFront + vectorRight * amount,
           rightBack = rightBack,
           leftBack = leftBack)
 
@@ -72,16 +72,16 @@ data class BoundingBox2D(
       BoundingBox2D(
           leftFront = leftFront,
           rightFront = rightFront,
-          rightBack = Location2D(rightBack + vectorBack * amount),
-          leftBack = Location2D(leftBack + vectorLeft * amount))
+          rightBack = rightBack + vectorBack * amount,
+          leftBack = leftBack + vectorLeft * amount)
 
   /** Extends this [BoundingBox2D] in all directions by the given amount. */
   fun extend(amount: Double) =
       BoundingBox2D(
-          leftFront = Location2D(leftFront + vectorLeft * amount + vectorFront * amount),
-          rightFront = Location2D(rightFront + vectorRight * amount + vectorFront * amount),
-          rightBack = Location2D(rightBack + vectorRight * amount + vectorBack * amount),
-          leftBack = Location2D(leftBack + vectorLeft * amount + vectorBack * amount))
+          leftFront = leftFront + vectorLeft * amount + vectorFront * amount,
+          rightFront = rightFront + vectorRight * amount + vectorFront * amount,
+          rightBack = rightBack + vectorRight * amount + vectorBack * amount,
+          leftBack = leftBack + vectorLeft * amount + vectorBack * amount)
 
   /** Checks if this [BoundingBox2D] collides with another [BoundingBox2D]. */
   fun collidesWith(other: BoundingBox2D): Boolean =

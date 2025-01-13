@@ -39,16 +39,16 @@ data class Location2D(val x: Double, val y: Double) {
       Vector2D(x = this.x + other.x, y = this.y + other.y)
 
   /** Addition operator. */
-  operator fun plus(other: Vector2D): Vector2D =
-      Vector2D(x = this.x + other.x, y = this.y + other.y)
+  operator fun plus(other: Vector2D): Location2D =
+      Location2D(x = this.x + other.x, y = this.y + other.y)
 
   /** Subtraction operator. */
   operator fun minus(other: Location2D): Vector2D =
       Vector2D(x = this.x - other.x, y = this.y - other.y)
 
   /** Subtraction operator. */
-  operator fun minus(other: Vector2D): Vector2D =
-      Vector2D(x = this.x - other.x, y = this.y - other.y)
+  operator fun minus(other: Vector2D): Location2D =
+      Location2D(x = this.x - other.x, y = this.y - other.y)
 
   companion object {
     /**
