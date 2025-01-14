@@ -21,7 +21,7 @@ letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-im
 kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
 
 # Gradle Plugins
-gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.0.21" }
+gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.1.0" }
 gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "1.9.20" }
 gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.6" }
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.51.0" }
