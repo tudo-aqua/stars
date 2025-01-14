@@ -22,10 +22,10 @@ import kotlinx.serialization.Serializable
 import tools.aqua.stars.data.av.dataclasses.LaneMidpoint
 
 /**
- * Json object for lane midpoints.
+ * Json object for [JsonLane] midpoints.
  *
- * @property laneId The identifier of the lane.
- * @property roadId The identifier of the road.
+ * @property laneId The identifier of the [JsonLane].
+ * @property roadId The identifier of the [JsonRoad].
  * @property distanceToStart The distance to the starting point.
  * @property location The [JsonLocation] of the midpoint.
  * @property rotation The [JsonRotation] of the midpoint.

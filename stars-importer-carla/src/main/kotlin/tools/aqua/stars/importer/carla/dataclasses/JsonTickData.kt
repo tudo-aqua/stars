@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json format containing data for current tick.
+ * Json object for current tick data.
  *
  * @property currentTick Current tick value.
  * @property actorPositions The current [JsonActorPosition]s of all actors.

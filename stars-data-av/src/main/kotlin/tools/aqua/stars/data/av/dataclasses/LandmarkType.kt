@@ -18,7 +18,7 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for landmark types.
+ * Data class for [Landmark] types.
  *
  * @property value Internal json value.
  */
