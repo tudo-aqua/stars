@@ -40,10 +40,7 @@ data class BoundingBox(
     val topLeftBack: Location,
 ) {
 
-  /**
-   * Converts this [BoundingBox] to a 2D [BoundingBox2D] by setting the z value of all [Location]s
-   * to 0.
-   */
+  /** Converts this [BoundingBox] to a 2D [BoundingBox2D]. */
   fun toBoundingBox2D() =
       BoundingBox2D(
           leftFront = Location2D(x = bottomLeftFront.x, y = bottomLeftFront.y),

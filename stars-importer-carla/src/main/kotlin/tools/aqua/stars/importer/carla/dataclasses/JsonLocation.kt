@@ -36,7 +36,7 @@ data class JsonLocation(
 ) {
 
   /** Converts [JsonLocation] to [Location]. */
-  fun toLocation(): Location = Location(x, y, z)
+  fun toLocation(): Location = Location(x, -y, z) // FIXME: Flipped coordinate system
 
   override fun toString(): String = "($x,$y,$z)"
 }

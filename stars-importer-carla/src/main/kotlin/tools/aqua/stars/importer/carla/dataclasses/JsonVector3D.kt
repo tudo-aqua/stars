@@ -37,5 +37,7 @@ data class JsonVector3D(
 ) {
 
   /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
+  fun toVector3D(): Vector3D = Vector3D(x, -y, z) // FIXME: Flipped coordinate system
+
+  override fun toString(): String = "($x,$y,$z)"
 }

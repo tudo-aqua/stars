@@ -31,6 +31,9 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
 
   constructor(location: Location) : this(location.x, location.y, location.z)
 
+  /** Converts [Vector3D] to [Vector2D]. */
+  fun toVector2D(): Vector2D = Vector2D(x, y)
+
   /** Addition operator. */
   operator fun plus(other: Vector3D): Vector3D =
       Vector3D(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
