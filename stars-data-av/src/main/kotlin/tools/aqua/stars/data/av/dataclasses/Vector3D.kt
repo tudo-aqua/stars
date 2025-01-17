@@ -59,15 +59,19 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
           y = this.y / scalar.toDouble(),
           z = this.z / scalar.toDouble())
 
+  /** Dot product with another vector. */
   fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
 
+  /** Cross (Vector) product with another vector. */
   fun cross(other: Vector3D): Vector3D =
       Vector3D(
           x = y * other.z - z * other.y,
           y = z * other.x - x * other.z,
           z = x * other.y - y * other.x)
 
+  /** Length of the vector. */
   fun magnitude(): Double = sqrt(x * x + y * y + z * z)
 
-  fun normalize(): Vector3D = magnitude().let { Vector3D(x / it, y / it, z / it) }
+  /** Normalized vector with the same direction and length 1. */
+  fun normalized(): Vector3D = magnitude().let { Vector3D(x / it, y / it, z / it) }
 }
