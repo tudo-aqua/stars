@@ -26,18 +26,24 @@ import kotlin.math.sqrt
  * Data class for vehicles.
  *
  * @property id The identifier of the vehicle.
- * @property tickData [TickData].
- * @property positionOnLane The [Vehicle]'s position in the [Lane].
- * @property lane The [Vehicle]'s [Lane].
  * @property typeId The type identifier.
- * @property vehicleType The [VehicleType].
- * @property isEgo Whether this is the own vehicle.
+ * @property attributes The attributes of the vehicle.
+ * @property isAlive Whether the vehicle is alive.
+ * @property isActive Whether the vehicle is active.
+ * @property isDormant Whether the vehicle is dormant.
+ * @property semanticTags The semantic tags of the vehicle.
+ * @property boundingBox The [BoundingBox] of the vehicle.
  * @property location The [Location] of the vehicle.
- * @property forwardVector The current forward vector.
  * @property rotation The [Rotation] of the vehicle.
+ * @property isPrimary Whether this is the own vehicle.
+ * @property forwardVector The current forward vector.
  * @property velocity The current velocity in m/s.
  * @property acceleration The current acceleration m/s².
  * @property angularVelocity The current angular velocity.
+ * @property lane The [Vehicle]'s [Lane].
+ * @property positionOnLane The [Vehicle]'s position in the [Lane].
+ * @property vehicleType The [VehicleType].
+ * @property tickData [TickData].
  */
 data class Vehicle(
     override val id: Int,
