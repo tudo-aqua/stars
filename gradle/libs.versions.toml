@@ -32,7 +32,7 @@ gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin
 # gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.6.1" }
 
 # Other
-dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "1.9.20" }
+dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "2.0.0" }
 
 [bundles]
 gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin"]
