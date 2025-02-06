@@ -60,14 +60,28 @@ sealed class TSCBuilder<
     }
 
   /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
-  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
+  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean) = CONST_TRUE
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true
       field = value
+
+      if (!isInverseConditionSet) {
+        inverseCondition = { ctx -> !field.invoke(ctx) }
+      }
     }
 
   private var isConditionSet = false
+
+  /** Inverse condition predicate of the edge. (Default: [CONST_FALSE]) */
+  protected var inverseCondition: ((PredicateContext<E, T, S, U, D>) -> Boolean) = CONST_FALSE
+    set(value) {
+      check(!isInverseConditionSet) { "Inverse condition already set." }
+      isInverseConditionSet = true
+      field = value
+    }
+
+  private var isInverseConditionSet = false
 
   /** Value function predicate of the node. (Default: empty) */
   protected var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }

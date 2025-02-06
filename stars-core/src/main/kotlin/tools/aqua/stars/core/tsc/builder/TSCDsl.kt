@@ -27,6 +27,9 @@ import tools.aqua.stars.core.types.*
 /** Constant predicate for always true edges. */
 val CONST_TRUE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { true }
 
+/** Constant predicate for always false edges. */
+val CONST_FALSE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { false }
+
 /** Label of the [TSCNode] built by the [tsc] function. */
 const val ROOT_NODE_LABEL = "root"
 

@@ -53,7 +53,7 @@ open class TSCBoundedBuilder<
    */
   fun build(): TSCBoundedEdge<E, T, S, U, D> =
       TSCBoundedEdge(
-          condition = condition ?: CONST_TRUE,
+          condition = condition,
           destination =
               TSCBoundedNode(
                   label = label,
@@ -81,6 +81,27 @@ open class TSCBoundedBuilder<
       condition: (PredicateContext<E, T, S, U, D>) -> Boolean
   ) {
     this.condition = condition
+  }
+
+  /**
+   * DSL function for inverse edge conditions.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param S [SegmentType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param inverseCondition The inverse edge condition.
+   */
+  fun <
+      E : EntityType<E, T, S, U, D>,
+      T : TickDataType<E, T, S, U, D>,
+      S : SegmentType<E, T, S, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.inverseCondition(
+      inverseCondition: (PredicateContext<E, T, S, U, D>) -> Boolean
+  ) {
+    this.inverseCondition = inverseCondition
   }
 
   /**
