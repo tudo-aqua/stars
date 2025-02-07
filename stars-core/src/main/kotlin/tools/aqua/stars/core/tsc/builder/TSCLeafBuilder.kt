@@ -19,7 +19,6 @@ package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
-import tools.aqua.stars.core.tsc.edge.TSCLeafEdge
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.types.*
 
@@ -41,12 +40,12 @@ open class TSCLeafBuilder<
     D : TickDifference<D>>(val label: String) : TSCBuilder<E, T, S, U, D>() {
 
   /**
-   * Creates a [TSCLeafEdge] with a [TSCLeafNode].
+   * Creates a [TSCEdge] with a [TSCLeafNode].
    *
-   * @return The created [TSCLeafEdge].
+   * @return The created [TSCEdge].
    */
-  fun build(): TSCLeafEdge<E, T, S, U, D> =
-      TSCLeafEdge(
+  fun build(): TSCEdge<E, T, S, U, D> =
+      TSCEdge(
           condition = condition ?: CONST_TRUE,
           destination =
               TSCLeafNode(

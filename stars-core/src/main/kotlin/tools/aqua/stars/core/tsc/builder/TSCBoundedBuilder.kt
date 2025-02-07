@@ -47,12 +47,12 @@ open class TSCBoundedBuilder<
 ) : TSCBuilder<E, T, S, U, D>() {
 
   /**
-   * Creates a [TSCBoundedEdge] with a [TSCBoundedNode].
+   * Creates a [TSCEdge] with a [TSCBoundedNode].
    *
-   * @return The created [TSCBoundedEdge].
+   * @return The created [TSCEdge].
    */
-  fun build(): TSCBoundedEdge<E, T, S, U, D> =
-      TSCBoundedEdge(
+  fun build(): TSCEdge<E, T, S, U, D> =
+      TSCEdge(
           condition = condition ?: CONST_TRUE,
           destination =
               TSCBoundedNode(
@@ -166,7 +166,7 @@ open class TSCBoundedBuilder<
       label: String,
       bounds: Pair<Int, Int>,
       init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCBoundedEdge<E, T, S, U, D> =
+  ): TSCEdge<E, T, S, U, D> =
       TSCBoundedBuilder<E, T, S, U, D>(label)
           .apply { init() }
           .apply { this.bounds = bounds }
@@ -193,7 +193,7 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.exclusive(
       label: String,
       init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCBoundedEdge<E, T, S, U, D> =
+  ): TSCEdge<E, T, S, U, D> =
       TSCBoundedBuilder<E, T, S, U, D>(label)
           .apply { init() }
           .apply { bounds = 1 to 1 }
@@ -220,7 +220,7 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.optional(
       label: String,
       init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCBoundedEdge<E, T, S, U, D> =
+  ): TSCEdge<E, T, S, U, D> =
       TSCBoundedBuilder<E, T, S, U, D>(label)
           .apply { init() }
           .apply { bounds = 0 to edgesCount() }
@@ -247,7 +247,7 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.any(
       label: String,
       init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCBoundedEdge<E, T, S, U, D> =
+  ): TSCEdge<E, T, S, U, D> =
       TSCBoundedBuilder<E, T, S, U, D>(label)
           .apply { init() }
           .apply { bounds = 1 to edgesCount() }
@@ -274,7 +274,7 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.all(
       label: String,
       init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCBoundedEdge<E, T, S, U, D> =
+  ): TSCEdge<E, T, S, U, D> =
       TSCBoundedBuilder<E, T, S, U, D>(label)
           .apply { init() }
           .apply { bounds = edgesCount() to edgesCount() }
@@ -301,6 +301,6 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>> TSCBoundedBuilder<E, T, S, U, D>.leaf(
       label: String,
       init: TSCLeafBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCLeafEdge<E, T, S, U, D> =
+  ): TSCEdge<E, T, S, U, D> =
       TSCLeafBuilder<E, T, S, U, D>(label).apply { init() }.build().also { this.addEdge(it) }
 }
