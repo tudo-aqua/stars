@@ -53,7 +53,7 @@ open class TSCBoundedBuilder<
    */
   fun build(): TSCBoundedEdge<E, T, S, U, D> =
       TSCBoundedEdge(
-          condition = condition ?: CONST_TRUE,
+          condition = condition,
           destination =
               TSCBoundedNode(
                   label = label,
