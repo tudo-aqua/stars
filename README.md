@@ -8,7 +8,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-importer-carla?logo=apache-maven&label=MavenCentral%20stars-importer-carla)](https://central.sonatype.com/artifact/tools.aqua/stars-importer-carla)\
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-data-av?logo=apache-maven&label=MavenCentral%20stars-data-av)](https://central.sonatype.com/artifact/tools.aqua/stars-data-av)
 
-STARS (Scenario-Based Testing of Autonomous Robotic Systems) is a formal framework for coverage analysis of test data of automated robotic systems.
+STARS (Scenario-Based Testing of Automated Robotic Systems) is a formal framework for coverage analysis of test data of automated robotic systems.
 
 See [stars-carla-experiments](https://github.com/tudo-aqua/stars-carla-experiments), or [stars-auna-experiments](https://github.com/tudo-aqua/stars-auna-experiments) for examples on how to use the 
 framework.
