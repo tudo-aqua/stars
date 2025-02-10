@@ -121,14 +121,14 @@ sealed class TSCNode<
                   valueFunction = valueFunction)
           is TSCBoundedNode -> {
             val outgoingEdges =
-                edges
-                    .mapNotNull { edge ->
-                      edge.destination.buildProjection(projectionId = projectionId)?.let {
-                          projection ->
-                        TSCEdge(edge.condition, projection)
-                      }
-                    }
-                    .toList()
+                edges.mapNotNull { edge ->
+                  edge.destination.buildProjection(projectionId = projectionId)?.let { projection ->
+                    TSCEdge(
+                        condition = edge.condition,
+                        inverseCondition = edge.inverseCondition,
+                        destination = projection)
+                  }
+                }
             val alwaysEdgesBefore = edges.count { it.condition == CONST_TRUE }
             val alwaysEdgesAfter = outgoingEdges.count { it.condition == CONST_TRUE }
             val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
@@ -147,10 +147,12 @@ sealed class TSCNode<
   /** Deeply clones [TSCNode]. */
   private fun deepClone(): TSCNode<E, T, S, U, D> {
     val outgoingEdges =
-        edges
-            .map { it to it.destination.deepClone() }
-            .map { TSCEdge(it.first.condition, it.second) }
-            .toList()
+        edges.map {
+          TSCEdge(
+              condition = it.condition,
+              inverseCondition = it.inverseCondition,
+              destination = it.destination.deepClone())
+        }
 
     return when (this) {
       is TSCLeafNode ->
