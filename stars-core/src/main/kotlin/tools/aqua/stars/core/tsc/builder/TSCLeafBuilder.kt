@@ -47,7 +47,7 @@ open class TSCLeafBuilder<
    */
   fun build(): TSCLeafEdge<E, T, S, U, D> =
       TSCLeafEdge(
-          condition = condition ?: CONST_TRUE,
+          condition = condition,
           destination =
               TSCLeafNode(
                   label = label,

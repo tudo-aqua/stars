@@ -60,7 +60,7 @@ sealed class TSCBuilder<
     }
 
   /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
-  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = CONST_TRUE
+  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean) = CONST_TRUE
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true
