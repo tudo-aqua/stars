@@ -75,11 +75,34 @@ sealed class TSCNode<
               this.valueFunction(ctx))
           .also {
             it.edges +=
-                this.edges
-                    .filter { t -> t.condition(ctx) }
-                    .map { tscEdge ->
-                      TSCInstanceEdge(tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
-                    }
+                this.edges.mapNotNull {
+                  val condition = it.condition.invoke(ctx)
+                  val inverseCondition = it.inverseCondition?.invoke(ctx)
+
+                  /*
+                   * Decisions based on the condition and inverseCondition:
+                   * [T = true, F = false, N = null]
+                   *
+                   * Condition InverseCondition -> Result
+                   * T T -> Fail
+                   * T F || T N -> OK
+                   * F T || F N -> SKIP
+                   * F F -> OK, but unknown
+                   */
+
+                  // Assert that not both condition and inverseCondition are true
+                  check(!condition || inverseCondition != true) {
+                    "Encountered TSCEdge where both condition and inverseCondition are true "
+                  }
+
+                  // Skip if condition is false and inverseCondition is not false
+                  if (!condition && inverseCondition != false) null
+                  else
+                  // Create TSCInstanceEdge if condition is true. Flag as unknown if condition is
+                  // false (inverseCondition must be false too at this point)
+                  TSCInstanceEdge(
+                          it.destination.evaluate(ctx, depth + 1), it, isUnknown = !condition)
+                }
           }
 
   /**

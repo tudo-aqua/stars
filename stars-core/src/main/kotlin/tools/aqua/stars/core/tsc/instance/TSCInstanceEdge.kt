@@ -30,6 +30,8 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property destination Destination [TSCInstanceNode].
  * @property tscEdge Associated [TSCEdge].
+ * @property isUnknown Whether this edge is unknown, i.e. [TSCEdge.condition] and
+ *   [TSCEdge.inverseCondition] returned `true`.
  */
 data class TSCInstanceEdge<
     E : EntityType<E, T, S, U, D>,
@@ -39,10 +41,13 @@ data class TSCInstanceEdge<
     D : TickDifference<D>>(
     var destination: TSCInstanceNode<E, T, S, U, D>,
     val tscEdge: TSCEdge<E, T, S, U, D>,
+    val isUnknown: Boolean,
 ) {
 
   override fun equals(other: Any?): Boolean =
-      other is TSCInstanceEdge<*, *, *, *, *> && destination == other.destination
+      other is TSCInstanceEdge<*, *, *, *, *> &&
+          destination == other.destination &&
+          isUnknown == other.isUnknown
 
   override fun hashCode(): Int = destination.hashCode()
 }

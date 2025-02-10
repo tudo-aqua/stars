@@ -91,7 +91,11 @@ open class TSCInstanceNode<
                         currentNode.label,
                         currentNode.monitorResults,
                         currentNode.value)
-                    .apply { this.edges += TSCInstanceEdge<E, T, S, U, D>(child, edge.tscEdge) }
+                    .apply {
+                      this.edges +=
+                          TSCInstanceEdge<E, T, S, U, D>(
+                              destination = child, tscEdge = edge.tscEdge, isUnknown = false)
+                    }
               }
             }
           } else {

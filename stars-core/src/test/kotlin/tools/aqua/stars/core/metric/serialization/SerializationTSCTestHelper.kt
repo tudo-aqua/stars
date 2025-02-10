@@ -77,8 +77,9 @@ val simpleTSCValidInstance =
             TSCInstanceNode(simpleTSC.rootNode).apply {
               edges +=
                   listOf(
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
+                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge, false),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -89,8 +90,9 @@ val simpleTSCValidInstance2 =
             TSCInstanceNode(simpleTSC.rootNode).apply {
               edges +=
                   listOf(
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
+                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge, false),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -101,8 +103,9 @@ val simpleTSCValidInstance3 =
             TSCInstanceNode(simpleTSC.rootNode).apply {
               edges +=
                   listOf(
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge),
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2))
+                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge, false),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSCLeafNode2), simpleTSCLeafEdge2, false))
             },
         sourceSegmentIdentifier = "file 2")
 
@@ -112,7 +115,8 @@ val simpleTSCInvalidInstance =
         rootNode =
             TSCInstanceNode(simpleTSC.rootNode).apply {
               edges +=
-                  listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge))
+                  listOf(
+                      TSCInstanceEdge(TSCInstanceNode(simpleTSCLeafNode), simpleTSCLeafEdge, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -150,7 +154,8 @@ val simpleTSC2ValidInstance =
                       TSCInstanceEdge(
                           TSCInstanceNode(
                               simpleTSC2LeafNode, monitorResults = mapOf("leaf1monitor" to true)),
-                          simpleTSC2LeafEdge))
+                          simpleTSC2LeafEdge,
+                          false))
             },
         sourceSegmentIdentifier = "")
 
@@ -207,8 +212,10 @@ val simpleTSC3ValidInstance =
             TSCInstanceNode(simpleTSC3.rootNode).apply {
               edges +=
                   listOf(
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSC3LeafNode), simpleTSC3LeafEdge),
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSC3LeafNode2), simpleTSC3LeafEdge2))
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC3LeafNode), simpleTSC3LeafEdge, false),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC3LeafNode2), simpleTSC3LeafEdge2, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -218,7 +225,9 @@ val simpleTSC3ValidInstance2 =
         rootNode =
             TSCInstanceNode(simpleTSC3.rootNode).apply {
               edges +=
-                  listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC3LeafNode), simpleTSC3LeafEdge))
+                  listOf(
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC3LeafNode), simpleTSC3LeafEdge, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -228,7 +237,9 @@ val simpleTSC3InvalidInstance =
         rootNode =
             TSCInstanceNode(simpleTSC3.rootNode).apply {
               edges +=
-                  listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC3LeafNode), simpleTSC3LeafEdge))
+                  listOf(
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC3LeafNode), simpleTSC3LeafEdge, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -300,8 +311,10 @@ val simpleTSC4ValidInstance =
             TSCInstanceNode(simpleTSC4.rootNode).apply {
               edges +=
                   listOf(
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSC4LeafNode), simpleTSC4LeafEdge),
-                      TSCInstanceEdge(TSCInstanceNode(simpleTSC4LeafNode2), simpleTSC4LeafEdge2))
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC4LeafNode), simpleTSC4LeafEdge, false),
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC4LeafNode2), simpleTSC4LeafEdge2, false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -315,15 +328,18 @@ val simpleTSC4ValidInstance2 =
                       TSCInstanceEdge(
                           TSCInstanceNode(
                               simpleTSC4LeafNode, monitorResults = mapOf("leaf1monitor" to true)),
-                          simpleTSC4LeafEdge),
+                          simpleTSC4LeafEdge,
+                          false),
                       TSCInstanceEdge(
                           TSCInstanceNode(
                               simpleTSC4LeafNode2, monitorResults = mapOf("leaf1monitor" to false)),
-                          simpleTSC4LeafEdge2),
+                          simpleTSC4LeafEdge2,
+                          false),
                       TSCInstanceEdge(
                           TSCInstanceNode(
                               simpleTSC4LeafNode3, monitorResults = mapOf("leaf1monitor" to false)),
-                          simpleTSC4LeafEdge3))
+                          simpleTSC4LeafEdge3,
+                          false))
             },
         sourceSegmentIdentifier = "file 1")
 
@@ -337,7 +353,9 @@ val simpleTSC4InvalidInstance =
         rootNode =
             TSCInstanceNode(simpleTSC4.rootNode).apply {
               edges +=
-                  listOf(TSCInstanceEdge(TSCInstanceNode(simpleTSC4LeafNode), simpleTSC4LeafEdge))
+                  listOf(
+                      TSCInstanceEdge(
+                          TSCInstanceNode(simpleTSC4LeafNode), simpleTSC4LeafEdge, false))
             },
         sourceSegmentIdentifier = "file 1")
 
