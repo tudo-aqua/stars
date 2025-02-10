@@ -65,23 +65,17 @@ sealed class TSCBuilder<
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true
       field = value
-
-      if (!isInverseConditionSet) {
-        inverseCondition = { ctx -> !field.invoke(ctx) }
-      }
     }
 
   private var isConditionSet = false
 
-  /** Inverse condition predicate of the edge. (Default: [CONST_FALSE]) */
-  protected var inverseCondition: ((PredicateContext<E, T, S, U, D>) -> Boolean) = CONST_FALSE
+  /** Inverse condition predicate of the edge. (Default: `null`) */
+  protected var inverseCondition: ((PredicateContext<E, T, S, U, D>) -> Boolean)? = null
     set(value) {
-      check(!isInverseConditionSet) { "Inverse condition already set." }
-      isInverseConditionSet = true
+      check(field == null) { "Inverse condition already set." }
+      checkNotNull(value) { "Inverse condition cannot be set to null." }
       field = value
     }
-
-  private var isInverseConditionSet = false
 
   /** Value function predicate of the node. (Default: empty) */
   protected var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
