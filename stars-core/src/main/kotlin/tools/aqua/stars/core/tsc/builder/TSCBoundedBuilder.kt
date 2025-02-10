@@ -53,7 +53,7 @@ open class TSCBoundedBuilder<
    */
   fun build(): TSCEdge<E, T, S, U, D> =
       TSCEdge(
-          condition = condition ?: CONST_TRUE,
+          condition = condition,
           destination =
               TSCBoundedNode(
                   label = label,
