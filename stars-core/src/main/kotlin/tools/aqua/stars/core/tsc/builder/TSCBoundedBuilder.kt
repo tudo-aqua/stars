@@ -54,6 +54,7 @@ open class TSCBoundedBuilder<
   fun build(): TSCEdge<E, T, S, U, D> =
       TSCEdge(
           condition = condition,
+          inverseCondition = inverseCondition,
           destination =
               TSCBoundedNode(
                   label = label,
