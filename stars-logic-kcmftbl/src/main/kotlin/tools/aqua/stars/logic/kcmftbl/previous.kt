@@ -86,8 +86,8 @@ fun <
     phi: (E1) -> Boolean
 ): Boolean =
     previous(
-        entity.tickData,
-        interval,
+        tickData = entity.tickData,
+        interval = interval,
         phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
@@ -124,8 +124,8 @@ fun <
     "The two entities provided as argument are not from same tick."
   }
   return previous(
-      entity1.tickData,
-      interval,
+      tickData = entity1.tickData,
+      interval = interval,
       phi = { td ->
         val previousEntity1 = td.getEntityById(entity1.id)
         val previousEntity2 = td.getEntityById(entity2.id)

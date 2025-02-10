@@ -87,8 +87,8 @@ fun <
     phi: (E1) -> Boolean
 ): Boolean =
     next(
-        entity.tickData,
-        interval,
+        tickData = entity.tickData,
+        interval = interval,
         phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
 
 /**
@@ -125,8 +125,8 @@ fun <
     "The two entities provided as argument are not from same tick."
   }
   return next(
-      entity1.tickData,
-      interval,
+      tickData = entity1.tickData,
+      interval = interval,
       phi = { td ->
         val futureEntity1 = td.getEntityById(entity1.id)
         val futureEntity2 = td.getEntityById(entity2.id)
