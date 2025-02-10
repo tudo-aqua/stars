@@ -49,18 +49,25 @@ data class TickData(
     get() = entities.filterIsInstance<Vehicle>()
 
   /** The ego vehicle. */
-  val egoVehicle: Vehicle?
-    get() = vehicles.firstOrNull { it.isEgo }
+  val ego: Vehicle
+
+  init {
+    vehicles
+        .filter { it.isEgo }
+        .let {
+          check(it.size == 1) { "There must be exactly one ego vehicle in the tick data" }
+          ego = it.first()
+        }
+  }
 
   /** Returns all [Vehicle]s in given [Block]. */
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
 
   /** Clones current [TickData]. */
-  fun clone(): TickData {
-    val newTickData = TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime)
-    newTickData.entities = entities.map { it.clone(newTickData) }
-    return newTickData
-  }
+  fun clone(): TickData =
+      TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime).also {
+        it.entities = entities.map { t -> t.clone(it) }
+      }
 
   override fun toString(): String = "$currentTick"
 }
