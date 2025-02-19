@@ -24,7 +24,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property isJunction Whether this is a junction.
  * @property lanes List of [Lane]s on this road.
  */
-data class Road(var id: Int, val isJunction: Boolean, val lanes: List<Lane>) {
+data class Road(var id: Int = 0, val isJunction: Boolean = false, val lanes: List<Lane>) {
 
   /** The [Block] this [Road] belongs to. */
   lateinit var block: Block

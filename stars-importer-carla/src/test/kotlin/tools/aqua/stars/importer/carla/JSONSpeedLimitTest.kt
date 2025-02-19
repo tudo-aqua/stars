@@ -55,7 +55,7 @@ class JSONSpeedLimitTest {
     jsonSpeedLimit2.value = 50.0
     jsonSpeedLimit2.type = JsonLandmarkType.MaximumSpeed
 
-    speedLimitLane = emptyLane(laneLength = 40.0)
+    speedLimitLane = Lane(laneLength = 40.0)
 
     jsonLandmarks = listOf(jsonSpeedLimit1, jsonSpeedLimit2)
     speedLimits = getSpeedLimitsFromLandmarks(speedLimitLane, jsonLandmarks)
@@ -123,7 +123,7 @@ class JSONSpeedLimitTest {
   /** Tests [getSpeedLimitsFromLandmarks] returns 0 if no landmark is given. */
   @Test
   fun testEmptyLandmarksList() {
-    assertEquals(0, getSpeedLimitsFromLandmarks(speedLimitLane, listOf()).size)
+    assertEquals(0, getSpeedLimitsFromLandmarks(speedLimitLane, emptyList()).size)
   }
 
   /** Tests [getSpeedLimitsFromLandmarks] from midpoint of lane. */
@@ -196,9 +196,9 @@ class JSONSpeedLimitTest {
         SpeedLimit(speedLimit = 50.0, fromDistanceFromStart = 30.0, toDistanceFromStart = 50.0)
     val speedLimit3 =
         SpeedLimit(speedLimit = 80.0, fromDistanceFromStart = 50.0, toDistanceFromStart = 80.0)
-    val vehicleLane: Lane = emptyLane(speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3))
+    val vehicleLane = Lane(speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3))
 
-    val vehicle: Vehicle = emptyVehicle(lane = vehicleLane, positionOnLane = 0.0)
+    val vehicle = Vehicle(lane = vehicleLane, positionOnLane = 0.0)
     assertEquals(null, vehicle.applicableSpeedLimit)
 
     vehicle.positionOnLane = 10.0
@@ -235,7 +235,7 @@ class JSONSpeedLimitTest {
         SpeedLimit(speedLimit = 50.0, fromDistanceFromStart = 30.0, toDistanceFromStart = 50.0)
     val speedLimit3 =
         SpeedLimit(speedLimit = 80.0, fromDistanceFromStart = 50.0, toDistanceFromStart = 80.0)
-    val lane = emptyLane(speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3))
+    val lane = Lane(speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3))
 
     assertEquals(30.0, lane.speedAt(0.0))
     assertEquals(speedLimit1.speedLimit, lane.speedAt(10.0))

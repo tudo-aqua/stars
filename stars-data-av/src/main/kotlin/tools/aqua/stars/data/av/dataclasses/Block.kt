@@ -24,7 +24,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property roads Roads incorporated in this block.
  */
 data class Block(
-    val id: String,
+    val id: String = "",
     var roads: List<Road>,
 ) {
 

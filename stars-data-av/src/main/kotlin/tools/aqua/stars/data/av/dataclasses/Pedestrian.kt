@@ -26,8 +26,8 @@ package tools.aqua.stars.data.av.dataclasses
  * @property lane The [Pedestrian]'s [Lane].
  */
 data class Pedestrian(
-    override val id: Int,
-    val positionOnLane: Double,
+    override val id: Int = 0,
+    val positionOnLane: Double = 0.0,
     val lane: Lane,
 ) : Actor() {
 

@@ -18,27 +18,43 @@
 package tools.aqua.stars.importer.carla
 
 import java.lang.IllegalStateException
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Location
+import tools.aqua.stars.data.av.dataclasses.Pedestrian
+import tools.aqua.stars.data.av.dataclasses.Road
+import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.data.av.dataclasses.TickDataUnitSeconds
+import tools.aqua.stars.data.av.dataclasses.Vehicle
 
 /** Tests the velocity and acceleration calculations. */
 class VelocityAndAccelerationTest {
 
+  /** Lane for testing. */
+  lateinit var lane: Lane
+
+  /** Test setup. */
+  @BeforeTest
+  fun setup() {
+    lane = Lane().also { Block(roads = listOf(Road(lanes = listOf(it)))) }
+  }
+
   /** Tests the velocity and acceleration calculations on pre-defined values. */
   @Test
   fun testVelocityCalculation() {
-    val vehicle1 = emptyVehicle(location = Location(0.0, 0.0, 0.0), isEgo = true)
-    val vehicle2 = emptyVehicle(location = Location(3.0, 4.0, 5.0), isEgo = true)
-    val vehicle3 = emptyVehicle(location = Location(8.0, 2.0, 10.0), isEgo = true)
+    val vehicle1 = Vehicle(location = Location(0.0, 0.0, 0.0), isEgo = true, lane = lane)
+    val vehicle2 = Vehicle(location = Location(3.0, 4.0, 5.0), isEgo = true, lane = lane)
+    val vehicle3 = Vehicle(location = Location(8.0, 2.0, 10.0), isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    emptyTickData(currentTick = TickDataUnitSeconds(0.0), actors = listOf(vehicle1))
-    emptyTickData(currentTick = TickDataUnitSeconds(1.0), actors = listOf(vehicle2))
-    emptyTickData(currentTick = TickDataUnitSeconds(2.0), actors = listOf(vehicle3))
+    TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
+    TickData(currentTick = TickDataUnitSeconds(1.0), entities = listOf(vehicle2))
+    TickData(currentTick = TickDataUnitSeconds(2.0), entities = listOf(vehicle3))
 
     // Vehicle 0 has no previous state. The velocity and acceleration values should be set to 0.0
     updateActorVelocityAndAcceleration(vehicle1, null)
@@ -82,12 +98,12 @@ class VelocityAndAccelerationTest {
    */
   @Test
   fun testZeroTimeDifference() {
-    val vehicle1 = emptyVehicle(isEgo = true)
-    val vehicle2 = emptyVehicle(isEgo = false)
-    val vehicle3 = emptyVehicle(isEgo = false)
+    val vehicle1 = Vehicle(isEgo = true, lane = lane)
+    val vehicle2 = Vehicle(isEgo = false, lane = lane)
+    val vehicle3 = Vehicle(isEgo = false, lane = lane)
 
     // Create TickData for all vehicles.
-    emptyTickData(actors = listOf(vehicle1, vehicle2, vehicle3))
+    TickData(entities = listOf(vehicle1, vehicle2, vehicle3))
 
     // Vehicle 0 has no previous state. The velocity and acceleration values should be set to 0.0
     updateActorVelocityAndAcceleration(vehicle1, null)
@@ -124,12 +140,12 @@ class VelocityAndAccelerationTest {
    */
   @Test
   fun testNegativeTimeDifference() {
-    val vehicle1 = emptyVehicle(isEgo = true)
-    val vehicle2 = emptyVehicle(isEgo = true)
+    val vehicle1 = Vehicle(isEgo = true, lane = lane)
+    val vehicle2 = Vehicle(isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    emptyTickData(currentTick = TickDataUnitSeconds(0.0), actors = listOf(vehicle1))
-    emptyTickData(currentTick = TickDataUnitSeconds(-1.0), actors = listOf(vehicle2))
+    TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
+    TickData(currentTick = TickDataUnitSeconds(-1.0), entities = listOf(vehicle2))
 
     // The time difference between Vehicle2 and Vehicle1 is -1.0. This should throw an
     // IllegalStateException
@@ -144,10 +160,10 @@ class VelocityAndAccelerationTest {
    */
   @Test
   fun testEmptyPreviousVehicle() {
-    val vehicle = emptyVehicle(isEgo = true)
+    val vehicle = Vehicle(isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    emptyTickData(actors = listOf(vehicle))
+    TickData(entities = listOf(vehicle))
 
     // Vehicle has no previous state. The velocity and acceleration values should be set to 0.0
     updateActorVelocityAndAcceleration(vehicle, null)
@@ -165,8 +181,8 @@ class VelocityAndAccelerationTest {
    */
   @Test
   fun testWrongActorType() {
-    val actor0 = emptyPedestrian(id = 0)
-    val vehicle1 = emptyVehicle(id = 0)
+    val actor0 = Pedestrian(id = 0, lane = lane)
+    val vehicle1 = Vehicle(id = 0, lane = lane)
 
     // It is expected that the actors of the current tick and the previous tick are both of type
     // 'Vehicle'. In this case the previous actor with the same id as a 'Pedestrian'. Therefore, an

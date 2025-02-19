@@ -40,18 +40,18 @@ import kotlin.math.sqrt
  * @property angularVelocity The current angular velocity.
  */
 data class Vehicle(
-    override val id: Int,
-    var positionOnLane: Double,
+    override val id: Int = 0,
+    var positionOnLane: Double = 0.0,
     var lane: Lane,
-    val typeId: String,
-    val vehicleType: VehicleType,
-    var isEgo: Boolean,
-    val location: Location,
-    val forwardVector: Vector3D,
-    val rotation: Rotation,
-    var velocity: Vector3D,
-    var acceleration: Vector3D,
-    val angularVelocity: Vector3D,
+    val typeId: String = "",
+    val vehicleType: VehicleType = VehicleType.CAR,
+    var isEgo: Boolean = false,
+    val location: Location = Location(),
+    val forwardVector: Vector3D = Vector3D(),
+    val rotation: Rotation = Rotation(),
+    var velocity: Vector3D = Vector3D(),
+    var acceleration: Vector3D = Vector3D(),
+    val angularVelocity: Vector3D = Vector3D(),
 ) : Actor() {
 
   override lateinit var tickData: TickData

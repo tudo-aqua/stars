@@ -17,14 +17,27 @@
 
 package tools.aqua.stars.data.av.metrics
 
+import kotlin.test.BeforeTest
 import kotlin.test.Test
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Lane
+import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.data.av.dataclasses.Segment
+import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.data.av.dataclasses.TickDataUnitSeconds
-import tools.aqua.stars.data.av.emptyTickData
-import tools.aqua.stars.data.av.emptyVehicle
+import tools.aqua.stars.data.av.dataclasses.Vehicle
 
 /** This class tests the [AverageVehiclesInEgosBlockMetric.evaluate] function. */
 class AverageVehiclesInEgosBlockMetricTest {
+
+  /** Lane for testing. */
+  lateinit var lane: Lane
+
+  /** Test setup. */
+  @BeforeTest
+  fun setup() {
+    lane = Lane().also { Block(roads = listOf(Road(lanes = listOf(it)))) }
+  }
 
   /**
    * This test checks that the returned value of the metric is equal to 1, as there is only the ego
@@ -32,8 +45,8 @@ class AverageVehiclesInEgosBlockMetricTest {
    */
   @Test
   fun testOnlyEgoInBlock() {
-    val actor = emptyVehicle(isEgo = true)
-    val tickData = emptyTickData(actors = listOf(actor))
+    val actor = Vehicle(isEgo = true, lane = lane)
+    val tickData = TickData(entities = listOf(actor))
     val segment = Segment(listOf(tickData), "", "")
 
     val averageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric()
@@ -45,11 +58,11 @@ class AverageVehiclesInEgosBlockMetricTest {
   /** This test checks that there are (on average) 2 vehicles. */
   @Test
   fun testOneVehicleBesidesEgoInBlock() {
-    val actors = listOf(emptyVehicle(isEgo = true), emptyVehicle(isEgo = false))
+    val entities = listOf(Vehicle(isEgo = true, lane = lane), Vehicle(isEgo = false, lane = lane))
 
-    val tickData = emptyTickData(currentTick = TickDataUnitSeconds(0.0), actors = actors)
-    val tickData2 = emptyTickData(currentTick = TickDataUnitSeconds(1.0), actors = actors)
-    val tickData3 = emptyTickData(currentTick = TickDataUnitSeconds(2.0), actors = actors)
+    val tickData = TickData(currentTick = TickDataUnitSeconds(0.0), entities = entities)
+    val tickData2 = TickData(currentTick = TickDataUnitSeconds(1.0), entities = entities)
+    val tickData3 = TickData(currentTick = TickDataUnitSeconds(2.0), entities = entities)
 
     val segment = Segment(listOf(tickData, tickData2, tickData3), "", "")
 
@@ -62,13 +75,13 @@ class AverageVehiclesInEgosBlockMetricTest {
   /** This test checks that there are (on average) over 1.5 vehicles. */
   @Test
   fun testMostlyOneVehicleBesidesEgoInBlock() {
-    val actor = emptyVehicle(isEgo = true)
-    val actor2 = emptyVehicle(isEgo = false)
+    val actor = Vehicle(isEgo = true, lane = lane)
+    val actor2 = Vehicle(isEgo = false, lane = lane)
     val tickData =
-        emptyTickData(currentTick = TickDataUnitSeconds(0.0), actors = listOf(actor, actor2))
+        TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(actor, actor2))
     val tickData2 =
-        emptyTickData(currentTick = TickDataUnitSeconds(1.0), actors = listOf(actor, actor2))
-    val tickData3 = emptyTickData(currentTick = TickDataUnitSeconds(2.0), actors = listOf(actor))
+        TickData(currentTick = TickDataUnitSeconds(1.0), entities = listOf(actor, actor2))
+    val tickData3 = TickData(currentTick = TickDataUnitSeconds(2.0), entities = listOf(actor))
     val segment = Segment(listOf(tickData, tickData2, tickData3), "", "")
 
     val averageVehiclesInEgosBlockMetric = AverageVehiclesInEgosBlockMetric()

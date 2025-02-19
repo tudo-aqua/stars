@@ -31,7 +31,7 @@ class SimpleEntity(
 
 /** Simple segment. */
 class SimpleSegment(
-    override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = mapOf(),
+    override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = emptyMap(),
     override val segmentSource: String = "",
     override val primaryEntityId: Int = 0
 ) :
@@ -46,7 +46,7 @@ class SimpleSegment(
 /** Simple tick data. */
 class SimpleTickData(
     override val currentTick: SimpleTickDataUnit = SimpleTickDataUnit(0),
-    override var entities: List<SimpleEntity> = listOf(),
+    override var entities: List<SimpleEntity> = emptyList(),
     override var segment: SimpleSegment = SimpleSegment()
 ) :
     TickDataType<

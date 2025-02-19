@@ -43,7 +43,7 @@ class IncompleteJSONLaneTest {
             s = 0.0,
             intersectingLanes = listOf(JsonContactLaneInfo(laneId = 1, roadId = 2)),
             laneLength = 10.0,
-            laneMidpoints = listOf(),
+            laneMidpoints = emptyList(),
             laneType = JsonLaneType.Driving,
             laneWidth = 2.0,
             predecessorLanes = listOf(JsonContactLaneInfo(laneId = 1, roadId = 0)),
@@ -61,8 +61,8 @@ class IncompleteJSONLaneTest {
                         contactLocation = JsonLocation(),
                         id = "")),
             successorLanes = listOf(JsonContactLaneInfo(laneId = 1, roadId = 3)),
-            speedLimits = listOf(),
-            trafficLights = listOf(),
+            speedLimits = emptyList(),
+            trafficLights = emptyList(),
             landmarks =
                 listOf(
                     JsonLandmark(

@@ -21,8 +21,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Lane
+import tools.aqua.stars.data.av.dataclasses.Road
+import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
+import tools.aqua.stars.data.av.dataclasses.TickData
+import tools.aqua.stars.data.av.dataclasses.TrafficLight
 import tools.aqua.stars.data.av.dataclasses.TrafficLightState
+import tools.aqua.stars.data.av.dataclasses.Vehicle
 import tools.aqua.stars.importer.carla.dataclasses.JsonActorPosition
 import tools.aqua.stars.importer.carla.dataclasses.JsonLane
 import tools.aqua.stars.importer.carla.dataclasses.JsonLocation
@@ -65,25 +71,25 @@ class JSONTrafficLightTest {
   @Test
   fun testJsonTrafficLightToTrafficLightConversion() {
     val openDriveTrafficLightId = 100
-    val staticTrafficLight = emptyStaticTrafficLight(id = 100)
+    val staticTrafficLight = StaticTrafficLight(id = 100)
 
-    val lane = emptyLane(staticTrafficLights = listOf(staticTrafficLight))
-    val road = emptyRoad(lanes = listOf(lane))
-    val block = emptyBlock(roads = listOf(road))
+    val lane = Lane(trafficLights = listOf(staticTrafficLight))
+    val road = Road(lanes = listOf(lane))
+    val block = Block(roads = listOf(road))
     val blocks = listOf(block)
-    val vehicles = listOf(emptyVehicle(isEgo = true))
+    val vehicles = listOf(Vehicle(isEgo = true, lane = lane))
 
     val trafficLight =
-        emptyTrafficLight(
+        TrafficLight(
             id = 0, relatedOpenDriveId = openDriveTrafficLightId, state = TrafficLightState.Red)
     val tickData1 =
-        emptyTickData(blocks = blocks, trafficLights = listOf(trafficLight), actors = vehicles)
+        TickData(blocks = blocks, trafficLights = listOf(trafficLight), entities = vehicles)
 
     val trafficLight2 =
-        emptyTrafficLight(
+        TrafficLight(
             id = 1, relatedOpenDriveId = openDriveTrafficLightId, state = TrafficLightState.Green)
     val tickData2 =
-        emptyTickData(blocks = blocks, trafficLights = listOf(trafficLight2), actors = vehicles)
+        TickData(blocks = blocks, trafficLights = listOf(trafficLight2), entities = vehicles)
 
     assertNotNull(tickData1.blocks[0].roads[0].lanes[0].trafficLights[0].getStateInTick(tickData1))
     assertEquals(
@@ -135,9 +141,9 @@ class JSONTrafficLightTest {
     val jsonTrafficLight = JsonTrafficLight(id = 100, state = 2)
     val jsonActorPosition = JsonActorPosition(actor = jsonTrafficLight, laneId = 1, roadId = 1)
 
-    val lane = emptyLane(jsonActorPosition.laneId)
-    val road = emptyRoad(jsonActorPosition.roadId, lanes = listOf(lane))
-    val block = emptyBlock(roads = listOf(road))
+    val lane = Lane(jsonActorPosition.laneId)
+    val road = Road(jsonActorPosition.roadId, lanes = listOf(lane))
+    val block = Block(roads = listOf(road))
 
     assertNull(
         convertJsonActorPositionToEntity(position = jsonActorPosition, blocks = listOf(block)))
