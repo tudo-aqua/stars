@@ -137,6 +137,7 @@ fun convertJsonRoadToRoad(jsonRoad: JsonRoad): Road =
  * Converts [JsonLane] to [Lane].
  *
  * @param jsonLane The [JsonLane].
+ * @param isJunction Whether the [Lane] is in a junction.
  */
 fun convertJsonLaneToLane(jsonLane: JsonLane, isJunction: Boolean): Lane =
     Lane(

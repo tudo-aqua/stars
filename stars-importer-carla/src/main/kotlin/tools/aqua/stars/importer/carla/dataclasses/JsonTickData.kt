@@ -30,7 +30,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class JsonTickData(
     @SerialName("current_tick") val currentTick: Double = 0.0,
-    @SerialName("actor_positions") val actorPositions: List<JsonActorPosition> = listOf(),
+    @SerialName("actor_positions") val actorPositions: List<JsonActorPosition> = emptyList(),
     @SerialName("weather_parameters")
     val weatherParameters: JSonDataWeatherParameters = JSonDataWeatherParameters()
 )

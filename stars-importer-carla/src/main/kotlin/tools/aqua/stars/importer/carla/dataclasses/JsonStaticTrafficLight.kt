@@ -36,7 +36,7 @@ data class JsonStaticTrafficLight(
     @SerialName("position_distance") val positionDistance: Float = 0.0f,
     @SerialName("location") var location: JsonLocation = JsonLocation(),
     @SerialName("rotation") var rotation: JsonRotation = JsonRotation(),
-    @SerialName("stop_locations") var stopLocations: List<JsonLocation> = listOf(),
+    @SerialName("stop_locations") var stopLocations: List<JsonLocation> = emptyList(),
 ) {
 
   /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */

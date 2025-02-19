@@ -21,7 +21,6 @@ package tools.aqua.stars.data.av.dataclasses
  * Data class for pedestrians.
  *
  * @property id The identifier of the pedestrian.
- * @property tickData [TickData].
  * @property positionOnLane The [Pedestrian]'s position on the [Lane].
  * @property lane The [Pedestrian]'s [Lane].
  */

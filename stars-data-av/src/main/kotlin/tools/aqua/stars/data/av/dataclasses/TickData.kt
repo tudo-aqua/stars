@@ -67,7 +67,7 @@ data class TickData(
 
   /** Clones current [TickData]. */
   fun clone(): TickData =
-      TickData(currentTick, listOf(), trafficLights, blocks, weather, daytime).also {
+      TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime).also {
         it.entities = entities.map { t -> t.clone(it) }
       }
 

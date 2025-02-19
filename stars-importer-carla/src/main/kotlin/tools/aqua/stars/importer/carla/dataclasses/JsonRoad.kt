@@ -31,5 +31,5 @@ import kotlinx.serialization.Serializable
 data class JsonRoad(
     @SerialName("road_id") val roadId: Int = 0,
     @SerialName("is_junction") val isJunction: Boolean = false,
-    @SerialName("lanes") val lanes: List<JsonLane> = listOf(),
+    @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
 )

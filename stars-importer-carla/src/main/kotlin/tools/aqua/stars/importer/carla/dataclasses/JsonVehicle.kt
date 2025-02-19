@@ -37,6 +37,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 @SerialName("Vehicle")
+@Suppress("BooleanPropertyNaming")
 data class JsonVehicle(
     @SerialName("id") override val id: Int = 0,
     @SerialName("location") override val location: JsonLocation = JsonLocation(),

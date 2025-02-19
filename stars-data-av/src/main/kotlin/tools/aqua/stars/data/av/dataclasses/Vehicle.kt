@@ -26,7 +26,6 @@ import kotlin.math.sqrt
  * Data class for vehicles.
  *
  * @property id The identifier of the vehicle.
- * @property tickData [TickData].
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property lane The [Vehicle]'s [Lane].
  * @property typeId The type identifier.
