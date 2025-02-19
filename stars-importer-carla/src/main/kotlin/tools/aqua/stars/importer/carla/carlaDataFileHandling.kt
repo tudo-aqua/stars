@@ -96,9 +96,7 @@ inline fun <reified T> getJsonContentOfPath(file: Path): T {
  * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [Path]
  */
 fun loadBlocks(mapDataFile: Path): Sequence<Block> =
-    calculateStaticBlocks(
-            getJsonContentOfPath<List<JsonBlock>>(mapDataFile), mapDataFile.fileName.toString())
-        .asSequence()
+    calculateStaticBlocks(getJsonContentOfPath<List<JsonBlock>>(mapDataFile)).asSequence()
 
 /**
  * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each

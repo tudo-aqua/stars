@@ -32,11 +32,11 @@ import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
  */
 @Serializable
 data class JsonStaticTrafficLight(
-    @SerialName("open_drive_id") var id: Int,
-    @SerialName("position_distance") val positionDistance: Float,
-    @SerialName("location") var location: JsonLocation,
-    @SerialName("rotation") var rotation: JsonRotation,
-    @SerialName("stop_locations") var stopLocations: List<JsonLocation>,
+    @SerialName("open_drive_id") var id: Int = 0,
+    @SerialName("position_distance") val positionDistance: Float = 0.0f,
+    @SerialName("location") var location: JsonLocation = JsonLocation(),
+    @SerialName("rotation") var rotation: JsonRotation = JsonRotation(),
+    @SerialName("stop_locations") var stopLocations: List<JsonLocation> = listOf(),
 ) {
 
   /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */

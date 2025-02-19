@@ -22,7 +22,7 @@ import tools.aqua.stars.core.types.*
 /** Simple entity. */
 class SimpleEntity(
     override val id: Int = 0,
-    override val tickData: SimpleTickData = SimpleTickData()
+    override var tickData: SimpleTickData = SimpleTickData()
 ) :
     EntityType<
         SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {

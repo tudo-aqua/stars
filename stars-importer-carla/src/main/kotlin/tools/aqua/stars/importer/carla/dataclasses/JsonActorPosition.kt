@@ -30,8 +30,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class JsonActorPosition(
-    @SerialName("position_on_lane") val positionOnLane: Double,
-    @SerialName("lane_id") var laneId: Int,
-    @SerialName("road_id") var roadId: Int,
-    @SerialName("actor") var actor: JsonActor,
+    @SerialName("position_on_lane") val positionOnLane: Double = 0.0,
+    @SerialName("lane_id") var laneId: Int = 0,
+    @SerialName("road_id") var roadId: Int = 0,
+    @SerialName("actor") var actor: JsonActor = JsonVehicle(),
 )

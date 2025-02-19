@@ -20,15 +20,19 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for [Road] blocks.
  *
- * @property fileName The filename.
  * @property id Identifier of the road block.
  * @property roads Roads incorporated in this block.
  */
 data class Block(
-    val fileName: String,
     val id: String,
     var roads: List<Road>,
 ) {
+
+  init {
+    check(roads.isNotEmpty()) { "Block must have at least one road" }
+    roads.forEach { it.block = this }
+  }
+
   override fun toString(): String = id
 
   override fun hashCode(): Int = id.hashCode()

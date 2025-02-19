@@ -29,66 +29,47 @@ import tools.aqua.stars.data.av.emptyVehicle
  * 'the primary entity should be consistent in the whole segment'.
  */
 class SegmentPrimaryEntityTest {
-  /**
-   * This test checks that an exception is thrown, when there is no primary entity in a [Segment].
-   */
+  /** Test [TickData] throwing [IllegalStateException] when there is no ego vehicle. */
   @Test
-  fun testNoEgoVehicle() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = false)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
-    val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
-    val segment =
-        Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
-    assertFailsWith<IllegalStateException> { segment.primaryEntityId }
+  fun `Test TickData throwing IllegalStateException when there is no ego vehicle`() {
+    val vehicle1 = emptyVehicle(id = 0, isEgo = false)
+    val vehicle2 = emptyVehicle(id = 1, isEgo = false)
+    assertFailsWith<IllegalStateException> { emptyTickData(actors = listOf(vehicle1, vehicle2)) }
   }
 
-  /**
-   * This test checks that there is no exception when exactly one primary entity is present in a
-   * [Segment].
-   */
+  /** Test [TickData] with exactly one ego vehicle. */
   @Test
-  fun testHasEgoVehicle() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+  fun `Test TickData with exactly one ego vehicle`() {
+    val vehicle1 = emptyVehicle(id = 0, isEgo = true)
+    val vehicle2 = emptyVehicle(id = 1, isEgo = false)
     val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
-    val segment =
-        Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
+    val segment = Segment(tickData = listOf(tickData), segmentSource = "")
+
     assertEquals(segment.primaryEntityId, vehicle1.id)
   }
 
-  /**
-   * This test checks that an exception is thrown when there are multiple primary entities in a
-   * [Segment].
-   */
+  /** Test [TickData] throwing [IllegalStateException] when there are multiple ego vehicles. */
   @Test
-  fun testHasMultipleEgoVehicles() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = true)
-    val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
-    val segment =
-        Segment(segmentSource = "", mainInitList = listOf(tickData), simulationRunId = "1")
-    assertFailsWith<IllegalStateException> { segment.primaryEntityId }
+  fun `Test TickData throwing IllegalStateException when there are multiple ego vehicles`() {
+    val vehicle1 = emptyVehicle(id = 0, isEgo = true)
+    val vehicle2 = emptyVehicle(id = 1, isEgo = true)
+    assertFailsWith<IllegalStateException> { emptyTickData(actors = listOf(vehicle1, vehicle2)) }
   }
 
-  /**
-   * This test checks that an exception is thrown when the primary entity changed during a [Segment]
-   * .
-   */
+  /** Test [TickData] throwing [IllegalStateException] when ego vehicle changes between ticks. */
   @Test
-  fun testChangingEgoVehicles() {
-    val vehicle1 = emptyVehicle(id = 0, egoVehicle = true)
-    val vehicle2 = emptyVehicle(id = 1, egoVehicle = false)
+  fun `Test TickData throwing IllegalStateException when ego vehicle changes between ticks`() {
+    val vehicle1 = emptyVehicle(id = 0, isEgo = true)
+    val vehicle2 = emptyVehicle(id = 1, isEgo = false)
     val tickData = emptyTickData(actors = listOf(vehicle1, vehicle2))
 
     // Change egoVehicle flag
-    val changedVehicle1 = emptyVehicle(id = 0, egoVehicle = false)
-    val changedVehicle2 = emptyVehicle(id = 1, egoVehicle = true)
+    val changedVehicle1 = emptyVehicle(id = 0, isEgo = false)
+    val changedVehicle2 = emptyVehicle(id = 1, isEgo = true)
     val tickData2 = emptyTickData(actors = listOf(changedVehicle1, changedVehicle2))
 
-    val segment =
-        Segment(
-            segmentSource = "", mainInitList = listOf(tickData, tickData2), simulationRunId = "1")
-
-    assertFailsWith<IllegalStateException> { segment.primaryEntityId }
+    assertFailsWith<IllegalStateException> {
+      Segment(tickData = listOf(tickData, tickData2), segmentSource = "")
+    }
   }
 }

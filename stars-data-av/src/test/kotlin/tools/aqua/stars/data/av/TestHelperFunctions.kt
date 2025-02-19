@@ -20,21 +20,19 @@ package tools.aqua.stars.data.av
 import tools.aqua.stars.data.av.dataclasses.*
 
 /** Empty [Block]. */
-fun emptyBlock(id: String = ""): Block = Block(id = id, roads = listOf(), fileName = "")
+fun emptyBlock(id: String = "", roads: List<Road>): Block = Block(id = id, roads = roads)
 
 /** Empty [Road]. */
-fun emptyRoad(id: Int = 0, isJunction: Boolean = false, block: Block = emptyBlock()): Road =
+fun emptyRoad(id: Int = 0, isJunction: Boolean = false, lanes: List<Lane>): Road =
     Road(
         id = id,
-        block = block,
         isJunction = isJunction,
-        lanes = listOf(),
+        lanes = lanes,
     )
 
 /** Empty [Lane]. */
 fun emptyLane(
     laneId: Int = 1,
-    road: Road = emptyRoad(),
     laneLength: Double = 0.0,
     speedLimits: List<SpeedLimit> = listOf(),
     staticTrafficLights: List<StaticTrafficLight> = listOf(),
@@ -43,21 +41,21 @@ fun emptyLane(
     laneDirection: LaneDirection = LaneDirection.UNKNOWN
 ): Lane =
     Lane(
-        laneId = laneId,
-        road = road,
-        intersectingLanes = listOf(),
-        laneLength = laneLength,
-        laneMidpoints = listOf(),
-        laneType = LaneType.Driving,
-        laneWidth = 0.0,
-        predecessorLanes = listOf(),
-        contactAreas = listOf(),
-        successorLanes = successorLanes,
-        speedLimits = speedLimits,
-        trafficLights = staticTrafficLights,
-        landmarks = landmarks,
-        laneDirection = laneDirection,
-        yieldLanes = listOf())
+            laneId = laneId,
+            intersectingLanes = listOf(),
+            laneLength = laneLength,
+            laneMidpoints = listOf(),
+            laneType = LaneType.Driving,
+            laneWidth = 0.0,
+            predecessorLanes = listOf(),
+            contactAreas = listOf(),
+            successorLanes = successorLanes,
+            speedLimits = speedLimits,
+            trafficLights = staticTrafficLights,
+            landmarks = landmarks,
+            laneDirection = laneDirection,
+            yieldLanes = listOf())
+        .also { emptyBlock(roads = listOf(emptyRoad(lanes = listOf(it)))) }
 
 /** Empty [Rotation]. */
 fun emptyRotation(): Rotation = Rotation(0.0, 0.0, 0.0)
@@ -98,7 +96,7 @@ fun emptyTickData(
     blocks: List<Block> = listOf(),
     trafficLights: List<TrafficLight> = listOf(),
     weatherParameters: WeatherParameters = emptyWeatherParameters(),
-    actors: List<Actor> = listOf(),
+    actors: List<Actor>,
     daytime: Daytime = Daytime.Sunset
 ): TickData =
     TickData(
@@ -113,39 +111,35 @@ fun emptyTickData(
 fun emptyPedestrian(
     id: Int = 1,
     lane: Lane = emptyLane(),
-    positionOnLane: Double = 0.0,
-    tickData: TickData = emptyTickData()
-): Pedestrian =
-    Pedestrian(id = id, positionOnLane = positionOnLane, tickData = tickData, lane = lane)
+    positionOnLane: Double = 0.0
+): Pedestrian = Pedestrian(id = id, positionOnLane = positionOnLane, lane = lane)
 
 /** Empty non-ego [Vehicle]. */
 fun emptyVehicle(
-    egoVehicle: Boolean = false,
+    isEgo: Boolean = false,
     id: Int = 0,
     lane: Lane = emptyLane(),
     positionOnLane: Double = 0.0,
-    tickData: TickData = emptyTickData(),
     location: Location = emptyLocation()
 ): Vehicle =
     Vehicle(
         id = id,
         rotation = emptyRotation(),
         location = location,
-        isEgo = egoVehicle,
+        isEgo = isEgo,
         acceleration = emptyVector3D(),
         angularVelocity = emptyVector3D(),
         forwardVector = emptyVector3D(),
         lane = lane,
         positionOnLane = positionOnLane,
-        tickData = tickData,
         typeId = "",
         vehicleType = VehicleType.CAR,
         velocity = emptyVector3D())
 
 /** Empty [StaticTrafficLight]. */
-fun emptyStaticTrafficLight(): StaticTrafficLight =
+fun emptyStaticTrafficLight(id: Int): StaticTrafficLight =
     StaticTrafficLight(
-        id = 0, rotation = emptyRotation(), location = emptyLocation(), stopLocations = listOf())
+        id = id, rotation = emptyRotation(), location = emptyLocation(), stopLocations = listOf())
 
 /** Empty [TrafficLight] with state [TrafficLightState.Unknown]. */
 fun emptyTrafficLight(

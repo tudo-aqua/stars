@@ -40,6 +40,17 @@ data class TickData(
 
   override lateinit var segment: Segment
 
+  init {
+    entities.onEach { it.tickData = this }
+
+    vehicles
+        .filter { it.isEgo }
+        .let {
+          check(it.size == 1) { "There must be exactly one ego vehicle in the tick data" }
+          ego = it.first()
+        }
+  }
+
   /** All pedestrians. */
   val pedestrians: List<Pedestrian>
     get() = entities.filterIsInstance<Pedestrian>()
@@ -51,21 +62,12 @@ data class TickData(
   /** The ego vehicle. */
   val ego: Vehicle
 
-  init {
-    vehicles
-        .filter { it.isEgo }
-        .let {
-          check(it.size == 1) { "There must be exactly one ego vehicle in the tick data" }
-          ego = it.first()
-        }
-  }
-
   /** Returns all [Vehicle]s in given [Block]. */
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
 
   /** Clones current [TickData]. */
   fun clone(): TickData =
-      TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime).also {
+      TickData(currentTick, listOf(), trafficLights, blocks, weather, daytime).also {
         it.entities = entities.map { t -> t.clone(it) }
       }
 

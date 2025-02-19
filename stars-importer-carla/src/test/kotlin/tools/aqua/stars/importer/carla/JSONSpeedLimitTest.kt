@@ -27,6 +27,7 @@ import tools.aqua.stars.data.av.dataclasses.SpeedLimit
 import tools.aqua.stars.data.av.dataclasses.Vehicle
 import tools.aqua.stars.importer.carla.dataclasses.JsonLandmark
 import tools.aqua.stars.importer.carla.dataclasses.JsonLandmarkType
+import tools.aqua.stars.importer.carla.dataclasses.JsonLane
 
 /** Tests various configurations of speed limits on a lane. */
 class JSONSpeedLimitTest {
@@ -40,14 +41,14 @@ class JSONSpeedLimitTest {
   /** Creates the speed limits, landmarks and the lane. */
   @BeforeTest
   fun setup() {
-    jsonSpeedLimit1 = emptyJsonLandmark()
+    jsonSpeedLimit1 = JsonLandmark()
     jsonSpeedLimit1.id = 100
     jsonSpeedLimit1.s = 10.0
     jsonSpeedLimit1.unit = "mph"
     jsonSpeedLimit1.value = 30.0
     jsonSpeedLimit1.type = JsonLandmarkType.MaximumSpeed
 
-    jsonSpeedLimit2 = emptyJsonLandmark()
+    jsonSpeedLimit2 = JsonLandmark()
     jsonSpeedLimit2.id = 100
     jsonSpeedLimit2.s = 30.0
     jsonSpeedLimit2.unit = "mph"
@@ -81,7 +82,7 @@ class JSONSpeedLimitTest {
   /** Tests [getSpeedLimitsFromLandmarks] with unis "kmh". */
   @Test
   fun testOtherUnitConversions() {
-    val jsonLandmark = emptyJsonLandmark()
+    val jsonLandmark = JsonLandmark()
     jsonLandmark.s = 10.0
     jsonLandmark.unit = "kmh"
     jsonLandmark.value = 30.0
@@ -111,7 +112,7 @@ class JSONSpeedLimitTest {
         JsonLandmarkType.entries
             .filter { it != JsonLandmarkType.MaximumSpeed }
             .map {
-              val landmark = emptyJsonLandmark()
+              val landmark = JsonLandmark()
               landmark.type = it
               return@map landmark
             }
@@ -130,7 +131,7 @@ class JSONSpeedLimitTest {
   fun testSingleSpeedLimitBoundariesStartingInMidOfLane() {
     // Single SpeedLimit sign at s=10
     val expectedStart = 10.0
-    val speedLimitLandmark = emptyJsonLandmark()
+    val speedLimitLandmark = JsonLandmark()
     speedLimitLandmark.type = JsonLandmarkType.MaximumSpeed
     speedLimitLandmark.s = expectedStart
 
@@ -145,7 +146,7 @@ class JSONSpeedLimitTest {
   fun testSingleSpeedLimitBoundariesStartingAtStartOfLane() {
     // Single SpeedLimit sign at s=0
     val expectedStart = 0.0
-    val speedLimitLandmark = emptyJsonLandmark()
+    val speedLimitLandmark = JsonLandmark()
     speedLimitLandmark.type = JsonLandmarkType.MaximumSpeed
     speedLimitLandmark.s = expectedStart
 
@@ -160,7 +161,7 @@ class JSONSpeedLimitTest {
   fun testSingleSpeedLimitBoundariesStartingAtEndOfLane() {
     // Single SpeedLimit sign at s=lane_length
     val expectedStart = speedLimitLane.laneLength
-    val speedLimitLandmark = emptyJsonLandmark()
+    val speedLimitLandmark = JsonLandmark()
     speedLimitLandmark.type = JsonLandmarkType.MaximumSpeed
     speedLimitLandmark.s = expectedStart
 
@@ -177,7 +178,7 @@ class JSONSpeedLimitTest {
   fun testSingleSpeedLimitBoundariesStartAfterEndOfLane() {
     // Single SpeedLimit sign at s=lane_length+1
     val expectedStart = speedLimitLane.laneLength + 1
-    val speedLimitLandmark = emptyJsonLandmark()
+    val speedLimitLandmark = JsonLandmark()
     speedLimitLandmark.type = JsonLandmarkType.MaximumSpeed
     speedLimitLandmark.s = expectedStart
 
@@ -195,13 +196,9 @@ class JSONSpeedLimitTest {
         SpeedLimit(speedLimit = 50.0, fromDistanceFromStart = 30.0, toDistanceFromStart = 50.0)
     val speedLimit3 =
         SpeedLimit(speedLimit = 80.0, fromDistanceFromStart = 50.0, toDistanceFromStart = 80.0)
-    val vehicleLane: Lane = emptyLane()
-    vehicleLane.speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3)
+    val vehicleLane: Lane = emptyLane(speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3))
 
-    val vehicle: Vehicle = emptyVehicle()
-    vehicle.lane = vehicleLane
-
-    vehicle.positionOnLane = 0.0
+    val vehicle: Vehicle = emptyVehicle(lane = vehicleLane, positionOnLane = 0.0)
     assertEquals(null, vehicle.applicableSpeedLimit)
 
     vehicle.positionOnLane = 10.0
@@ -238,8 +235,7 @@ class JSONSpeedLimitTest {
         SpeedLimit(speedLimit = 50.0, fromDistanceFromStart = 30.0, toDistanceFromStart = 50.0)
     val speedLimit3 =
         SpeedLimit(speedLimit = 80.0, fromDistanceFromStart = 50.0, toDistanceFromStart = 80.0)
-    val lane = emptyLane()
-    lane.speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3)
+    val lane = emptyLane(speedLimits = listOf(speedLimit1, speedLimit2, speedLimit3))
 
     assertEquals(30.0, lane.speedAt(0.0))
     assertEquals(speedLimit1.speedLimit, lane.speedAt(10.0))
@@ -254,23 +250,12 @@ class JSONSpeedLimitTest {
   /** Tests speed limit conversion from json. */
   @Test
   fun testSpeedLimitCreationFromJsonLaneConversion() {
-    val jsonLane = emptyJsonLane()
-    jsonLane.laneLength = 50.0
+    val jsonLandmark1 = JsonLandmark(type = JsonLandmarkType.MaximumSpeed, s = 10.0, value = 30.0)
 
-    val jsonLandmark1 = emptyJsonLandmark()
-    jsonLandmark1.type = JsonLandmarkType.MaximumSpeed
-    jsonLandmark1.s = 10.0
-    jsonLandmark1.value = 30.0
+    val jsonLandmark2 = JsonLandmark(type = JsonLandmarkType.MaximumSpeed, s = 30.0, value = 30.0)
 
-    val jsonLandmark2 = emptyJsonLandmark()
-    jsonLandmark2.type = JsonLandmarkType.MaximumSpeed
-    jsonLandmark2.s = 30.0
-    jsonLandmark2.value = 30.0
-
-    jsonLane.landmarks = listOf(jsonLandmark1, jsonLandmark2)
-    val road = emptyRoad()
-
-    val lane = convertJsonLaneToLane(jsonLane, road)
+    val jsonLane = JsonLane(laneLength = 50.0, landmarks = listOf(jsonLandmark1, jsonLandmark2))
+    val lane = convertJsonLaneToLane(jsonLane = jsonLane, isJunction = false)
 
     assertEquals(2, lane.speedLimits.size)
     // test boundaries

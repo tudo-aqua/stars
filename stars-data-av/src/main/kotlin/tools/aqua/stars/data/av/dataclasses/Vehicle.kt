@@ -41,7 +41,6 @@ import kotlin.math.sqrt
  */
 data class Vehicle(
     override val id: Int,
-    override val tickData: TickData,
     var positionOnLane: Double,
     var lane: Lane,
     val typeId: String,
@@ -54,6 +53,8 @@ data class Vehicle(
     var acceleration: Vector3D,
     val angularVelocity: Vector3D,
 ) : Actor() {
+
+  override lateinit var tickData: TickData
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -84,31 +85,25 @@ data class Vehicle(
 
   override fun clone(newTickData: TickData): Actor =
       Vehicle(
-          id,
-          newTickData,
-          positionOnLane,
-          lane,
-          typeId,
-          vehicleType,
-          isEgo,
-          location,
-          forwardVector,
-          rotation,
-          velocity,
-          acceleration,
-          angularVelocity)
+              id,
+              positionOnLane,
+              lane,
+              typeId,
+              vehicleType,
+              isEgo,
+              location,
+              forwardVector,
+              rotation,
+              velocity,
+              acceleration,
+              angularVelocity)
+          .apply { tickData = newTickData }
 
   override fun toString(): String =
       "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
-  override fun equals(other: Any?): Boolean {
-    if (other is Vehicle) {
-      return id == other.id &&
-          tickData.currentTick == other.tickData.currentTick &&
-          positionOnLane == other.positionOnLane &&
-          lane.laneId == other.lane.laneId &&
-          lane.road.id == other.lane.road.id
-    }
-    return super.equals(other)
-  }
+  override fun equals(other: Any?): Boolean =
+      other is Vehicle && id == other.id && tickData.currentTick == other.tickData.currentTick
+
+  override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
 }

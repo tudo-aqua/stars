@@ -36,8 +36,6 @@ class IncompleteJSONLaneTest {
   /** Creates block, road and lane. */
   @BeforeTest
   fun setupData() {
-    incompleteBlock = Block(id = "1", fileName = "", roads = listOf())
-    incompleteRoad = Road(lanes = listOf(), id = 1, block = incompleteBlock, isJunction = false)
     incompleteJsonLane =
         JsonLane(
             laneId = 1,
@@ -60,7 +58,7 @@ class IncompleteJSONLaneTest {
                         lane1EndPos = 10.0,
                         lane2StartPos = 5.0,
                         lane2EndPos = 5.0,
-                        contactLocation = JsonLocation(0.0, 0.0, 0.0),
+                        contactLocation = JsonLocation(),
                         id = "")),
             successorLanes = listOf(JsonContactLaneInfo(laneId = 1, roadId = 3)),
             speedLimits = listOf(),
@@ -70,14 +68,14 @@ class IncompleteJSONLaneTest {
                     JsonLandmark(
                         id = 100,
                         roadId = 1,
-                        location = JsonLocation(0.0, 0.0, 0.0),
+                        location = JsonLocation(),
                         text = "",
                         unit = "mph",
                         value = 30.0,
                         type = JsonLandmarkType.MaximumSpeed,
                         country = "Test",
                         distance = 10.0,
-                        rotation = JsonRotation(0.0, 0.0, 0.0),
+                        rotation = JsonRotation(),
                         hOffset = 0.0,
                         height = 2.3,
                         isDynamic = false,
@@ -89,10 +87,13 @@ class IncompleteJSONLaneTest {
                         subType = "",
                         width = 1.0,
                         zOffset = 0.0)))
-    incompleteLane = convertJsonLaneToLane(incompleteJsonLane, incompleteRoad)
+    incompleteLane = convertJsonLaneToLane(jsonLane = incompleteJsonLane, isJunction = false)
     // The jsonLanes are not sufficiently filled out, as the connecting lanes are missing
     jsonLanes = listOf(incompleteJsonLane)
     lanes = listOf(incompleteLane)
+
+    incompleteRoad = Road(lanes = lanes, id = 1, isJunction = false)
+    incompleteBlock = Block(id = "1", roads = listOf(incompleteRoad))
   }
 
   /** Tests [updateLanes] for incomplete [JsonLane] and [Lane]. */

@@ -22,9 +22,17 @@ package tools.aqua.stars.data.av.dataclasses
  *
  * @property id The identifier of the road.
  * @property isJunction Whether this is a junction.
- * @property block The [Block] of the [Lane].
  * @property lanes List of [Lane]s on this road.
  */
-data class Road(var id: Int, val isJunction: Boolean, val block: Block, var lanes: List<Lane>) {
+data class Road(var id: Int, val isJunction: Boolean, val lanes: List<Lane>) {
+
+  /** The [Block] this [Road] belongs to. */
+  lateinit var block: Block
+
+  init {
+    check(lanes.isNotEmpty()) { "Road must have at least one lane" }
+    lanes.forEach { it.road = this }
+  }
+
   override fun toString(): String = "$id"
 }

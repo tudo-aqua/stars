@@ -30,9 +30,9 @@ import tools.aqua.stars.data.av.dataclasses.Location
  */
 @Serializable
 data class JsonLocation(
-    @SerialName("x") val x: Double,
-    @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
+    @SerialName("x") val x: Double = 0.0,
+    @SerialName("y") val y: Double = 0.0,
+    @SerialName("z") val z: Double = 0.0,
 ) {
 
   /** Converts [JsonLocation] to [Location]. */

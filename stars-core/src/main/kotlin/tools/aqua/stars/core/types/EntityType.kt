@@ -38,5 +38,5 @@ interface EntityType<
   val id: Int
 
   /** Tick data. */
-  val tickData: T
+  var tickData: T
 }
