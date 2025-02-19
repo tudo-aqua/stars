@@ -25,9 +25,9 @@ class ListExtensionsTest {
   /** Tests powerlist() on empty list. */
   @Test
   fun testPowerlistEmpty() {
-    val list = listOf<Int>()
+    val list = emptyList<Int>()
     val result = list.powerlist()
-    assert(result == listOf(listOf<Int>()))
+    assert(result == listOf(emptyList<Int>()))
   }
 
   /** Tests powerlist() on list with one item. */
@@ -35,7 +35,7 @@ class ListExtensionsTest {
   fun testPowerlistOneItem() {
     val list = listOf(0)
     val result = list.powerlist()
-    assert(result == listOf(listOf(), listOf(0)))
+    assert(result == listOf(emptyList(), listOf(0)))
   }
 
   /** Tests powerlist() on list with multiple items. */
@@ -45,7 +45,7 @@ class ListExtensionsTest {
     val result = list.powerlist()
     val expected =
         listOf(
-            listOf(),
+            emptyList(),
             listOf(0),
             listOf(1),
             listOf(2),

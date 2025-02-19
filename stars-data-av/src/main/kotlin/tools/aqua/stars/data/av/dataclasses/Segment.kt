@@ -22,38 +22,25 @@ import tools.aqua.stars.core.types.SegmentType
 /**
  * Data class for segments.
  *
- * @property mainInitList [TickData] of the [Segment].
- * @property simulationRunId Identifier of the simulation run.
+ * @property tickData [TickData] of the [Segment].
  * @property segmentSource Source identifier.
+ * @property simulationRunId Identifier of the simulation run.
  */
 data class Segment(
-    val mainInitList: List<TickData>,
-    val simulationRunId: String = "",
+    override val tickData: List<TickData>,
     override val segmentSource: String,
+    val simulationRunId: String = "",
 ) : SegmentType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
 
-  override val tickData: List<TickData> = mainInitList.onEach { it.segment = this }
+  init {
+    tickData.onEach { it.segment = this }
+
+    check(tickData.map { it.ego.id }.distinct().count() == 1) { "The ego changes in Segment" }
+  }
 
   override val ticks: Map<TickDataUnitSeconds, TickData> = tickData.associateBy { it.currentTick }
 
-  override val primaryEntityId: Int
-    get() {
-      val firstTick = tickData.first()
-      val ego = firstTick.egoVehicle
-
-      checkNotNull(ego) { "There is no primary entity for tick $firstTick" }
-
-      val egoId = ego.id
-
-      check(tickData.any { it.vehicles.count { v -> v.isEgo } == 1 }) {
-        "There is at least one tick with multiple primary entities in segment ${this.toString(egoId)}"
-      }
-
-      if (tickData.any { it.egoVehicle?.id != egoId })
-          error("The ego id changes in Segment ${this.toString(egoId)}")
-
-      return egoId
-    }
+  override val primaryEntityId: Int = tickData.first().ego.id
 
   /** Cache for all vehicle IDs. */
   private val vehicleIdsCache = mutableListOf<Int>()

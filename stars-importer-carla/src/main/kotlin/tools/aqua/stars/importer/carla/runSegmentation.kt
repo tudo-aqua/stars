@@ -242,11 +242,11 @@ fun sliceRunIntoSegments(
 
   simulationRuns.forEach { (simulationRunId, simulationRun) ->
     val blockRanges = mutableListOf<Pair<TickDataUnitSeconds, TickDataUnitSeconds>>()
-    var prevBlockID = checkNotNull(simulationRun.first().egoVehicle).lane.road.block.id
+    var prevBlockID = simulationRun.first().ego.lane.road.block.id
     var firstTickInBlock = simulationRun.first().currentTick
 
     simulationRun.forEachIndexed { index, tick ->
-      val currentBlockID = checkNotNull(tick.egoVehicle).lane.road.block.id
+      val currentBlockID = tick.ego.lane.road.block.id
       if (currentBlockID != prevBlockID) {
         blockRanges += (firstTickInBlock to simulationRun[index - 1].currentTick)
         prevBlockID = currentBlockID

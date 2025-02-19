@@ -21,30 +21,25 @@ package tools.aqua.stars.data.av.dataclasses
  * Data class for pedestrians.
  *
  * @property id The identifier of the pedestrian.
- * @property tickData [TickData].
  * @property positionOnLane The [Pedestrian]'s position on the [Lane].
  * @property lane The [Pedestrian]'s [Lane].
  */
 data class Pedestrian(
-    override val id: Int,
-    override val tickData: TickData,
-    val positionOnLane: Double,
+    override val id: Int = 0,
+    val positionOnLane: Double = 0.0,
     val lane: Lane,
 ) : Actor() {
 
+  override lateinit var tickData: TickData
+
   override fun clone(newTickData: TickData): Actor =
-      Pedestrian(id, newTickData, positionOnLane, lane)
+      Pedestrian(id, positionOnLane, lane).apply { tickData = newTickData }
 
   override fun toString(): String =
       "Pedestrian(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
-  override fun equals(other: Any?): Boolean = super.equals(other)
+  override fun equals(other: Any?): Boolean =
+      other is Pedestrian && id == other.id && tickData.currentTick == other.tickData.currentTick
 
-  override fun hashCode(): Int {
-    var result = id
-    result = 31 * result + tickData.hashCode()
-    result = 31 * result + positionOnLane.hashCode()
-    result = 31 * result + lane.hashCode()
-    return result
-  }
+  override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
 }
