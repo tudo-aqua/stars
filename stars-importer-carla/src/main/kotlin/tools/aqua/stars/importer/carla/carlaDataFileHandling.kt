@@ -105,6 +105,8 @@ fun loadBlocks(mapDataFile: Path): Sequence<Block> =
  *
  * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
  *   to its dynamic data
+ * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
+ *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
@@ -114,6 +116,7 @@ fun loadBlocks(mapDataFile: Path): Sequence<Block> =
  */
 fun loadSegments(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
+    egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
@@ -179,6 +182,7 @@ fun loadSegments(
           sliceRunIntoSegments(
               simulationRunsWrapper.blocks,
               simulationRun,
+              egoIds,
               useEveryVehicleAsEgo,
               currentDynamicDataPath.nameWithoutExtension,
               minSegmentTickCount))
@@ -199,6 +203,8 @@ fun loadSegments(
  * @param mapDataFile The [Path] to map data file containing all static information
  * @param dynamicDataFile The [Path] to the data file which contains the timed state data for the
  *   simulation
+ * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
+ *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
@@ -209,6 +215,7 @@ fun loadSegments(
 fun loadSegments(
     mapDataFile: Path,
     dynamicDataFile: Path,
+    egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
@@ -216,6 +223,7 @@ fun loadSegments(
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
         listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+        egoIds,
         useEveryVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
@@ -227,6 +235,8 @@ fun loadSegments(
  * @param mapDataFile The [Path] to map data file containing all static information
  * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state data
  *   for the simulation
+ * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
+ *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
@@ -237,6 +247,7 @@ fun loadSegments(
 fun loadSegments(
     mapDataFile: Path,
     dynamicDataFiles: List<Path>,
+    egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
@@ -244,6 +255,7 @@ fun loadSegments(
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
         listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
+        egoIds,
         useEveryVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
@@ -255,6 +267,8 @@ fun loadSegments(
  *
  * @param mapToDynamicDataFiles Maps the [Path] of the static file to a [List] of [Path]s of dynamic
  *   files related to the static file.
+ * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
+ *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
@@ -265,6 +279,7 @@ fun loadSegments(
  */
 fun loadSegments(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
+    egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
@@ -272,6 +287,7 @@ fun loadSegments(
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
         mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
+        egoIds,
         useEveryVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)

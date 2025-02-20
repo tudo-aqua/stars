@@ -46,7 +46,9 @@ data class TickData(
     vehicles
         .filter { it.isEgo }
         .let {
-          check(it.size == 1) { "There must be exactly one ego vehicle in the tick data" }
+          check(it.size == 1) {
+            "There must be exactly one ego vehicle in the tick data. Was ${it.size} of ${vehicles.size}$ vehicles."
+          }
           ego = it.first()
         }
   }
@@ -67,7 +69,7 @@ data class TickData(
 
   /** Clones current [TickData]. */
   fun clone(): TickData =
-      TickData(currentTick, emptyList(), trafficLights, blocks, weather, daytime).also {
+      TickData(currentTick, entities, trafficLights, blocks, weather, daytime).also {
         it.entities = entities.map { t -> t.clone(it) }
       }
 
