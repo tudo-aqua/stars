@@ -43,7 +43,8 @@ fun <
     tickData: T,
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
-): Boolean = since(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
+): Boolean =
+    since(tickData = tickData, interval = interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
  * CMFTBL implementation of the 'once' operator for one entity i.e. "In a past tick in the interval
@@ -69,7 +70,8 @@ fun <
     entity: E1,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean = since(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
+): Boolean =
+    since(entity = entity, interval = interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
  * CMFTBL implementation of the 'once' operator for two entities i.e. "In a past tick in the
@@ -100,4 +102,9 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean =
-    since(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { e1, e2 -> phi(e1, e2) })
+    since(
+        entity1 = entity1,
+        entity2 = entity2,
+        interval = interval,
+        phi1 = { _, _ -> true },
+        phi2 = { e1, e2 -> phi(e1, e2) })

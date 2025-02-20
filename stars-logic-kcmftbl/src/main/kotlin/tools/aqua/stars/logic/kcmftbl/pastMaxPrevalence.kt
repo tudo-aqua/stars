@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'next' operator i.e. "In the next tick phi holds and the tick is in
- * the interval".
+ * CMFTBL implementation of the 'maxPrevalence' operator i.e. "In all past ticks in the interval phi
+ * holds for at most ([percentage]*100)% of the ticks in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -31,6 +31,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param tickData Current [TickDataType].
+ * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
@@ -39,32 +40,16 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> next(
+    D : TickDifference<D>> pastMaxPrevalence(
     tickData: T,
+    percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
-): Boolean {
-  checkInterval(interval)
-
-  val segment = tickData.segment
-  val nowIndex = segment.tickData.indexOf(tickData)
-
-  // There needs to be a next tick
-  if (nowIndex == segment.tickData.lastIndex) return false
-  val nextTick = segment.tickData[nowIndex + 1]
-
-  // The next tick has to be in the interval
-  if (interval != null &&
-      (nextTick.currentTick < tickData.currentTick + interval.first ||
-          nextTick.currentTick >= tickData.currentTick + interval.second))
-      return false
-
-  return phi(nextTick)
-}
+): Boolean = pastMinPrevalence(tickData, 1 - percentage, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the 'next' operator for one entity i.e. "In the next tick phi holds and
- * the tick is in the interval".
+ * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all past ticks in
+ * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -73,29 +58,28 @@ fun <
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
+ * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> next(
+    D : TickDifference<D>> pastMaxPrevalence(
     entity: E1,
+    percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
 ): Boolean =
-    next(
-        tickData = entity.tickData,
-        interval = interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
+    pastMinPrevalence(
+        entity = entity, percentage = 1 - percentage, interval = interval, phi = { e -> !phi(e) })
 
 /**
- * CMFTBL implementation of the 'next' operator for two entities i.e. "In the next tick phi holds
- * and the tick is in the interval".
+ * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. "In all past ticks in
+ * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].
@@ -104,12 +88,12 @@ fun <
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param entity1 First [EntityType]
- * @param entity2 Second [EntityType]
+ * @param entity1 First [EntityType].
+ * @param entity2 Second [EntityType].
+ * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
-@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,
@@ -117,23 +101,16 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> next(
+    D : TickDifference<D>> pastMaxPrevalence(
     entity1: E1,
     entity2: E2,
+    percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
-): Boolean {
-  require(entity1.tickData == entity2.tickData) {
-    "The two entities provided as argument are not from same tick."
-  }
-  return next(
-      tickData = entity1.tickData,
-      interval = interval,
-      phi = { td ->
-        val futureEntity1 = td.getEntityById(entity1.id)
-        val futureEntity2 = td.getEntityById(entity2.id)
-
-        if (futureEntity1 == null || futureEntity2 == null) false
-        else phi(futureEntity1 as E1, futureEntity2 as E2)
-      })
-}
+): Boolean =
+    pastMinPrevalence(
+        entity1 = entity1,
+        entity2 = entity2,
+        percentage = 1 - percentage,
+        interval = interval,
+        phi = { e1, e2 -> !phi(e1, e2) })
