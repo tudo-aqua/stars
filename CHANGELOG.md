@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.6 - To be released
 ### Added
-- Add CMFTBL operators `pastMinPrevalence` and `pastMaxPrevalence`. 
+- Add CMFTBL operators `pastMinPrevalence`, `pastMaxPrevalence`, `release` and `back-to`.
 
 ## [0.5] - 06.11.2024
 ### Added
