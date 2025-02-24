@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("DuplicatedCode")
 
 package tools.aqua.stars.logic.kcmftbl
 
