@@ -101,7 +101,7 @@ fun <
  * @param phi1 First predicate.
  * @param phi2 Second predicate.
  */
-@Suppress("DuplicatedCode", "UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,
