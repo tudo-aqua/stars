@@ -111,9 +111,7 @@ class JSONTrafficLightTest {
             location = JsonLocation(10.0, 10.0, 0.0),
             rotation = JsonRotation(10.0, 10.0, 0.0),
             stopLocations = listOf(JsonLocation(10.0, 10.0, 0.0)))
-    val lane =
-        convertJsonLaneToLane(
-            jsonLane = JsonLane(trafficLights = listOf(staticJsonTrafficLight)), isJunction = false)
+    val lane = JsonLane(trafficLights = listOf(staticJsonTrafficLight)).toLane(isJunction = false)
 
     val staticTrafficLight = lane.trafficLights.firstOrNull { it.id == staticJsonTrafficLight.id }
     assertNotNull(staticTrafficLight)
@@ -145,8 +143,7 @@ class JSONTrafficLightTest {
     val road = Road(jsonActorPosition.roadId, lanes = listOf(lane))
     val block = Block(roads = listOf(road))
 
-    assertNull(
-        convertJsonActorPositionToEntity(position = jsonActorPosition, blocks = listOf(block)))
+    assertNull(jsonActorPosition.toActorOrNull(blocks = listOf(block)))
   }
 
   /** Tests TrafficLight conversion from StaticTrafficLight. */

@@ -255,7 +255,7 @@ class JSONSpeedLimitTest {
     val jsonLandmark2 = JsonLandmark(type = JsonLandmarkType.MaximumSpeed, s = 30.0, value = 30.0)
 
     val jsonLane = JsonLane(laneLength = 50.0, landmarks = listOf(jsonLandmark1, jsonLandmark2))
-    val lane = convertJsonLaneToLane(jsonLane = jsonLane, isJunction = false)
+    val lane = jsonLane.toLane(isJunction = false)
 
     assertEquals(2, lane.speedLimits.size)
     // test boundaries

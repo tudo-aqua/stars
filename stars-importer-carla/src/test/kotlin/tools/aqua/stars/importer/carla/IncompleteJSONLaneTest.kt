@@ -87,7 +87,7 @@ class IncompleteJSONLaneTest {
                         subType = "",
                         width = 1.0,
                         zOffset = 0.0)))
-    incompleteLane = convertJsonLaneToLane(jsonLane = incompleteJsonLane, isJunction = false)
+    incompleteLane = incompleteJsonLane.toLane(isJunction = false)
     // The jsonLanes are not sufficiently filled out, as the connecting lanes are missing
     jsonLanes = listOf(incompleteJsonLane)
     lanes = listOf(incompleteLane)
