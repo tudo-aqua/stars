@@ -135,22 +135,18 @@ fun <
     phi1: (E1, E2) -> Boolean,
     phi2: (E1, E2) -> Boolean
 ): Boolean {
-  require(entity1.tickData == entity2.tickData) {
-    "the two entities provided as argument are not from same tick"
-  }
+  checkTick(entity1, entity2)
   return since(
       tickData = entity1.tickData,
       interval = interval,
       phi1 = { td ->
-        val pastEntity1 = td.getEntityById(entity1.id)
-        val pastEntity2 = td.getEntityById(entity2.id)
-        if (pastEntity1 == null || pastEntity2 == null) false
-        else phi1(pastEntity1 as E1, pastEntity2 as E2)
+        phi1(
+            (td.getEntityById(entity1.id) ?: return@since false) as E1,
+            (td.getEntityById(entity2.id) ?: return@since false) as E2)
       },
       phi2 = { td ->
-        val pastEntity1 = td.getEntityById(entity1.id)
-        val pastEntity2 = td.getEntityById(entity2.id)
-        if (pastEntity1 == null || pastEntity2 == null) false
-        else phi2(pastEntity1 as E1, pastEntity2 as E2)
+        phi2(
+            (td.getEntityById(entity1.id) ?: return@since false) as E1,
+            (td.getEntityById(entity2.id) ?: return@since false) as E2)
       })
 }

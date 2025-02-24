@@ -100,8 +100,8 @@ fun <
     until(
         tickData = entity.tickData,
         interval = interval,
-        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } ?: false },
-        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
+        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } == true },
+        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } == true })
 
 /**
  * CMFTBL implementation of the 'until' operator for two entities i.e. "In all future ticks in the
@@ -135,22 +135,18 @@ fun <
     phi1: (E1, E2) -> Boolean,
     phi2: (E1, E2) -> Boolean
 ): Boolean {
-  require(entity1.tickData == entity2.tickData) {
-    "the two entities provided as argument are not from same tick"
-  }
+  checkTick(entity1, entity2)
   return until(
       tickData = entity1.tickData,
       interval = interval,
       phi1 = { td ->
-        val futureEntity1 = td.getEntityById(entity1.id)
-        val futureEntity2 = td.getEntityById(entity2.id)
-        if (futureEntity1 == null || futureEntity2 == null) false
-        else phi1(futureEntity1 as E1, futureEntity2 as E2)
+        phi1(
+            (td.getEntityById(entity1.id) ?: return@until false) as E1,
+            (td.getEntityById(entity2.id) ?: return@until false) as E2)
       },
       phi2 = { td ->
-        val futureEntity1 = td.getEntityById(entity1.id)
-        val futureEntity2 = td.getEntityById(entity2.id)
-        if (futureEntity1 == null || futureEntity2 == null) false
-        else phi2(futureEntity1 as E1, futureEntity2 as E2)
+        phi2(
+            (td.getEntityById(entity1.id) ?: return@until false) as E1,
+            (td.getEntityById(entity2.id) ?: return@until false) as E2)
       })
 }

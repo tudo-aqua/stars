@@ -136,9 +136,7 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean {
-  require(entity1.tickData == entity2.tickData) {
-    "the two entities provided as argument are not from same tick"
-  }
+  checkTick(entity1, entity2)
   return minPrevalence(
       tickData = entity1.tickData,
       percentage = percentage,
