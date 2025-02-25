@@ -98,8 +98,8 @@ fun <
     phi2: (E1) -> Boolean
 ): Boolean =
     until(
-        entity.tickData,
-        interval,
+        tickData = entity.tickData,
+        interval = interval,
         phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } ?: false },
         phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
 
@@ -120,7 +120,7 @@ fun <
  * @param phi1 First predicate.
  * @param phi2 Second predicate.
  */
-@Suppress("DuplicatedCode", "UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
     E2 : E,
@@ -135,13 +135,12 @@ fun <
     phi1: (E1, E2) -> Boolean,
     phi2: (E1, E2) -> Boolean
 ): Boolean {
-
   require(entity1.tickData == entity2.tickData) {
     "the two entities provided as argument are not from same tick"
   }
   return until(
-      entity1.tickData,
-      interval,
+      tickData = entity1.tickData,
+      interval = interval,
       phi1 = { td ->
         val futureEntity1 = td.getEntityById(entity1.id)
         val futureEntity2 = td.getEntityById(entity2.id)
