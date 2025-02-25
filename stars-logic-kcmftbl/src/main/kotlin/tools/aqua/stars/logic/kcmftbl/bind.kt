@@ -20,6 +20,7 @@ package tools.aqua.stars.logic.kcmftbl
 /**
  * CMFTBL implementation of the 'bind' operator.
  *
+ * @param T Type of the field.
  * @param field Field to bind.
  * @param phi The predicate.
  */

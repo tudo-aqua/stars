@@ -20,6 +20,7 @@ package tools.aqua.stars.logic.kcmftbl
 /**
  * CMFTBL implementation of the 'for all' operator.
  *
+ * @param T Type of the field.
  * @param collection The collection.
  * @param phi The predicate.
  */
