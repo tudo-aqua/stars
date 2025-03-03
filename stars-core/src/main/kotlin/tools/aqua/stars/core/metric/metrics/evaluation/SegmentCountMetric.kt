@@ -64,7 +64,7 @@ class SegmentCountMetric<
    * @param segment The current [SegmentType] that is evaluated.
    * @return The number of analyzed [SegmentType]s so far.
    */
-  override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int {
+  override fun evaluate(segment: S): Int {
     ++segmentCount
     logFiner("==== Segment $segmentCount: $segment ====")
     val segmentSource = segment.segmentSource

@@ -43,9 +43,7 @@ class AverageVehiclesInEgosBlockMetric(
    * @param segment The Segment on which the average count should be calculated
    * @return The average count of [Actor]s in the [Block] of the ego vehicle
    */
-  override fun evaluate(
-      segment: SegmentType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>
-  ): Double {
+  override fun evaluate(segment: Segment): Double {
     val averageVehiclesInEgosBlock =
         segment.tickData
             .map {
