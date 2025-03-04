@@ -89,7 +89,7 @@ fun <
     next(
         tickData = entity.tickData,
         interval = interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
 
 /**
  * CMFTBL implementation of the 'next' operator for two entities i.e. "In the next tick phi holds
@@ -121,17 +121,13 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean {
-  require(entity1.tickData == entity2.tickData) {
-    "The two entities provided as argument are not from same tick."
-  }
+  checkTick(entity1, entity2)
   return next(
       tickData = entity1.tickData,
       interval = interval,
       phi = { td ->
-        val futureEntity1 = td.getEntityById(entity1.id)
-        val futureEntity2 = td.getEntityById(entity2.id)
-
-        if (futureEntity1 == null || futureEntity2 == null) false
-        else phi(futureEntity1 as E1, futureEntity2 as E2)
+        phi(
+            (td.getEntityById(entity1.id) ?: return@next false) as E1,
+            (td.getEntityById(entity2.id) ?: return@next false) as E2)
       })
 }
