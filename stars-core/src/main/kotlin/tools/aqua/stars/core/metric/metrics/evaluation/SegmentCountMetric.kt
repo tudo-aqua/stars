@@ -55,7 +55,9 @@ class SegmentCountMetric<
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
-  /** Holds the count of [SegmentType]s grouped by [SegmentType.segmentIdentifier]. */
+  /**
+   * Holds the count of [SegmentType]s grouped by the value of [SegmentType.getSegmentIdentifier].
+   */
   private val segmentIdentifierToSegmentCountMap: MutableMap<String, Int> = mutableMapOf()
 
   /**
@@ -64,7 +66,7 @@ class SegmentCountMetric<
    * @param segment The current [SegmentType] that is evaluated.
    * @return The number of analyzed [SegmentType]s so far.
    */
-  override fun evaluate(segment: SegmentType<E, T, S, U, D>): Int {
+  override fun evaluate(segment: S): Int {
     ++segmentCount
     logFiner("==== Segment $segmentCount: $segment ====")
     val segmentSource = segment.segmentSource

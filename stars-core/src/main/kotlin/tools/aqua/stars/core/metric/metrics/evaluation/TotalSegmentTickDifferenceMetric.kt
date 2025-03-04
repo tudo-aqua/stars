@@ -62,7 +62,7 @@ class TotalSegmentTickDifferenceMetric<
    * @throws IllegalStateException If the [TickDifference] between the first and last [TickDataType]
    *   of the [SegmentType] is negative.
    */
-  override fun evaluate(segment: SegmentType<E, T, S, U, D>): Optional<D> {
+  override fun evaluate(segment: S): Optional<D> {
     // The Segment has at least two TickData objects from which a TickDifference can be calculated.
     if (segment.tickData.size >= 2) {
       // Calculate the TickDifference between the last and the first tick in the given segment.

@@ -44,5 +44,5 @@ interface SegmentMetricProvider<
    * @param segment The current [SegmentType].
    * @return The evaluation result.
    */
-  fun evaluate(segment: SegmentType<E, T, S, U, D>): Any?
+  fun evaluate(segment: S): Any?
 }
