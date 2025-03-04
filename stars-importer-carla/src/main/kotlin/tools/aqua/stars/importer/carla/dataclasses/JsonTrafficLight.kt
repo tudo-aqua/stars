@@ -35,12 +35,12 @@ import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 @Serializable
 @SerialName("TrafficLight")
 data class JsonTrafficLight(
-    @SerialName("id") override var id: Int,
-    @SerialName("type_id") val typeId: String,
-    @SerialName("state") var state: Int,
-    @SerialName("location") override val location: JsonLocation,
-    @SerialName("rotation") override val rotation: JsonRotation,
-    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
+    @SerialName("id") override var id: Int = 0,
+    @SerialName("type_id") val typeId: String = "",
+    @SerialName("state") var state: Int = 0,
+    @SerialName("location") override val location: JsonLocation = JsonLocation(),
+    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
+    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int = 0,
 ) : JsonActor() {
 
   /** Converts [JsonTrafficLight] to [TrafficLight]. */

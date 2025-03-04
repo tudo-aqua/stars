@@ -31,8 +31,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("Pedestrian")
 data class JsonPedestrian(
-    @SerialName("id") override val id: Int,
-    @SerialName("type_id") val typeId: String,
-    @SerialName("location") override val location: JsonLocation,
-    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("id") override val id: Int = 0,
+    @SerialName("type_id") val typeId: String = "",
+    @SerialName("location") override val location: JsonLocation = JsonLocation(),
+    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
 ) : JsonActor()

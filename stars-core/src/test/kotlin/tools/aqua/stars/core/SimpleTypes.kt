@@ -22,7 +22,7 @@ import tools.aqua.stars.core.types.*
 /** Simple entity. */
 class SimpleEntity(
     override val id: Int = 0,
-    override val tickData: SimpleTickData = SimpleTickData()
+    override var tickData: SimpleTickData = SimpleTickData()
 ) :
     EntityType<
         SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
@@ -31,7 +31,7 @@ class SimpleEntity(
 
 /** Simple segment. */
 class SimpleSegment(
-    override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = mapOf(),
+    override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = emptyMap(),
     override val segmentSource: String = "",
     override val primaryEntityId: Int = 0
 ) :
@@ -46,7 +46,7 @@ class SimpleSegment(
 /** Simple tick data. */
 class SimpleTickData(
     override val currentTick: SimpleTickDataUnit = SimpleTickDataUnit(0),
-    override var entities: List<SimpleEntity> = listOf(),
+    override var entities: List<SimpleEntity> = emptyList(),
     override var segment: SimpleSegment = SimpleSegment()
 ) :
     TickDataType<

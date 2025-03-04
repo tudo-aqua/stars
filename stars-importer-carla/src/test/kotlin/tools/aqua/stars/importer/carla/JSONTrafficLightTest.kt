@@ -21,10 +21,20 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import tools.aqua.stars.data.av.*
+import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.Lane
+import tools.aqua.stars.data.av.dataclasses.Road
+import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
+import tools.aqua.stars.data.av.dataclasses.TickData
+import tools.aqua.stars.data.av.dataclasses.TrafficLight
 import tools.aqua.stars.data.av.dataclasses.TrafficLightState
+import tools.aqua.stars.data.av.dataclasses.Vehicle
+import tools.aqua.stars.importer.carla.dataclasses.JsonActorPosition
+import tools.aqua.stars.importer.carla.dataclasses.JsonLane
 import tools.aqua.stars.importer.carla.dataclasses.JsonLocation
 import tools.aqua.stars.importer.carla.dataclasses.JsonRotation
+import tools.aqua.stars.importer.carla.dataclasses.JsonStaticTrafficLight
+import tools.aqua.stars.importer.carla.dataclasses.JsonTrafficLight
 
 /** Tests for traffic lights. */
 class JSONTrafficLightTest {
@@ -32,12 +42,12 @@ class JSONTrafficLightTest {
   /** Tests the conversion of JSONTrafficLights to TrafficLights. */
   @Test
   fun testStaticTrafficLightConversion() {
-    val staticJsonTrafficLight = emptyJsonStaticTrafficLight()
-    staticJsonTrafficLight.id = 1
-    staticJsonTrafficLight.location = JsonLocation(10.0, 10.0, 0.0)
-    staticJsonTrafficLight.rotation = JsonRotation(10.0, 10.0, 0.0)
-    val stopLocation = JsonLocation(10.0, 10.0, 0.0)
-    staticJsonTrafficLight.stopLocations = listOf(stopLocation)
+    val staticJsonTrafficLight =
+        JsonStaticTrafficLight(
+            id = 1,
+            location = JsonLocation(10.0, 10.0, 0.0),
+            rotation = JsonRotation(10.0, 10.0, 0.0),
+            stopLocations = listOf(JsonLocation(10.0, 10.0, 0.0)))
 
     val staticTrafficLight = staticJsonTrafficLight.toStaticTrafficLight()
     assertEquals(staticJsonTrafficLight.id, staticTrafficLight.id)
@@ -61,25 +71,25 @@ class JSONTrafficLightTest {
   @Test
   fun testJsonTrafficLightToTrafficLightConversion() {
     val openDriveTrafficLightId = 100
-    val lane = emptyLane()
-    val staticTrafficLight = emptyStaticTrafficLight()
-    staticTrafficLight.id = openDriveTrafficLightId
-    lane.trafficLights = listOf(staticTrafficLight)
-    val road = emptyRoad()
-    road.lanes = listOf(lane)
-    val block = emptyBlock()
-    block.roads = listOf(road)
+    val staticTrafficLight = StaticTrafficLight(id = 100)
+
+    val lane = Lane(trafficLights = listOf(staticTrafficLight))
+    val road = Road(lanes = listOf(lane))
+    val block = Block(roads = listOf(road))
     val blocks = listOf(block)
+    val vehicles = listOf(Vehicle(isEgo = true, lane = lane))
 
-    val trafficLight = emptyTrafficLight(relatedOpenDriveId = openDriveTrafficLightId)
-    trafficLight.id = 0
-    trafficLight.state = TrafficLightState.Red
-    val tickData1 = emptyTickData(blocks = blocks, trafficLights = listOf(trafficLight))
+    val trafficLight =
+        TrafficLight(
+            id = 0, relatedOpenDriveId = openDriveTrafficLightId, state = TrafficLightState.Red)
+    val tickData1 =
+        TickData(blocks = blocks, trafficLights = listOf(trafficLight), entities = vehicles)
 
-    val trafficLight2 = emptyTrafficLight(relatedOpenDriveId = openDriveTrafficLightId)
-    trafficLight2.id = 1
-    trafficLight2.state = TrafficLightState.Green
-    val tickData2 = emptyTickData(blocks = blocks, trafficLights = listOf(trafficLight2))
+    val trafficLight2 =
+        TrafficLight(
+            id = 1, relatedOpenDriveId = openDriveTrafficLightId, state = TrafficLightState.Green)
+    val tickData2 =
+        TickData(blocks = blocks, trafficLights = listOf(trafficLight2), entities = vehicles)
 
     assertNotNull(tickData1.blocks[0].roads[0].lanes[0].trafficLights[0].getStateInTick(tickData1))
     assertEquals(
@@ -95,16 +105,13 @@ class JSONTrafficLightTest {
   /** Tests the conversion of Lanes to StaticTrafficLights. */
   @Test
   fun testStaticTrafficLightConversionFromLane() {
-    val road = emptyRoad()
-    val jsonLane = emptyJsonLane()
-    val staticJsonTrafficLight = emptyJsonStaticTrafficLight()
-    staticJsonTrafficLight.id = 1
-    staticJsonTrafficLight.location = JsonLocation(10.0, 10.0, 0.0)
-    staticJsonTrafficLight.rotation = JsonRotation(10.0, 10.0, 0.0)
-    val stopLocation = JsonLocation(10.0, 10.0, 0.0)
-    staticJsonTrafficLight.stopLocations = listOf(stopLocation)
-    jsonLane.trafficLights = listOf(staticJsonTrafficLight)
-    val lane = convertJsonLaneToLane(jsonLane, road)
+    val staticJsonTrafficLight =
+        JsonStaticTrafficLight(
+            id = 1,
+            location = JsonLocation(10.0, 10.0, 0.0),
+            rotation = JsonRotation(10.0, 10.0, 0.0),
+            stopLocations = listOf(JsonLocation(10.0, 10.0, 0.0)))
+    val lane = JsonLane(trafficLights = listOf(staticJsonTrafficLight)).toLane(isJunction = false)
 
     val staticTrafficLight = lane.trafficLights.firstOrNull { it.id == staticJsonTrafficLight.id }
     assertNotNull(staticTrafficLight)
@@ -115,6 +122,7 @@ class JSONTrafficLightTest {
     assertEquals(staticJsonTrafficLight.rotation.yaw, staticTrafficLight.rotation.yaw)
     assertEquals(staticJsonTrafficLight.rotation.roll, staticTrafficLight.rotation.roll)
     assertEquals(staticJsonTrafficLight.rotation.pitch, staticTrafficLight.rotation.pitch)
+
     staticJsonTrafficLight.stopLocations.forEach { jsonLocation ->
       assertNotNull(
           staticTrafficLight.stopLocations.firstOrNull { location ->
@@ -128,28 +136,20 @@ class JSONTrafficLightTest {
   /** Tests ignoring of JSONTrafficLights as actors. */
   @Test
   fun testIgnoringJsonTrafficLightAsActorPosition() {
-    val jsonTrafficLight = emptyJsonTrafficLight()
-    jsonTrafficLight.id = 100
-    jsonTrafficLight.state = 2
-    val jsonActorPosition = emptyJsonActorPosition()
-    jsonActorPosition.actor = jsonTrafficLight
-    jsonActorPosition.laneId = 1
-    jsonActorPosition.roadId = 1
+    val jsonTrafficLight = JsonTrafficLight(id = 100, state = 2)
+    val jsonActorPosition = JsonActorPosition(actor = jsonTrafficLight, laneId = 1, roadId = 1)
 
-    val road = emptyRoad(jsonActorPosition.roadId)
-    val lane = emptyLane(jsonActorPosition.laneId, road)
-    road.lanes = listOf(lane)
+    val lane = Lane(jsonActorPosition.laneId)
+    val road = Road(jsonActorPosition.roadId, lanes = listOf(lane))
+    val block = Block(roads = listOf(road))
 
-    val block = emptyBlock()
-    block.roads = listOf(road)
-
-    assertNull(convertJsonActorPositionToEntity(jsonActorPosition, emptyTickData(), listOf(block)))
+    assertNull(jsonActorPosition.toActorOrNull(blocks = listOf(block)))
   }
 
   /** Tests TrafficLight conversion from StaticTrafficLight. */
   @Test
   fun testTrafficLightConversion() {
-    val jsonTrafficLight = emptyJsonTrafficLight()
+    val jsonTrafficLight = JsonTrafficLight()
     jsonTrafficLight.id = 1
     jsonTrafficLight.state = 0 // Red
 

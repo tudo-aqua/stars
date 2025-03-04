@@ -24,7 +24,7 @@ package tools.aqua.stars.importer.carla
  */
 
 /** List for base type: CAR. */
-val cars =
+val cars: List<String> =
     listOf(
         "vehicle.audi.a2",
         "vehicle.audi.etron",
@@ -53,7 +53,7 @@ val cars =
         "vehicle.toyota.prius")
 
 /** List for base type: TRUCK. */
-val trucks =
+val trucks: List<String> =
     listOf(
         "vehicle.carlamotors.carlacola",
         "vehicle.carlamotors.european_hgv",
@@ -61,7 +61,7 @@ val trucks =
         "vehicle.tesla.cybertruck")
 
 /** List for base type: VAN. */
-val vans =
+val vans: List<String> =
     listOf(
         "vehicle.ford.ambulance",
         "vehicle.mercedes.sprinter",
@@ -69,10 +69,10 @@ val vans =
         "vehicle.volkswagen.t2_2021")
 
 /** List for base type: BUS. */
-val buses = listOf("vehicle.mitsubishi.fusorosa")
+val buses: List<String> = listOf("vehicle.mitsubishi.fusorosa")
 
 /** List for base type: MOTORCYCLE. */
-val motorcycles =
+val motorcycles: List<String> =
     listOf(
         "vehicle.harley-davidson.low_rider",
         "vehicle.kawasaki.ninja",
@@ -80,5 +80,5 @@ val motorcycles =
         "vehicle.yamaha.yzf")
 
 /** List for base type: BICYCLE. */
-val bicycles =
+val bicycles: List<String> =
     listOf("vehicle.bh.crossbike", "vehicle.diamondback.century", "vehicle.gazelle.omafiets")

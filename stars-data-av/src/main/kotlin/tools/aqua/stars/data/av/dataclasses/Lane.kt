@@ -21,7 +21,6 @@ package tools.aqua.stars.data.av.dataclasses
  * Data class for lanes.
  *
  * @property laneId The identifier of the [Lane].
- * @property road The identifier of the [Road].
  * @property laneType The [LaneType] of the [Lane].
  * @property laneWidth The width of the [Lane].
  * @property laneLength The length of the [Lane].
@@ -39,22 +38,24 @@ package tools.aqua.stars.data.av.dataclasses
  * @property laneDirection The [LaneDirection] of this [Lane].
  */
 data class Lane(
-    val laneId: Int,
-    var road: Road,
-    val laneType: LaneType,
-    val laneWidth: Double,
-    val laneLength: Double,
-    var predecessorLanes: List<ContactLaneInfo>,
-    var successorLanes: List<ContactLaneInfo>,
-    var intersectingLanes: List<ContactLaneInfo>,
-    var yieldLanes: List<ContactLaneInfo>,
-    val laneMidpoints: List<LaneMidpoint>,
-    var speedLimits: List<SpeedLimit>,
-    val landmarks: List<Landmark>,
-    var contactAreas: List<ContactArea>,
-    var trafficLights: List<StaticTrafficLight>,
-    var laneDirection: LaneDirection,
+    val laneId: Int = 0,
+    val laneType: LaneType = LaneType.Driving,
+    val laneWidth: Double = 0.0,
+    val laneLength: Double = 0.0,
+    var predecessorLanes: List<ContactLaneInfo> = emptyList(),
+    var successorLanes: List<ContactLaneInfo> = emptyList(),
+    var intersectingLanes: List<ContactLaneInfo> = emptyList(),
+    var yieldLanes: List<ContactLaneInfo> = emptyList(),
+    val laneMidpoints: List<LaneMidpoint> = emptyList(),
+    var speedLimits: List<SpeedLimit> = emptyList(),
+    val landmarks: List<Landmark> = emptyList(),
+    var contactAreas: List<ContactArea> = emptyList(),
+    var trafficLights: List<StaticTrafficLight> = emptyList(),
+    var laneDirection: LaneDirection = LaneDirection.STRAIGHT,
 ) {
+
+  /** The [Road] this [Lane] belongs to. */
+  lateinit var road: Road
 
   /** Whether this [Lane] turns left. */
   val isTurningLeft: Boolean
