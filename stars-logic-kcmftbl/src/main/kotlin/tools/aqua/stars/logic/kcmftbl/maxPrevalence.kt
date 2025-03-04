@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package tools.aqua.stars.logic.kcmftbl
 
 import tools.aqua.stars.core.types.*
@@ -45,7 +43,12 @@ fun <
     percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
-): Boolean = minPrevalence(tickData, 1 - percentage, interval, phi = { td -> !phi(td) })
+): Boolean =
+    minPrevalence(
+        tickData = tickData,
+        percentage = 1 - percentage,
+        interval = interval,
+        phi = { td -> !phi(td) })
 
 /**
  * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all future ticks in
@@ -73,7 +76,9 @@ fun <
     percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean = minPrevalence(entity, 1 - percentage, interval, phi = { e -> !phi(e) })
+): Boolean =
+    minPrevalence(
+        entity = entity, percentage = 1 - percentage, interval = interval, phi = { e -> !phi(e) })
 
 /**
  * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. "In all future ticks
@@ -106,4 +111,9 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean =
-    minPrevalence(entity1, entity2, 1 - percentage, interval, phi = { e1, e2 -> !phi(e1, e2) })
+    minPrevalence(
+        entity1 = entity1,
+        entity2 = entity2,
+        percentage = 1 - percentage,
+        interval = interval,
+        phi = { e1, e2 -> !phi(e1, e2) })

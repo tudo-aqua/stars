@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package tools.aqua.stars.logic.kcmftbl
 
 import tools.aqua.stars.core.types.*
@@ -100,10 +98,10 @@ fun <
     phi2: (E1) -> Boolean
 ): Boolean =
     since(
-        entity.tickData,
-        interval,
-        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } ?: false },
-        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } ?: false })
+        tickData = entity.tickData,
+        interval = interval,
+        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } == true },
+        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } == true })
 
 /**
  * CMFTBL implementation of the 'since' operator for two entities i.e. "In all previous ticks in the
@@ -137,13 +135,12 @@ fun <
     phi1: (E1, E2) -> Boolean,
     phi2: (E1, E2) -> Boolean
 ): Boolean {
-
   require(entity1.tickData == entity2.tickData) {
     "the two entities provided as argument are not from same tick"
   }
   return since(
-      entity1.tickData,
-      interval,
+      tickData = entity1.tickData,
+      interval = interval,
       phi1 = { td ->
         val pastEntity1 = td.getEntityById(entity1.id)
         val pastEntity2 = td.getEntityById(entity2.id)

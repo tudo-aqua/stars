@@ -20,7 +20,6 @@ package tools.aqua.stars.data.av.metrics
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
-import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.data.av.dataclasses.*
 
 /**

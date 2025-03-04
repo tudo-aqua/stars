@@ -67,7 +67,8 @@ fun <
     entity: E1,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean = until(entity, interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
+): Boolean =
+    until(entity = entity, interval = interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
  * CMFTBL implementation of the 'eventually' operator for two entities i.e. "In a future tick in the
@@ -98,4 +99,9 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean =
-    until(entity1, entity2, interval, phi1 = { _, _ -> true }, phi2 = { e1, e2 -> phi(e1, e2) })
+    until(
+        entity1 = entity1,
+        entity2 = entity2,
+        interval = interval,
+        phi1 = { _, _ -> true },
+        phi2 = { e1, e2 -> phi(e1, e2) })

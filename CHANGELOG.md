@@ -15,6 +15,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.6 - To be released
+### Added
+- Add CMFTBL operators `pastMinPrevalence` and `pastMaxPrevalence`. 
+
+### Changed
+- Changed parameter type of `SegmentMetricProvider.evaluate()` from `SegmentType` to `S`.
+
 ## [0.5] - 06.11.2024
 ### Added
 - Add `PreEvaluationHooks` before evaluation of `TSCs` and `Segments` in `TSCEvaluation`.

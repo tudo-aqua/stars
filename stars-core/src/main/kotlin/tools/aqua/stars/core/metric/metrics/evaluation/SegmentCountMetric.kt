@@ -55,7 +55,9 @@ class SegmentCountMetric<
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 
-  /** Holds the count of [SegmentType]s grouped by [SegmentType.segmentIdentifier]. */
+  /**
+   * Holds the count of [SegmentType]s grouped by the value of [SegmentType.getSegmentIdentifier].
+   */
   private val segmentIdentifierToSegmentCountMap: MutableMap<String, Int> = mutableMapOf()
 
   /**

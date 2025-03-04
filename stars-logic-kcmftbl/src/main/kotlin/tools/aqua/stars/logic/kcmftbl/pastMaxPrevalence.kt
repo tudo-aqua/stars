@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.stars.logic.kcmftbl
 
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'once' operator i.e. "In a past tick in the interval phi holds at
- * least once".
+ * CMFTBL implementation of the 'maxPrevalence' operator i.e. "In all past ticks in the interval phi
+ * holds for at most ([percentage]*100)% of the ticks in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -29,6 +31,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param tickData Current [TickDataType].
+ * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
@@ -37,16 +40,16 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
+    D : TickDifference<D>> pastMaxPrevalence(
     tickData: T,
+    percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
-): Boolean =
-    since(tickData = tickData, interval = interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
+): Boolean = pastMinPrevalence(tickData, 1 - percentage, interval, phi = { td -> !phi(td) })
 
 /**
- * CMFTBL implementation of the 'once' operator for one entity i.e. "In a past tick in the interval
- * phi holds at least once".
+ * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all past ticks in
+ * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -55,6 +58,7 @@ fun <
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
+ * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
@@ -64,16 +68,18 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
+    D : TickDifference<D>> pastMaxPrevalence(
     entity: E1,
+    percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
 ): Boolean =
-    since(entity = entity, interval = interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
+    pastMinPrevalence(
+        entity = entity, percentage = 1 - percentage, interval = interval, phi = { e -> !phi(e) })
 
 /**
- * CMFTBL implementation of the 'once' operator for two entities i.e. "In a past tick in the
- * interval phi holds at least once".
+ * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. "In all past ticks in
+ * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].
@@ -84,6 +90,7 @@ fun <
  * @param D [TickDifference].
  * @param entity1 First [EntityType].
  * @param entity2 Second [EntityType].
+ * @param percentage Threshold value.
  * @param interval Observation interval.
  * @param phi Predicate.
  */
@@ -94,15 +101,16 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
+    D : TickDifference<D>> pastMaxPrevalence(
     entity1: E1,
     entity2: E2,
+    percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean =
-    since(
+    pastMinPrevalence(
         entity1 = entity1,
         entity2 = entity2,
+        percentage = 1 - percentage,
         interval = interval,
-        phi1 = { _, _ -> true },
-        phi2 = { e1, e2 -> phi(e1, e2) })
+        phi = { e1, e2 -> !phi(e1, e2) })

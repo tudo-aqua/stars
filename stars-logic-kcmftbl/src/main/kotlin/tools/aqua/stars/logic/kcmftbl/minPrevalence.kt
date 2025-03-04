@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("DuplicatedCode")
 
 package tools.aqua.stars.logic.kcmftbl
 
@@ -97,28 +97,12 @@ fun <
     percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (E1) -> Boolean
-): Boolean {
-  val segment = entity.tickData.segment
-  val now = entity.tickData.currentTick
-  val nowIndex = segment.tickData.indexOf(entity.tickData)
-
-  var tickCount = 0
-  val trueCount =
-      (nowIndex..segment.tickData.lastIndex).count { currentIndex ->
-        val currentTickData = segment.tickData[currentIndex]
-
-        if (interval != null &&
-            currentTickData.currentTick !in now + interval.first..now + interval.second)
-            return@count false
-
-        tickCount++
-
-        val currentEntity = currentTickData.getEntityById(entity.id) ?: return@count false
-        phi(currentEntity as E1)
-      }
-
-  return trueCount >= tickCount * percentage
-}
+): Boolean =
+    minPrevalence(
+        tickData = entity.tickData,
+        percentage = percentage,
+        interval = interval,
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
 
 /**
  * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. "In all future ticks
@@ -153,27 +137,16 @@ fun <
     phi: (E1, E2) -> Boolean
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
-    "the two actors provided as argument are not from same tick"
+    "the two entities provided as argument are not from same tick"
   }
-
-  val segment = entity1.tickData.segment
-  val now = entity1.tickData.currentTick
-  val nowIndex = segment.tickData.indexOf(entity1.tickData)
-
-  var tickCount = 0
-  val trueCount =
-      (nowIndex..segment.tickData.lastIndex).count { currentIndex ->
-        val currentTickData = segment.tickData[currentIndex]
-        if (interval != null &&
-            currentTickData.currentTick !in now + interval.first..now + interval.second)
-            return@count false
-
-        tickCount++
-
-        val firstEntity = currentTickData.getEntityById(entity1.id) ?: return@count false
-        val secondEntity = currentTickData.getEntityById(entity2.id) ?: return@count false
-        phi(firstEntity as E1, secondEntity as E2)
-      }
-
-  return trueCount >= tickCount * percentage
+  return minPrevalence(
+      tickData = entity1.tickData,
+      percentage = percentage,
+      interval = interval,
+      phi = { td ->
+        val futureEntity1 = td.getEntityById(entity1.id)
+        val futureEntity2 = td.getEntityById(entity2.id)
+        if (futureEntity1 == null || futureEntity2 == null) false
+        else phi(futureEntity1 as E1, futureEntity2 as E2)
+      })
 }
