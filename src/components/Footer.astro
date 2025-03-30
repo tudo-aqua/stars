@@ -1,0 +1,52 @@
+---
+import aqua from '../assets/logo/aqua.svg';
+import tudoLogo from '../assets/logo/tudo.svg';
+---
+
+<footer>
+    <div class="footer-gray py-10">
+        <div class="wrapper flex flex-col space-y-10 text-white font-light">
+            <div class="flex flex-row justify-between space-x-30">
+                <div>
+                    <p class="font-semibold">Chair 14 for Software Engineering<br/>Department of Computer Science<br/>TU Dortmund University</p>
+                    <p>Otto-Hahn-Straße 12</p>
+                    <p>44227 Dortmund</p>
+                    <p>Germany</p>
+                </div>
+                <div>
+                    <p class="font-semibold">STARS: Scenario-Based Testing<br/>of Autonomous Robotic Systems</p>
+                    <br>
+                    <br>
+                    <p>E-Mail: <a href="mailto:till.schallau@tu-dortmund.de">till.schallau@tu-dortmund.de</a></p>
+                    <p>Web: <a href="http://aqua.cs.tu-dortmund.de">aqua.cs.tu-dortmund.de</a></p>
+                </div>
+            </div>
+            <div class="flex flex-row justify-center space-x-4">
+                <a href="/stars/imprint">Imprint</a>
+                <a href="/stars/privacy">Privacy</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex flex-row space-x-15 items-start justify-center bg-white p-10">
+        <a href="http://aqua.cs.tu-dortmund.de">
+            <img width="100" src={aqua.src} alt="AQUA Group Logo">
+        </a>
+        <a href="http://www.tu-dortmund.de/en/">
+            <img width="100" src={tudoLogo.src} alt="TU Dortmund University Logo">
+        </a>
+    </div>
+</footer>
+
+
+
+<style>
+    .footer-gray {
+        background-color: #3b3b3b;
+    }
+
+    .footer-gray a:hover {
+        color: var(--color-primary);
+    }
+</style>
+

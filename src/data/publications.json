@@ -1,0 +1,39 @@
+[
+  {
+    "title": "Validating Behavioral Requirements, Conditions, and Rules of Autonomous Systems with Scenario-Based Testing",
+    "authors": "Till Schallau, Stefan Naujokat",
+    "year": 2023,
+    "in": "Electronic Communications of the EASST (ECEASST 2023)",
+    "doi": "https://doi.org/10.14279/tuj.eceasst.82.1222",
+    "preprintUrl": "",
+    "comment": ""
+  },
+
+  {
+    "title": "STARS: A Tool for Measuring Scenario Coverage When Testing Autonomous Robotic Systems",
+    "authors": "Till Schallau, Dominik Mäckel, Stefan Naujokat, Falk Howar",
+    "year": 2024,
+    "in": "Dependable Computing - EDCC 2024 Workshops (EDCC 2024)",
+    "doi": "https://doi.org/10.1007/978-3-031-56776-6_6",
+    "preprintUrl": "",
+    "comment": ""
+  },
+  {
+    "title": "Tree-Based Scenario Classification",
+    "authors": "Till Schallau, Stefan Naujokat, Fiona Kullmann, Falk Howar",
+    "year": 2024,
+    "in": "NASA Formal Methods (NFM 2024)",
+    "doi": "https://doi.org/10.1007/978-3-031-60698-4_15",
+    "preprintUrl": "",
+    "comment": ""
+  },
+  {
+    "title": "Extended Abstract of Poster: STARS: Tree-Based Classification and Testing of Feature Combinations in the Automated Robotic Domain",
+    "authors": "Till Schallau, Dominik Schmid, Nick Pawlinorz, Stefan Naujokat, Falk Howar",
+    "year": 2025,
+    "in": "ICST Workshops (IWCT 2025)",
+    "doi": null,
+    "preprintUrl": "",
+    "comment": "not published yet"
+  }
+]

@@ -6,10 +6,13 @@
   width: 100%;
   height: 100%;
 
+  background-color: var(--color-background);
+
   /* colors */
   --color-primary: #639a00; /* tu-green */
   --color-secondary: #ca7406; /* tu-orange accent */
-  --color-background: #f9fafb; /* gray-100 */
+  --color-aqua-gray: #3f3f3e;
+  --color-background: #f2f2f2; /* gray-100 */
   --color-foreground: #111827; /* gray-900 */
 
   /* font */
@@ -21,12 +24,6 @@
   color: var(--color-primary);
 }
 
-h1 {
-  @apply text-6xl mb-2;
-  color: var(--color-primary);
-}
-
-h2 {
-  @apply text-2xl;
-  color: var(--color-secondary);
+.wrapper {
+  @apply max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8; /* Maximale Breite und dynamisches Padding */
 }

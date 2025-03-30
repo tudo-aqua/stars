@@ -1,0 +1,53 @@
+---
+const navItems = [
+    { name: 'Researchers', href: '#researchers' },
+    { name: 'Publications', href: '#publications' },
+    { name: 'Theses', href: '#theses' },
+];
+---
+
+<header class="sticky top-0 z-50">
+    <div class="wrapper flex flex-row items-center justify-between px-10 py-4">
+        <a href="/stars" id="logo">STARS</a>
+        <nav class="sm:visible invisible">
+            <ul class="flex flex-row space-x-8">
+                {navItems.map((navItem) => (
+                    <li><a href={navItem.href}>{navItem.name}</a></li>
+                ))}
+            </ul>
+        </nav>
+
+    </div>
+</header>
+
+<style>
+    @import "tailwindcss";
+
+    header {
+        background-color: white;
+        border-bottom: 3px solid var(--color-primary); 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #logo {
+        @apply text-4xl transition-colors;
+        font-weight: 400;
+        color: var(--color-aqua-gray);
+    }
+
+    #logo:hover {
+        color: var(--color-primary);
+        text-decoration: none;
+    }
+
+    nav ul li a {
+        @apply transition-colors;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    nav ul li a:hover {
+        color: var(--color-primary);
+    }
+</style>
