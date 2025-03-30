@@ -1,6 +1,9 @@
 ---
 import mailIcon from '../assets/icons/mail.svg';
 import orcidIcon from '../assets/icons/orcid.svg';
+import linkedinIcon from '../assets/icons/linkedin.svg';
+import scholarIcon from '../assets/icons/scholar.svg';
+import githubIcon from '../assets/icons/github.svg';
 
 const {name, socials, bio, imageUrl} = Astro.props;
 ---
@@ -11,6 +14,21 @@ const {name, socials, bio, imageUrl} = Astro.props;
       <a href=`https://orcid.org/${socials.orcid}`>
         <img src={orcidIcon.src} alt="Orcid" class="w-5">
       </a>
+      {socials.linkedin && (
+        <a href={socials.linkedin}>
+        <img src={linkedinIcon.src} alt="Linkedin" class="w-5">
+      </a>
+      )}
+      {socials.scholar && (
+        <a href={socials.scholar}>
+        <img src={scholarIcon.src} alt="Google Scholar" class="w-5">
+      </a>
+      )}
+      {socials.github && (
+        <a href={socials.github}>
+        <img src={githubIcon.src} alt="GitHub" class="w-5">
+      </a>
+      )}
       <a href=`mailto:${socials.mail}`>
         <img src={mailIcon.src} alt="Mail" class="w-5">
       </a>
