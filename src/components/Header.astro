@@ -2,19 +2,26 @@
 const navItems = [
     { name: 'Researchers', href: '#researchers' },
     { name: 'Publications', href: '#publications' },
-    { name: 'Theses', href: '#theses' },
-    { name: 'GitHub', href: 'https://github.com/tudo-aqua/stars' }
+    { name: 'Theses', href: '#theses' }
 ];
+
+import githubIcon from '../assets/icons/github.svg';
 ---
 
 <header class="sticky top-0 z-50">
     <div class="wrapper flex flex-row items-center justify-between px-10 py-4">
         <a href="/stars" id="logo">STARS</a>
-        <nav class="sm:visible invisible">
+        <nav>
             <ul class="flex flex-row flex-wrap space-x-8">
                 {navItems.map((navItem) => (
-                    <li><a href={navItem.href}>{navItem.name}</a></li>
+                    <li class="sm:block hidden"><a href={navItem.href}>{navItem.name}</a></li>
                 ))}
+                <li class=""><a href="https://github.com/tudo-aqua/stars" class=" flex flex-row space-x-1">
+                    <span>
+                        GitHub    
+                    </span>
+                    <img src={githubIcon.src} class="w-4" alt=""> 
+                </a></li>
             </ul>
         </nav>
 
