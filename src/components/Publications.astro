@@ -20,6 +20,12 @@ const sortedPublicationsDesc = publications.sort((publication) => publication.ye
                             <a href={publication.doi} target="_blank" rel="noopener noreferrer" class="text-tudo hover:underline">{publication.doi}</a>
                         </p>
                         )}
+                        {publication.preprintUrl && (
+                            <p>
+                                Preprint:
+                                <a href={publication.preprintUrl} target="_blank" rel="noopener noreferrer" class="text-tudo hover:underline">Download</a>
+                            </p>
+                        )}
                         {publication.comment && (
                             <p class="text-gray-500 italic">{publication.comment}</p>
                         )}
