@@ -1,3 +1,7 @@
+---
+layout: ../layouts/MarkdownLayout.astro
+---
+
 # Privacy Policy
 
 ## General Preliminary Remarks

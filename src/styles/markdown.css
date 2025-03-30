@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+.markdown-content h1 {
+  @apply text-4xl mb-8;
+  color: var(--color-primary);
+}
+
+.markdown-content h2 {
+  @apply text-2xl mb-6;
+  color: var(--color-secondary);
+}
+
+.markdown-content h3 {
+  @apply font-bold mb-4;
+  color: var(--color-foreground);
+}
+
+.markdown-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.markdown-content p {
+  @apply mb-4 text-justify;
+  color: var(--color-foreground);
+}
+
+.markdown-content ul {
+  @apply list-disc pl-6 mb-4;
+  color: var(--color-foreground);
+}
