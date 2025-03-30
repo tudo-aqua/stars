@@ -1,86 +1,86 @@
 [
   {
-    "title": "Extraktion von formal Analysierbaren Fahrdaten aus Computerspielen am Beispiel von GTA 5",
+    "title": "Extraktion von formal Analysierbaren Fahrdaten aus Computerspielen am Beispiel von GTA V",
     "year": 2023,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": true
   },
   {
     "title": "Szenario-basierte Auswertung von formalisierten Verkehrsregeln für Autobahnverkehr mit dem STARS Framework",
     "year": 2023,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": true
   },
   {
     "title": "Design und Implementierung einer DSL zur vereinfachten Beschreibung von Szenarien zum simulationsbasierten Testen von autonomen Fahrzeugen",
     "year": 2024,
-    "type": "Master Thesis",
+    "type": "Master's Thesis",
     "finished": true
   },
   {
     "title": "Strategies for extracting static map data from GTA for formal analysis with STARS",
     "year": 2024,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": true
   },
   {
     "title": "Testfallerstellung für STARS Scenario Features durch effizientes Labeln von Fahrdaten in GTA V",
     "year": 2024,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": true
   },
   {
     "title": "Analyse der Szenario-Diversität des KITTI-Datensatzes mit dem STARS Framework",
     "year": 2024,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": true
   },
   {
     "title": "Aufbau und Evaluierung einer quellenunabhängigen Schnittstelle für das STARS-Framework durch Nutzung einer ROS2-Umgebung am Beispiel des CARLA-Simulators",
     "year": 2024,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": true
   },
   {
     "title": "Analyse des INTERACTION Datensatzes mit Hilfe des STARS Frameworks",
     "year": 2025,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": false
   },
   {
     "title": "Continuous TSC evaluation and visualization for driving in CARLA",
     "year": 2025,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": false
   },
   {
     "title": "Strategien zur Segmentierung von Simulationsfahrten für formale Analysen mit STARS",
     "year": 2025,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": false
   },
   {
     "title": "Model Checking von CMFTBL-Formeln mit SMT-Solvern am Beispiel von automatisierten Fahrsystemen",
     "year": 2025,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": false
   },
   {
     "title": "A Proof-Logic-Based Explainable Model Checker for the Temporal Logic CMFTBL",
     "year": 2025,
-    "type": "Master Thesis",
+    "type": "Master's Thesis",
     "finished": false
   },
   {
     "title": "Scenario Generation based on missing feature combinations using SCENIC",
     "year": 2025,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": false
   },
   {
     "title": "Analyse der Diversität des INTERACTION-Datensatzes",
     "year": 2025,
-    "type": "Bachelor Thesis",
+    "type": "Bachelor's Thesis",
     "finished": false
   }
 ]
