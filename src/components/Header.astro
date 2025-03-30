@@ -10,7 +10,7 @@ const navItems = [
     <div class="wrapper flex flex-row items-center justify-between px-10 py-4">
         <a href="/stars" id="logo">STARS</a>
         <nav class="sm:visible invisible">
-            <ul class="flex flex-row space-x-8">
+            <ul class="flex flex-row flex-wrap space-x-8">
                 {navItems.map((navItem) => (
                     <li><a href={navItem.href}>{navItem.name}</a></li>
                 ))}
