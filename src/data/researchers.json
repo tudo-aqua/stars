@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Till Schallau",
+    "image": "schallau.jpg",
+    "imageUrl": "",
+    "socials": {
+      "mail": "till.schallau@tu-dortmund.de",
+      "orcid": "0000-0002-1769-3486"
+    },
+    "bio": "Till Schallau received the M.Sc. degree in Computer Science from TU  University, Germany, in 2019. Since then, he has been a research associate (Ph.D.) at the Chair for Software Engineering in Prof. Dr. Falk Howar's group, TU Dortmund University, Germany. His current research interests include the formal specification of scenario-based testing of autonomous systems as well as utilizing domain-specific languages."
+  },
+  {
+    "name": "Dominik Schmid",
+    "image": "schmid.jpg",
+    "imageUrl": "",
+    "socials": {
+      "mail": "dominik.schmid@tu-dortmund.de",
+      "orcid": "0000-0002-7866-7927"
+    },
+    "bio": "Dominik Schmid received the M.Sc. degree in Computer Science from TU  University, Germany, in 2023. During his Master’s thesis, he worked as a research associate at the Institute for Transport Logistics in Prof. Dr. Uwe Clausen's group for mathematical optimization, TU Dortmund University, Germany. Since then, he has been a research associate (Ph.D.) at the Chair for Software Engineering in Prof. Dr. Falk Howar's group, TU Dortmund University, Germany. His current research focuses on the formal specification of traffic and the verification of autonomated driving systems using temporal logic to classify driving scenarios in recorded and live data traces from the automotive domain."
+  },
+  {
+    "name": "Nick Pawlinorz",
+    "image": "pawlinorz.jpg",
+    "imageUrl": "",
+    "socials": {
+      "mail": "nick.pawlinorz@tu-dortmund.de",
+      "orcid": "0009-0003-6614-1252"
+    },
+    "bio": "Nick Pawlinorz received his B.Sc. degree in Computer Science from TU Dortmund University, Germany, in 2024. His Bachelor's thesis, titled 'Extraktion von formal Analysierbaren Fahrdaten aus Computerspielen am Beispiel von GTA V', was related to the STARS project. He began working for the Automated Quality Assurance group under Prof. Dr. Falk Howar in 2023.  He is currently pursuing his M.Sc. degree at TU Dortmund University and is involved in several research projects within the STARS context."
+  },
+  {
+    "name": "Dr. Stefan Naujokat",
+    "image": "naujokat.jpg",
+    "imageUrl": "",
+    "socials": {
+      "mail": "stefan.naujokat@tu-dortmund.de",
+      "orcid": "0000-0002-6265-6641"
+    },
+    "bio": "Stefan Naujokat received the Dipl.-Inf. and Dr.-Ing. degrees from the Department of Computer Science at TU Dortmund University, Germany, in 2009 and 2017, respectively. He was a Ph.D. student and postdoc at the Chair for Programming Systems until 2019 and currently is senior researcher at the Chair for Software Engineering in Prof. Dr. Falk Howar's group, TU Dortmund University, Germany. His dissertation focused on simplifying language workbenches to make the development of visual domain-specific languages more accessible to a wider audience of language engineers. His research interests furthermore include metamodeling, code generation, and bridging the gap between formal specifications and domain-specific languages."
+  },
+  {
+    "name": "Prof. Dr. Falk Howar",
+    "image": "howar.jpg",
+    "imageUrl": "",
+    "socials": {
+      "mail": "falk.howar@tu-dortmund.de",
+      "orcid": "0000-0002-9524-4459"
+    },
+    "bio": "Falk Howar is a professor for Software Engineering in the Department of Computer Science at TU Dortmund University and Coordinator of Software Engineering Research at Fraunhofer ISST. His research focuses on the safety and security of intelligent and autonomous software systems. He is particularly interested in the use of  formal methods to analyze the behavior of such systems. After studying computer science and earning his doctorate at TU Dortmund University, Falk Howar first worked in the USA at Carnegie Mellon University (Silicon Valley) and at NASA Ames Research Center, where he developed methods for testing an autonomous air traffic control system. Subsequently, he was on the management board of the Institute for Applied Software Systems Engineering at TU Clausthal. There, he conducted research on safe autonomous driving functions together with partners from the automotive industry."
+  }
+]

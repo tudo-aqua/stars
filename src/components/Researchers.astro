@@ -1,0 +1,28 @@
+---
+import researchers from "../data/researchers.json";
+import ResearcherCard from "./ResearcherCard.astro";
+
+const images = import.meta.glob("../assets/researchers/*.jpg", { eager: true });
+// Get URL for each image
+researchers.forEach((researcher) => {
+    const localImagePath : string = `../assets/researchers/${researcher.image}`;
+    // @ts-ignore
+    researcher.imageUrl = images[localImagePath]?.default.src;
+})
+
+---
+<div class="py-5">
+  <h2 class="wrapper text-4xl text-tudo mb-10">Researchers</h2>
+  <section class="wrapper flex flex-row flex-wrap gap-4 mx-auto justify-center">
+    {researchers.map((researcher) => (
+      <ResearcherCard
+        name={researcher.name}
+        altName = {researcher.altName}
+        socials={researcher.socials}
+        bio={researcher.bio}
+        imageUrl={researcher.imageUrl}
+    />
+    ))}
+  </section>
+
+</div>

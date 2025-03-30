@@ -1,0 +1,22 @@
+---
+import mailIcon from '../assets/icons/mail.svg';
+import orcidIcon from '../assets/icons/orcid.svg';
+
+const {name, socials, bio, imageUrl} = Astro.props;
+---
+<div class="bg-white w-100 rounded-lg shadow-md p-6">
+    <img src={imageUrl} alt={name} class="w-60 h-60 rounded-full mx-auto object-cover" />
+    <h2 class="text-xl font-bold text-center mt-4 text-tudo">{name}</h2>
+    <div class="flex flex-row justify-center mt-1 space-x-1">
+      <a href=`https://orcid.org/${socials.orcid}`>
+        <img src={orcidIcon.src} alt="Orcid" class="w-5">
+      </a>
+      <a href=`mailto:${socials.mail}`>
+        <img src={mailIcon.src} alt="Mail" class="w-5">
+      </a>
+    </div>
+    <p class="mt-1 text-sm text-gray-700 text-justify">{bio}</p>
+  </div>
+
+
+  
