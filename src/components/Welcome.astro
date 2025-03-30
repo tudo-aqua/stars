@@ -1,0 +1,27 @@
+---
+import aqua from '../assets/logo/aqua.svg';
+import tudoLogo from '../assets/logo/tudo.svg';
+
+import {Content as WelcomeText} from '../data/welcome.md';
+import "../styles/markdown.css";
+---
+
+<div class="wrapper bg-white pb-10">
+        <div class="pt-15 md:pt-30">
+            <h1 class="text-3xl md:text-5xl max-w-8/12 md:max-w-5/12 mx-auto text-center text-tudo">
+                Scenario-Based Testing of Autonomous Robotic Systems
+            </h1>
+            <div class="flex flex-row space-x-10 items-start justify-center bg-white p-10">
+                <a href="http://aqua.cs.tu-dortmund.de">
+                    <img width="100" src={aqua.src} alt="AQUA Group Logo">
+                </a>
+                <a href="http://www.tu-dortmund.de/en/">
+                    <img width="100" src={tudoLogo.src} alt="TU Dortmund University Logo">
+                </a>
+            </div>
+        </div>
+        <div class="pt-20 markdown-content">
+            <WelcomeText />
+        </div>
+    </div>
+</div>
