@@ -33,7 +33,16 @@
     "year": 2025,
     "in": "ICST Workshops (IWCT 2025)",
     "doi": null,
+    "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2025STARSTreeBasedClassification.pdf",
+    "comment": "to be published"
+  },
+  {
+    "title": "Post-hoc Scenario-based Testing of Automated Driving Systems: Classification of Driving Scenarios and Checking of Functional Requirements in Recorded Data",
+    "authors": "Till Schallau, Dominik Schmid, Nick Pawlinorz, Harun Teper, Stefan Naujokat, Jian-Jia Chen, Falk Howar",
+    "year": 2025,
+    "in": "Intelligent Vehicles (IV 2025)",
+    "doi": null,
     "preprintUrl": "",
-    "comment": "not published yet"
+    "comment": "to be published"
   }
 ]
