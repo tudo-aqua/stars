@@ -12,27 +12,27 @@ const {name, socials, bio, imageUrl} = Astro.props;
     <h2 class="text-xl font-bold text-center mt-4 text-tudo">{name}</h2>
     <div class="flex flex-row justify-center mt-1 space-x-1">
       {socials.orcid && (
-        <a href=`https://orcid.org/${socials.orcid}`>
+        <a href=`https://orcid.org/${socials.orcid}` target="_blank" rel="noopener noreferrer">
           <img src={orcidIcon.src} alt="Orcid" class="w-5">
         </a>
       )}
       {socials.linkedin && (
-        <a href={socials.linkedin}>
+        <a href={socials.linkedin} target="_blank" rel="noopener noreferrer">
           <img src={linkedinIcon.src} alt="Linkedin" class="w-5">
         </a>
       )}
       {socials.scholar && (
-        <a href={socials.scholar}>
+        <a href={socials.scholar} target="_blank" rel="noopener noreferrer">
           <img src={scholarIcon.src} alt="Google Scholar" class="w-5">
         </a>
       )}
       {socials.github && (
-        <a href={socials.github}>
+        <a href={socials.github} target="_blank" rel="noopener noreferrer">
           <img src={githubIcon.src} alt="GitHub" class="w-5">
         </a>
       )}
       {socials.mail && (
-        <a href=`mailto:${socials.mail}`>
+        <a href=`mailto:${socials.mail}` target="_blank" rel="noopener noreferrer">
           <img src={mailIcon.src} alt="Mail" class="w-5">
         </a>
       )}
