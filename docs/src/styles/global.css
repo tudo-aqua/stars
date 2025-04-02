@@ -24,6 +24,14 @@
   color: var(--color-primary);
 }
 
+.text-aqua {
+  color: var(--color-aqua-gray);
+}
+
+.bg-tudo {
+  background-color: var(--color-primary);
+}
+
 .wrapper {
   @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8; /* Maximale Breite und dynamisches Padding */
 }

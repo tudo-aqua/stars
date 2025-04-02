@@ -9,7 +9,7 @@ const sortedPublicationsDesc = publications.sort((publication) => publication.ye
         <h2 class="text-4xl text-tudo mb-10">Publications</h2>
             <div class="space-y-4">
                 {sortedPublicationsDesc.map((publication) => (
-                    <div class="">
+                    <div class="text-aqua">
                         <h3 class="text-lg font-bold">{publication.title}</h3>
                         <p>{publication.authors}</p>
                         <p>In: <span class="italic">{publication.in}</span></p>
@@ -20,25 +20,17 @@ const sortedPublicationsDesc = publications.sort((publication) => publication.ye
                             <a href={publication.doi} target="_blank" rel="noopener noreferrer" class="text-tudo hover:underline">{publication.doi}</a>
                         </p>
                         )}
+                        {publication.comment && (
+                            <p class="text-gray-500 italic">{publication.comment}</p>
+                        )}
                         {publication.preprintUrl && (
                             <p>
                                 Preprint:
                                 <a href={publication.preprintUrl} target="_blank" rel="noopener noreferrer" class="text-tudo hover:underline">Download</a>
                             </p>
                         )}
-                        {publication.comment && (
-                            <p class="text-gray-500 italic">{publication.comment}</p>
-                        )}
                     </div>
                 ))}
-            </div>
-
+        </div>
     </div>
-
 </div>
-
-<style>
-    .bg-tudo {
-        background-color: var(--color-primary);
-    }
-</style>
