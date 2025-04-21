@@ -32,9 +32,9 @@
     "authors": "Till Schallau, Dominik Schmid, Nick Pawlinorz, Stefan Naujokat, Falk Howar",
     "year": 2025,
     "in": "ICST Workshops (IWCT 2025)",
-    "doi": null,
+    "doi": "https://doi.org/10.1109/ICSTW64639.2025.10962523",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2025STARSTreeBasedClassification.pdf",
-    "comment": "to be published"
+    "comment": ""
   },
   {
     "title": "Post-hoc Scenario-based Testing of Automated Driving Systems: Classification of Driving Scenarios and Checking of Functional Requirements in Recorded Data",
