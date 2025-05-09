@@ -42,12 +42,6 @@
     "finished": true
   },
   {
-    "title": "Analyse des INTERACTION Datensatzes mit Hilfe des STARS Frameworks",
-    "year": 2025,
-    "type": "Bachelor's Thesis",
-    "finished": false
-  },
-  {
     "title": "Continuous TSC evaluation and visualization for driving in CARLA",
     "year": 2025,
     "type": "Bachelor's Thesis",
@@ -81,6 +75,24 @@
     "title": "Analyse der Diversität des INTERACTION-Datensatzes",
     "year": 2025,
     "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Erstellung eines Autopiloten in CARLA mit einstellbarer Fahrqualität",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Risikobewertung von Szenarien in STARS mittels unfallrelevanter Fahrmetriken",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Implementation of a Traffic Data Acquisition Prototype for Scenario-Based Testing of Automated Driving Systems​",
+    "year": 2025,
+    "type": "Masters's Thesis",
     "finished": false
   }
 ]
