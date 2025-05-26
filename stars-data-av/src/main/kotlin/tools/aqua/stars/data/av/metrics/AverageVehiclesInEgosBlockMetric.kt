@@ -20,7 +20,6 @@ package tools.aqua.stars.data.av.metrics
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
-import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.data.av.dataclasses.*
 
 /**
@@ -43,9 +42,7 @@ class AverageVehiclesInEgosBlockMetric(
    * @param segment The Segment on which the average count should be calculated
    * @return The average count of [Actor]s in the [Block] of the ego vehicle
    */
-  override fun evaluate(
-      segment: SegmentType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>
-  ): Double {
+  override fun evaluate(segment: Segment): Double {
     val averageVehiclesInEgosBlock =
         segment.tickData.map { it.vehiclesInBlock(it.ego.lane.road.block).size }.average()
     logFiner(
