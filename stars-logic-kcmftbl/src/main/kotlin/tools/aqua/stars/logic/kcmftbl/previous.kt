@@ -88,7 +88,7 @@ fun <
     previous(
         tickData = entity.tickData,
         interval = interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } ?: false })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
 
 /**
  * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous tick phi
@@ -120,17 +120,13 @@ fun <
     interval: Pair<D, D>? = null,
     phi: (E1, E2) -> Boolean
 ): Boolean {
-  require(entity1.tickData == entity2.tickData) {
-    "The two entities provided as argument are not from same tick."
-  }
+  checkTick(entity1, entity2)
   return previous(
       tickData = entity1.tickData,
       interval = interval,
       phi = { td ->
-        val previousEntity1 = td.getEntityById(entity1.id)
-        val previousEntity2 = td.getEntityById(entity2.id)
-
-        if (previousEntity1 == null || previousEntity2 == null) false
-        else phi(previousEntity1 as E1, previousEntity2 as E2)
+        phi(
+            (td.getEntityById(entity1.id) ?: return@previous false) as E1,
+            (td.getEntityById(entity2.id) ?: return@previous false) as E2)
       })
 }

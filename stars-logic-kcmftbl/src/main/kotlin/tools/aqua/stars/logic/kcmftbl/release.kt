@@ -20,8 +20,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'until' operator i.e. "In all future ticks in the interval phi 1
- * holds, at least until phi 2 holds".
+ * CMFTBL implementation of the 'release' operator i.e. "In all future ticks in the interval phi 2
+ * holds, at least until (and including) phi1 holds, or forever".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -38,40 +38,21 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> until(
+    D : TickDifference<D>> release(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
     phi2: (T) -> Boolean
-): Boolean {
-  checkInterval(interval)
-
-  val segment = tickData.segment
-  val now = tickData.currentTick
-  val nowIndex = segment.tickData.indexOf(tickData)
-
-  for (searchIndex in nowIndex..segment.tickData.lastIndex) {
-    val searchTickData = segment.tickData[searchIndex]
-
-    // Interval not reached yet, phi1 must hold
-    if (interval != null && searchTickData.currentTick < now + interval.first)
-        if (phi1(searchTickData)) continue else return false
-
-    // Interval left, but phi2 did not hold
-    if (interval != null && searchTickData.currentTick >= now + interval.second) return false
-
-    // In interval: if phi2 holds, return true
-    if (phi2(searchTickData)) return true
-
-    // In interval: phi2 did not hold, phi1 must hold
-    if (!phi1(searchTickData)) return false
-  }
-  return false
-}
+): Boolean =
+    !until(
+        tickData = tickData,
+        interval = interval,
+        phi1 = { td -> !phi1(td) },
+        phi2 = { td -> !phi2(td) })
 
 /**
- * CMFTBL implementation of the 'until' operator for one entity i.e. "In all future ticks in the
- * interval phi 1 holds, at least until phi 2 holds".
+ * CMFTBL implementation of the 'release' operator for one entity i.e. "In all future ticks in the
+ * interval phi 2 holds, at least until (and including) phi1 holds, or forever".
  *
  * @param E1 [EntityType].
  * @param E [EntityType].
@@ -91,21 +72,21 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> until(
+    D : TickDifference<D>> release(
     entity: E1,
     interval: Pair<D, D>? = null,
     phi1: (E1) -> Boolean,
     phi2: (E1) -> Boolean
 ): Boolean =
-    until(
-        tickData = entity.tickData,
-        interval = interval,
-        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } == true },
-        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } == true })
+    !until(
+        entity.tickData,
+        interval,
+        phi1 = { td -> td.getEntityById(entity.id)?.let { !phi1(it as E1) } != false },
+        phi2 = { td -> td.getEntityById(entity.id)?.let { !phi2(it as E1) } != false })
 
 /**
- * CMFTBL implementation of the 'until' operator for two entities i.e. "In all future ticks in the
- * interval phi 1 holds, at least until phi 2 holds".
+ * CMFTBL implementation of the 'release' operator for two entities i.e. "In all future ticks in the
+ * interval phi 2 holds, at least until (and including) phi1 holds, or forever".
  *
  * @param E1 [EntityType].
  * @param E2 [EntityType].
@@ -128,7 +109,7 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> until(
+    D : TickDifference<D>> release(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
@@ -136,17 +117,17 @@ fun <
     phi2: (E1, E2) -> Boolean
 ): Boolean {
   checkTick(entity1, entity2)
-  return until(
-      tickData = entity1.tickData,
-      interval = interval,
+  return !until(
+      entity1.tickData,
+      interval,
       phi1 = { td ->
-        phi1(
-            (td.getEntityById(entity1.id) ?: return@until false) as E1,
-            (td.getEntityById(entity2.id) ?: return@until false) as E2)
+        !phi1(
+            (td.getEntityById(entity1.id) ?: return@until true) as E1,
+            (td.getEntityById(entity2.id) ?: return@until true) as E2)
       },
       phi2 = { td ->
-        phi2(
-            (td.getEntityById(entity1.id) ?: return@until false) as E1,
-            (td.getEntityById(entity2.id) ?: return@until false) as E2)
+        !phi2(
+            (td.getEntityById(entity1.id) ?: return@until true) as E1,
+            (td.getEntityById(entity2.id) ?: return@until true) as E2)
       })
 }
