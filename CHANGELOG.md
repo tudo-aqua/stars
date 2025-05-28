@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.6 - To be released
 ### Added
-- Add CMFTBL operators `pastMinPrevalence` and `pastMaxPrevalence`. 
+- Add CMFTBL operators `pastMinPrevalence`, `pastMaxPrevalence`, `bind`, `exists`, and `forall`.
 
 ### Changed
 - Changed parameter type of `SegmentMetricProvider.evaluate()` from `SegmentType` to `S`.
