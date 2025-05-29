@@ -109,6 +109,7 @@ fun loadBlocks(mapDataFile: Path): Sequence<Block> =
  *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle
+ * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map
@@ -209,6 +210,7 @@ fun loadSegments(
  *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle
+ * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map
@@ -243,6 +245,7 @@ fun loadSegments(
  *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle
+ * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map
@@ -277,6 +280,7 @@ fun loadSegments(
  *   Json data.
  * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
  *   vehicle as the "ego" vehicle.
+ * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a [Segment]
  *   .
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of

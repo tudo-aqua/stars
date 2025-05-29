@@ -106,12 +106,12 @@ fun convertTickData(
     useFirstVehicleAsEgo: Boolean = false,
     simulationRunId: String
 ): List<List<TickData>> {
-  // Extract actors from Json file
-  val vehicles: List<JsonVehicle> =
+  // Extract vehicles from the JSON file
+  val jsonVehicles: List<JsonVehicle> =
       jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
 
   // Check that no two actors have the same id
-  check(vehicles.map { it.id }.distinct().size == vehicles.size) {
+  check(jsonVehicles.map { it.id }.distinct().size == jsonVehicles.size) {
     "There are vehicles with the same id in the Json data."
   }
 
@@ -119,12 +119,12 @@ fun convertTickData(
   val egosToUse =
       when {
         // Every vehicle should be used as ego. Ignore egoIds parameter and ego flag in Json data.
-        useEveryVehicleAsEgo -> vehicles.map { it.id }
+        useEveryVehicleAsEgo -> jsonVehicles.map { it.id }
 
         // Ego ids to use have been specified. Ignore ego flag in Json data.
         egoIds.isNotEmpty() -> {
           // Extract vehicles with ego ids
-          vehicles
+          jsonVehicles
               .map { it.id }
               .filter { it in egoIds }
               .also {
@@ -134,16 +134,23 @@ fun convertTickData(
               }
         }
 
-        vehicles.none { it.egoVehicle } -> {
+        jsonVehicles.none { it.egoVehicle } -> {
           if (useFirstVehicleAsEgo) {
-            listOf(vehicles.first().id)
+            // Get the first vehicle that is present in every Tick
+            listOf(
+                jsonSimulationRun
+                    .map { tick ->
+                      tick.actorPositions.filter { it.actor is JsonVehicle }.map { it.actor.id }
+                    }
+                    .reduce { acc, vehicles -> (acc.intersect(vehicles)).toList() }
+                    .first())
           } else {
             listOf()
           }
         }
 
         else -> {
-          vehicles
+          jsonVehicles
               .filter { it.egoVehicle }
               .map { it.id }
               .also {
@@ -241,6 +248,7 @@ fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) 
  * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
  *   Json data.
  * @param useEveryVehicleAsEgo Whether to treat every vehicle as own.
+ * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param simulationRunId Identifier of the simulation run.
  * @param minSegmentTickCount Minimal count of ticks per segment.
  */
