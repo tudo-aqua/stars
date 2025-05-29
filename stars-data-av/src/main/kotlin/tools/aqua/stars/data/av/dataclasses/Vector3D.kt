@@ -26,7 +26,7 @@ import kotlin.math.sqrt
  * @property y The y ordinate.
  * @property z The z ordinate.
  */
-data class Vector3D(val x: Double, val y: Double, val z: Double) {
+data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
   constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)
 
   constructor(location: Location) : this(location.x, location.y, location.z)

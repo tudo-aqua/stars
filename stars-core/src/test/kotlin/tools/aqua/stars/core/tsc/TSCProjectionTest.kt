@@ -87,7 +87,7 @@ class TSCProjectionTest {
     assert(projections.any { it.identifier == projection2 })
 
     // Check empty ignore list. The projections should not be filtered
-    projections = tsc.buildProjections(listOf())
+    projections = tsc.buildProjections(emptyList())
     // Check that exactly two projections are produced
     assert(projections.size == 2)
     // Check that the projections are correctly represented in their respective TSCProjection class

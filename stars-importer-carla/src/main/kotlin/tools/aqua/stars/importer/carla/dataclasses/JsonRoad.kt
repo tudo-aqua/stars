@@ -29,7 +29,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class JsonRoad(
-    @SerialName("road_id") val roadId: Int,
-    @SerialName("is_junction") val isJunction: Boolean,
-    @SerialName("lanes") val lanes: List<JsonLane>,
+    @SerialName("road_id") val roadId: Int = 0,
+    @SerialName("is_junction") val isJunction: Boolean = false,
+    @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
 )

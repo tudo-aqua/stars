@@ -26,7 +26,6 @@ import kotlin.math.sqrt
  * Data class for vehicles.
  *
  * @property id The identifier of the vehicle.
- * @property tickData [TickData].
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property lane The [Vehicle]'s [Lane].
  * @property typeId The type identifier.
@@ -40,20 +39,21 @@ import kotlin.math.sqrt
  * @property angularVelocity The current angular velocity.
  */
 data class Vehicle(
-    override val id: Int,
-    override val tickData: TickData,
-    var positionOnLane: Double,
+    override val id: Int = 0,
+    var positionOnLane: Double = 0.0,
     var lane: Lane,
-    val typeId: String,
-    val vehicleType: VehicleType,
-    var isEgo: Boolean,
-    val location: Location,
-    val forwardVector: Vector3D,
-    val rotation: Rotation,
-    var velocity: Vector3D,
-    var acceleration: Vector3D,
-    val angularVelocity: Vector3D,
+    val typeId: String = "",
+    val vehicleType: VehicleType = VehicleType.CAR,
+    var isEgo: Boolean = false,
+    val location: Location = Location(),
+    val forwardVector: Vector3D = Vector3D(),
+    val rotation: Rotation = Rotation(),
+    var velocity: Vector3D = Vector3D(),
+    var acceleration: Vector3D = Vector3D(),
+    val angularVelocity: Vector3D = Vector3D(),
 ) : Actor() {
+
+  override lateinit var tickData: TickData
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -84,31 +84,40 @@ data class Vehicle(
 
   override fun clone(newTickData: TickData): Actor =
       Vehicle(
-          id,
-          newTickData,
-          positionOnLane,
-          lane,
-          typeId,
-          vehicleType,
-          isEgo,
-          location,
-          forwardVector,
-          rotation,
-          velocity,
-          acceleration,
-          angularVelocity)
+              id,
+              positionOnLane,
+              lane,
+              typeId,
+              vehicleType,
+              isEgo,
+              location,
+              forwardVector,
+              rotation,
+              velocity,
+              acceleration,
+              angularVelocity)
+          .apply { tickData = newTickData }
 
   override fun toString(): String =
       "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
-  override fun equals(other: Any?): Boolean {
-    if (other is Vehicle) {
-      return id == other.id &&
-          tickData.currentTick == other.tickData.currentTick &&
-          positionOnLane == other.positionOnLane &&
-          lane.laneId == other.lane.laneId &&
-          lane.road.id == other.lane.road.id
-    }
-    return super.equals(other)
+  override fun equals(other: Any?): Boolean =
+      other is Vehicle && id == other.id && tickData.currentTick == other.tickData.currentTick
+
+  override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
+
+  /**
+   * Extension on Vehicle: set its `velocity` field to correspond to the given effective speed (in
+   * miles per hour).
+   */
+  fun setVelocityFromEffVelocityMPH(effVelocityMPH: Double) {
+    // 1) convert to meters per second
+    val speedMps = effVelocityMPH / 2.237
+
+    // 2) normalize the forward vector
+    val dir = Vector3D(1.0, 0.0, 0.0).normalized()
+
+    // 3) scale by speed and assign
+    this.velocity = Vector3D(dir.x * speedMps, dir.y * speedMps, dir.z * speedMps)
   }
 }

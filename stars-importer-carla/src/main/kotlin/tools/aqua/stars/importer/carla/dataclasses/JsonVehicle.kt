@@ -37,16 +37,17 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 @SerialName("Vehicle")
+@Suppress("BooleanPropertyNaming")
 data class JsonVehicle(
-    @SerialName("id") override val id: Int,
-    @SerialName("location") override val location: JsonLocation,
-    @SerialName("rotation") override val rotation: JsonRotation,
-    @SerialName("type_id") val typeId: String,
-    @SerialName("ego_vehicle") val egoVehicle: Boolean,
-    @SerialName("forward_vector") val forwardVector: JsonVector3D,
-    @SerialName("velocity") val velocity: JsonVector3D,
-    @SerialName("acceleration") val acceleration: JsonVector3D,
-    @SerialName("angular_velocity") val angularVelocity: JsonVector3D
+    @SerialName("id") override val id: Int = 0,
+    @SerialName("location") override val location: JsonLocation = JsonLocation(),
+    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
+    @SerialName("type_id") val typeId: String = "",
+    @SerialName("ego_vehicle") var egoVehicle: Boolean = false,
+    @SerialName("forward_vector") val forwardVector: JsonVector3D = JsonVector3D(),
+    @SerialName("velocity") val velocity: JsonVector3D = JsonVector3D(),
+    @SerialName("acceleration") val acceleration: JsonVector3D = JsonVector3D(),
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D()
 ) : JsonActor() {
 
   /** The effective velocity. */
