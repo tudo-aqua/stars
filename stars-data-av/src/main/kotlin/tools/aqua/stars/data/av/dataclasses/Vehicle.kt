@@ -115,7 +115,7 @@ data class Vehicle(
     val speedMps = effVelocityMPH / 2.237
 
     // 2) normalize the forward vector
-    val dir = forwardVector.normalized()
+    val dir = Vector3D(1.0, 0.0, 0.0).normalized()
 
     // 3) scale by speed and assign
     this.velocity = Vector3D(dir.x * speedMps, dir.y * speedMps, dir.z * speedMps)
