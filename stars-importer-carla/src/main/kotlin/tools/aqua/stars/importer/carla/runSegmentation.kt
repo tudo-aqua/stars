@@ -94,6 +94,7 @@ fun getLaneProgressionForVehicle(
  * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
  *   Json data.
  * @param useEveryVehicleAsEgo Whether to treat every vehicle as ego.
+ * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param simulationRunId Identifier of the simulation run.
  */
 @Suppress("unused")
@@ -102,6 +103,7 @@ fun convertTickData(
     jsonSimulationRun: List<JsonTickData>,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
     simulationRunId: String
 ): List<List<TickData>> {
   // Extract actors from Json file
@@ -132,7 +134,14 @@ fun convertTickData(
               }
         }
 
-        // No ego has been specified. Use ego flag in Json data.
+        vehicles.none { it.egoVehicle } -> {
+          if (useFirstVehicleAsEgo) {
+            listOf(vehicles.first().id)
+          } else {
+            listOf()
+          }
+        }
+
         else -> {
           vehicles
               .filter { it.egoVehicle }
@@ -240,12 +249,19 @@ fun sliceRunIntoSegments(
     jsonSimulationRun: List<JsonTickData>,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean,
+    useFirstVehicleAsEgo: Boolean,
     simulationRunId: String,
     minSegmentTickCount: Int
 ): List<Segment> {
   cleanJsonData(blocks, jsonSimulationRun)
   val tickData =
-      convertTickData(blocks, jsonSimulationRun, egoIds, useEveryVehicleAsEgo, simulationRunId)
+      convertTickData(
+          blocks,
+          jsonSimulationRun,
+          egoIds,
+          useEveryVehicleAsEgo,
+          useFirstVehicleAsEgo,
+          simulationRunId)
 
   val segments = mutableListOf<Segment>()
 

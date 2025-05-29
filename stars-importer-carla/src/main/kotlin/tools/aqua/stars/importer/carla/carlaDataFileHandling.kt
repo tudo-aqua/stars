@@ -118,6 +118,7 @@ fun loadSegments(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> {
@@ -184,6 +185,7 @@ fun loadSegments(
               simulationRun,
               egoIds,
               useEveryVehicleAsEgo,
+              useFirstVehicleAsEgo,
               currentDynamicDataPath.nameWithoutExtension,
               minSegmentTickCount))
       return@generateSequence segmentBuffer.removeFirst()
@@ -217,6 +219,7 @@ fun loadSegments(
     dynamicDataFile: Path,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> =
@@ -225,6 +228,7 @@ fun loadSegments(
         listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
         egoIds,
         useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
 
@@ -249,6 +253,7 @@ fun loadSegments(
     dynamicDataFiles: List<Path>,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> =
@@ -257,6 +262,7 @@ fun loadSegments(
         listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
         egoIds,
         useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
 
@@ -281,6 +287,7 @@ fun loadSegments(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
     orderFilesBySeed: Boolean = false
 ): Sequence<Segment> =
@@ -289,5 +296,6 @@ fun loadSegments(
         mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
         egoIds,
         useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo,
         minSegmentTickCount,
         orderFilesBySeed)
