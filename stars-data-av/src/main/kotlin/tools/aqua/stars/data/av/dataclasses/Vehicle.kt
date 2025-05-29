@@ -107,8 +107,8 @@ data class Vehicle(
   override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
 
   /**
-   * Extension on Vehicle: set its `velocity` field to correspond to
-   * the given effective speed (in miles per hour).
+   * Extension on Vehicle: set its `velocity` field to correspond to the given effective speed (in
+   * miles per hour).
    */
   fun setVelocityFromEffVelocityMPH(effVelocityMPH: Double) {
     // 1) convert to meters per second
@@ -118,10 +118,6 @@ data class Vehicle(
     val dir = forwardVector.normalized()
 
     // 3) scale by speed and assign
-    this.velocity = Vector3D(
-      dir.x * speedMps,
-      dir.y * speedMps,
-      dir.z * speedMps
-    )
+    this.velocity = Vector3D(dir.x * speedMps, dir.y * speedMps, dir.z * speedMps)
   }
 }
