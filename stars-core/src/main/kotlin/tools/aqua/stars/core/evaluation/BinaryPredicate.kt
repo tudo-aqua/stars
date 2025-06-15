@@ -30,6 +30,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param name The name of the predicate.
  * @property kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
  * @property eval The evaluation function on the [PredicateContext].
  */
@@ -41,12 +42,13 @@ class BinaryPredicate<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    name: String,
     val kClasses: Pair<KClass<E1>, KClass<E2>>,
     val eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-) {
+) : AbstractPredicate<E, T, S, U, D>(name) {
 
   /**
-   * Checks if this predicate holds (i.e. is true) in the given context.
+   * Checks if this predicate holds (i.e., is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick (Default: first tick in context) The time stamp to evaluate this predicate in.
@@ -64,7 +66,7 @@ class BinaryPredicate<
   ): Boolean = ctx.holds(this, tick, entityId1, entityId2)
 
   /**
-   * Checks if this predicate holds (i.e. is true) in the given context on current tick.
+   * Checks if this predicate holds (i.e., is true) in the given context on the current tick.
    *
    * @param ctx The context this predicate is evaluated in.
    * @param entity1 The first entity to evaluate this predicate for.
@@ -81,6 +83,7 @@ class BinaryPredicate<
           entity1.id,
           entity2.id)
 
+  /** Creates a binary tick predicate in this context. */
   companion object {
     /**
      * Creates a binary tick predicate in this context.
@@ -92,6 +95,7 @@ class BinaryPredicate<
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
+     * @param name The name of the predicate.
      * @param kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
      * @param eval The evaluation function on the [PredicateContext].
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass]es of the
@@ -105,8 +109,9 @@ class BinaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
+        name: String,
         kClasses: Pair<KClass<E1>, KClass<E2>>,
         eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(kClasses, eval)
+    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(name, kClasses, eval)
   }
 }

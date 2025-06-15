@@ -36,10 +36,10 @@ class NullaryPredicate<
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val eval: (PredicateContext<E, T, S, U, D>) -> Boolean,
-) {
+) : AbstractPredicate<E, T, S, U, D>() {
 
   /**
-   * Checks if this predicate holds (i.e. is true) in the given context and tick identifier.
+   * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
@@ -50,6 +50,7 @@ class NullaryPredicate<
       tick: U = ctx.segment.ticks.keys.first()
   ): Boolean = ctx.holds(this, tick)
 
+  /** Creates a nullary tick predicate. */
   companion object {
     /**
      * Creates a nullary tick predicate.

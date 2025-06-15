@@ -41,7 +41,7 @@ class UnaryPredicate<
     D : TickDifference<D>>(
     val kClass: KClass<E1>,
     val eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-) {
+) : AbstractPredicate<E, T, S, U, D>() {
   /**
    * Check if this predicate holds (i.e. is true) in the given context.
    *
@@ -68,7 +68,7 @@ class UnaryPredicate<
       holds(ctx, entity.tickData.currentTick, entity.id)
 
   /**
-   * Check if this predicate holds (i.e. is true) in the given context.
+   * Check if this predicate holds (i.e., is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
    * @return Whether the predicate holds in the given [PredicateContext].
@@ -76,6 +76,7 @@ class UnaryPredicate<
   fun holds(ctx: PredicateContext<E, T, S, U, D>): Boolean =
       holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId)
 
+  /** Creates a unary tick predicate. * */
   companion object {
     /**
      * Creates a unary tick predicate.
