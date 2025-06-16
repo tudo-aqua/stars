@@ -32,7 +32,7 @@ class DataAvTSCTest {
   fun testTSCConstruction() {
 
     val soBetween =
-        predicate(Vehicle::class to Vehicle::class) { _, v0, v1 ->
+        predicate("Someone between", Vehicle::class to Vehicle::class) { _, v0, v1 ->
           v1.tickData.vehicles
               .filter { it.id != v0.id && it.id != v1.id }
               .any { vx ->
@@ -43,7 +43,7 @@ class DataAvTSCTest {
         }
 
     val obeyedSpeedLimit =
-        predicate(Vehicle::class) { _, v ->
+        predicate("Obeyed speed limit", Vehicle::class) { _, v ->
           globally(v) { t -> (t.effVelocityInMPH) <= t.lane.speedAt(t.positionOnLane) }
         }
 
