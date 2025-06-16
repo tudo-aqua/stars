@@ -27,6 +27,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param name The name of the predicate.
  * @property eval The evaluation function on the [PredicateContext].
  */
 class NullaryPredicate<
@@ -35,8 +36,9 @@ class NullaryPredicate<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    name: String,
     val eval: (PredicateContext<E, T, S, U, D>) -> Boolean,
-) : AbstractPredicate<E, T, S, U, D>() {
+) : AbstractPredicate<E, T, S, U, D>(name) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
@@ -60,6 +62,7 @@ class NullaryPredicate<
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
+     * @param name The name of the predicate.
      * @param eval The evaluation function on the [PredicateContext].
      * @return The created [NullaryPredicate] with the given [eval] function.
      */
@@ -69,7 +72,8 @@ class NullaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
+        name: String,
         eval: (PredicateContext<E, T, S, U, D>) -> Boolean
-    ): NullaryPredicate<E, T, S, U, D> = NullaryPredicate(eval)
+    ): NullaryPredicate<E, T, S, U, D> = NullaryPredicate(name, eval)
   }
 }

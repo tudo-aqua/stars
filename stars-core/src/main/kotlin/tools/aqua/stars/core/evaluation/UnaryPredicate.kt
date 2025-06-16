@@ -29,6 +29,7 @@ import tools.aqua.stars.core.types.*
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param name The name of the predicate.
  * @property kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
  * @property eval The evaluation function on the [PredicateContext].
  */
@@ -39,11 +40,12 @@ class UnaryPredicate<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
+    name: String,
     val kClass: KClass<E1>,
     val eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-) : AbstractPredicate<E, T, S, U, D>() {
+) : AbstractPredicate<E, T, S, U, D>(name) {
   /**
-   * Check if this predicate holds (i.e. is true) in the given context.
+   * Check if this predicate holds (i.e., is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
@@ -58,7 +60,7 @@ class UnaryPredicate<
   ): Boolean = ctx.holds(this, tick, entityId)
 
   /**
-   * Check if this predicate holds (i.e. is true) in the given context.
+   * Check if this predicate holds (i.e., is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
    * @param entity The entity to evaluate this predicate for.
@@ -87,6 +89,7 @@ class UnaryPredicate<
      * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
+     * @param name The name of the predicate.
      * @param kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
      * @param eval The evaluation function on the [PredicateContext].
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass] of the
@@ -99,8 +102,9 @@ class UnaryPredicate<
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
+        name: String,
         kClass: KClass<E1>,
         eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(kClass, eval)
+    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(name, kClass, eval)
   }
 }
