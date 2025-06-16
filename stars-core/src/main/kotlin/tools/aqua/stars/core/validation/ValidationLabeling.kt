@@ -17,39 +17,53 @@
 
 package tools.aqua.stars.core.validation
 
-import kotlin.reflect.KProperty0
 import tools.aqua.stars.core.evaluation.AbstractPredicate
+import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.SegmentType
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
 
-fun labelFile(path: String, block: FileSpec.() -> Unit): FileSpec = FileSpec(path).apply(block)
+fun <
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> labelFile(
+    path: String,
+    block: FileSpec<E, T, S, U, D>.() -> Unit
+): FileSpec<E, T, S, U, D> = FileSpec<E, T, S, U, D>(path).apply(block)
 
-class FileSpec(val path: String) {
-  internal val specs = mutableListOf<PredicateSpec<out AbstractPredicate<*, *, *, *, *>>>()
+class FileSpec<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(val path: String) {
+  internal val specs = mutableListOf<PredicateSpec<E, T, S, U, D>>()
 
-  /**
-   * Accepts any concrete subclass of AbstractPredicate<…> by property‐ref. IDE will autocomplete
-   * ::hasLowTrafficDensity, ::compareVehicles, etc.
-   */
-  fun <P : AbstractPredicate<*, *, *, *, *>> predicate(
-      prop: KProperty0<P>,
-      block: PredicateSpec<P>.() -> Unit
+  fun predicate(
+      pred: AbstractPredicate<E, T, S, U, D>,
+      block: PredicateSpec<E, T, S, U, D>.() -> Unit
   ) {
-    val spec = PredicateSpec(prop.name, prop.get())
+    val spec = PredicateSpec(pred)
     spec.apply(block)
     specs += spec
   }
 }
 
-class PredicateSpec<P : AbstractPredicate<*, *, *, *, *>>(
-    /** the Kotlin var name, e.g. "hasLowTrafficDensity" */
-    val name: String,
-    /** your actual predicate instance (nullary/unary/binary) */
-    val pred: P
-) {
+class PredicateSpec<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>(val pred: AbstractPredicate<E, T, S, U, D>) {
+  val name: String = pred.name
+
   data class Interval(val fromSec: Int, val toSec: Int)
 
   internal val intervals = mutableListOf<Interval>()
 
-  /** mark [fromSec toSec] as true for this predicate */
   fun interval(fromSec: Int, toSec: Int) {
     require(fromSec >= 0 && toSec >= fromSec) { "Invalid interval [$fromSec,$toSec]" }
     intervals += Interval(fromSec, toSec)
