@@ -17,16 +17,22 @@
 
 package tools.aqua.stars.core.validation
 
-import org.junit.jupiter.api.Assertions.assertTrue
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import tools.aqua.stars.core.evaluation.BinaryPredicate
-import tools.aqua.stars.core.evaluation.NullaryPredicate
-import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.evaluation.UnaryPredicate
+import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.SegmentType
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
 
-abstract class AbstractManualLabelTest {
-  protected abstract val manuallyLabelledTests: List<FileSpec>
+abstract class AbstractManualLabelTest<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>> {
+  protected abstract val manuallyLabelledTests: List<FileSpec<E, T, S, U, D>>
 
   @TestFactory
   fun labeledPredicateTests(): List<DynamicTest> =
@@ -34,29 +40,35 @@ abstract class AbstractManualLabelTest {
         manualFile.specs.flatMap { spec ->
           spec.intervals.map { (from, to) ->
             DynamicTest.dynamicTest("${manualFile.path} | ${spec.name} @ [$from,$to]s") {
-              val data = YourDataLoader.load(manualFile.path)
-              val segment = data.segment(from, to)
-              when (val p = spec.pred) {
-                is NullaryPredicate<*, *, *, *, *> ->
-                    assertTrue(p.eval(PredicateContext.of(segment)))
+              assertEquals(
+                  1,
+                  2,
+              )
 
-                is UnaryPredicate<*, *, *, *, *, *> ->
-                    // e.g. assert holds for each entity in segment,
-                    // or whatever your semantics are:
-                    segment.entities.forEach { e ->
-                      assertTrue(p.eval(PredicateContext.of(segment), e))
-                    }
+              //              val data = YourDataLoader.load(manualFile.path)
+              //              val segment = data.segment(from, to)
+              //              when (val p = spec.pred) {
+              //                is NullaryPredicate<*, *, *, *, *> ->
+              //                    assertTrue(p.eval(PredicateContext.of(segment)))
+              //
+              //                is UnaryPredicate<*, *, *, *, *, *> ->
+              //                    // e.g. assert holds for each entity in segment,
+              //                    // or whatever your semantics are:
+              //                    segment.entities.forEach { e ->
+              //                      assertTrue(p.eval(PredicateContext.of(segment), e))
+              //                    }
+              //
+              //                is BinaryPredicate<*, *, *, *, *, *, *> ->
+              //                    // maybe you want to test all pairs, or some canonical pair:
+              //                    segment.entities.forEach { e1 ->
+              //                      segment.entities.forEach { e2 ->
+              //                        assertTrue(p.eval(PredicateContext.of(segment), e1, e2),
+              // "for $e1, $e2")
+              //                      }
+              //                    }
 
-                is BinaryPredicate<*, *, *, *, *, *, *> ->
-                    // maybe you want to test all pairs, or some canonical pair:
-                    segment.entities.forEach { e1 ->
-                      segment.entities.forEach { e2 ->
-                        assertTrue(p.eval(PredicateContext.of(segment), e1, e2), "for $e1, $e2")
-                      }
-                    }
-
-                else -> error("Unsupported predicate type: ${p::class}")
-              }
+              //                else -> error("Unsupported predicate type: ${p::class}")
+              //              }
             }
           }
         }
