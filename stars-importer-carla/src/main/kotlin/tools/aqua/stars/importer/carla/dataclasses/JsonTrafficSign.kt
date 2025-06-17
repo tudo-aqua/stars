@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for traffic signs.
+ * JSON object for traffic signs.
  *
  * @property id The identifier of the traffic light.
  * @property trafficSignType The [JsonTrafficSignType] of the traffic sign.
@@ -29,6 +29,13 @@ import kotlinx.serialization.Serializable
  * @property typeId List type identifier.
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
+ * @property attributes The additional attributes for the [JsonTrafficSign] from the CARLA
+ *   simulation.
+ * @property isAlive Whether the [JsonTrafficSign] is alive in the simulation.
+ * @property isActive Whether the [JsonTrafficSign] is active in the simulation.
+ * @property isDormant Whether the [JsonTrafficSign] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonTrafficSign] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonTrafficSign].
  */
 @Serializable
 @SerialName("TrafficSign")
@@ -40,4 +47,10 @@ data class JsonTrafficSign(
     @SerialName("type_id") val typeId: String = "",
     @SerialName("location") override val location: JsonLocation = JsonLocation(),
     @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
+    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
+    @SerialName("is_alive") override val isAlive: Boolean = false,
+    @SerialName("is_active") override val isActive: Boolean = false,
+    @SerialName("is_dormant") override val isDormant: Boolean = false,
+    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
 ) : JsonActor()

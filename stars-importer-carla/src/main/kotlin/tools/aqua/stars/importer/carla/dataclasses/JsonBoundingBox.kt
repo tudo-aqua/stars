@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2025 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,17 +20,16 @@ package tools.aqua.stars.importer.carla.dataclasses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/**
- * Json object for current tick data.
- *
- * @property currentTick Current tick value.
- * @property actorPositions The current [JsonActorPosition]s of all actors.
- * @property weatherParameters The current [JsonDataWeatherParameters].
- */
+/** JSON bounding box. */
 @Serializable
-data class JsonTickData(
-    @SerialName("current_tick") val currentTick: Double = 0.0,
-    @SerialName("actor_positions") val actorPositions: List<JsonActorPosition> = emptyList(),
-    @SerialName("weather_parameters")
-    val weatherParameters: JsonDataWeatherParameters = JsonDataWeatherParameters()
-)
+@SerialName("BoundingBox")
+class JsonBoundingBox {
+  /** The extent of the bounding box. */
+  val extent: JsonVector3D = JsonVector3D()
+  /** The location of the bounding box. */
+  val location: JsonLocation = JsonLocation()
+  /** The rotation of the bounding box. */
+  val rotation: JsonRotation = JsonRotation()
+  /** All vertices of the bounding box. */
+  val vertices: List<JsonLocation>? = emptyList()
+}

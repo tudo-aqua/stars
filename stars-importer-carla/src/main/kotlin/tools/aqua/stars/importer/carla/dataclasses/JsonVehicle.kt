@@ -23,7 +23,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for vehicles.
+ * JSON object for vehicles.
  *
  * @property id The identifier of the vehicle.
  * @property location The [JsonLocation] of the vehicle.
@@ -34,6 +34,12 @@ import kotlinx.serialization.Serializable
  * @property velocity The current velocity.
  * @property acceleration The current acceleration.
  * @property angularVelocity The current angular velocity.
+ * @property attributes The additional attributes for the [JsonVehicle] from the CARLA simulation.
+ * @property isAlive Whether the [JsonVehicle] is alive in the simulation.
+ * @property isActive Whether the [JsonVehicle] is active in the simulation.
+ * @property isDormant Whether the [JsonVehicle] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonVehicle] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonVehicle].
  */
 @Serializable
 @SerialName("Vehicle")
@@ -47,7 +53,13 @@ data class JsonVehicle(
     @SerialName("forward_vector") val forwardVector: JsonVector3D = JsonVector3D(),
     @SerialName("velocity") val velocity: JsonVector3D = JsonVector3D(),
     @SerialName("acceleration") val acceleration: JsonVector3D = JsonVector3D(),
-    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D()
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D(),
+    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
+    @SerialName("is_alive") override val isAlive: Boolean = false,
+    @SerialName("is_active") override val isActive: Boolean = false,
+    @SerialName("is_dormant") override val isDormant: Boolean = false,
+    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
 ) : JsonActor() {
 
   /** The effective velocity. */

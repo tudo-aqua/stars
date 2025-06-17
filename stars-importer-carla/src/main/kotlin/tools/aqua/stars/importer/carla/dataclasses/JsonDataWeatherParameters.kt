@@ -22,9 +22,10 @@ import kotlinx.serialization.Serializable
 import tools.aqua.stars.data.av.dataclasses.WeatherParameters
 
 /**
- * Json object for weather parameters.
+ * JSON object for weather parameters.
  *
  * @property type The [JsonDataWeatherParametersType] of the weather parameter.
+ * @property dustStorm The intensity of a dust storm.
  * @property cloudiness The cloudiness.
  * @property precipitation The precipitation.
  * @property precipitationDeposits The deposits of precipitation.
@@ -36,13 +37,14 @@ import tools.aqua.stars.data.av.dataclasses.WeatherParameters
  * @property wetness The wetness.
  * @property fogFalloff The fog falloff.
  * @property scatteringIntensity The intensity of light scattering.
- * @property mieScatteringScale The scale of mie scattering.
+ * @property mieScatteringScale The scale of Mie scattering.
  * @property rayleighScatteringScale The scale of rayleigh scattering.
  */
 @Serializable
-data class JSonDataWeatherParameters(
+data class JsonDataWeatherParameters(
     @SerialName("type")
     val type: JsonDataWeatherParametersType = JsonDataWeatherParametersType.Default,
+    @SerialName("dust_storm") val dustStorm: Double = 0.0,
     @SerialName("cloudiness") val cloudiness: Double = 0.0,
     @SerialName("precipitation") val precipitation: Double = 0.0,
     @SerialName("precipitation_deposits") val precipitationDeposits: Double = 0.0,
@@ -58,7 +60,7 @@ data class JSonDataWeatherParameters(
     @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double = 0.0,
 ) {
 
-  /** Converts [JSonDataWeatherParameters] to [WeatherParameters]. */
+  /** Converts [JsonDataWeatherParameters] to [WeatherParameters]. */
   fun toWeatherParameters(): WeatherParameters =
       WeatherParameters(
           type = this.type.toWeatherType(),

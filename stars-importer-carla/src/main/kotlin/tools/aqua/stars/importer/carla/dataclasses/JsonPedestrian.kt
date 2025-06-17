@@ -27,6 +27,13 @@ import kotlinx.serialization.Serializable
  * @property typeId The type identifier.
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
+ * @property attributes The additional attributes for the [JsonPedestrian] from the CARLA
+ *   simulation.
+ * @property isAlive Whether the [JsonPedestrian] is alive in the simulation.
+ * @property isActive Whether the [JsonPedestrian] is active in the simulation.
+ * @property isDormant Whether the [JsonPedestrian] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonPedestrian] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonPedestrian].
  */
 @Serializable
 @SerialName("Pedestrian")
@@ -35,4 +42,10 @@ data class JsonPedestrian(
     @SerialName("type_id") val typeId: String = "",
     @SerialName("location") override val location: JsonLocation = JsonLocation(),
     @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
+    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
+    @SerialName("is_alive") override val isAlive: Boolean = false,
+    @SerialName("is_active") override val isActive: Boolean = false,
+    @SerialName("is_dormant") override val isDormant: Boolean = false,
+    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
 ) : JsonActor()

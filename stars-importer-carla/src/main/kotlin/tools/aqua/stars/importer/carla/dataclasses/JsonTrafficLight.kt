@@ -23,7 +23,7 @@ import tools.aqua.stars.data.av.dataclasses.TrafficLight
 import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 
 /**
- * Json object for traffic lights.
+ * JSON object for traffic lights.
  *
  * @property id The identifier of the traffic light.
  * @property typeId The type identifier.
@@ -31,6 +31,13 @@ import tools.aqua.stars.data.av.dataclasses.TrafficLightState
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
  * @property relatedOpenDriveId The related open drive identifier.
+ * @property attributes The additional attributes for the [JsonTrafficLight] from the CARLA
+ *   simulation.
+ * @property isAlive Whether the [JsonTrafficLight] is alive in the simulation.
+ * @property isActive Whether the [JsonTrafficLight] is active in the simulation.
+ * @property isDormant Whether the [JsonTrafficLight] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonTrafficLight] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonTrafficLight].
  */
 @Serializable
 @SerialName("TrafficLight")
@@ -41,6 +48,12 @@ data class JsonTrafficLight(
     @SerialName("location") override val location: JsonLocation = JsonLocation(),
     @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
     @SerialName("related_open_drive_id") val relatedOpenDriveId: Int = 0,
+    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
+    @SerialName("is_alive") override val isAlive: Boolean = false,
+    @SerialName("is_active") override val isActive: Boolean = false,
+    @SerialName("is_dormant") override val isDormant: Boolean = false,
+    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
 ) : JsonActor() {
 
   /** Converts [JsonTrafficLight] to [TrafficLight]. */

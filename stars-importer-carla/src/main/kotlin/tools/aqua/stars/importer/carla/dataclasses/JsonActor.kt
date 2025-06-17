@@ -20,7 +20,7 @@ package tools.aqua.stars.importer.carla.dataclasses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** Abstract Json actor. */
+/** Abstract JSON actor. */
 @Serializable
 @SerialName("Actor")
 sealed class JsonActor {
@@ -32,4 +32,22 @@ sealed class JsonActor {
 
   /** Current [JsonRotation]. */
   abstract val rotation: JsonRotation
+
+  /** All additional attributes from CARLA. */
+  abstract val attributes: Map<String, String>
+
+  /** Whether the [JsonActor] is alive in the simulation. */
+  @SerialName("is_alive") abstract val isAlive: Boolean
+
+  /** Whether the [JsonActor] is active in the simulation. */
+  @SerialName("is_active") abstract val isActive: Boolean
+
+  /** Whether the [JsonActor] is dormant in the simulation. */
+  @SerialName("is_dormant") abstract val isDormant: Boolean
+
+  /** All semantic tags from CARLA. */
+  @SerialName("semantic_tags") abstract val semanticTags: List<Int>
+
+  /** The [JsonBoundingBox] of the [JsonActor]. */
+  @SerialName("bounding_box") abstract val boundingBox: JsonBoundingBox?
 }
