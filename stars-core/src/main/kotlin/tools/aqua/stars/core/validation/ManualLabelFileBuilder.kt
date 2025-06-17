@@ -29,7 +29,6 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> manuallyLabelledFile(
-    testFilePath: String,
+    segmentsToTest: List<S>,
     manualLabelFile: ManualLabelFile<E, T, S, U, D>.() -> Unit
-): ManualLabelFile<E, T, S, U, D> =
-    ManualLabelFile<E, T, S, U, D>(testFilePath).apply(manualLabelFile)
+): ManualLabelFile<E, T, S, U, D> = ManualLabelFile(segmentsToTest).apply(manualLabelFile)
