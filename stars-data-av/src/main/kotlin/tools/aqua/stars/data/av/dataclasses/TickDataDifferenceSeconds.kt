@@ -40,8 +40,7 @@ class TickDataDifferenceSeconds(val differenceSeconds: Double) :
   override fun deserialize(str: String): TickDataDifferenceSeconds =
       TickDataDifferenceSeconds(str.toDouble())
 
-  override fun toString(): String =
-      "TickDataDifferenceSeconds(difference: ${this.differenceSeconds})"
+  override fun toString(): String = "${this.differenceSeconds}s"
 
   override fun equals(other: Any?): Boolean =
       if (other is TickDataDifferenceSeconds) this.differenceSeconds == other.differenceSeconds

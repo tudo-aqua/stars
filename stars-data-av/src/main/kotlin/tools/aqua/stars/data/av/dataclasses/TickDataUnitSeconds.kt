@@ -38,7 +38,7 @@ class TickDataUnitSeconds(val tickSeconds: Double) :
   override fun compareTo(other: TickDataUnitSeconds): Int =
       this.tickSeconds.compareTo(other.tickSeconds)
 
-  override fun toString(): String = "TickDataUnitSeconds(tickSeconds: ${this.tickSeconds})"
+  override fun toString(): String = "${this.tickSeconds}s"
 
   override fun equals(other: Any?): Boolean =
       if (other is TickDataUnitSeconds) this.tickSeconds == other.tickSeconds
