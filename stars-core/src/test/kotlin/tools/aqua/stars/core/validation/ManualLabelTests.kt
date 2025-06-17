@@ -17,9 +17,13 @@
 
 package tools.aqua.stars.core.validation
 
-import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
+import tools.aqua.stars.core.evaluation.BinaryPredicate
+import tools.aqua.stars.core.evaluation.NullaryPredicate
+import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.evaluation.UnaryPredicate
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -39,37 +43,19 @@ abstract class ManualLabelTests<
       manualLabelTestFiles.flatMap { manualLabelTestFile ->
         manualLabelTestFile.predicates.flatMap { manualLabelPredicate ->
           manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
+            val correctSegment = manualLabelTestFile.segmentsToTest.first() // TODO
             DynamicTest.dynamicTest(
-                "${manualLabelTestFile.testFilePath} | ${manualLabelPredicate.name} @ [$from,$to]s") {
-                  assertEquals(
-                      1,
-                      2,
-                  )
-
-                  //              val data = YourDataLoader.load(manualFile.path)
-                  //              val segment = data.segment(from, to)
-                  //              when (val p = spec.pred) {
-                  //                is NullaryPredicate<*, *, *, *, *> ->
-                  //                    assertTrue(p.eval(PredicateContext.of(segment)))
-                  //
-                  //                is UnaryPredicate<*, *, *, *, *, *> ->
-                  //                    // e.g. assert holds for each entity in segment,
-                  //                    // or whatever your semantics are:
-                  //                    segment.entities.forEach { e ->
-                  //                      assertTrue(p.eval(PredicateContext.of(segment), e))
-                  //                    }
-                  //
-                  //                is BinaryPredicate<*, *, *, *, *, *, *> ->
-                  //                    // maybe you want to test all pairs, or some canonical pair:
-                  //                    segment.entities.forEach { e1 ->
-                  //                      segment.entities.forEach { e2 ->
-                  //                        assertTrue(p.eval(PredicateContext.of(segment), e1, e2),
-                  // "for $e1, $e2")
-                  //                      }
-                  //                    }
-
-                  //                else -> error("Unsupported predicate type: ${p::class}")
-                  //              }
+                "Predicate '${manualLabelPredicate.name}' should hold in '[$from,$to]s' in segment '${correctSegment.getSegmentIdentifier()}'") {
+                  val ctx = PredicateContext(correctSegment)
+                  val predicate = manualLabelPredicate.predicate
+                  when (predicate) {
+                    is NullaryPredicate<E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
+                    is UnaryPredicate<*, E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
+                    is BinaryPredicate<*, *, E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
+                    else ->
+                        error(
+                            "Unsupported predicate type: ${manualLabelPredicate.predicate::class}")
+                  }
                 }
           }
         }
