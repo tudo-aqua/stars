@@ -29,7 +29,7 @@ sealed class EvaluationHook<T>(
     val identifier: String,
     val evaluationFunction: (T) -> EvaluationHookResult
 ) {
-  /** Static functions.*/
+  /** Static functions. */
   companion object {
     /**
      * Evaluates given the results map by grouping them by [EvaluationHookResult] and returning the
