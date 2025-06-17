@@ -46,6 +46,23 @@ class BinaryPredicate<
     val kClasses: Pair<KClass<E1>, KClass<E2>>,
     val eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
 ) : AbstractPredicate<E, T, S, U, D>(name) {
+  /**
+   * Checks if this predicate holds (i.e., is true) in the given context.
+   *
+   * @param ctx The context this predicate is evaluated in.
+   * @param tick (Default: first tick in context) The time stamp to evaluate this predicate in.
+   * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
+   *   primary entity and any other entity.
+   */
+  fun holds(
+      ctx: PredicateContext<E, T, S, U, D>,
+      tick: U = ctx.segment.ticks.keys.first(),
+  ): Boolean =
+      ctx.holds(
+          this,
+          tick,
+          ctx.segment.primaryEntityId,
+          ctx.segment.tickData.first().entities.first { it.id != ctx.primaryEntityId }.id)
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
