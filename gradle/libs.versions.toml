@@ -7,7 +7,7 @@ detekt-rules-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt
 
 # Kotlinx
 # kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.10.1" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.8.0" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.9.0" }
 
 # SLF4J
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.16"}
