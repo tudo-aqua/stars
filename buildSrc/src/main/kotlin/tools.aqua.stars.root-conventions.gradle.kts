@@ -25,7 +25,6 @@ plugins {
   id("com.dorongold.task-tree")
   id("com.github.ben-manes.versions")
   id("com.diffplug.spotless")
-  id("io.github.gradle-nexus.publish-plugin")
   id("me.qoomon.git-versioning")
 }
 
@@ -69,7 +68,3 @@ gitVersioning.apply {
     }
   }
 }
-
-val printVersion by tasks.registering { doFirst { logger.error(version.toString()) } }
-
-nexusPublishing { repositories { sonatype() } }
