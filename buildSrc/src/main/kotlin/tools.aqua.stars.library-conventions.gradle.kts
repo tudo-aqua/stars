@@ -16,7 +16,6 @@
  */
 
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.gradle.kotlin.dsl.`java-library`
 import tools.aqua.*
@@ -32,9 +31,9 @@ plugins {
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
+  id("com.vanniktech.maven.publish")
 
   `java-library`
-  `maven-publish`
   signing
 
   kotlin("jvm")
@@ -92,11 +91,6 @@ val javadocJar: TaskProvider<Jar> by
       from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     }
 
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
-
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
@@ -115,31 +109,22 @@ kotlin { jvmToolchain(17) }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["java"])
+mavenPublishing {
+  publishToMavenCentral()
+  signAllPublications()
 
-      pom {
-        name.set(mavenMetadata.name)
-        description.set(mavenMetadata.description)
+  pom {
+    name.set(mavenMetadata.name)
+    description.set(mavenMetadata.description)
 
-        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+    val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
 
-        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+    developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
 
-        globalMetadata.githubProject.get().let {
-          github(it.organization, it.project, it.mainBranch)
-        }
+    globalMetadata.githubProject.get().let { github(it.organization, it.project, it.mainBranch) }
 
-        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
-      }
-    }
+    licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
   }
 }
 
-signing {
-  setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
-  useGpgCmd()
-  sign(publishing.publications["maven"])
-}
+signing { useGpgCmd() }
