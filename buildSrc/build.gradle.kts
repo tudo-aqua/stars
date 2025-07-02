@@ -32,7 +32,7 @@ dependencies {
   implementation(libs.gradle.bmVersions)
   implementation(libs.gradle.detekt)
   implementation(libs.gradle.gitVersioning)
-  implementation(libs.gradle.nexusPublish)
+  implementation(libs.gradle.mavenPublish)
   implementation(libs.gradle.spotless)
   implementation(libs.gradle.taskTree)
   // implementation(libs.gradle.kover)
