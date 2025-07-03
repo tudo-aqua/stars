@@ -27,24 +27,22 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property condition Predicate for the edge condition.
  * @property destination Destination [TSCNode].
  */
 open class TSCEdge<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
-    val destination: TSCNode<E, T, S, U, D>,
+    val condition: (PredicateContext<E, T, U, D>) -> Boolean = CONST_TRUE,
+    val destination: TSCNode<E, T, U, D>,
 ) {
 
   override fun equals(other: Any?): Boolean =
-      other is TSCEdge<*, *, *, *, *> &&
+      other is TSCEdge<*, *, *, *> &&
           condition == other.condition &&
           destination == other.destination
 

@@ -18,17 +18,15 @@
 package tools.aqua.stars.core.validation
 
 import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
 fun <
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> manuallyLabelledFile(
-    segmentsToTest: List<S>,
-    manualLabelFile: ManualLabelFile<E, T, S, U, D>.() -> Unit
-): ManualLabelFile<E, T, S, U, D> = ManualLabelFile(segmentsToTest).apply(manualLabelFile)
+    ticksToTest: List<T>,
+    manualLabelFile: ManualLabelFile<E, T, U, D>.() -> Unit
+): ManualLabelFile<E, T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)

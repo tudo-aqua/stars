@@ -27,7 +27,6 @@ import tools.aqua.stars.core.types.*
  * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
@@ -37,32 +36,14 @@ import tools.aqua.stars.core.types.*
 class BinaryPredicate<
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     name: String,
     val kClasses: Pair<KClass<E1>, KClass<E2>>,
-    val eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-) : AbstractPredicate<E, T, S, U, D>(name) {
-  /**
-   * Checks if this predicate holds (i.e., is true) in the given context.
-   *
-   * @param ctx The context this predicate is evaluated in.
-   * @param tick (Default: first tick in context) The time stamp to evaluate this predicate in.
-   * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
-   *   primary entity and any other entity.
-   */
-  fun holds(
-      ctx: PredicateContext<E, T, S, U, D>,
-      tick: U = ctx.segment.ticks.keys.first(),
-  ): Boolean =
-      ctx.holds(
-          this,
-          tick,
-          ctx.segment.primaryEntityId,
-          ctx.segment.tickData.first().entities.first { it.id != ctx.primaryEntityId }.id)
+    val eval: (PredicateContext<E, T, U, D>, E1, E2) -> Boolean,
+) : AbstractPredicate<E, T, U, D>(name) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
@@ -76,8 +57,8 @@ class BinaryPredicate<
    *   given [entityId1] and [entityId2].
    */
   fun holds(
-      ctx: PredicateContext<E, T, S, U, D>,
-      tick: U = ctx.segment.ticks.keys.first(),
+      ctx: PredicateContext<E, T, U, D>,
+      tick: U = ctx.ticks.first().currentTick,
       entityId1: Int = ctx.primaryEntityId,
       entityId2: Int
   ): Boolean = ctx.holds(this, tick, entityId1, entityId2)
@@ -91,7 +72,7 @@ class BinaryPredicate<
    * @return Whether the predicate holds in the given [PredicateContext] for the given [entity1] and
    *   [entity2].
    */
-  fun holds(ctx: PredicateContext<E, T, S, U, D>, entity1: E1, entity2: E2): Boolean =
+  fun holds(ctx: PredicateContext<E, T, U, D>, entity1: E1, entity2: E2): Boolean =
       holds(
           ctx,
           entity1.tickData.currentTick.apply {
@@ -109,7 +90,6 @@ class BinaryPredicate<
      * @param E2 [EntityType].
      * @param E [EntityType].
      * @param T [TickDataType].
-     * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
@@ -121,14 +101,13 @@ class BinaryPredicate<
     fun <
         E1 : E,
         E2 : E,
-        E : EntityType<E, T, S, U, D>,
-        T : TickDataType<E, T, S, U, D>,
-        S : SegmentType<E, T, S, U, D>,
+        E : EntityType<E, T, U, D>,
+        T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
         name: String,
         kClasses: Pair<KClass<E1>, KClass<E2>>,
-        eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
-    ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(name, kClasses, eval)
+        eval: (PredicateContext<E, T, U, D>, E1, E2) -> Boolean,
+    ): BinaryPredicate<E1, E2, E, T, U, D> = BinaryPredicate(name, kClasses, eval)
   }
 }

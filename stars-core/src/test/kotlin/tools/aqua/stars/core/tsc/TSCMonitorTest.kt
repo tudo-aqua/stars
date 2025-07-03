@@ -33,12 +33,7 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on root node`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -51,17 +46,14 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = ticks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -74,12 +66,7 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on leaf node`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -94,17 +81,14 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = ticks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -117,12 +101,7 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on root and leaf node`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -142,17 +121,14 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = ticks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -170,12 +146,7 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on root and leaf node with identical label`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -195,17 +166,14 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = ticks())
         }
 
     assertTrue { failedMonitorsMetric.failedMonitors.any() }
@@ -217,15 +185,13 @@ class TSCMonitorTest {
     assertTrue(failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "MonitorFalse" })
   }
 
-  private fun segments(): Sequence<SimpleSegment> {
+  private fun ticks(): Sequence<SimpleTickData> {
     val entities = mutableListOf<SimpleEntity>()
-    val tickdatas = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
-    val segments = listOf(SimpleSegment(tickdatas)).asSequence()
-    val tick = SimpleTickDataUnit(0)
-    val tickdata = SimpleTickData(tick)
-    tickdatas[tick] = tickdata
-    entities.add(SimpleEntity(0, tickdata))
+    val tickData = SimpleTickData(SimpleTickDataUnit(0))
+    val ticks = mutableListOf(tickData)
 
-    return segments
+    entities.add(SimpleEntity(0, tickData))
+
+    return ticks.asSequence()
   }
 }

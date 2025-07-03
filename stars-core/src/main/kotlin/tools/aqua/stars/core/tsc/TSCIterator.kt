@@ -40,24 +40,23 @@ import tools.aqua.stars.core.types.*
  * ```
  */
 class TSCIterator<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(startNode: TSCNode<E, T, S, U, D>) : Iterator<TSCNode<E, T, S, U, D>> {
+    D : TickDifference<D>>(startNode: TSCNode<E, T, U, D>) : Iterator<TSCNode<E, T, U, D>> {
 
-  private val items: MutableList<TSCNode<E, T, S, U, D>> = mutableListOf()
+  private val items: MutableList<TSCNode<E, T, U, D>> = mutableListOf()
 
   init {
     addNodesRecursively(startNode)
   }
 
-  private fun addNodesRecursively(node: TSCNode<E, T, S, U, D>) {
+  private fun addNodesRecursively(node: TSCNode<E, T, U, D>) {
     items.add(node)
     node.edges.forEach { addNodesRecursively(it.destination) }
   }
 
   override fun hasNext(): Boolean = items.isNotEmpty()
 
-  override fun next(): TSCNode<E, T, S, U, D> = items.removeFirst()
+  override fun next(): TSCNode<E, T, U, D> = items.removeFirst()
 }

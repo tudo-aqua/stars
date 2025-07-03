@@ -36,9 +36,7 @@ data class TickData(
     val blocks: List<Block> = emptyList(),
     val weather: WeatherParameters = WeatherParameters(),
     val daytime: Daytime = Daytime.Noon
-) : TickDataType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
-
-  override lateinit var segment: Segment
+) : TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds> {
 
   init {
     entities.onEach { it.tickData = this }

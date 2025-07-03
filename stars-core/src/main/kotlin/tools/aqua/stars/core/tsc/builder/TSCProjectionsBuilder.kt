@@ -24,16 +24,14 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 open class TSCProjectionsBuilder<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
+    D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
 
   /** Holds all projections of the node. */
   private val projectionIDs: MutableMap<String, Boolean> = mutableMapOf()
@@ -46,17 +44,15 @@ open class TSCProjectionsBuilder<
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projection(label: String) {
+      D : TickDifference<D>> TSCProjectionsBuilder<E, T, U, D>.projection(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = false
   }
@@ -66,19 +62,15 @@ open class TSCProjectionsBuilder<
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projectionRecursive(
-      label: String
-  ) {
+      D : TickDifference<D>> TSCProjectionsBuilder<E, T, U, D>.projectionRecursive(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = true
   }

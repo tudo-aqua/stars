@@ -39,7 +39,6 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
@@ -51,23 +50,22 @@ import tools.aqua.stars.core.types.*
  */
 @Suppress("unused")
 class FailedMonitorsGroupedByTSCNodeMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
+    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors-grouped-by-node",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
     private val onlyLeafNodes: Boolean = false
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
+) : PostEvaluationMetricProvider<E, T, U, D>, Loggable {
 
   /**
    * Holds a [Map] from a [TSC] to a [Map] from the monitor label to a [Map] from a node label to a
    * [List] of all occurring [TSCInstanceNode]s including the node label.
    */
   private val failedMonitors:
-      MutableMap<TSC<E, T, S, U, D>, Map<String, Map<String, List<TSCInstance<E, T, S, U, D>>>>> =
+      MutableMap<TSC<E, T, U, D>, Map<String, Map<String, List<TSCInstance<E, T, U, D>>>>> =
       mutableMapOf()
 
   /**

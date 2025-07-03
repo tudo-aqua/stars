@@ -26,22 +26,20 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param minNodes The minimum number of nodes the TSC must have.
  * @param failPolicy The [EvaluationHookResult] to return if the TSC has less minNodes nodes.
  */
 open class MinNodesInTSCHook<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     minNodes: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
-    PreTSCEvaluationHook<E, T, S, U, D>(
+    PreTSCEvaluationHook<E, T, U, D>(
         identifier = "EmptyTSCHook",
         evaluationFunction = { tsc ->
           if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy

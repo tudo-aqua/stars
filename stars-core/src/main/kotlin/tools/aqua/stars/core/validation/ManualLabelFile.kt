@@ -20,22 +20,20 @@ package tools.aqua.stars.core.validation
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.AbstractPredicate
 import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
 class ManualLabelFile<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val segmentsToTest: List<S>) {
-  internal val predicates = mutableListOf<ManualLabelPredicate<E, T, S, U, D>>()
+    D : TickDifference<D>>(val ticksToTest: List<T>) {
+  internal val predicates = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
 
   fun predicate(
-      predicate: AbstractPredicate<E, T, S, U, D>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, S, U, D>.() -> Unit
+      predicate: AbstractPredicate<E, T, U, D>,
+      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)

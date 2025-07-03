@@ -34,17 +34,16 @@ import tools.aqua.stars.core.types.*
  * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
 open class TSCLeafNode<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
-    monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    monitorsMap: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+    valueFunction: (PredicateContext<E, T, U, D>) -> Any = {},
 ) :
-    TSCBoundedNode<E, T, S, U, D>(
+    TSCBoundedNode<E, T, U, D>(
         label = label,
         edges = emptyList(),
         monitorsMap = monitorsMap,

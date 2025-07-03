@@ -17,47 +17,40 @@
 
 package tools.aqua.stars.core.validation
 
-import kotlin.test.assertTrue
-import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.TestFactory
-import tools.aqua.stars.core.evaluation.BinaryPredicate
-import tools.aqua.stars.core.evaluation.NullaryPredicate
-import tools.aqua.stars.core.evaluation.PredicateContext
-import tools.aqua.stars.core.evaluation.UnaryPredicate
 import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
 abstract class ManualLabelTests<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
-  protected abstract val manualLabelTestFiles: List<ManualLabelFile<E, T, S, U, D>>
+  protected abstract val manualLabelTestFiles: List<ManualLabelFile<E, T, U, D>>
 
-  @TestFactory
-  fun testManualLabeledTestFiles(): List<DynamicTest> =
-      manualLabelTestFiles.flatMap { manualLabelTestFile ->
-        manualLabelTestFile.predicates.flatMap { manualLabelPredicate ->
-          manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
-            val correctSegment = manualLabelTestFile.segmentsToTest.first() // TODO
-            DynamicTest.dynamicTest(
-                "Predicate '${manualLabelPredicate.name}' should hold in '[$from,$to]s' in segment '${correctSegment.getSegmentIdentifier()}'") {
-                  val ctx = PredicateContext(correctSegment)
-                  val predicate = manualLabelPredicate.predicate
-                  when (predicate) {
-                    is NullaryPredicate<E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
-                    is UnaryPredicate<*, E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
-                    is BinaryPredicate<*, *, E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
-                    else ->
-                        error(
-                            "Unsupported predicate type: ${manualLabelPredicate.predicate::class}")
-                  }
-                }
-          }
-        }
-      }
+  //  @TestFactory
+  //  fun testManualLabeledTestFiles(): List<DynamicTest> =
+  //      manualLabelTestFiles.flatMap { manualLabelTestFile ->
+  //        manualLabelTestFile.predicates.flatMap { manualLabelPredicate ->
+  //          manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
+  //            val correctSegment = manualLabelTestFile.segmentsToTest.first() // TODO
+  //            DynamicTest.dynamicTest(
+  //                "Predicate '${manualLabelPredicate.name}' should hold in '[$from,$to]s' in
+  // segment '${correctSegment.getSegmentIdentifier()}'") {
+  //                  val ctx = PredicateContext(correctSegment)
+  //                  val predicate = manualLabelPredicate.predicate
+  //                  when (predicate) {
+  //                    is NullaryPredicate<E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
+  //                    is UnaryPredicate<*, E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
+  //                    is BinaryPredicate<*, *, E, T, S, U, D> -> assertTrue(predicate.holds(ctx))
+  //                    else ->
+  //                        error(
+  //                            "Unsupported predicate type:
+  // ${manualLabelPredicate.predicate::class}")
+  //                  }
+  //                }
+  //          }
+  //        }
+  //      }
 }

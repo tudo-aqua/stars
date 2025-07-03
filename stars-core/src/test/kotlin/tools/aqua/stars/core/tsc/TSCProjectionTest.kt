@@ -34,12 +34,7 @@ class TSCProjectionTest {
     val projection1 = "projection1"
     val projection2 = "projection2"
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root") {
             projections {
               projection(projection1)
@@ -65,12 +60,7 @@ class TSCProjectionTest {
     val projection1 = "projection1"
     val projection2 = "projection2"
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root") {
             projections {
               projection(projection1)
@@ -126,12 +116,7 @@ class TSCProjectionTest {
   @Test
   fun testNoExistingProjections() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           all("root")
         }
 
@@ -147,12 +132,7 @@ class TSCProjectionTest {
     val projectionSub1 = "projection_sub1"
     val projectionSub2 = "projection_sub2"
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           any("root") {
             projections {
               projectionRecursive(projectionAll)

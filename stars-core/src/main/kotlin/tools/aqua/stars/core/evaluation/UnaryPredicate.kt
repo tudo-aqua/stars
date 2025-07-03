@@ -26,7 +26,6 @@ import tools.aqua.stars.core.types.*
  * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
@@ -35,15 +34,14 @@ import tools.aqua.stars.core.types.*
  */
 class UnaryPredicate<
     E1 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     name: String,
     val kClass: KClass<E1>,
-    val eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-) : AbstractPredicate<E, T, S, U, D>(name) {
+    val eval: (PredicateContext<E, T, U, D>, E1) -> Boolean,
+) : AbstractPredicate<E, T, U, D>(name) {
   /**
    * Check if this predicate holds (i.e., is true) in the given context.
    *
@@ -54,8 +52,8 @@ class UnaryPredicate<
    *   given [entityId].
    */
   fun holds(
-      ctx: PredicateContext<E, T, S, U, D>,
-      tick: U = ctx.segment.ticks.keys.first(),
+      ctx: PredicateContext<E, T, U, D>,
+      tick: U = ctx.ticks.first().currentTick,
       entityId: Int = ctx.primaryEntityId
   ): Boolean = ctx.holds(this, tick, entityId)
 
@@ -66,8 +64,8 @@ class UnaryPredicate<
    * @param entity The entity to evaluate this predicate for.
    * @return Whether the predicate holds in the given [PredicateContext] for the given [entity].
    */
-  fun holds(ctx: PredicateContext<E, T, S, U, D>, entity: E): Boolean =
-      holds(ctx, entity.tickData.currentTick, entity.id)
+  fun holds(ctx: PredicateContext<E, T, U, D>, entity: E): Boolean =
+      holds(ctx, entity.tickData.currentTick, entity.id) // TODO: call ctx.holds
 
   /**
    * Check if this predicate holds (i.e., is true) in the given context.
@@ -75,8 +73,8 @@ class UnaryPredicate<
    * @param ctx The context this predicate is evaluated in.
    * @return Whether the predicate holds in the given [PredicateContext].
    */
-  fun holds(ctx: PredicateContext<E, T, S, U, D>): Boolean =
-      holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId)
+  fun holds(ctx: PredicateContext<E, T, U, D>): Boolean =
+      holds(ctx, ctx.ticks.first().currentTick, ctx.primaryEntityId) // TODO: call ctx.holds
 
   /** Creates a unary tick predicate. * */
   companion object {
@@ -86,7 +84,6 @@ class UnaryPredicate<
      * @param E1 [EntityType].
      * @param E [EntityType].
      * @param T [TickDataType].
-     * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
@@ -97,14 +94,13 @@ class UnaryPredicate<
      */
     fun <
         E1 : E,
-        E : EntityType<E, T, S, U, D>,
-        T : TickDataType<E, T, S, U, D>,
-        S : SegmentType<E, T, S, U, D>,
+        E : EntityType<E, T, U, D>,
+        T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
         name: String,
         kClass: KClass<E1>,
-        eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
-    ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(name, kClass, eval)
+        eval: (PredicateContext<E, T, U, D>, E1) -> Boolean,
+    ): UnaryPredicate<E1, E, T, U, D> = UnaryPredicate(name, kClass, eval)
   }
 }

@@ -29,10 +29,10 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 @Serializable
 data class SerializableTSCEdge(val destination: SerializableTSCNode) {
   constructor(
-      tscEdge: TSCInstanceEdge<*, *, *, *, *>
+      tscEdge: TSCInstanceEdge<*, *, *, *>
   ) : this(destination = SerializableTSCNode(tscEdge.destination))
 
   constructor(
-      tscEdge: TSCEdge<*, *, *, *, *>
+      tscEdge: TSCEdge<*, *, *, *>
   ) : this(destination = SerializableTSCNode(tscEdge.destination))
 }

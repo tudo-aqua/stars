@@ -33,7 +33,6 @@ import tools.aqua.stars.core.types.TickDataType
 class BooleanTick(
     override var currentTick: TestUnit,
     override var entities: List<TestEntity>,
-    override var segment: TestSegment,
     val phi1: Boolean,
     val phi2: Boolean,
-) : TickDataType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>
+) : TickDataType<TestEntity, BooleanTick, TestUnit, TestDifference>
