@@ -41,36 +41,35 @@ import tools.aqua.stars.core.types.*
  * @property bounds [Pair] of bounds of the [TSCBoundedNode].
  */
 open class TSCBoundedNode<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
-    edges: List<TSCEdge<E, T, S, U, D>>,
-    monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    edges: List<TSCEdge<E, T, U, D>>,
+    monitorsMap: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
-    valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
+    valueFunction: (PredicateContext<E, T, U, D>) -> Any = {},
     val bounds: Pair<Int, Int>
 ) :
-    TSCNode<E, T, S, U, D>(
+    TSCNode<E, T, U, D>(
         label = label,
         edges = edges,
         monitorsMap = monitorsMap,
         projectionsMap = projectionsMap,
         valueFunction = valueFunction) {
 
-  override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
-    val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()
+  override fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>> {
+    val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, U, D>>>>()
     edges.forEach { edge ->
-      val successorList = mutableListOf<List<TSCInstanceEdge<E, T, S, U, D>>>()
+      val successorList = mutableListOf<List<TSCInstanceEdge<E, T, U, D>>>()
       edge.destination.generateAllInstances().forEach { generatedChild ->
         successorList += listOf(TSCInstanceEdge(generatedChild, edge))
       }
       allSuccessorsList += successorList
     }
 
-    val returnList = mutableListOf<TSCInstanceNode<E, T, S, U, D>>()
+    val returnList = mutableListOf<TSCInstanceNode<E, T, U, D>>()
 
     // build all subsets of allSuccessorsList and filter to subsets.size in
     // (bounds.first...bounds.second)

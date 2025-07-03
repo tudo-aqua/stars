@@ -25,7 +25,7 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /** Constant predicate for always true edges. */
-val CONST_TRUE: ((PredicateContext<*, *, *, *, *>) -> Boolean) = { true }
+val CONST_TRUE: ((PredicateContext<*, *, *, *>) -> Boolean) = { true }
 
 /** Label of the [TSCNode] built by the [tsc] function. */
 const val ROOT_NODE_LABEL: String = "root"
@@ -42,15 +42,14 @@ const val ROOT_NODE_LABEL: String = "root"
  * @return The [TSCNode] at the root level of the TSC.
  */
 fun <
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> tsc(
-    init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSC<E, T, S, U, D> {
+    init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+): TSC<E, T, U, D> {
   val rootEdge =
-      TSCBoundedBuilder<E, T, S, U, D>(ROOT_NODE_LABEL)
+      TSCBoundedBuilder<E, T, U, D>(ROOT_NODE_LABEL)
           .apply { init() }
           .apply { this.bounds = edgesCount() to edgesCount() }
           .build()

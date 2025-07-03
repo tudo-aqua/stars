@@ -47,7 +47,6 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property loggerIdentifier identifier (name) for the logger.
@@ -55,20 +54,19 @@ import tools.aqua.stars.core.types.*
  */
 @Suppress("unused")
 class MissedTSCInstancesPerTSCMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val loggerIdentifier: String = "missed-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
+) : TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
   /**
    * Map a [TSC] to a map in which the missed valid [TSCInstanceNode]s are stored:
    * Map<tsc,Map<referenceInstance,missed>>.
    */
   private val missedInstancesMap:
-      MutableMap<TSC<E, T, S, U, D>, MutableMap<TSCInstanceNode<E, T, S, U, D>, Boolean>> =
+      MutableMap<TSC<E, T, U, D>, MutableMap<TSCInstanceNode<E, T, U, D>, Boolean>> =
       mutableMapOf()
 
   /**
@@ -79,7 +77,7 @@ class MissedTSCInstancesPerTSCMetric<
    * @param tscInstance The current [TSCInstance] which is removed from the [missedInstancesMap]
    *   list.
    */
-  override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
+  override fun evaluate(tsc: TSC<E, T, U, D>, tscInstance: TSCInstance<E, T, U, D>) {
     missedInstancesMap.putIfAbsent(tsc, createDefaultMissedInstanceFlagMap(tsc))
     // Check if the given tscInstance is invalid. If so, skip
     if (!tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
@@ -96,15 +94,15 @@ class MissedTSCInstancesPerTSCMetric<
    *   amount of [TSCInstanceNode]s in [TSC.possibleTSCInstances].
    */
   private fun createDefaultMissedInstanceFlagMap(
-      tsc: TSC<E, T, S, U, D>
-  ): MutableMap<TSCInstanceNode<E, T, S, U, D>, Boolean> =
-      mutableMapOf<TSCInstanceNode<E, T, S, U, D>, Boolean>().apply {
+      tsc: TSC<E, T, U, D>
+  ): MutableMap<TSCInstanceNode<E, T, U, D>, Boolean> =
+      mutableMapOf<TSCInstanceNode<E, T, U, D>, Boolean>().apply {
         tsc.possibleTSCInstances.forEach { putIfAbsent(it, true) }
         check(size == tsc.possibleTSCInstances.size)
       }
 
   /** Returns a [Map] containing the list of missed [TSCInstanceNode]s for each [TSC]. */
-  override fun getState(): Map<TSC<E, T, S, U, D>, List<TSCInstanceNode<E, T, S, U, D>>> =
+  override fun getState(): Map<TSC<E, T, U, D>, List<TSCInstanceNode<E, T, U, D>>> =
       missedInstancesMap.mapValues { (_, nodes) ->
         nodes.filter { instance -> instance.value }.map { instance -> instance.key }
       }

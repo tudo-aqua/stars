@@ -25,48 +25,18 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property segment The current [SegmentType].
  */
 class PredicateContext<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val segment: S) {
+    D : TickDifference<D>>(val ticks: List<T>) {
 
   /** Identifier of the primary entity. */
-  var primaryEntityId: Int = segment.primaryEntityId
-
-  /** Cache for all entity IDs. */
-  private val entityIdsCache = mutableListOf<Int>()
-
-  /** All entity IDs of the current context state. */
-  @Suppress("unused")
-  val entityIds: List<Int>
-    get() {
-      if (entityIdsCache.isEmpty()) {
-        entityIdsCache.addAll(
-            segment.tickData.flatMap { tickData -> tickData.entities.map { it.id } }.distinct())
-      }
-      return entityIdsCache
-    }
-
-  /** Holds the evaluations of all previously calculated [NullaryPredicate]s. */
-  private val nullaryPredicateCache: MutableMap<Pair<NullaryPredicate<E, T, S, U, D>, U>, Boolean> =
-      mutableMapOf()
-  /** Holds the evaluations of all previously calculated [UnaryPredicate]s. */
-  private val unaryPredicateCache:
-      MutableMap<Pair<UnaryPredicate<*, E, T, S, U, D>, Pair<U, Int>>, Boolean> =
-      mutableMapOf()
-  /** Holds the evaluations of all previously calculated [BinaryPredicate]s. */
-  private val binaryPredicateCache:
-      MutableMap<Pair<BinaryPredicate<*, *, E, T, S, U, D>, Triple<U, Int, Int>>, Boolean> =
-      mutableMapOf()
-
-  // TODO: Check if the caches are still "useful" and actually used.
+  var primaryEntityId: Int = ticks.first().entities.first { it.id == 0 }.id // TODO
 
   /**
    * Evaluates whether [NullaryPredicate] [predicate] holds for current [PredicateContext] at [tick]
@@ -76,12 +46,8 @@ class PredicateContext<
    * @param tick The [TickUnit] at which the [predicate] is evaluated.
    * @return Whether the [predicate] holds at the given [tick].
    */
-  fun holds(predicate: NullaryPredicate<E, T, S, U, D>, tick: U): Boolean =
-      nullaryPredicateCache.getOrPut(predicate to tick) {
-        val currentTick = segment.ticks[tick]
-
-        currentTick != null && predicate.eval(this)
-      }
+  fun holds(predicate: NullaryPredicate<E, T, U, D>, tick: U): Boolean =
+      ticks.firstOrNull { it.currentTick == tick }.let { it != null && predicate.eval(this) }
 
   /**
    * Evaluates whether [UnaryPredicate] [predicate] holds for current [PredicateContext], at [tick]
@@ -94,19 +60,16 @@ class PredicateContext<
    * @return Whether the [predicate] holds at the given [tick] for the given [entityId].
    */
   @Suppress("UNCHECKED_CAST")
-  fun <E1 : E> holds(
-      predicate: UnaryPredicate<E1, E, T, S, U, D>,
-      tick: U,
-      entityId: Int
-  ): Boolean =
-      unaryPredicateCache.getOrPut(predicate to (tick to entityId)) {
-        val currentTick = segment.ticks[tick]
-        val entity = currentTick?.getEntityById(entityId)
+  fun <E1 : E> holds(predicate: UnaryPredicate<E1, E, T, U, D>, tick: U, entityId: Int): Boolean =
+      ticks
+          .firstOrNull { it.currentTick == tick }
+          .let { currentTick ->
+            val entity = currentTick?.getEntityById(entityId)
 
-        currentTick != null &&
-            predicate.kClass.isInstance(entity) &&
-            predicate.eval(this, entity as E1)
-      }
+            currentTick != null &&
+                predicate.kClass.isInstance(entity) &&
+                predicate.eval(this, entity as E1)
+          }
 
   /**
    * Evaluates whether [UnaryPredicate] [predicate] holds for current [PredicateContext], at [tick]
@@ -121,23 +84,24 @@ class PredicateContext<
    * @return Whether the [predicate] holds at the given [tick] for both [entityId1] and [entityId2].
    */
   fun <E1 : E, E2 : E> holds(
-      predicate: BinaryPredicate<E1, E2, E, T, S, U, D>,
+      predicate: BinaryPredicate<E1, E2, E, T, U, D>,
       tick: U,
       entityId1: Int,
       entityId2: Int
   ): Boolean =
-      binaryPredicateCache.getOrPut(predicate to (Triple(tick, entityId1, entityId2))) {
-        val currentTick = segment.ticks[tick]
-        val entity1 = currentTick?.getEntityById(entityId1)
-        val entity2 = currentTick?.getEntityById(entityId2)
+      ticks
+          .firstOrNull { it.currentTick == tick }
+          .let { currentTick ->
+            val entity1 = currentTick?.getEntityById(entityId1)
+            val entity2 = currentTick?.getEntityById(entityId2)
 
-        entityId1 != entityId2 &&
-            currentTick != null &&
-            predicate.kClasses.first.isInstance(entity1) &&
-            predicate.kClasses.second.isInstance(entity2) &&
-            predicate.eval(
-                this,
-                predicate.kClasses.first.cast(entity1),
-                predicate.kClasses.second.cast(entity2))
-      }
+            return@let entityId1 != entityId2 &&
+                currentTick != null &&
+                predicate.kClasses.first.isInstance(entity1) &&
+                predicate.kClasses.second.isInstance(entity2) &&
+                predicate.eval(
+                    this,
+                    predicate.kClasses.first.cast(entity1),
+                    predicate.kClasses.second.cast(entity2))
+          }
 }

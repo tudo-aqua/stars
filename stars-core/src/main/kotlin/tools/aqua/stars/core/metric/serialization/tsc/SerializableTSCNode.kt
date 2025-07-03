@@ -31,12 +31,12 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 @Serializable
 data class SerializableTSCNode(val label: String, val outgoingEdges: List<SerializableTSCEdge>) {
   constructor(
-      tscInstanceNode: TSCInstanceNode<*, *, *, *, *>
+      tscInstanceNode: TSCInstanceNode<*, *, *, *>
   ) : this(
       label = tscInstanceNode.label,
       outgoingEdges = tscInstanceNode.edges.map { SerializableTSCEdge(it) })
 
   constructor(
-      tscNode: TSCNode<*, *, *, *, *>
+      tscNode: TSCNode<*, *, *, *>
   ) : this(label = tscNode.label, outgoingEdges = tscNode.edges.map { SerializableTSCEdge(it) })
 }

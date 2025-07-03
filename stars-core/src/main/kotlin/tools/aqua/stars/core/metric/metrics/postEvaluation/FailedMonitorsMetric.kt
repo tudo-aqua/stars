@@ -53,19 +53,17 @@ import tools.aqua.stars.core.types.*
  */
 @Suppress("unused")
 class FailedMonitorsMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
+    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
+) : PostEvaluationMetricProvider<E, T, U, D>, Serializable, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
-  val failedMonitors:
-      MutableMap<TSC<E, T, S, U, D>, List<TSCFailedMonitorInstance<E, T, S, U, D>>> =
+  val failedMonitors: MutableMap<TSC<E, T, U, D>, List<TSCFailedMonitorInstance<E, T, U, D>>> =
       mutableMapOf()
 
   /**

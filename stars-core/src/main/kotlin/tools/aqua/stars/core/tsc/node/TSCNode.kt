@@ -30,7 +30,6 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property label Label of the [TSCNode].
@@ -40,16 +39,15 @@ import tools.aqua.stars.core.types.*
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val label: String,
-    open val edges: List<TSCEdge<E, T, S, U, D>>,
-    private val monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    open val edges: List<TSCEdge<E, T, U, D>>,
+    private val monitorsMap: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>?,
     private val projectionsMap: Map<String, Boolean>?,
-    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
+    val valueFunction: (PredicateContext<E, T, U, D>) -> Any
 ) {
 
   /** Map of projection labels to their recursive state. */
@@ -57,17 +55,14 @@ sealed class TSCNode<
     get() = projectionsMap.orEmpty()
 
   /** Map of monitor labels to their predicates. */
-  val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>
+  val monitors: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>
     get() = monitorsMap.orEmpty()
 
   /** Generates all TSC instances. */
-  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
+  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
 
   /** Evaluates this TSC in the given context. */
-  fun evaluate(
-      ctx: PredicateContext<E, T, S, U, D>,
-      depth: Int = 0
-  ): TSCInstanceNode<E, T, S, U, D> =
+  fun evaluate(ctx: PredicateContext<E, T, U, D>, depth: Int = 0): TSCInstanceNode<E, T, U, D> =
       TSCInstanceNode(
               this,
               this.label,
@@ -89,7 +84,7 @@ sealed class TSCNode<
    *
    * @param projectionIgnoreList Projections to ignore.
    */
-  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, S, U, D>> =
+  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, U, D>> =
       projections
           .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
           .mapNotNull { (projectionId, _) ->
@@ -104,7 +99,7 @@ sealed class TSCNode<
    *
    * @param projectionId The projection identifier as in [projections].
    */
-  private fun buildProjection(projectionId: Any): TSCNode<E, T, S, U, D>? {
+  private fun buildProjection(projectionId: Any): TSCNode<E, T, U, D>? {
     val isRecursive = projections[projectionId] ?: return null
 
     // projection id is there and everything below should be included -> just deep clone
@@ -145,7 +140,7 @@ sealed class TSCNode<
   }
 
   /** Deeply clones [TSCNode]. */
-  private fun deepClone(): TSCNode<E, T, S, U, D> {
+  private fun deepClone(): TSCNode<E, T, U, D> {
     val outgoingEdges =
         edges
             .map { it to it.destination.deepClone() }
@@ -199,10 +194,10 @@ sealed class TSCNode<
    * @return The [String] representation of the [TSCNode] with labels on the edges.
    */
   @Suppress("unused")
-  fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, S, U, D>, Int>): String =
+  fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, U, D>, Int>): String =
       toStringWithEdgeLabels(0, labels)
 
-  private fun toStringWithEdgeLabels(depth: Int, labels: Map<TSCEdge<E, T, S, U, D>, Any>): String {
+  private fun toStringWithEdgeLabels(depth: Int, labels: Map<TSCEdge<E, T, U, D>, Any>): String {
     val builder = StringBuilder()
     when (this) {
       is TSCBoundedNode -> builder.append("(${this.bounds.first}..${this.bounds.second})\n")

@@ -25,19 +25,17 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 open class TSCMonitorsBuilder<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
+    D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
-  fun build(): Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> = monitorMap
+  fun build(): Map<String, (PredicateContext<E, T, U, D>) -> Boolean> = monitorMap
 
   /**
    * DSL function for a monitor.
@@ -51,13 +49,12 @@ open class TSCMonitorsBuilder<
    * @param condition The monitor condition.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCMonitorsBuilder<E, T, S, U, D>.monitor(
+      D : TickDifference<D>> TSCMonitorsBuilder<E, T, U, D>.monitor(
       label: String,
-      condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+      condition: (PredicateContext<E, T, U, D>) -> Boolean
   ) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
     monitorMap[label] = condition

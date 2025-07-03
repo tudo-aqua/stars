@@ -26,4 +26,4 @@ import tools.aqua.stars.core.types.EntityType
  * @property tickData The [BooleanTick] this [TestEntity] belongs to.
  */
 class TestEntity(override val id: Int, override var tickData: BooleanTick) :
-    EntityType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>
+    EntityType<TestEntity, BooleanTick, TestUnit, TestDifference>

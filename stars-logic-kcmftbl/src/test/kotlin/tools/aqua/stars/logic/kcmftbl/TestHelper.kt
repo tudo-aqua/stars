@@ -19,28 +19,16 @@ package tools.aqua.stars.logic.kcmftbl
 
 import tools.aqua.stars.logic.kcmftbl.data.BooleanTick
 import tools.aqua.stars.logic.kcmftbl.data.TestDifference
-import tools.aqua.stars.logic.kcmftbl.data.TestSegment
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 
 /** Creates ticks and returns first by parsing INT-Lists to Boolean values. */
-fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> {
-  val ticks =
-      phi1.indices.associate {
-        TestUnit(it) to
-            BooleanTick(
-                TestUnit(it),
-                listOf(),
-                TestSegment(listOf(), mapOf(), "", -1),
-                phi1[it] == 1,
-                phi2[it] == 1)
-      }
-
-  TestSegment(ticks.values.toList(), ticks.toMap(), "", -1).also {
-    it.tickData.forEach { t -> t.segment = it }
-  }
-
-  return ticks.values.toList()
-}
+fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> =
+    phi1.indices
+        .associate {
+          TestUnit(it) to BooleanTick(TestUnit(it), listOf(), phi1[it] == 1, phi2[it] == 1)
+        }
+        .values
+        .toList()
 
 /**
  * Creates ticks and returns first by parsing INT-Lists to Boolean values. Phi2 is set to always
