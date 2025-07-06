@@ -295,11 +295,7 @@ class TSCRootTest {
   @Test
   fun `Test throwing of exception with added complex false condition at exclusive root node`() {
     assertFailsWith<IllegalStateException> {
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         exclusive("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -309,11 +305,7 @@ class TSCRootTest {
   @Test
   fun `Test throwing of exception with added complex false condition at leaf root node`() {
     assertFailsWith<IllegalStateException> {
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         leaf("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -323,11 +315,7 @@ class TSCRootTest {
   @Test
   fun `Test throwing of exception with added complex false condition at bounded root node`() {
     assertFailsWith<IllegalStateException> {
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         bounded("root", 2 to 3) { condition { LocalDate.now().year < 0 } }
       }
     }

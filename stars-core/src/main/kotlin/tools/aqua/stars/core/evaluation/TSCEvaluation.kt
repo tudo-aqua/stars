@@ -19,11 +19,17 @@
 
 package tools.aqua.stars.core.evaluation
 
+import java.time.LocalDateTime
 import java.util.logging.Logger
+import kotlin.time.measureTime
+import tools.aqua.stars.core.computeWhile
 import tools.aqua.stars.core.hooks.*
+import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
+import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerSegmentHook
+import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
+import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.providers.*
-import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
-import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
@@ -62,7 +68,7 @@ class TSCEvaluation<
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : Loggable {
 
-  /** Test. */
+  /** Mutex. */
   private val mutex: Any = Any()
 
   /**
@@ -108,6 +114,25 @@ class TSCEvaluation<
   private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, U, D>> = mutableListOf()
 
   /**
+   * Holds the results (Map of [PreSegmentEvaluationHook.identifier] to [EvaluationHookResult]) of
+   * the [PreSegmentEvaluationHook]s after calling [runEvaluation] that did not return
+   * [EvaluationHookResult.OK] for each segment identifier.
+   */
+  val preSegmentEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
+    mutableMapOf() //TODO: String = SegmentIdentifier -> Change to range
+
+  /**
+   * Holds a [List] of all [PreSegmentEvaluationHook]s registered by
+   * [registerPreSegmentEvaluationHooks].
+   */
+  private val preSegmentEvaluationHooks: MutableList<PreSegmentEvaluationHook<E, T, U, D>> =
+    mutableListOf()
+
+  init {
+    registerDefaultHooks()
+  }
+
+  /**
    * Registers all [MetricProvider]s to the list of metrics that should be called during evaluation.
    *
    * @param metricProviders The [MetricProvider]s that should be registered.
@@ -140,6 +165,40 @@ class TSCEvaluation<
     this.preTSCEvaluationHooks.addAll(preTSCEvaluationHooks)
   }
 
+  /**
+   * Registers all [PreSegmentEvaluationHook]s to the list of hooks that should be called before the
+   * evaluation of any segment of data.
+   * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation proceeds
+   *   with the next segment.
+   * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
+   *   canceled at this point.
+   * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
+   *   aborted, a [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
+   *
+   * @param preSegmentEvaluationHooks The [PreSegmentEvaluationHook]s that should be registered.
+   */
+  fun registerPreSegmentEvaluationHooks(
+    vararg preSegmentEvaluationHooks: PreSegmentEvaluationHook<E, T, U, D>
+  ) {
+    this.preSegmentEvaluationHooks.addAll(preSegmentEvaluationHooks)
+  }
+
+  /**
+   * Registers all default hooks to the list of hooks that should be called during evaluation. This
+   * includes:
+   * - [MinEntitiesPerSegmentHook] with a minimum of 1 entity per segment.
+   * - [MinTicksPerSegmentHook] with a minimum of 1 tick per segment.
+   * - [MinNodesInTSCHook] with a minum of 1 node in each TSC.
+   *
+   * The lists of hooks [preTSCEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared
+   * before. [clearHooks] may be called before to clear them.
+   */
+  fun registerDefaultHooks() {
+    preSegmentEvaluationHooks.add(MinEntitiesPerSegmentHook(minEntities = 1))
+    preSegmentEvaluationHooks.add(MinTicksPerSegmentHook(minTicks = 1))
+    preTSCEvaluationHooks.add(MinNodesInTSCHook(minNodes = 1))
+  }
+
   /** Clears all [PreTSCEvaluationHook]s that have been registered. */
   fun clearHooks() {
     preTSCEvaluationHooks.clear()
@@ -154,162 +213,165 @@ class TSCEvaluation<
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
   fun runEvaluation(ticks: Sequence<T>) {
-    //    require(metricProviders.any()) { "There needs to be at least one registered
-    // MetricProvider."
-    // }
-    //
-    //    val totalEvaluationTime = measureTime {
-    //      val tscListToEvaluate =
-    //          preTSCEvaluationHooks.evaluate(tscList).let { (passingTSCs, results) ->
-    //            results.forEach { (tsc, results) ->
-    //              preTSCEvaluationHookResults[tsc] =
-    //                  results.map { it.key.identifier to it.value }.toMap()
-    //            }
-    //            passingTSCs ?: return
-    //          }
-    //
-    //      // Evaluate all segments
-    //      val segmentsEvaluationTime = measureTime {
-    //        if (tscListToEvaluate.isNotEmpty())
-    //            segments.computeWhile { evaluateSegment(segment = it, tscList = tscListToEvaluate)
-    // }
-    //      }
-    //      logInfo("The evaluation of all segments took: $segmentsEvaluationTime")
-    //    }
-    //    logInfo("The whole evaluation took: $totalEvaluationTime")
-    //    ApplicationConstantsHolder.totalEvaluationTime += totalEvaluationTime
-    //    ApplicationConstantsHolder.experimentEndTime = LocalDateTime.now()
-    //
-    //    postEvaluate()
-    //  }
-    //
-    //  /**
-    //   * Evaluates the given [SegmentType] on the given [TSC]s. The function returns `false` if
-    // the
-    //   * iteration should be stopped due to an [EvaluationHook] returning
-    // [EvaluationHookResult.CANCEL].
-    //   *
-    //   * @param segment The [SegmentType] to evaluate.
-    //   * @param tscList The list of [TSC]s to evaluate.
-    //   * @return Whether the evaluation should continue.
-    //   */
-    //  private fun evaluateSegment(segment: S, tscList: List<TSC<E, T, S, U, D>>): Boolean {
-    //    // Evaluate PreSegmentEvaluationHooks
-    //    preSegmentEvaluationHooks.evaluate(segment).let { (verdict, results) ->
-    //      if (verdict != null) {
-    //        preSegmentEvaluationHookResults[segment.getSegmentIdentifier()] =
-    //            results.map { it.key.identifier to it.value }.toMap()
-    //
-    //        return verdict
-    //      }
-    //    }
-    //
-    //    // Evaluate segment
-    //    val segmentEvaluationTime = measureTime {
-    //      // Run the "evaluate" function for all SegmentMetricProviders on the current segment
-    //      metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
-    //        it.evaluate(segment)
-    //      }
-    //      val allTSCEvaluationTime = measureTime {
-    //        tscList.forEach { tsc ->
-    //          val tscEvaluationTime = measureTime {
-    //            // Run the "evaluate" function for all TSCMetricProviders on the current segment
-    //            metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
-    //              it.evaluate(tsc)
-    //            }
-    //            // Holds the PredicateContext for the current segment
-    //            val context = PredicateContext(segment)
-    //
-    //            // Holds the [TSCInstanceNode] of the current [tsc] using the
-    //            // [PredicateContext], representing a whole TSC.
-    //            val segmentTSCInstance = tsc.evaluate(context)
-    //
-    //            // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-    //            // current segment
-    //            metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S, U,
-    // D>>().forEach
-    // {
-    //              it.evaluate(segmentTSCInstance)
-    //            }
-    //
-    //            // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
-    //            // current tsc and instance
-    //            metricProviders
-    //                .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
-    //                .forEach { it.evaluate(tsc, segmentTSCInstance) }
-    //          }
-    //          logFine(
-    //              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment
-    // '$segment' took: $tscEvaluationTime")
-    //        }
-    //      }
-    //      logFine("The evaluation of all TSCs for segment '$segment' took: $allTSCEvaluationTime")
-    //    }
-    //    logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
-    //    ApplicationConstantsHolder.totalSegmentEvaluationTime += segmentEvaluationTime
-    //
-    //    return true
-    //  }
-    //
-    //  /** Runs post evaluation steps such as printing, logging and plotting. */
-    //  private fun postEvaluate() {
-    //    // Print the results of all Stateful metrics
-    //    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
-    //
-    //    // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-    //    println("Running post evaluation metrics")
-    //    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach {
-    //      it.postEvaluate()
-    //      it.printPostEvaluationResult()
-    //    }
-    //
-    //    // Plot the results of all Plottable metrics
-    //    if (writePlots) {
-    //      println("Creating Plots")
-    //      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
-    //    }
-    //
-    //    // Write CSV of the results of all Plottable metrics
-    //    if (writePlotDataCSV) {
-    //      println("Writing CSVs")
-    //      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
-    //    }
-    //
-    //    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
-    //    if (serializableMetrics.any()) {
-    //      ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
-    //
-    //      // Write JSON files of all Serializable metrics
-    //      if (writeSerializedResults) {
-    //        println("Writing serialized results")
-    //        ApplicationConstantsHolder.writeMetaInfo(
-    //            "$serializedResultsFolder/$applicationStartTimeString/")
-    //        serializableMetrics.forEach { t -> t.writeSerializedResults() }
-    //      }
-    //
-    //      // Compare the results to the baseline
-    //      if (compareToBaselineResults) {
-    //        println("Comparing to baseline")
-    //        ApplicationConstantsHolder.writeMetaInfo(
-    //            "$comparedResultsFolder/$applicationStartTimeString/")
-    //        serializableMetrics.compareToBaselineResults().let {
-    //          resultsReproducedFromBaseline = it.noMismatch()
-    //
-    //          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
-    //        }
-    //      }
-    //
-    //      // Compare the results to the latest run
-    //      if (compareToPreviousRun) {
-    //        println("Comparing to previous run")
-    //        ApplicationConstantsHolder.writeMetaInfo(
-    //            "$comparedResultsFolder/$applicationStartTimeString/")
-    //        serializableMetrics.compareToPreviousResults().let {
-    //          resultsReproducedFromPreviousRun = it.noMismatch()
-    //
-    //          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = false)
-    //        }
-    //      }
-    //    }
+    require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
+
+    val totalEvaluationTime = measureTime {
+      val tscListToEvaluate =
+          preTSCEvaluationHooks.evaluate(tscList).let { (passingTSCs, results) ->
+            results.forEach { (tsc, results) ->
+              preTSCEvaluationHookResults[tsc] =
+                  results.map { it.key.identifier to it.value }.toMap()
+            }
+            passingTSCs ?: return
+          }
+
+      // Evaluate all ticks
+      val evaluationTime = measureTime {
+        val segmentBuffer = mutableListOf<T>()
+        if (tscListToEvaluate.isNotEmpty())
+            ticks.computeWhile {
+              segmentBuffer.add(it)
+              evaluateSegment(segment = segmentBuffer, tscList = tscListToEvaluate)
+            }
+      }
+      logInfo("The evaluation of all segments took: $evaluationTime")
+    }
+    logInfo("The whole evaluation took: $totalEvaluationTime")
+    ApplicationConstantsHolder.totalEvaluationTime += totalEvaluationTime
+    ApplicationConstantsHolder.experimentEndTime = LocalDateTime.now()
+
+    postEvaluate()
   }
+
+    /**
+     * Evaluates the given [List] of [TickDataType]s on the given [TSC]s. The function returns `false` if the
+     * iteration should be stopped due to an [EvaluationHook] returning [EvaluationHookResult.CANCEL].
+     *
+     * @param segment The [List] of [TickDataType]s to evaluate.
+     * @param tscList The list of [TSC]s to evaluate.
+     * @return Whether the evaluation should continue.
+     */
+    private fun evaluateSegment(segment: List<T>, tscList: List<TSC<E, T, U, D>>): Boolean {
+      // Evaluate PreSegmentEvaluationHooks
+      preSegmentEvaluationHooks.evaluate(segment).let { (verdict, results) ->
+        if (verdict != null) {
+          preSegmentEvaluationHookResults[segment.getSegmentIdentifier()] =
+              results.map { it.key.identifier to it.value }.toMap()
+
+          return verdict
+        }
+      }
+
+      // Evaluate segment
+      val segmentEvaluationTime = measureTime {
+        // Run the "evaluate" function for all SegmentMetricProviders on the current segment
+        metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
+          it.evaluate(segment)
+        }
+        val allTSCEvaluationTime = measureTime {
+          tscList.forEach { tsc ->
+            val tscEvaluationTime = measureTime {
+              // Run the "evaluate" function for all TSCMetricProviders on the current segment
+              metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
+                it.evaluate(tsc)
+              }
+              // Holds the PredicateContext for the current segment
+              val context = PredicateContext(segment)
+
+              // Holds the [TSCInstanceNode] of the current [tsc] using the
+              // [PredicateContext], representing a whole TSC.
+              val segmentTSCInstance = tsc.evaluate(context)
+
+              // Run the "evaluate" function for all TSCInstanceMetricProviders on the
+              // current segment
+              metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S, U,
+   D>>().forEach
+   {
+                it.evaluate(segmentTSCInstance)
+              }
+
+              // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on
+   the
+              // current tsc and instance
+              metricProviders
+                  .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
+                  .forEach { it.evaluate(tsc, segmentTSCInstance) }
+            }
+            logFine(
+                "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment
+   '$segment' took: $tscEvaluationTime")
+          }
+        }
+        logFine("The evaluation of all TSCs for segment '$segment' took:
+   $allTSCEvaluationTime")
+      }
+      logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
+      ApplicationConstantsHolder.totalSegmentEvaluationTime += segmentEvaluationTime
+
+      return true
+    }
+  //
+  //  /** Runs post evaluation steps such as printing, logging and plotting. */
+  //  private fun postEvaluate() {
+  //    // Print the results of all Stateful metrics
+  //    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+  //
+  //    // Call the 'evaluate' and then the 'print' function for all
+  // PostEvaluationMetricProviders
+  //    println("Running post evaluation metrics")
+  //    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach
+  // {
+  //      it.postEvaluate()
+  //      it.printPostEvaluationResult()
+  //    }
+  //
+  //    // Plot the results of all Plottable metrics
+  //    if (writePlots) {
+  //      println("Creating Plots")
+  //      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+  //    }
+  //
+  //    // Write CSV of the results of all Plottable metrics
+  //    if (writePlotDataCSV) {
+  //      println("Writing CSVs")
+  //      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+  //    }
+  //
+  //    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+  //    if (serializableMetrics.any()) {
+  //      ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
+  //
+  //      // Write JSON files of all Serializable metrics
+  //      if (writeSerializedResults) {
+  //        println("Writing serialized results")
+  //        ApplicationConstantsHolder.writeMetaInfo(
+  //            "$serializedResultsFolder/$applicationStartTimeString/")
+  //        serializableMetrics.forEach { t -> t.writeSerializedResults() }
+  //      }
+  //
+  //      // Compare the results to the baseline
+  //      if (compareToBaselineResults) {
+  //        println("Comparing to baseline")
+  //        ApplicationConstantsHolder.writeMetaInfo(
+  //            "$comparedResultsFolder/$applicationStartTimeString/")
+  //        serializableMetrics.compareToBaselineResults().let {
+  //          resultsReproducedFromBaseline = it.noMismatch()
+  //
+  //          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
+  //        }
+  //      }
+  //
+  //      // Compare the results to the latest run
+  //      if (compareToPreviousRun) {
+  //        println("Comparing to previous run")
+  //        ApplicationConstantsHolder.writeMetaInfo(
+  //            "$comparedResultsFolder/$applicationStartTimeString/")
+  //        serializableMetrics.compareToPreviousResults().let {
+  //          resultsReproducedFromPreviousRun = it.noMismatch()
+  //
+  //          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = false)
+  //        }
+  //      }
+  //    }
+  //  }
 }
