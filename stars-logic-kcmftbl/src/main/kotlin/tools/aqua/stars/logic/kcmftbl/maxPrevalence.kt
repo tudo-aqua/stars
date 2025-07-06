@@ -25,7 +25,6 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param tickData Current [TickDataType].
@@ -34,9 +33,8 @@ import tools.aqua.stars.core.types.*
  * @param phi Predicate.
  */
 fun <
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> maxPrevalence(
     tickData: T,
@@ -57,7 +55,6 @@ fun <
  * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
@@ -67,9 +64,8 @@ fun <
  */
 fun <
     E1 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> maxPrevalence(
     entity: E1,
@@ -88,7 +84,6 @@ fun <
  * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity1 First [EntityType].
@@ -100,9 +95,8 @@ fun <
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> maxPrevalence(
     entity1: E1,

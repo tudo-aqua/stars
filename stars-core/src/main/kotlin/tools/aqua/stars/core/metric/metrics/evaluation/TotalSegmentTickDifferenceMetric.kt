@@ -28,14 +28,13 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class implements the [SegmentMetricProvider] and tracks the total [TickDifference] of all
- * [SegmentType]s.
+ * analyzed segments.
  *
  * This class implements the [Serializable] interface. It serializes the [totalTickDifference] for
- * all analyzed [SegmentType]s.
+ * all analyzed segments.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property loggerIdentifier identifier (name) for the logger.
@@ -43,32 +42,32 @@ import tools.aqua.stars.core.types.*
  */
 @Suppress("unused")
 class TotalSegmentTickDifferenceMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val loggerIdentifier: String = "total-segment-tick-difference",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
-  /** Holds the current [TickDifference] for all already analyzed [SegmentType]s. */
+) : SegmentMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
+  /** Holds the current [TickDifference] for all already analyzed segments. */
   private var totalTickDifference: D? = null
 
   /**
    * Add the given [segment] to the total [TickDifference].
    *
-   * @param segment The [SegmentType] for which the total [TickDifference] should be tracked.
-   * @return The current total [TickDifference] of all analyzed [SegmentType]s.
+   * @param segment The [List] of [TickDataType]s for which the total [TickDifference] should be
+   *   tracked.
+   * @return The current total [TickDifference] of all analyzed segments.
    * @throws IllegalStateException If the [TickDifference] between the first and last [TickDataType]
-   *   of the [SegmentType] is negative.
+   *   of the segment is negative.
    */
-  override fun evaluate(segment: S): Optional<D> {
+  override fun evaluate(segment: List<T>): Optional<D> {
     // The Segment has at least two TickData objects from which a TickDifference can be calculated.
-    if (segment.tickData.size >= 2) {
+    if (segment.size >= 2) {
       // Calculate the TickDifference between the last and the first tick in the given segment.
-      val segmentTickDifference = segment.tickData.run { last().currentTick - first().currentTick }
+      val segmentTickDifference = segment.last().currentTick - segment.first().currentTick
 
-      check(segment.tickData.run { last().currentTick > first().currentTick }) {
+      check(segment.last().currentTick > segment.first().currentTick) {
         "The difference between the first and last tick of segment '$segment' should be positive! " +
             "Actual difference: $segmentTickDifference."
       }
@@ -83,10 +82,10 @@ class TotalSegmentTickDifferenceMetric<
   }
 
   /**
-   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no
-   * [SegmentType]s have been analyzed yet.
+   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no segments
+   * have been analyzed yet.
    *
-   * @return The current [totalTickDifference] for all already analyzed [SegmentType]s.
+   * @return The current [totalTickDifference] for all already analyzed segments.
    */
   override fun getState(): Optional<D> = Optional.ofNullable(totalTickDifference)
 

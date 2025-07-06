@@ -25,7 +25,6 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param tickData Current [TickDataType].
@@ -33,9 +32,8 @@ import tools.aqua.stars.core.types.*
  * @param phi Predicate.
  */
 fun <
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> next(
     tickData: T,
@@ -44,20 +42,22 @@ fun <
 ): Boolean {
   checkInterval(interval)
 
-  val segment = tickData.segment
-  val nowIndex = segment.tickData.indexOf(tickData)
+  TODO()
 
-  // There needs to be a next tick
-  if (nowIndex == segment.tickData.lastIndex) return false
-  val nextTick = segment.tickData[nowIndex + 1]
-
-  // The next tick has to be in the interval
-  if (interval != null &&
-      (nextTick.currentTick < tickData.currentTick + interval.first ||
-          nextTick.currentTick >= tickData.currentTick + interval.second))
-      return false
-
-  return phi(nextTick)
+  //  val segment = tickData.segment
+  //  val nowIndex = segment.tickData.indexOf(tickData)
+  //
+  //  // There needs to be a next tick
+  //  if (nowIndex == segment.tickData.lastIndex) return false
+  //  val nextTick = segment.tickData[nowIndex + 1]
+  //
+  //  // The next tick has to be in the interval
+  //  if (interval != null &&
+  //      (nextTick.currentTick < tickData.currentTick + interval.first ||
+  //          nextTick.currentTick >= tickData.currentTick + interval.second))
+  //      return false
+  //
+  //  return phi(nextTick)
 }
 
 /**
@@ -67,7 +67,6 @@ fun <
  * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
@@ -77,9 +76,8 @@ fun <
 @Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> next(
     entity: E1,
@@ -99,7 +97,6 @@ fun <
  * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity1 First [EntityType]
@@ -111,9 +108,8 @@ fun <
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> next(
     entity1: E1,

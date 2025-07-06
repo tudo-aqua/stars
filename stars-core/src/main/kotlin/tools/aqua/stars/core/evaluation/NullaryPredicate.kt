@@ -24,21 +24,19 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
  * @property eval The evaluation function on the [PredicateContext].
  */
 class NullaryPredicate<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     name: String,
-    val eval: (PredicateContext<E, T, S, U, D>) -> Boolean,
-) : AbstractPredicate<E, T, S, U, D>(name) {
+    val eval: (PredicateContext<E, T, U, D>) -> Boolean,
+) : AbstractPredicate<E, T, U, D>(name = name) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
@@ -48,9 +46,9 @@ class NullaryPredicate<
    * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
    */
   fun holds(
-      ctx: PredicateContext<E, T, S, U, D>,
-      tick: U = ctx.segment.ticks.keys.first()
-  ): Boolean = ctx.holds(this, tick)
+      ctx: PredicateContext<E, T, U, D>,
+      tick: U = ctx.ticks.first().currentTick,
+  ): Boolean = ctx.ticks.firstOrNull { it.currentTick == tick }.let { it != null && this.eval(ctx) }
 
   /** Creates a nullary tick predicate. */
   companion object {
@@ -59,7 +57,6 @@ class NullaryPredicate<
      *
      * @param E [EntityType].
      * @param T [TickDataType].
-     * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
@@ -67,13 +64,12 @@ class NullaryPredicate<
      * @return The created [NullaryPredicate] with the given [eval] function.
      */
     fun <
-        E : EntityType<E, T, S, U, D>,
-        T : TickDataType<E, T, S, U, D>,
-        S : SegmentType<E, T, S, U, D>,
+        E : EntityType<E, T, U, D>,
+        T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
         name: String,
-        eval: (PredicateContext<E, T, S, U, D>) -> Boolean
-    ): NullaryPredicate<E, T, S, U, D> = NullaryPredicate(name, eval)
+        eval: (PredicateContext<E, T, U, D>) -> Boolean
+    ): NullaryPredicate<E, T, U, D> = NullaryPredicate(name, eval)
   }
 }

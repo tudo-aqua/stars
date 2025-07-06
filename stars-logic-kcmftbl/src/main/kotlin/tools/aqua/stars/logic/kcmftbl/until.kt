@@ -25,7 +25,6 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param tickData Current [TickDataType].
@@ -34,9 +33,8 @@ import tools.aqua.stars.core.types.*
  * @param phi2 Second predicate.
  */
 fun <
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> until(
     tickData: T,
@@ -46,27 +44,29 @@ fun <
 ): Boolean {
   checkInterval(interval)
 
-  val segment = tickData.segment
-  val now = tickData.currentTick
-  val nowIndex = segment.tickData.indexOf(tickData)
+  TODO()
 
-  for (searchIndex in nowIndex..segment.tickData.lastIndex) {
-    val searchTickData = segment.tickData[searchIndex]
-
-    // Interval not reached yet, phi1 must hold
-    if (interval != null && searchTickData.currentTick < now + interval.first)
-        if (phi1(searchTickData)) continue else return false
-
-    // Interval left, but phi2 did not hold
-    if (interval != null && searchTickData.currentTick >= now + interval.second) return false
-
-    // In interval: if phi2 holds, return true
-    if (phi2(searchTickData)) return true
-
-    // In interval: phi2 did not hold, phi1 must hold
-    if (!phi1(searchTickData)) return false
-  }
-  return false
+  //  val segment = tickData.segment
+  //  val now = tickData.currentTick
+  //  val nowIndex = segment.tickData.indexOf(tickData)
+  //
+  //  for (searchIndex in nowIndex..segment.tickData.lastIndex) {
+  //    val searchTickData = segment.tickData[searchIndex]
+  //
+  //    // Interval not reached yet, phi1 must hold
+  //    if (interval != null && searchTickData.currentTick < now + interval.first)
+  //        if (phi1(searchTickData)) continue else return false
+  //
+  //    // Interval left, but phi2 did not hold
+  //    if (interval != null && searchTickData.currentTick >= now + interval.second) return false
+  //
+  //    // In interval: if phi2 holds, return true
+  //    if (phi2(searchTickData)) return true
+  //
+  //    // In interval: phi2 did not hold, phi1 must hold
+  //    if (!phi1(searchTickData)) return false
+  //  }
+  //  return false
 }
 
 /**
@@ -76,7 +76,6 @@ fun <
  * @param E1 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity Current [EntityType] of which the tickData gets retrieved.
@@ -87,9 +86,8 @@ fun <
 @Suppress("UNCHECKED_CAST")
 fun <
     E1 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> until(
     entity: E1,
@@ -111,7 +109,6 @@ fun <
  * @param E2 [EntityType].
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param entity1 First [EntityType].
@@ -124,9 +121,8 @@ fun <
 fun <
     E1 : E,
     E2 : E,
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> until(
     entity1: E1,

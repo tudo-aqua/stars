@@ -22,31 +22,30 @@ import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreSegmentEvaluationHook] that checks if a [SegmentType] contains at least `minEntities` in
- * every tick.
+ * [PreSegmentEvaluationHook] that checks if a segment contains at least [minEntities] [EntityType]s
+ * in every tick.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minEntities The minimum number of [EntityType]s each tick must contain (must be >= 0).
+ * @param minEntities The minimum number of [EntityType]s each tick must contain. Must not be
+ *   negative.
  * @param failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s is
  *   not reached.
  */
 open class MinEntitiesPerSegmentHook<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     minEntities: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
-    PreSegmentEvaluationHook<E, T, S, U, D>(
+    PreSegmentEvaluationHook<E, T, U, D>(
         identifier = "MinEntitiesPerSegmentHook",
         evaluationFunction = { segment ->
-          if (segment.tickData.all { it.entities.size >= minEntities }) EvaluationHookResult.OK
+          if (segment.all { it.entities.size >= minEntities }) EvaluationHookResult.OK
           else failPolicy
         }) {
   init {

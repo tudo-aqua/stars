@@ -22,14 +22,12 @@ package tools.aqua.stars.core.types
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 interface TickDataType<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
 
@@ -38,9 +36,6 @@ interface TickDataType<
 
   /** List of [EntityType]s in tick data. */
   var entities: List<E>
-
-  /** Current [SegmentType]. */
-  var segment: S
 
   /**
    * Retrieves [EntityType] from [entities] by given [entityID].

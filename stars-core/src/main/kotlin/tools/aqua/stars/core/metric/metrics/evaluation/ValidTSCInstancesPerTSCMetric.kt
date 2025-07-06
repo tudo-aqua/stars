@@ -56,23 +56,21 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 class ValidTSCInstancesPerTSCMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     override val loggerIdentifier: String = "valid-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) :
-    TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>,
-    PostEvaluationMetricProvider<E, T, S, U, D>,
+    TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>,
+    PostEvaluationMetricProvider<E, T, U, D>,
     Stateful,
     Serializable,
     Loggable,
@@ -83,16 +81,15 @@ class ValidTSCInstancesPerTSCMetric<
    */
   private val validInstancesMap:
       MutableMap<
-          TSC<E, T, S, U, D>,
-          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
+          TSC<E, T, U, D>,
+          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>> =
       mutableMapOf()
 
   /**
    * Maps [TSC] to a list of increasing counts of occurrences of valid [TSCInstanceNode]s:
    * - Map<tsc,List<increasing count>>.
    */
-  private val uniqueTimedInstances: MutableMap<TSC<E, T, S, U, D>, MutableList<Int>> =
-      mutableMapOf()
+  private val uniqueTimedInstances: MutableMap<TSC<E, T, U, D>, MutableList<Int>> = mutableMapOf()
 
   /** Maps the name of a [TSC] the a list of timed [TSCInstance] occurrences. */
   private val combinedTSCToOccurredInstancesMap = mutableMapOf<String, Pair<List<Int>, List<Int>>>()
@@ -122,7 +119,7 @@ class ValidTSCInstancesPerTSCMetric<
    * @param tsc The current [TSC] for which the validity should be checked.
    * @param tscInstance The current [TSCInstance] which is checked for validity.
    */
-  override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
+  override fun evaluate(tsc: TSC<E, T, U, D>, tscInstance: TSCInstance<E, T, U, D>) {
     // Get current count of unique and valid TSC instance for the current TSC
     val validInstances = validInstancesMap.getOrPut(tsc) { mutableMapOf() }
 
@@ -154,8 +151,8 @@ class ValidTSCInstancesPerTSCMetric<
    */
   override fun getState():
       MutableMap<
-          TSC<E, T, S, U, D>,
-          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
+          TSC<E, T, U, D>,
+          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>> =
       validInstancesMap
 
   /** Prints the number of valid [TSCInstance] for each [TSC] using [println]. */
