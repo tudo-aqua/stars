@@ -212,6 +212,7 @@ class TSCEvaluation<
   /** Clears all [PreTSCEvaluationHook]s that have been registered. */
   fun clearHooks() {
     preTSCEvaluationHooks.clear()
+    preSegmentEvaluationHooks.clear()
   }
 
   /**
