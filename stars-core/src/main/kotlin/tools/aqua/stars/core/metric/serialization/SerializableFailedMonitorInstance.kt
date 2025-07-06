@@ -25,7 +25,7 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 /**
  * This is a serializable wrapper class for [TSCFailedMonitorInstance].
  *
- * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
+ * @property segmentIdentifier Uniquely identifies the segment from which the TSCInstanceNode
  *   results.
  * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
  * @property monitorLabel The label of the monitor that failed.

@@ -55,7 +55,8 @@ class TotalSegmentTickDifferenceMetric<
   /**
    * Add the given [segment] to the total [TickDifference].
    *
-   * @param segment The [List] of [TickDataType]s for which the total [TickDifference] should be tracked.
+   * @param segment The [List] of [TickDataType]s for which the total [TickDifference] should be
+   *   tracked.
    * @return The current total [TickDifference] of all analyzed segments.
    * @throws IllegalStateException If the [TickDifference] between the first and last [TickDataType]
    *   of the segment is negative.
@@ -81,8 +82,8 @@ class TotalSegmentTickDifferenceMetric<
   }
 
   /**
-   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no
-   * segments have been analyzed yet.
+   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no segments
+   * have been analyzed yet.
    *
    * @return The current [totalTickDifference] for all already analyzed segments.
    */
