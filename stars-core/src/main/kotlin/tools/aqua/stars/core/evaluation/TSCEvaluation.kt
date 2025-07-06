@@ -165,7 +165,7 @@ class TSCEvaluation<
    * - If the [PreTSCEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
    *   canceled at this point.
    * - If the [PreTSCEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
-   *   aborted, a [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
+   *   aborted, an [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
    *
    * @param preTSCEvaluationHooks The [PreTSCEvaluationHook]s that should be registered.
    */
@@ -177,13 +177,13 @@ class TSCEvaluation<
 
   /**
    * Registers all [PreSegmentEvaluationHook]s to the list of hooks that should be called before the
-   * evaluation of any segment of data.
+   * evaluation of each segment of data.
    * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation
    *   proceeds with the next segment.
    * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
-   *   canceled at this point.
+   *   canceled at this point but post evaluation steps are performed.
    * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
-   *   aborted, a [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
+   *   aborted, an [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
    *
    * @param preSegmentEvaluationHooks The [PreSegmentEvaluationHook]s that should be registered.
    */
@@ -198,7 +198,7 @@ class TSCEvaluation<
    * includes:
    * - [MinEntitiesPerSegmentHook] with a minimum of 1 entity per segment.
    * - [MinTicksPerSegmentHook] with a minimum of 1 tick per segment.
-   * - [MinNodesInTSCHook] with a minum of 1 node in each TSC.
+   * - [MinNodesInTSCHook] with a minimum of 1 node in each TSC.
    *
    * The lists of hooks [preTSCEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared
    * before. [clearHooks] may be called before to clear them.
