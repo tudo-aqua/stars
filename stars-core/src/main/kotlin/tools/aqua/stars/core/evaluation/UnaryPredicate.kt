@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.evaluation
 
 import kotlin.reflect.KClass
+import kotlin.reflect.cast
 import tools.aqua.stars.core.types.*
 
 /**
@@ -41,7 +42,8 @@ class UnaryPredicate<
     name: String,
     val kClass: KClass<E1>,
     val eval: (PredicateContext<E, T, U, D>, E1) -> Boolean,
-) : AbstractPredicate<E, T, U, D>(name) {
+) : AbstractPredicate<E, T, U, D>(name = name) {
+
   /**
    * Check if this predicate holds (i.e., is true) in the given context.
    *
@@ -55,26 +57,16 @@ class UnaryPredicate<
       ctx: PredicateContext<E, T, U, D>,
       tick: U = ctx.ticks.first().currentTick,
       entityId: Int = ctx.primaryEntityId
-  ): Boolean = ctx.holds(this, tick, entityId)
+  ): Boolean =
+      ctx.ticks
+          .firstOrNull { it.currentTick == tick }
+          .let { currentTick ->
+            val entity = currentTick?.getEntityById(entityId)
 
-  /**
-   * Check if this predicate holds (i.e., is true) in the given context.
-   *
-   * @param ctx The context this predicate is evaluated in.
-   * @param entity The entity to evaluate this predicate for.
-   * @return Whether the predicate holds in the given [PredicateContext] for the given [entity].
-   */
-  fun holds(ctx: PredicateContext<E, T, U, D>, entity: E): Boolean =
-      holds(ctx, entity.tickData.currentTick, entity.id) // TODO: call ctx.holds
-
-  /**
-   * Check if this predicate holds (i.e., is true) in the given context.
-   *
-   * @param ctx The context this predicate is evaluated in.
-   * @return Whether the predicate holds in the given [PredicateContext].
-   */
-  fun holds(ctx: PredicateContext<E, T, U, D>): Boolean =
-      holds(ctx, ctx.ticks.first().currentTick, ctx.primaryEntityId) // TODO: call ctx.holds
+            currentTick != null &&
+                this.kClass.isInstance(entity) &&
+                this.eval(ctx, kClass.cast(entity))
+          }
 
   /** Creates a unary tick predicate. * */
   companion object {

@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.evaluation
 
 import kotlin.reflect.KClass
+import kotlin.reflect.cast
 import tools.aqua.stars.core.types.*
 
 /**
@@ -61,25 +62,20 @@ class BinaryPredicate<
       tick: U = ctx.ticks.first().currentTick,
       entityId1: Int = ctx.primaryEntityId,
       entityId2: Int
-  ): Boolean = ctx.holds(this, tick, entityId1, entityId2)
+  ): Boolean =
+      ctx.ticks
+          .firstOrNull { it.currentTick == tick }
+          .let { currentTick ->
+            val entity1 = currentTick?.getEntityById(entityId1)
+            val entity2 = currentTick?.getEntityById(entityId2)
 
-  /**
-   * Checks if this predicate holds (i.e., is true) in the given context on the current tick.
-   *
-   * @param ctx The context this predicate is evaluated in.
-   * @param entity1 The first entity to evaluate this predicate for.
-   * @param entity2 The second entity to evaluate this predicate for.
-   * @return Whether the predicate holds in the given [PredicateContext] for the given [entity1] and
-   *   [entity2].
-   */
-  fun holds(ctx: PredicateContext<E, T, U, D>, entity1: E1, entity2: E2): Boolean =
-      holds(
-          ctx,
-          entity1.tickData.currentTick.apply {
-            if (this != entity2.tickData.currentTick) error("ticks don't match")
-          },
-          entity1.id,
-          entity2.id)
+            entityId1 != entityId2 &&
+                currentTick != null &&
+                this.kClasses.first.isInstance(entity1) &&
+                this.kClasses.second.isInstance(entity2) &&
+                this.eval(
+                    ctx, this.kClasses.first.cast(entity1), this.kClasses.second.cast(entity2))
+          }
 
   /** Creates a binary tick predicate in this context. */
   companion object {

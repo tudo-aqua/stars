@@ -36,7 +36,7 @@ class NullaryPredicate<
     D : TickDifference<D>>(
     name: String,
     val eval: (PredicateContext<E, T, U, D>) -> Boolean,
-) : AbstractPredicate<E, T, U, D>(name) {
+) : AbstractPredicate<E, T, U, D>(name = name) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
@@ -48,7 +48,7 @@ class NullaryPredicate<
   fun holds(
       ctx: PredicateContext<E, T, U, D>,
       tick: U = ctx.ticks.first().currentTick,
-  ): Boolean = ctx.holds(this, tick)
+  ): Boolean = ctx.ticks.firstOrNull { it.currentTick == tick }.let { it != null && this.eval(ctx) }
 
   /** Creates a nullary tick predicate. */
   companion object {
