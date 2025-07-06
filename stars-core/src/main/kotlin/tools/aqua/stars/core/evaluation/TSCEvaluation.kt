@@ -30,7 +30,16 @@ import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerSegmentHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
 import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
+import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
+import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
+import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.logFolder
+import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
@@ -317,65 +326,62 @@ class TSCEvaluation<
 
   /** Runs post evaluation steps such as printing, logging and plotting. */
   private fun postEvaluate() {
-    //    // Print the results of all Stateful metrics
-    //    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
-    //
-    //    // Call the 'evaluate' and then the 'print' function for all
-    // PostEvaluationMetricProviders
-    //    println("Running post evaluation metrics")
-    //    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, S, U, D>>().forEach
-    // {
-    //      it.postEvaluate()
-    //      it.printPostEvaluationResult()
-    //    }
-    //
-    //    // Plot the results of all Plottable metrics
-    //    if (writePlots) {
-    //      println("Creating Plots")
-    //      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
-    //    }
-    //
-    //    // Write CSV of the results of all Plottable metrics
-    //    if (writePlotDataCSV) {
-    //      println("Writing CSVs")
-    //      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
-    //    }
-    //
-    //    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
-    //    if (serializableMetrics.any()) {
-    //      ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
-    //
-    //      // Write JSON files of all Serializable metrics
-    //      if (writeSerializedResults) {
-    //        println("Writing serialized results")
-    //        ApplicationConstantsHolder.writeMetaInfo(
-    //            "$serializedResultsFolder/$applicationStartTimeString/")
-    //        serializableMetrics.forEach { t -> t.writeSerializedResults() }
-    //      }
-    //
-    //      // Compare the results to the baseline
-    //      if (compareToBaselineResults) {
-    //        println("Comparing to baseline")
-    //        ApplicationConstantsHolder.writeMetaInfo(
-    //            "$comparedResultsFolder/$applicationStartTimeString/")
-    //        serializableMetrics.compareToBaselineResults().let {
-    //          resultsReproducedFromBaseline = it.noMismatch()
-    //
-    //          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
-    //        }
-    //      }
-    //
-    //      // Compare the results to the latest run
-    //      if (compareToPreviousRun) {
-    //        println("Comparing to previous run")
-    //        ApplicationConstantsHolder.writeMetaInfo(
-    //            "$comparedResultsFolder/$applicationStartTimeString/")
-    //        serializableMetrics.compareToPreviousResults().let {
-    //          resultsReproducedFromPreviousRun = it.noMismatch()
-    //
-    //          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = false)
-    //        }
-    //      }
-    //    }
+    // Print the results of all Stateful metrics
+    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+
+    // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
+    println("Running post evaluation metrics")
+    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, U, D>>().forEach {
+      it.postEvaluate()
+      it.printPostEvaluationResult()
+    }
+
+    // Plot the results of all Plottable metrics
+    if (writePlots) {
+      println("Creating Plots")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+    }
+
+    // Write CSV of the results of all Plottable metrics
+    if (writePlotDataCSV) {
+      println("Writing CSVs")
+      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+    }
+
+    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    if (serializableMetrics.any()) {
+      ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
+
+      // Write JSON files of all Serializable metrics
+      if (writeSerializedResults) {
+        println("Writing serialized results")
+        ApplicationConstantsHolder.writeMetaInfo(
+            "$serializedResultsFolder/$applicationStartTimeString/")
+        serializableMetrics.forEach { t -> t.writeSerializedResults() }
+      }
+
+      // Compare the results to the baseline
+      if (compareToBaselineResults) {
+        println("Comparing to baseline")
+        ApplicationConstantsHolder.writeMetaInfo("$comparedResultsFolder/$applicationStartTimeString/")
+        serializableMetrics.compareToBaselineResults().let {
+          resultsReproducedFromBaseline = it.noMismatch()
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
+        }
+      }
+
+      // Compare the results to the latest run
+      if (compareToPreviousRun) {
+        println("Comparing to previous run")
+        ApplicationConstantsHolder.writeMetaInfo(
+            "$comparedResultsFolder/$applicationStartTimeString/")
+        serializableMetrics.compareToPreviousResults().let {
+          resultsReproducedFromPreviousRun = it.noMismatch()
+
+          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = false)
+        }
+      }
+    }
   }
 }
