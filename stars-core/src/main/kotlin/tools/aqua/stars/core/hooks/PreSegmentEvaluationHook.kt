@@ -64,7 +64,7 @@ open class PreSegmentEvaluationHook<
         // Abort the evaluation using a EvaluationHookAbort exception
         EvaluationHookResult.ABORT -> {
           EvaluationHookStringWrapper.abort(segment, hooks)
-          null
+          null // This will not be reached, as the exception will be thrown
         }
         // Cancel the evaluation by returning false
         EvaluationHookResult.CANCEL -> {

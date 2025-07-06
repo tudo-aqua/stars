@@ -29,7 +29,8 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param minTicks The minimum number of [TickDataType]s a segment must contain.
- * @param failPolicy The [EvaluationHookResult] to return if the segment contains less than [minTicks] [TickDataType]s.
+ * @param failPolicy The [EvaluationHookResult] to return if the segment contains less than
+ *   [minTicks] [TickDataType]s.
  */
 open class MinTicksPerSegmentHook<
     E : EntityType<E, T, U, D>,
