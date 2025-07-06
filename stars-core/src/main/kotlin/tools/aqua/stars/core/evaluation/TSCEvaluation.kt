@@ -286,6 +286,11 @@ class TSCEvaluation<
 
     // Evaluate segment
     val segmentEvaluationTime = measureTime {
+      // Run the "evaluate" function for all TickMetricProviders on the current tick
+      metricProviders.filterIsInstance<TickMetricProvider<E, T, U, D>>().forEach {
+        it.evaluate(segment.last())
+      }
+
       // Run the "evaluate" function for all SegmentMetricProviders on the current segment
       metricProviders.filterIsInstance<SegmentMetricProvider<E, T, U, D>>().forEach {
         it.evaluate(segment)
@@ -364,7 +369,8 @@ class TSCEvaluation<
       // Compare the results to the baseline
       if (compareToBaselineResults) {
         println("Comparing to baseline")
-        ApplicationConstantsHolder.writeMetaInfo("$comparedResultsFolder/$applicationStartTimeString/")
+        ApplicationConstantsHolder.writeMetaInfo(
+            "$comparedResultsFolder/$applicationStartTimeString/")
         serializableMetrics.compareToBaselineResults().let {
           resultsReproducedFromBaseline = it.noMismatch()
 

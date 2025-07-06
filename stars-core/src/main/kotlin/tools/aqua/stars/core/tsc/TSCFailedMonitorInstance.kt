@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property segmentIdentifier Uniquely identifies the [SegmentType] from which the TSCInstanceNode
+ * @property segmentIdentifier Uniquely identifies the segment from which the TSCInstanceNode
  *   results.
  * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
  * @property monitorLabel The label of the monitor that failed.

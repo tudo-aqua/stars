@@ -35,7 +35,6 @@ const val ROOT_NODE_LABEL: String = "root"
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param init The init function. Must add exactly one edge.
