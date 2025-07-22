@@ -62,7 +62,7 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 class ValidTSCInstancesPerTSCMetric<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

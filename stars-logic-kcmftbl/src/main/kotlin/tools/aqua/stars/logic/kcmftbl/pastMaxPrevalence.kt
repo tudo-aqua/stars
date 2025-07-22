@@ -35,7 +35,7 @@ import tools.aqua.stars.core.types.*
  * @param phi Predicate.
  */
 fun <
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> pastMaxPrevalence(
@@ -45,66 +45,66 @@ fun <
     phi: (T) -> Boolean
 ): Boolean = pastMinPrevalence(tickData, 1 - percentage, interval, phi = { td -> !phi(td) })
 
-/**
- * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all past ticks in
- * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
- *
- * @param E1 [EntityType].
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
- * @param entity Current [EntityType] of which the tickData gets retrieved.
- * @param percentage Threshold value.
- * @param interval Observation interval.
- * @param phi Predicate.
- */
-fun <
-    E1 : E,
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>> pastMaxPrevalence(
-    entity: E1,
-    percentage: Double,
-    interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
-): Boolean =
-    pastMinPrevalence(
-        entity = entity, percentage = 1 - percentage, interval = interval, phi = { e -> !phi(e) })
+///**
+// * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all past ticks in
+// * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
+// *
+// * @param E1 [EntityType].
+// * @param E [EntityType].
+// * @param T [TickDataType].
+// * @param U [TickUnit].
+// * @param D [TickDifference].
+// * @param entity Current [EntityType] of which the tickData gets retrieved.
+// * @param percentage Threshold value.
+// * @param interval Observation interval.
+// * @param phi Predicate.
+// */
+//fun <
+//    E1 : E,
+//    E : EntityType<E>,
+//    T : TickDataType<E, T, U, D>,
+//    U : TickUnit<U, D>,
+//    D : TickDifference<D>> pastMaxPrevalence(
+//    entity: E1,
+//    percentage: Double,
+//    interval: Pair<D, D>? = null,
+//    phi: (E1) -> Boolean
+//): Boolean =
+//    pastMinPrevalence(
+//        entity = entity, percentage = 1 - percentage, interval = interval, phi = { e -> !phi(e) })
 
-/**
- * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. "In all past ticks in
- * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
- *
- * @param E1 [EntityType].
- * @param E2 [EntityType].
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
- * @param entity1 First [EntityType].
- * @param entity2 Second [EntityType].
- * @param percentage Threshold value.
- * @param interval Observation interval.
- * @param phi Predicate.
- */
-fun <
-    E1 : E,
-    E2 : E,
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>> pastMaxPrevalence(
-    entity1: E1,
-    entity2: E2,
-    percentage: Double,
-    interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
-): Boolean =
-    pastMinPrevalence(
-        entity1 = entity1,
-        entity2 = entity2,
-        percentage = 1 - percentage,
-        interval = interval,
-        phi = { e1, e2 -> !phi(e1, e2) })
+///**
+// * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. "In all past ticks in
+// * the interval phi holds for at most ([percentage]*100)% of the ticks in the interval".
+// *
+// * @param E1 [EntityType].
+// * @param E2 [EntityType].
+// * @param E [EntityType].
+// * @param T [TickDataType].
+// * @param U [TickUnit].
+// * @param D [TickDifference].
+// * @param entity1 First [EntityType].
+// * @param entity2 Second [EntityType].
+// * @param percentage Threshold value.
+// * @param interval Observation interval.
+// * @param phi Predicate.
+// */
+//fun <
+//    E1 : E,
+//    E2 : E,
+//    E : EntityType<E>,
+//    T : TickDataType<E, T, U, D>,
+//    U : TickUnit<U, D>,
+//    D : TickDifference<D>> pastMaxPrevalence(
+//    entity1: E1,
+//    entity2: E2,
+//    percentage: Double,
+//    interval: Pair<D, D>? = null,
+//    phi: (E1, E2) -> Boolean
+//): Boolean =
+//    pastMinPrevalence(
+//        entity1 = entity1,
+//        entity2 = entity2,
+//        percentage = 1 - percentage,
+//        interval = interval,
+//        phi = { e1, e2 -> !phi(e1, e2) })

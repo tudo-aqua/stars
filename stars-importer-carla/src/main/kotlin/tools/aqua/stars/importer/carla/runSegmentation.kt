@@ -168,9 +168,9 @@ fun convertTickData(
         .mapNotNull {
           // Set ego flag for each vehicle
           val vehiclesInRun = it.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
-          vehiclesInRun.forEach { it.egoVehicle = (it.id == t) }
+          vehiclesInRun.forEach { v -> v.egoVehicle = (v.id == t) }
 
-          if (vehiclesInRun.none { it.egoVehicle }) {
+          if (vehiclesInRun.none { v -> v.egoVehicle }) {
             println(
                 "Vehicle with id $t not found in tick data at tick ${it.currentTick}, skipping.")
             null
@@ -193,7 +193,9 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
     val previousTick = simulationRun[i - 1]
     currentTick.vehicles.forEach { currentActor ->
       updateActorVelocityAndAcceleration(
-          currentActor, previousTick.vehicles.firstOrNull { it.id == currentActor.id })
+          vehicle = currentActor,
+        previousActor = previousTick.vehicles.firstOrNull { it.id == currentActor.id },
+        timeDelta = (currentTick.currentTick - previousTick.currentTick).differenceSeconds)
     }
   }
 }
@@ -205,7 +207,7 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  * @param previousActor The previous [Actor].
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
-fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) {
+fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, timeDelta: Double) {
 
   // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousActor == null) {
@@ -215,17 +217,7 @@ fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?) 
   }
 
   check(previousActor is Vehicle) {
-    "The Actor with id '${previousActor.id}' from the previous tick is of type '${previousActor::class}' " +
-        "but '${Vehicle::class}' was expected."
-  }
-
-  // Calculate the time difference
-  val timeDelta: Double =
-      (vehicle.tickData.currentTick - previousActor.tickData.currentTick).differenceSeconds
-
-  check(timeDelta >= 0) {
-    "The time delta between the vehicles is less than 0. Maybe you have switched the vehicles? " +
-        "Tick of current vehicle: ${vehicle.tickData.currentTick} vs. previous vehicle: ${previousActor.tickData.currentTick}"
+    "The Actor '$previousActor' from the previous tick is of type '${previousActor::class}' but '${Vehicle::class}' was expected."
   }
 
   if (timeDelta == 0.0) {

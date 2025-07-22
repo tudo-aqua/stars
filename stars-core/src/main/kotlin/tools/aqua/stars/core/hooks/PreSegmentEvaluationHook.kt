@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  *   data.
  */
 open class PreSegmentEvaluationHook<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -51,7 +51,7 @@ open class PreSegmentEvaluationHook<
      * @param segment The list of [TickDataType]s to evaluate.
      */
     fun <
-        E : EntityType<E, T, U, D>,
+        E : EntityType<E>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> MutableList<PreSegmentEvaluationHook<E, T, U, D>>.evaluate(

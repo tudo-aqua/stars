@@ -25,21 +25,18 @@ package tools.aqua.stars.data.av.dataclasses
  * @property lane The [Pedestrian]'s [Lane].
  */
 data class Pedestrian(
-    override val id: Int = 0,
+    val id: Int = 0,
     val positionOnLane: Double = 0.0,
     val lane: Lane,
 ) : Actor() {
-
-  override lateinit var tickData: TickData
-
   override fun clone(newTickData: TickData): Actor =
-      Pedestrian(id, positionOnLane, lane).apply { tickData = newTickData }
+      Pedestrian(id, positionOnLane, lane)
 
   override fun toString(): String =
-      "Pedestrian(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+      "Pedestrian(id=$id, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
   override fun equals(other: Any?): Boolean =
-      other is Pedestrian && id == other.id && tickData.currentTick == other.tickData.currentTick
+      other is Pedestrian && id == other.id
 
-  override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
+  override fun hashCode(): Int = id
 }

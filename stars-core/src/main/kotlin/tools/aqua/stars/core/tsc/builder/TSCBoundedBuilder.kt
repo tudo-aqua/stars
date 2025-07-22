@@ -19,7 +19,6 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCNode
@@ -36,7 +35,7 @@ import tools.aqua.stars.core.types.*
  * @property bounds (Default: 0 to 0) Bounds of the node.
  */
 open class TSCBoundedBuilder<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -70,11 +69,11 @@ open class TSCBoundedBuilder<
    * @param condition The edge condition.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.condition(
-      condition: (PredicateContext<E, T, U, D>) -> Boolean
+      condition: (List<T>) -> Boolean
   ) {
     this.condition = condition
   }
@@ -89,11 +88,11 @@ open class TSCBoundedBuilder<
    * @param valueFunction The value function.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.valueFunction(
-      valueFunction: (PredicateContext<E, T, U, D>) -> Any
+      valueFunction: (List<T>) -> Any
   ) {
     this.valueFunction = valueFunction
   }
@@ -109,7 +108,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] that is connected to a projections' node.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.projections(
@@ -127,7 +126,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] that is connected to a monitors' node.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.monitors(
@@ -147,7 +146,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the given bounds.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.bounded(
@@ -173,7 +172,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (1,1).
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.exclusive(
@@ -198,7 +197,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (0,#Edges).
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.optional(
@@ -223,7 +222,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (1,#Edges).
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.any(
@@ -248,7 +247,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (#Edges,#Edges).
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.all(
@@ -273,7 +272,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] that is connected to a leaf node.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.leaf(

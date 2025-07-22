@@ -64,7 +64,7 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 class TSCEvaluation<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -300,11 +300,8 @@ class TSCEvaluation<
         // Run the evaluation for all TSCs
         tscList.forEach { tsc ->
           val tscEvaluationTime = measureTime {
-            // Wrap the current segment into a predicate context
-            val context = PredicateContext(segment, -1) // TODO: Hardcoded primary entity
-
             // Evaluate the TSC with the current segment and context.
-            val segmentTSCInstance = tsc.evaluate(context)
+            val segmentTSCInstance = tsc.evaluate(segment)
 
             // Run the "evaluate" function for all TSCInstanceMetricProviders on the
             // current segment

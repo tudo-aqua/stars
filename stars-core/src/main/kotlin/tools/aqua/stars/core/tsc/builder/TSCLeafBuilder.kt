@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.types.*
@@ -32,7 +31,7 @@ import tools.aqua.stars.core.types.*
  * @property label Label of the [TSCLeafNode].
  */
 open class TSCLeafBuilder<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val label: String) : TSCBuilder<E, T, U, D>() {
@@ -62,11 +61,11 @@ open class TSCLeafBuilder<
    * @param condition The edge condition.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.condition(
-      condition: (PredicateContext<E, T, U, D>) -> Boolean
+      condition: (List<T>) -> Boolean
   ) {
     this.condition = condition
   }
@@ -81,11 +80,11 @@ open class TSCLeafBuilder<
    * @param valueFunction The value function.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.valueFunction(
-      valueFunction: (PredicateContext<E, T, U, D>) -> Any
+      valueFunction: (List<T>) -> Any
   ) {
     this.valueFunction = valueFunction
   }
@@ -101,7 +100,7 @@ open class TSCLeafBuilder<
    * @return The [TSCEdge] that is connected to a projections node.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.projections(
@@ -119,7 +118,7 @@ open class TSCLeafBuilder<
    * @return The [TSCEdge] that is connected to a monitors node.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.monitors(

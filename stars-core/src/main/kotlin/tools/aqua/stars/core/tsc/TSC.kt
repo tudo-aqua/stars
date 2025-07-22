@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.node.TSCNode
@@ -34,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @property identifier The identifier of the [TSC].
  */
 class TSC<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val rootNode: TSCNode<E, T, U, D>, val identifier: String = "TSC") :
@@ -50,12 +49,12 @@ class TSC<
   val possibleTSCInstances: List<TSCInstanceNode<E, T, U, D>> = rootNode.generateAllInstances()
 
   /**
-   * Evaluates [PredicateContext] on [TSC].
+   * Evaluates [List] of [TickDataType]s on [TSC].
    *
-   * @param ctx The [PredicateContext].
+   * @param ctx The [List] of [TickDataType]s.
    * @return The calculated [TSCInstance] based on the evaluation.
    */
-  fun evaluate(ctx: PredicateContext<E, T, U, D>): TSCInstance<E, T, U, D> =
+  fun evaluate(ctx: List<T>): TSCInstance<E, T, U, D> =
       TSCInstance(rootNode.evaluate(ctx), "") // TODO: Add identifier
 
   /**

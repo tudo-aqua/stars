@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.types.*
 
 /**
@@ -29,13 +28,13 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  */
 open class TSCMonitorsBuilder<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
-  fun build(): Map<String, (PredicateContext<E, T, U, D>) -> Boolean> = monitorMap
+  fun build(): Map<String, (List<T>) -> Boolean> = monitorMap
 
   /**
    * DSL function for a monitor.
@@ -48,12 +47,12 @@ open class TSCMonitorsBuilder<
    * @param condition The monitor condition.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCMonitorsBuilder<E, T, U, D>.monitor(
       label: String,
-      condition: (PredicateContext<E, T, U, D>) -> Boolean
+      condition: (List<T>) -> Boolean
   ) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
     monitorMap[label] = condition

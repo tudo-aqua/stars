@@ -39,7 +39,7 @@ import kotlin.math.sqrt
  * @property angularVelocity The current angular velocity.
  */
 data class Vehicle(
-    override val id: Int = 0,
+    val id: Int = 0,
     var positionOnLane: Double = 0.0,
     var lane: Lane,
     val typeId: String = "",
@@ -52,8 +52,6 @@ data class Vehicle(
     var acceleration: Vector3D = Vector3D(),
     val angularVelocity: Vector3D = Vector3D(),
 ) : Actor() {
-
-  override lateinit var tickData: TickData
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -96,15 +94,14 @@ data class Vehicle(
               velocity,
               acceleration,
               angularVelocity)
-          .apply { tickData = newTickData }
 
   override fun toString(): String =
-      "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+      "Vehicle(id=$id, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
   override fun equals(other: Any?): Boolean =
-      other is Vehicle && id == other.id && tickData.currentTick == other.tickData.currentTick
+      other is Vehicle && id == other.id
 
-  override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
+  override fun hashCode(): Int = id
 
   /**
    * Extension on Vehicle: set its `velocity` field to correspond to the given effective speed (in

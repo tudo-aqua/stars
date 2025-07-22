@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
@@ -39,15 +38,15 @@ import tools.aqua.stars.core.types.*
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
-    private val monitorsMap: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>?,
+    private val monitorsMap: Map<String, (List<T>) -> Boolean>?,
     private val projectionsMap: Map<String, Boolean>?,
-    val valueFunction: (PredicateContext<E, T, U, D>) -> Any
+    val valueFunction: (List<T>) -> Any
 ) {
 
   /** Map of projection labels to their recursive state. */
@@ -55,14 +54,14 @@ sealed class TSCNode<
     get() = projectionsMap.orEmpty()
 
   /** Map of monitor labels to their predicates. */
-  val monitors: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>
+  val monitors: Map<String, (List<T>) -> Boolean>
     get() = monitorsMap.orEmpty()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
 
   /** Evaluates this TSC in the given context. */
-  fun evaluate(ctx: PredicateContext<E, T, U, D>, depth: Int = 0): TSCInstanceNode<E, T, U, D> =
+  fun evaluate(ctx: List<T>, depth: Int = 0): TSCInstanceNode<E, T, U, D> =
       TSCInstanceNode(
               this,
               this.label,

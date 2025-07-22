@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param phi Predicate.
  */
 fun <
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> previous(
@@ -59,70 +59,70 @@ fun <
   //  return phi(previousTick)
 }
 
-/**
- * CMFTBL implementation of the 'previous' operator for one entity i.e. "In the previous tick phi
- * holds and the tick is in the interval".
- *
- * @param E1 [EntityType].
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
- * @param entity Current [EntityType] of which the tickData gets retrieved.
- * @param interval Observation interval.
- * @param phi Predicate.
- */
-@Suppress("UNCHECKED_CAST")
-fun <
-    E1 : E,
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>> previous(
-    entity: E1,
-    interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
-): Boolean =
-    previous(
-        tickData = entity.tickData,
-        interval = interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
+///**
+// * CMFTBL implementation of the 'previous' operator for one entity i.e. "In the previous tick phi
+// * holds and the tick is in the interval".
+// *
+// * @param E1 [EntityType].
+// * @param E [EntityType].
+// * @param T [TickDataType].
+// * @param U [TickUnit].
+// * @param D [TickDifference].
+// * @param entity Current [EntityType] of which the tickData gets retrieved.
+// * @param interval Observation interval.
+// * @param phi Predicate.
+// */
+//@Suppress("UNCHECKED_CAST")
+//fun <
+//    E1 : E,
+//    E : EntityType<E>,
+//    T : TickDataType<E, T, U, D>,
+//    U : TickUnit<U, D>,
+//    D : TickDifference<D>> previous(
+//    entity: E1,
+//    interval: Pair<D, D>? = null,
+//    phi: (E1) -> Boolean
+//): Boolean =
+//    previous(
+//        tickData = entity.tickData,
+//        interval = interval,
+//        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
 
-/**
- * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous tick phi
- * holds and the tick is in the interval".
- *
- * @param E1 [EntityType].
- * @param E2 [EntityType].
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
- * @param entity1 First [EntityType].
- * @param entity2 Second [EntityType].
- * @param interval Observation interval.
- * @param phi Predicate.
- */
-@Suppress("UNCHECKED_CAST")
-fun <
-    E1 : E,
-    E2 : E,
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>> previous(
-    entity1: E1,
-    entity2: E2,
-    interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
-): Boolean {
-  checkTick(entity1, entity2)
-  return previous(
-      tickData = entity1.tickData,
-      interval = interval,
-      phi = { td ->
-        phi(
-            (td.getEntityById(entity1.id) ?: return@previous false) as E1,
-            (td.getEntityById(entity2.id) ?: return@previous false) as E2)
-      })
-}
+///**
+// * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous tick phi
+// * holds and the tick is in the interval".
+// *
+// * @param E1 [EntityType].
+// * @param E2 [EntityType].
+// * @param E [EntityType].
+// * @param T [TickDataType].
+// * @param U [TickUnit].
+// * @param D [TickDifference].
+// * @param entity1 First [EntityType].
+// * @param entity2 Second [EntityType].
+// * @param interval Observation interval.
+// * @param phi Predicate.
+// */
+//@Suppress("UNCHECKED_CAST")
+//fun <
+//    E1 : E,
+//    E2 : E,
+//    E : EntityType<E>,
+//    T : TickDataType<E, T, U, D>,
+//    U : TickUnit<U, D>,
+//    D : TickDifference<D>> previous(
+//    entity1: E1,
+//    entity2: E2,
+//    interval: Pair<D, D>? = null,
+//    phi: (E1, E2) -> Boolean
+//): Boolean {
+//  checkTick(entity1, entity2)
+//  return previous(
+//      tickData = entity1.tickData,
+//      interval = interval,
+//      phi = { td ->
+//        phi(
+//            (td.getEntityById(entity1.id) ?: return@previous false) as E1,
+//            (td.getEntityById(entity2.id) ?: return@previous false) as E2)
+//      })
+//}

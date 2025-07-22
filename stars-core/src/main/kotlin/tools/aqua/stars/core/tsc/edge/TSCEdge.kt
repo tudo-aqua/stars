@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.edge
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
@@ -33,11 +32,11 @@ import tools.aqua.stars.core.types.*
  * @property destination Destination [TSCNode].
  */
 open class TSCEdge<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val condition: (PredicateContext<E, T, U, D>) -> Boolean = CONST_TRUE,
+    val condition: (List<T>) -> Boolean = CONST_TRUE,
     val destination: TSCNode<E, T, U, D>,
 ) {
 

@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.TickUnit
  * @property name The name of the predicate.
  */
 abstract class AbstractPredicate<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val name: String)

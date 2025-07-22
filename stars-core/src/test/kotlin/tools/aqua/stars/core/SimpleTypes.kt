@@ -21,10 +21,14 @@ import tools.aqua.stars.core.types.*
 
 /** Simple entity. */
 class SimpleEntity(
-    override val id: Int = 0,
-    override var tickData: SimpleTickData = SimpleTickData()
-) : EntityType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
-  override fun toString(): String = "Entity[$id] in Tick[${tickData}]"
+    val id: Int = 0,
+) : EntityType<SimpleEntity> {
+  override fun equals(other: Any?): Boolean {
+    return if (other !is SimpleEntity) false
+    else id == (other as SimpleEntity).id
+  }
+
+  override fun hashCode(): Int = id
 }
 
 /** Simple tick data. */

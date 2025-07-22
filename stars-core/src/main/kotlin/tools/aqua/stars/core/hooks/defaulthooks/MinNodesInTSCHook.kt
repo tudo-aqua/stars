@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param failPolicy The [EvaluationHookResult] to return if the TSC has less [minNodes] nodes.
  */
 open class MinNodesInTSCHook<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

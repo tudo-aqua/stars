@@ -25,7 +25,6 @@ import tools.aqua.stars.core.types.TickDataType
  *
  * @property currentTick The current tick.
  * @property entities The [List] of [TestEntity]s.
- * @property segment The [TestSegment] this [BooleanTick] belongs to.
  * @property phi1 Represents the evaluation results of the formula 'phi1'.
  * @property phi2 Represents the evaluation results of the formula 'phi2'.
  */

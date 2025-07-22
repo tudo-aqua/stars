@@ -26,7 +26,7 @@ package tools.aqua.stars.core.types
  * @param D [TickDifference].
  */
 interface TickDataType<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
@@ -36,12 +36,4 @@ interface TickDataType<
 
   /** List of [EntityType]s in tick data. */
   var entities: List<E>
-
-  /**
-   * Retrieves [EntityType] from [entities] by given [entityID].
-   *
-   * @param entityID Entity identifier.
-   * @return The [EntityType] with the ID [entityID] if existing. Null otherwise.
-   */
-  fun getEntityById(entityID: Int): E? = entities.firstOrNull { it.id == entityID }
 }

@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.types.*
 
 /**
@@ -33,14 +32,14 @@ import tools.aqua.stars.core.types.*
  * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
 open class TSCLeafNode<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
-    monitorsMap: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>?,
+    monitorsMap: Map<String, (List<T>) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
-    valueFunction: (PredicateContext<E, T, U, D>) -> Any = {},
+    valueFunction: (List<T>) -> Any = {},
 ) :
     TSCBoundedNode<E, T, U, D>(
         label = label,

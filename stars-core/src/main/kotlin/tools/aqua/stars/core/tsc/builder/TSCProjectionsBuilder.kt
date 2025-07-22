@@ -28,7 +28,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  */
 open class TSCProjectionsBuilder<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
@@ -49,7 +49,7 @@ open class TSCProjectionsBuilder<
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCProjectionsBuilder<E, T, U, D>.projection(label: String) {
@@ -67,7 +67,7 @@ open class TSCProjectionsBuilder<
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E, T, U, D>,
+      E : EntityType<E>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCProjectionsBuilder<E, T, U, D>.projectionRecursive(label: String) {

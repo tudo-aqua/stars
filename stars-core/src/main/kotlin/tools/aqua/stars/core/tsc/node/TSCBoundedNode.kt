@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.tsc.node
 
 import tools.aqua.stars.core.crossProduct
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.powerlist
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
@@ -40,15 +39,15 @@ import tools.aqua.stars.core.types.*
  * @property bounds [Pair] of bounds of the [TSCBoundedNode].
  */
 open class TSCBoundedNode<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
-    monitorsMap: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>?,
+    monitorsMap: Map<String, (List<T>) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
-    valueFunction: (PredicateContext<E, T, U, D>) -> Any = {},
+    valueFunction: (List<T>) -> Any = {},
     val bounds: Pair<Int, Int>
 ) :
     TSCNode<E, T, U, D>(

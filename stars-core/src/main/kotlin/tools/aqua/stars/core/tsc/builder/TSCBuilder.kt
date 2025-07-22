@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.types.*
 
@@ -31,7 +30,7 @@ import tools.aqua.stars.core.types.*
  */
 @TSCBuilderMarker
 sealed class TSCBuilder<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
@@ -40,7 +39,7 @@ sealed class TSCBuilder<
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
   /** Holds all monitors of the node. */
-  protected val monitorMap: MutableMap<String, (PredicateContext<E, T, U, D>) -> Boolean> =
+  protected val monitorMap: MutableMap<String, (List<T>) -> Boolean> =
       mutableMapOf()
 
   /** Holds the optional projections. */
@@ -51,14 +50,14 @@ sealed class TSCBuilder<
     }
 
   /** Holds the optional monitors edge. */
-  protected var monitors: Map<String, (PredicateContext<E, T, U, D>) -> Boolean>? = null
+  protected var monitors: Map<String, (List<T>) -> Boolean>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
     }
 
   /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
-  protected var condition: ((PredicateContext<E, T, U, D>) -> Boolean) = CONST_TRUE
+  protected var condition: ((List<T>) -> Boolean) = CONST_TRUE
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true
@@ -68,7 +67,7 @@ sealed class TSCBuilder<
   private var isConditionSet = false
 
   /** Value function predicate of the node. (Default: empty) */
-  protected var valueFunction: ((PredicateContext<E, T, U, D>) -> Any) = { _ -> }
+  protected var valueFunction: ((List<T>) -> Any) = { _ -> }
     set(value) {
       check(!isValueFunctionSet) { "Value function already set." }
       isValueFunctionSet = true

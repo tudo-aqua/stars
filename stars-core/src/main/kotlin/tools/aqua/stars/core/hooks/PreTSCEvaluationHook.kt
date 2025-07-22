@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param evaluationFunction The function to be executed before the evaluation of the [TSC].
  */
 open class PreTSCEvaluationHook<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -52,7 +52,7 @@ open class PreTSCEvaluationHook<
      * @param tscList The list of TSCs to evaluate.
      */
     fun <
-        E : EntityType<E, T, U, D>,
+        E : EntityType<E>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> List<PreTSCEvaluationHook<E, T, U, D>>.evaluate(

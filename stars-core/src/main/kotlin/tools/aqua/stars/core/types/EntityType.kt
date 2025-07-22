@@ -21,20 +21,5 @@ package tools.aqua.stars.core.types
  * Interface for entity types.
  *
  * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
  */
-interface EntityType<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>,
-> {
-
-  /** Entity identifier. */
-  val id: Int
-
-  /** Tick data. */
-  var tickData: T
-}
+interface EntityType<E : EntityType<E>>

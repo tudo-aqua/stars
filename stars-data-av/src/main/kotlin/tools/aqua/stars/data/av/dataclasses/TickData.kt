@@ -39,8 +39,6 @@ data class TickData(
 ) : TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds> {
 
   init {
-    entities.onEach { it.tickData = this }
-
     vehicles
         .filter { it.isEgo }
         .let {

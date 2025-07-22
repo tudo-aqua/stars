@@ -27,28 +27,52 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
- * @property eval The evaluation function on the [PredicateContext].
+ * @property eval The evaluation function on the context.
  */
 class NullaryPredicate<
-    E : EntityType<E, T, U, D>,
+    E : EntityType<E>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     name: String,
-    val eval: (PredicateContext<E, T, U, D>) -> Boolean,
+    val eval: (List<T>) -> Boolean,
 ) : AbstractPredicate<E, T, U, D>(name = name) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
    *
    * @param ctx The context this predicate is evaluated in.
-   * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
-   * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
+   * @param tick The tick to evaluate this predicate in.
+   * @return Whether the predicate holds in the given context and at the given [tick].
    */
   fun holds(
-      ctx: PredicateContext<E, T, U, D>,
-      tick: U = ctx.ticks.first().currentTick,
-  ): Boolean = ctx.ticks.firstOrNull { it.currentTick == tick }.let { it != null && this.eval(ctx) }
+      ctx: List<T>,
+      tick: U,
+  ): Boolean {
+    ctx.firstOrNull { it.currentTick == tick } ?: return false
+
+    return holds(ctx)
+  }
+
+  /**
+   * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
+   *
+   * @param ctx The context this predicate is evaluated in.
+   * @param tick (Default: Last tick in context) The tick to evaluate this predicate in.
+   * @return Whether the predicate holds in the given context and at the given [tick].
+   */
+  fun holds(
+    ctx: List<T>,
+    tick: Int = ctx.lastIndex,
+  ): Boolean {
+    check(tick in ctx.indices) {
+      "Tick $tick is out of bounds for context with size ${ctx.size}."
+    }
+
+    return holds(ctx)
+  }
+
+  private fun holds(ctx: List<T>): Boolean = this.eval(ctx)
 
   /** Creates a nullary tick predicate. */
   companion object {
@@ -60,16 +84,16 @@ class NullaryPredicate<
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
-     * @param eval The evaluation function on the [PredicateContext].
+     * @param eval The evaluation function on the [List] of [TickDataType]s.
      * @return The created [NullaryPredicate] with the given [eval] function.
      */
     fun <
-        E : EntityType<E, T, U, D>,
+        E : EntityType<E>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
         name: String,
-        eval: (PredicateContext<E, T, U, D>) -> Boolean
+        eval: (List<T>) -> Boolean
     ): NullaryPredicate<E, T, U, D> = NullaryPredicate(name, eval)
   }
 }
