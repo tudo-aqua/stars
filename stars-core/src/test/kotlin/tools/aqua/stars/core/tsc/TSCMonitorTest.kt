@@ -190,7 +190,7 @@ class TSCMonitorTest {
     val tickData = SimpleTickData(SimpleTickDataUnit(0))
     val ticks = mutableListOf(tickData)
 
-    entities.add(SimpleEntity(0, tickData))
+    entities.add(SimpleEntity(0))
 
     return ticks.asSequence()
   }

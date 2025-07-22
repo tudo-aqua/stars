@@ -140,9 +140,8 @@ class MinNodesInTSCHookTest {
   private fun ticks(): Sequence<SimpleTickData> {
     val entities = mutableListOf<SimpleEntity>()
     val tickDataList = mutableListOf<SimpleTickData>()
-    val tickData = SimpleTickData(SimpleTickDataUnit(0), entities)
 
-    entities.add(SimpleEntity(0, tickData))
+    entities.add(SimpleEntity(0))
 
     return tickDataList.asSequence()
   }
