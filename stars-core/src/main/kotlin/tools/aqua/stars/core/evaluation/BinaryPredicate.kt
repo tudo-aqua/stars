@@ -24,75 +24,56 @@ import tools.aqua.stars.core.types.*
 /**
  * Binary predicate.
  *
- * @param E1 [EntityType].
- * @param E2 [EntityType].
- * @param E [EntityType].
+ * @param E1 [EntityDataType].
+ * @param E2 [EntityDataType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
- * @property kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
+ * @property kClasses The [KClass]es of the [EntityDataType]s that are evaluated by this predicate.
  * @property eval The evaluation function on the context.
  */
 class BinaryPredicate<
     E1 : E,
     E2 : E,
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     name: String,
     val kClasses: Pair<KClass<E1>, KClass<E2>>,
-    val eval: (List<T>, E1, E2) -> Boolean,
+    val eval: (T, E1, E2) -> Boolean,
 ) : AbstractPredicate<E, T, U, D>(name) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
    *
-   * @param ctx The context this predicate is evaluated in.
-   * @param tick The time stamp to evaluate this predicate in.
+   * @param tick The current tick that is beeing evaluated.
+   * @param tickUnit The time stamp to evaluate this predicate for.
    * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
    * @return Whether the predicate holds in the given context at the given [tick] for the
    *   given [entity1] and [entity2]. Returns false if the [tick] is not in the context.
    */
   fun holds(
-      ctx: List<T>,
-      tick: U,
+      tick: T,
+      tickUnit: U,
       entity1: E1,
       entity2: E2
-  ): Boolean {
-    ctx.firstOrNull { it.currentTick == tick } ?: return false
-
-    return holds(ctx, entity1, entity2)
-  }
+  ): Boolean = TODO("Search for tickUnit in tick")
+    // ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it, entity1, entity2) } ?: false
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
    *
-   * @param ctx The context this predicate is evaluated in.
-   * @param tick (Default: Last tick in context) The time stamp to evaluate this predicate in.
+   * @param tick The tick to evaluate this predicate for.
    * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
-   * @return Whether the predicate holds in the given context at the given [tick] for the
-   *   given [entity1] and [entity2].
-   * @throws IllegalArgumentException if the [tick] is not in the context.
+   * @return Whether the predicate holds for the current tick for the given [entity1] and [entity2].
    */
   fun holds(
-    ctx: List<T>,
-    tick: Int = ctx.lastIndex,
-    entity1: E1,
-    entity2: E2
-  ): Boolean {
-    check(tick in ctx.indices) {
-      "Tick $tick is out of bounds for context with size ${ctx.size}."
-    }
-
-    return holds(ctx, entity1, entity2)
-  }
-
-  private fun holds(
-    ctx: List<T>,
+    tick: T,
     entity1: E1,
     entity2: E2
   ): Boolean =
@@ -100,23 +81,22 @@ class BinaryPredicate<
         this.kClasses.first.isInstance(entity1) &&
         this.kClasses.second.isInstance(entity2) &&
         this.eval(
-          ctx, this.kClasses.first.cast(entity1), this.kClasses.second.cast(entity2)
+          tick, this.kClasses.first.cast(entity1), this.kClasses.second.cast(entity2)
         )
-
 
   /** Creates a binary tick predicate in this context. */
   companion object {
     /**
      * Creates a binary tick predicate in this context.
      *
-     * @param E1 [EntityType].
-     * @param E2 [EntityType].
-     * @param E [EntityType].
+     * @param E1 [EntityDataType].
+     * @param E2 [EntityDataType].
+     * @param E [EntityDataType].
      * @param T [TickDataType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
-     * @param kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
+     * @param kClasses The [KClass]es of the [EntityDataType]s that are evaluated by this predicate.
      * @param eval The evaluation function on the [List] of [TickDataType]s.
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass]es of the
      *   entities for which the predicate should be evaluated.
@@ -124,13 +104,13 @@ class BinaryPredicate<
     fun <
         E1 : E,
         E2 : E,
-        E : EntityType<E>,
+        E : EntityDataType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
-        name: String,
-        kClasses: Pair<KClass<E1>, KClass<E2>>,
-        eval: (List<T>, E1, E2) -> Boolean,
+      name: String,
+      kClasses: Pair<KClass<E1>, KClass<E2>>,
+      eval: (T, E1, E2) -> Boolean,
     ): BinaryPredicate<E1, E2, E, T, U, D> = BinaryPredicate(name, kClasses, eval)
   }
 }

@@ -25,14 +25,14 @@ import tools.aqua.stars.core.types.*
  * function which is called after the evaluation phase. It also may depend on the results of metrics
  * that evaluated during the evaluation phase.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
 interface PostEvaluationMetricProvider<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> : MetricProvider<E, T, U, D> {

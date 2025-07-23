@@ -195,7 +195,7 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
       updateActorVelocityAndAcceleration(
           vehicle = currentActor,
         previousActor = previousTick.vehicles.firstOrNull { it.id == currentActor.id },
-        timeDelta = (currentTick.currentTick - previousTick.currentTick).differenceSeconds)
+        timeDelta = (currentTick.currentTickUnit - previousTick.currentTickUnit).differenceSeconds)
     }
   }
 }

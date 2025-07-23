@@ -22,7 +22,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Leaf TSC node.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -32,14 +32,14 @@ import tools.aqua.stars.core.types.*
  * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
 open class TSCLeafNode<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
-    monitorsMap: Map<String, (List<T>) -> Boolean>?,
+    monitorsMap: Map<String, (T) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
-    valueFunction: (List<T>) -> Any = {},
+    valueFunction: (T) -> Any = {},
 ) :
     TSCBoundedNode<E, T, U, D>(
         label = label,

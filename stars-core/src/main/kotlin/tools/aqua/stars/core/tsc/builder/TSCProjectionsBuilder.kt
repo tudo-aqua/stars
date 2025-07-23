@@ -22,13 +22,13 @@ import tools.aqua.stars.core.types.*
 /**
  * Class to assist in creating monitors nodes in the DSL.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 open class TSCProjectionsBuilder<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
@@ -42,14 +42,14 @@ open class TSCProjectionsBuilder<
   /**
    * DSL function to build projections from a label without recursion.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCProjectionsBuilder<E, T, U, D>.projection(label: String) {
@@ -60,14 +60,14 @@ open class TSCProjectionsBuilder<
   /**
    * DSL function to build projections from a label with recursion.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCProjectionsBuilder<E, T, U, D>.projectionRecursive(label: String) {

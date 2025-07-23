@@ -137,11 +137,8 @@ class TestPrevious {
   @Test
   fun `Test when phi holds at the previous tick, but the tick is after the interval starts`() {
     val ticks = createTicks(listOf(1, 1, 1))
-    ticks[0].currentTick = TestUnit(0)
-    ticks[1].currentTick = TestUnit(2)
-    ticks[2].currentTick = TestUnit(4)
 
-    val interval = 1 to 2
+    val interval = 0 to 1
 
     assertFalse { previous(ticks[2], createInterval(interval), phi = { it.phi1 }) }
   }

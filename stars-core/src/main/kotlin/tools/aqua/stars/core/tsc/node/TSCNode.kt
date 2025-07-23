@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Abstract baseclass for TSC nodes.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -38,15 +38,15 @@ import tools.aqua.stars.core.types.*
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
-    private val monitorsMap: Map<String, (List<T>) -> Boolean>?,
+    private val monitorsMap: Map<String, (T) -> Boolean>?,
     private val projectionsMap: Map<String, Boolean>?,
-    val valueFunction: (List<T>) -> Any
+    val valueFunction: (T) -> Any
 ) {
 
   /** Map of projection labels to their recursive state. */
@@ -54,25 +54,25 @@ sealed class TSCNode<
     get() = projectionsMap.orEmpty()
 
   /** Map of monitor labels to their predicates. */
-  val monitors: Map<String, (List<T>) -> Boolean>
+  val monitors: Map<String, (T) -> Boolean>
     get() = monitorsMap.orEmpty()
 
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
 
   /** Evaluates this TSC in the given context. */
-  fun evaluate(ctx: List<T>, depth: Int = 0): TSCInstanceNode<E, T, U, D> =
+  fun evaluate(tick: T, depth: Int = 0): TSCInstanceNode<E, T, U, D> =
       TSCInstanceNode(
               this,
               this.label,
-              this.monitors.mapValues { (_, monitor) -> monitor(ctx) },
-              this.valueFunction(ctx))
+              this.monitors.mapValues { (_, monitor) -> monitor(tick) },
+              this.valueFunction(tick))
           .also {
             it.edges +=
                 this.edges
-                    .filter { t -> t.condition(ctx) }
+                    .filter { t -> t.condition(tick) }
                     .map { tscEdge ->
-                      TSCInstanceEdge(tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
+                      TSCInstanceEdge(tscEdge.destination.evaluate(tick, depth + 1), tscEdge)
                     }
           }
 

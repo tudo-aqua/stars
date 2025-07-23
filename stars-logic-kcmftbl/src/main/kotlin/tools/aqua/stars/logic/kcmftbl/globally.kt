@@ -23,7 +23,7 @@ import tools.aqua.stars.core.types.*
  * CMFTBL implementation of the 'globally' operator i.e. "In all future ticks in the interval phi
  * holds".
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param phi Predicate.
  */
 fun <
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> globally(
@@ -56,7 +56,7 @@ fun <
 // */
 //fun <
 //    E1 : E,
-//    E : EntityType<E>,
+//    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
 //    U : TickUnit<U, D>,
 //    D : TickDifference<D>> globally(
@@ -83,7 +83,7 @@ fun <
 //fun <
 //    E1 : E,
 //    E2 : E,
-//    E : EntityType<E>,
+//    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
 //    U : TickUnit<U, D>,
 //    D : TickDifference<D>> globally(

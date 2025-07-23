@@ -35,7 +35,7 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements [Loggable] and logs the final [tickCount].
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -43,7 +43,7 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 class TickCountMetric<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

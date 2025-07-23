@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.*
 /**
  * TSC graph.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @property identifier The identifier of the [TSC].
  */
 class TSC<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val rootNode: TSCNode<E, T, U, D>, val identifier: String = "TSC") :
@@ -51,11 +51,11 @@ class TSC<
   /**
    * Evaluates [List] of [TickDataType]s on [TSC].
    *
-   * @param ctx The [List] of [TickDataType]s.
+   * @param tick The current [TickDataType].
    * @return The calculated [TSCInstance] based on the evaluation.
    */
-  fun evaluate(ctx: List<T>): TSCInstance<E, T, U, D> =
-      TSCInstance(rootNode.evaluate(ctx), "") // TODO: Add identifier
+  fun evaluate(tick: T): TSCInstance<E, T, U, D> =
+      TSCInstance(rootNode.evaluate(tick), "") // TODO: Add identifier
 
   /**
    * Builds all possible TSCs ignoring those in [projectionIgnoreList].

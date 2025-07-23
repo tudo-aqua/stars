@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Bounded TSC node.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -39,15 +39,15 @@ import tools.aqua.stars.core.types.*
  * @property bounds [Pair] of bounds of the [TSCBoundedNode].
  */
 open class TSCBoundedNode<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
-    monitorsMap: Map<String, (List<T>) -> Boolean>?,
+    monitorsMap: Map<String, (T) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
-    valueFunction: (List<T>) -> Any = {},
+    valueFunction: (T) -> Any = {},
     val bounds: Pair<Int, Int>
 ) :
     TSCNode<E, T, U, D>(

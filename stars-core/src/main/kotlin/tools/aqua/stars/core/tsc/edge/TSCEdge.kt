@@ -24,7 +24,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Baseclass for TSC edges.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -32,11 +32,11 @@ import tools.aqua.stars.core.types.*
  * @property destination Destination [TSCNode].
  */
 open class TSCEdge<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val condition: (List<T>) -> Boolean = CONST_TRUE,
+    val condition: (T) -> Boolean = CONST_TRUE,
     val destination: TSCNode<E, T, U, D>,
 ) {
 

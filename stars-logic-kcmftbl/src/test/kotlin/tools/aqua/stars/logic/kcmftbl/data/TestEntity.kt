@@ -17,12 +17,11 @@
 
 package tools.aqua.stars.logic.kcmftbl.data
 
-import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.EntityDataType
 
 /**
- * This class is used for tests and implements the [EntityType] interface.
+ * This class is used for tests and implements the [EntityDataType] interface.
  *
  * @property id The ID of this entity.
  */
-class TestEntity(val id: Int, ) :
-    EntityType<TestEntity>
+class TestEntityData(val id: Int) : EntityDataType<TestEntityData, BooleanTickData, TestUnit, TestDifference>()

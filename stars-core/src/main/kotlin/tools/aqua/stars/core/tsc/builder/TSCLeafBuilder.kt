@@ -24,14 +24,14 @@ import tools.aqua.stars.core.types.*
 /**
  * Class to assist in creating leaf nodes in the DSL.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property label Label of the [TSCLeafNode].
  */
 open class TSCLeafBuilder<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val label: String) : TSCBuilder<E, T, U, D>() {
@@ -54,18 +54,18 @@ open class TSCLeafBuilder<
   /**
    * DSL function for edge conditions.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param condition The edge condition.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.condition(
-      condition: (List<T>) -> Boolean
+      condition: (T) -> Boolean
   ) {
     this.condition = condition
   }
@@ -73,18 +73,18 @@ open class TSCLeafBuilder<
   /**
    * DSL function for a value function.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param valueFunction The value function.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.valueFunction(
-      valueFunction: (List<T>) -> Any
+      valueFunction: (T) -> Any
   ) {
     this.valueFunction = valueFunction
   }
@@ -92,7 +92,7 @@ open class TSCLeafBuilder<
   /**
    * DSL function for the projections block.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -100,7 +100,7 @@ open class TSCLeafBuilder<
    * @return The [TSCEdge] that is connected to a projections node.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.projections(
@@ -110,7 +110,7 @@ open class TSCLeafBuilder<
   /**
    * DSL function for an edge with MonitorsEdge in the leaf node scope.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -118,7 +118,7 @@ open class TSCLeafBuilder<
    * @return The [TSCEdge] that is connected to a monitors node.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.monitors(

@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Evaluated TSC node.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -37,7 +37,7 @@ import tools.aqua.stars.core.types.*
  * @property value Value of this node.
  */
 class TSCInstanceNode<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

@@ -40,7 +40,7 @@ import tools.aqua.stars.core.types.*
  * ```
  */
 class TSCIterator<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(startNode: TSCNode<E, T, U, D>) : Iterator<TSCNode<E, T, U, D>> {

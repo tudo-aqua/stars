@@ -23,7 +23,7 @@ import tools.aqua.stars.core.types.*
  * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi 2
  * held, at least since (and including) phi1 held, or forever".
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @param phi2 Second predicate.
  */
 fun <
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> backto(
@@ -65,7 +65,7 @@ fun <
 //@Suppress("UNCHECKED_CAST")
 //fun <
 //    E1 : E,
-//    E : EntityType<E>,
+//    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
 //    U : TickUnit<U, D>,
 //    D : TickDifference<D>> backto(
@@ -100,7 +100,7 @@ fun <
 //fun <
 //    E1 : E,
 //    E2 : E,
-//    E : EntityType<E>,
+//    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
 //    U : TickUnit<U, D>,
 //    D : TickDifference<D>> backto(

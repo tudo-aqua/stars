@@ -18,8 +18,15 @@
 package tools.aqua.stars.core.types
 
 /**
- * Interface for entity types.
+ * Class storing data of dynamic objects (entities).
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  */
-interface EntityType<E : EntityType<E>>
+abstract class EntityDataType<
+    E : EntityDataType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>

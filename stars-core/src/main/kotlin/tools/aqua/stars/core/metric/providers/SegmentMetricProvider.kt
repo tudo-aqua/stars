@@ -20,28 +20,28 @@ package tools.aqua.stars.core.metric.providers
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.types.*
 
-/**
- * The [SegmentMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
- * function which gets a [List] of [TickDataType]s ("segment") which is called during the evaluation
- * phase.
- *
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
- * @see TSCEvaluation.runEvaluation
- */
-interface SegmentMetricProvider<
-    E : EntityType<E>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>> : EvaluationMetricProvider<E, T, U, D> {
-
-  /**
-   * Evaluate the metric based on the given parameter.
-   *
-   * @param segment The current [List] of [TickDataType]s.
-   * @return The evaluation result.
-   */
-  fun evaluate(segment: List<T>): Any?
-}
+///**
+// * The [SegmentMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
+// * function which gets a [List] of [TickDataType]s ("segment") which is called during the evaluation
+// * phase.
+// *
+// * @param E [EntityDataType].
+// * @param T [TickDataType].
+// * @param U [TickUnit].
+// * @param D [TickDifference].
+// * @see TSCEvaluation.runEvaluation
+// */
+//interface SegmentMetricProvider<
+//    E : EntityDataType<E, T, U, D>,
+//    T : TickDataType<E, T, U, D>,
+//    U : TickUnit<U, D>,
+//    D : TickDifference<D>> : EvaluationMetricProvider<E, T, U, D> {
+//
+//  /**
+//   * Evaluate the metric based on the given parameter.
+//   *
+//   * @param segment The current [List] of [TickDataType]s.
+//   * @return The evaluation result.
+//   */
+//  fun evaluate(segment: List<T>): Any?
+//}

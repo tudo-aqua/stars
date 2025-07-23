@@ -37,7 +37,7 @@ import tools.aqua.stars.core.types.*
  * failing [TSCNode.monitors] for each [TSC]. It logs the failing [TSCFailedMonitorInstance]s for
  * each [TSC] and groups it by the [TSCInstanceNode].
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -50,7 +50,7 @@ import tools.aqua.stars.core.types.*
  */
 @Suppress("unused")
 class FailedMonitorsGroupedByTSCNodeMetric<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

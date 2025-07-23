@@ -22,24 +22,24 @@ import tools.aqua.stars.core.types.*
 /**
  * Class to assist in creating monitors nodes in the DSL.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 open class TSCMonitorsBuilder<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
-  fun build(): Map<String, (List<T>) -> Boolean> = monitorMap
+  fun build(): Map<String, (T) -> Boolean> = monitorMap
 
   /**
    * DSL function for a monitor.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -47,12 +47,12 @@ open class TSCMonitorsBuilder<
    * @param condition The monitor condition.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCMonitorsBuilder<E, T, U, D>.monitor(
       label: String,
-      condition: (List<T>) -> Boolean
+      condition: (T) -> Boolean
   ) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
     monitorMap[label] = condition

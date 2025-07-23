@@ -25,7 +25,7 @@ import kotlin.math.sqrt
 /**
  * Data class for vehicles.
  *
- * @property id The identifier of the vehicle.
+ * @param id The ID of the vehicle.
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property lane The [Vehicle]'s [Lane].
  * @property typeId The type identifier.
@@ -38,8 +38,8 @@ import kotlin.math.sqrt
  * @property acceleration The current acceleration m/s².
  * @property angularVelocity The current angular velocity.
  */
-data class Vehicle(
-    val id: Int = 0,
+class Vehicle(
+    id: Int = 0,
     var positionOnLane: Double = 0.0,
     var lane: Lane,
     val typeId: String = "",
@@ -51,7 +51,7 @@ data class Vehicle(
     var velocity: Vector3D = Vector3D(),
     var acceleration: Vector3D = Vector3D(),
     val angularVelocity: Vector3D = Vector3D(),
-) : Actor() {
+) : Actor(id) {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -96,12 +96,7 @@ data class Vehicle(
               angularVelocity)
 
   override fun toString(): String =
-      "Vehicle(id=$id, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
-
-  override fun equals(other: Any?): Boolean =
-      other is Vehicle && id == other.id
-
-  override fun hashCode(): Int = id
+      "Vehicle(positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
   /**
    * Extension on Vehicle: set its `velocity` field to correspond to the given effective speed (in

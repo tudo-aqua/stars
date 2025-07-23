@@ -18,22 +18,63 @@
 package tools.aqua.stars.core.types
 
 /**
- * Interface for tick data types.
+ * Class storing data of the current tick. Forms a double-linked list with the previous and next tick.
+ * Global/Static data should be stored directly in this class, dynamic entities are held in [entities].
+ * The current timestamp is represented by [currentTickUnit].
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ *
+ * @property currentTickUnit The current [TickUnit].
+ * @property entities List of [EntityDataType]s in tick data.
  */
-interface TickDataType<
-    E : EntityType<E>,
+abstract class TickDataType<
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> {
+    D : TickDifference<D>> (
+      val currentTickUnit: U,
+      val entities: Map<Int, E> = HashMap()
+    ) {
+  /** The next [TickDataType] in the sequence. */
+  var nextTick: T? = null
 
-  /** The current tick. */
-  val currentTick: U
+  /** The previous [TickDataType] in the sequence. */
+  var previousTick: T? = null
 
-  /** List of [EntityType]s in tick data. */
-  var entities: List<E>
+  /**
+   * The number of predecessors in the tick sequence.
+   *
+   * This is the number of ticks that precede this tick in the sequence, including the previous tick.
+   * If there is no previous tick, this will return 0.
+   */
+  val numPredecessors: Int
+    get() = previousTick?.numPredecessors?.plus(1) ?: 0
+
+  /**
+   * The number of successors in the tick sequence.
+   *
+   * This is the number of ticks that follow this tick in the sequence, including the next tick.
+   * If there is no next tick, this will return 0.
+   */
+  val numSuccessors: Int
+    get() = nextTick?.numSuccessors?.plus(1) ?: 0
+
+  /**
+   * The total length of the tick sequence.
+   *
+   * This is the total number of ticks in the sequence, including this tick.
+   */
+  val sequenceLength: Int
+    get() = numPredecessors + numSuccessors + 1
+
+  /**
+   * Retrieves [EntityDataType] from [entities] by given [entityID].
+   *
+   * @param entityID Entity identifier.
+   * @return The [EntityDataType] with the ID [entityID] if existing. Null otherwise.
+   */
+  fun getEntityDataById(entityID: Int): E? = entities.getOrDefault(entityID, null)
 }

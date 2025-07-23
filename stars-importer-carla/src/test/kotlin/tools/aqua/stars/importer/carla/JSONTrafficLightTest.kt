@@ -77,7 +77,7 @@ class JSONTrafficLightTest {
     val road = Road(lanes = listOf(lane))
     val block = Block(roads = listOf(road))
     val blocks = listOf(block)
-    val vehicles = listOf(Vehicle(isEgo = true, lane = lane))
+    val vehicles = mapOf(0 to Vehicle(isEgo = true, lane = lane))
 
     val trafficLight =
         TrafficLight(

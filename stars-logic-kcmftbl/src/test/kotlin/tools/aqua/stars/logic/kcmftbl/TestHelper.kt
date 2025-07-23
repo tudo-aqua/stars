@@ -17,15 +17,15 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.logic.kcmftbl.data.BooleanTick
+import tools.aqua.stars.logic.kcmftbl.data.BooleanTickData
 import tools.aqua.stars.logic.kcmftbl.data.TestDifference
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 
 /** Creates ticks and returns first by parsing INT-Lists to Boolean values. */
-fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> =
+fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTickData> =
     phi1.indices
         .associate {
-          TestUnit(it) to BooleanTick(TestUnit(it), listOf(), phi1[it] == 1, phi2[it] == 1)
+          TestUnit(it) to BooleanTickData(TestUnit(it), mapOf(), phi1[it] == 1, phi2[it] == 1)
         }
         .values
         .toList()
@@ -34,7 +34,7 @@ fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> =
  * Creates ticks and returns first by parsing INT-Lists to Boolean values. Phi2 is set to always
  * true
  */
-fun createTicks(phi1: List<Int>): List<BooleanTick> = createTicks(phi1, List(phi1.size) { 1 })
+fun createTicks(phi1: List<Int>): List<BooleanTickData> = createTicks(phi1, List(phi1.size) { 1 })
 
 /** Creates an interval by wrapping the INT-Values into [TestDifference]s. */
 fun createInterval(interval: Pair<Int, Int>): Pair<TestDifference, TestDifference> =

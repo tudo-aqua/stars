@@ -19,13 +19,13 @@ package tools.aqua.stars.core.validation
 
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.AbstractPredicate
-import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.EntityDataType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
 class ManualLabelFile<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val ticksToTest: List<T>) {

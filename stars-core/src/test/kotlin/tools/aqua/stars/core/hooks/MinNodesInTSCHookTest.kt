@@ -33,7 +33,7 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with fail policy OK`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
@@ -51,7 +51,7 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with fail policy SKIP`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
@@ -69,7 +69,7 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with fail policy ABORT`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
@@ -85,7 +85,7 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with #nodes equal to minNodes`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
@@ -103,7 +103,7 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with #nodes greater than minNodes`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
           any("") { any("") {} }
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
@@ -121,16 +121,16 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with #nodes negative`() {
     assertFailsWith<IllegalArgumentException> {
-      MinNodesInTSCHook<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
+      MinNodesInTSCHook<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
           minNodes = -1)
     }
   }
 
   private fun TSCEvaluation<
-      SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>
+      SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>
       .setup():
-      TickCountMetric<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> =
-      TickCountMetric<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+      TickCountMetric<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> =
+      TickCountMetric<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
           .also {
             // Clear hooks to test them individually
             clearHooks()
@@ -138,10 +138,10 @@ class MinNodesInTSCHookTest {
           }
 
   private fun ticks(): Sequence<SimpleTickData> {
-    val entities = mutableListOf<SimpleEntity>()
+    val entities = mutableListOf<SimpleEntityData>()
     val tickDataList = mutableListOf<SimpleTickData>()
 
-    entities.add(SimpleEntity(0))
+    entities.add(SimpleEntityData(0))
 
     return tickDataList.asSequence()
   }

@@ -24,11 +24,11 @@ import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.computeWhile
 import tools.aqua.stars.core.hooks.*
-import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook.Companion.evaluate
+import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
-import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerSegmentHook
+import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerTickHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
-import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
+import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickHook
 import tools.aqua.stars.core.metric.providers.*
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
 import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
@@ -47,7 +47,7 @@ import tools.aqua.stars.core.types.*
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
  * the [TSC]s based on the given [Sequence] of [TickDataType]s. This class implements [Loggable].
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -64,7 +64,7 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 class TSCEvaluation<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -125,17 +125,17 @@ class TSCEvaluation<
 
   /**
    * Holds the results (Map of [PreSegmentEvaluationHook.identifier] to [EvaluationHookResult]) of
-   * the [PreSegmentEvaluationHook]s after calling [runEvaluation] that did not return
+   * the [PreTickEvaluationHook]s after calling [runEvaluation] that did not return
    * [EvaluationHookResult.OK] for each segment identifier.
    */
-  val preSegmentEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
+  val preTickEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
       mutableMapOf() // TODO: String = SegmentIdentifier -> Change to range
 
   /**
-   * Holds a [List] of all [PreSegmentEvaluationHook]s registered by
+   * Holds a [List] of all [PreTickEvaluationHook]s registered by
    * [registerPreSegmentEvaluationHooks].
    */
-  private val preSegmentEvaluationHooks: MutableList<PreSegmentEvaluationHook<E, T, U, D>> =
+  private val preTickEvaluationHooks: MutableList<PreTickEvaluationHook<E, T, U, D>> =
       mutableListOf()
 
   init {
@@ -176,43 +176,43 @@ class TSCEvaluation<
   }
 
   /**
-   * Registers all [PreSegmentEvaluationHook]s to the list of hooks that should be called before the
+   * Registers all [PreTickEvaluationHook]s to the list of hooks that should be called before the
    * evaluation of each segment of data.
-   * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation
+   * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation
    *   proceeds with the next segment.
-   * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
+   * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
    *   canceled at this point but post evaluation steps are performed.
-   * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
+   * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
    *   aborted, an [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
    *
-   * @param preSegmentEvaluationHooks The [PreSegmentEvaluationHook]s that should be registered.
+   * @param preTickEvaluationHooks The [PreTickEvaluationHook]s that should be registered.
    */
   fun registerPreSegmentEvaluationHooks(
-      vararg preSegmentEvaluationHooks: PreSegmentEvaluationHook<E, T, U, D>
+      vararg preTickEvaluationHooks: PreTickEvaluationHook<E, T, U, D>
   ) {
-    this.preSegmentEvaluationHooks.addAll(preSegmentEvaluationHooks)
+    this.preTickEvaluationHooks.addAll(preTickEvaluationHooks)
   }
 
   /**
    * Registers all default hooks to the list of hooks that should be called during evaluation. This
    * includes:
-   * - [MinEntitiesPerSegmentHook] with a minimum of 1 entity per segment.
-   * - [MinTicksPerSegmentHook] with a minimum of 1 tick per segment.
+   * - [MinEntitiesPerTickHook] with a minimum of 1 entity per segment.
+   * - [MinTicksPerTickHook] with a minimum of 1 tick per segment.
    * - [MinNodesInTSCHook] with a minimum of 1 node in each TSC.
    *
-   * The lists of hooks [preTSCEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared
+   * The lists of hooks [preTSCEvaluationHooks] and [preTickEvaluationHooks] are NOT cleared
    * before. [clearHooks] may be called before to clear them.
    */
   fun registerDefaultHooks() {
-    preSegmentEvaluationHooks.add(MinEntitiesPerSegmentHook(minEntities = 1))
-    preSegmentEvaluationHooks.add(MinTicksPerSegmentHook(minTicks = 1))
+    preTickEvaluationHooks.add(MinEntitiesPerTickHook(minEntities = 1))
+    preTickEvaluationHooks.add(MinTicksPerTickHook(minTicks = 1))
     preTSCEvaluationHooks.add(MinNodesInTSCHook(minNodes = 1))
   }
 
   /** Clears all [PreTSCEvaluationHook]s that have been registered. */
   fun clearHooks() {
     preTSCEvaluationHooks.clear()
-    preSegmentEvaluationHooks.clear()
+    preTickEvaluationHooks.clear()
   }
 
   /**
@@ -223,7 +223,7 @@ class TSCEvaluation<
    * @param ticks The [Sequence] of [TickDataType]s to evaluate.
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
    */
-  fun runEvaluation(ticks: Sequence<T>) {
+  fun runEvaluation(ticks: Sequence<T>, bufferSize: Int = 20) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
@@ -238,7 +238,14 @@ class TSCEvaluation<
 
       // Evaluate all ticks
       val evaluationTime = measureTime {
-        val segmentBuffer = mutableListOf<T>()
+
+        //Housekeeping
+        // TODO: Move to utility class?
+        val iterator = ticks.iterator()
+        var firstTick = iterator.next()
+        var lastTick = firstTick
+        var tickCount = 1
+
         if (tscListToEvaluate.isNotEmpty()) {
           tscListToEvaluate.forEach { tsc ->
             // Run the "evaluate" function for all TSCMetricProviders on the current segment
@@ -248,8 +255,15 @@ class TSCEvaluation<
           }
 
           ticks.computeWhile {
-            segmentBuffer.add(it)
-            evaluateSegment(segment = segmentBuffer, tscList = tscListToEvaluate)
+            lastTick.nextTick = it
+            lastTick = it
+
+            if(tickCount == bufferSize) {
+              firstTick = firstTick.nextTick!!
+              firstTick.previousTick = null
+            }
+
+            evaluateTick(tick = lastTick, tscList = tscListToEvaluate)
           }
         }
       }
@@ -271,11 +285,11 @@ class TSCEvaluation<
    * @param tscList The list of [TSC]s to evaluate.
    * @return Whether the evaluation should continue.
    */
-  private fun evaluateSegment(segment: List<T>, tscList: List<TSC<E, T, U, D>>): Boolean {
+  private fun evaluateTick(tick: T, tscList: List<TSC<E, T, U, D>>): Boolean {
     // Evaluate PreSegmentEvaluationHooks
-    preSegmentEvaluationHooks.evaluate(segment).let { (verdict, results) ->
+    preTickEvaluationHooks.evaluate(tick).let { (verdict, results) ->
       if (verdict != null) {
-        preSegmentEvaluationHookResults[segment.toString()] =
+        preTickEvaluationHookResults[tick.toString()] =
             results
                 .map { it.key.identifier to it.value }
                 .toMap() // TODO: Change segment identifier to range
@@ -288,40 +302,35 @@ class TSCEvaluation<
     val segmentEvaluationTime = measureTime {
       // Run the "evaluate" function for all TickMetricProviders on the current tick
       metricProviders.filterIsInstance<TickMetricProvider<E, T, U, D>>().forEach {
-        it.evaluate(segment.last())
-      }
-
-      // Run the "evaluate" function for all SegmentMetricProviders on the current segment
-      metricProviders.filterIsInstance<SegmentMetricProvider<E, T, U, D>>().forEach {
-        it.evaluate(segment)
+        it.evaluate(tick)
       }
 
       val allTSCEvaluationTime = measureTime {
         // Run the evaluation for all TSCs
         tscList.forEach { tsc ->
           val tscEvaluationTime = measureTime {
-            // Evaluate the TSC with the current segment and context.
-            val segmentTSCInstance = tsc.evaluate(segment)
+            // Evaluate the TSC on the current tick.
+            val tscInstance = tsc.evaluate(tick)
 
             // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-            // current segment
+            // current tick
             metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, U, D>>().forEach {
-              it.evaluate(segmentTSCInstance)
+              it.evaluate(tscInstance)
             }
 
             // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
             // current tsc and instance
             metricProviders
                 .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>>()
-                .forEach { it.evaluate(tsc, segmentTSCInstance) }
+                .forEach { it.evaluate(tsc, tscInstance) }
           }
           logFine(
-              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime")
+              "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime")
         }
       }
-      logFine("The evaluation of all TSCs for segment '$segment' took: $allTSCEvaluationTime")
+      logFine("The evaluation of all TSCs for tick '$tick' took: $allTSCEvaluationTime")
     }
-    logFine("The evaluation of segment '$segment' took: $segmentEvaluationTime")
+    logFine("The evaluation of tick '$tick' took: $segmentEvaluationTime")
     ApplicationConstantsHolder.totalSegmentEvaluationTime += segmentEvaluationTime
 
     return true

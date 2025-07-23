@@ -23,15 +23,15 @@ import tools.aqua.stars.core.types.TickDataType
  * This class is used for tests and implements the [TickDataType] interface. It holds two [Boolean]
  * values representing the evaluations of 'phi1' 'phi2'.
  *
- * @property currentTick The current tick.
+ * @property currentTickUnit The current tick.
  * @property entities The [List] of [TestEntity]s.
  * @property phi1 Represents the evaluation results of the formula 'phi1'.
  * @property phi2 Represents the evaluation results of the formula 'phi2'.
  */
 @Suppress("BooleanPropertyNaming")
-class BooleanTick(
-    override var currentTick: TestUnit,
-    override var entities: List<TestEntity>,
+class BooleanTickData(
+    currentTickUnit: TestUnit,
+    entities: Map<Int, TestEntityData>,
     val phi1: Boolean,
     val phi2: Boolean,
-) : TickDataType<TestEntity, BooleanTick, TestUnit, TestDifference>
+) : TickDataType<TestEntityData, BooleanTickData, TestUnit, TestDifference>(currentTickUnit, entities)

@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.EntityDataType
 import tools.aqua.stars.core.types.TickDifference
 
 /**
@@ -48,7 +48,7 @@ fun <D : TickDifference<D>> checkInterval(interval: Pair<D, D>?) {
 // * @param entity2 The second entity.
 // * @throws IllegalArgumentException if the entities are not from the same tick.
 // */
-//fun <E : EntityType<E>> checkTick(entity1: E, entity2: E) {
+//fun <E : EntityType<E, T, U, D>> checkTick(entity1: E, entity2: E) {
 //  require(entity1.tickData == entity2.tickData) {
 //    "The two entities provided as argument are not from same tick."
 //  }

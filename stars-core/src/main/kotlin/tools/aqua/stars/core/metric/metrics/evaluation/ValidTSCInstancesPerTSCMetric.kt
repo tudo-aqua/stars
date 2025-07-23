@@ -54,7 +54,7 @@ import tools.aqua.stars.core.types.*
  * This class implements [Plottable] and plots the distribution and temporal change of valid
  * [TSCInstance]s.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -62,7 +62,7 @@ import tools.aqua.stars.core.types.*
  * @property logger [Logger] instance.
  */
 class ValidTSCInstancesPerTSCMetric<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

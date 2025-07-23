@@ -24,7 +24,7 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /** Constant predicate for always true edges. */
-val CONST_TRUE: ((List<*>) -> Boolean) = { true }
+val CONST_TRUE: ((Any) -> Boolean) = { true }
 
 /** Label of the [TSCNode] built by the [tsc] function. */
 const val ROOT_NODE_LABEL: String = "root"
@@ -32,7 +32,7 @@ const val ROOT_NODE_LABEL: String = "root"
 /**
  * Builds root node. Applies [init] function to [TSCNode].
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -40,7 +40,7 @@ const val ROOT_NODE_LABEL: String = "root"
  * @return The [TSCNode] at the root level of the TSC.
  */
 fun <
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> tsc(

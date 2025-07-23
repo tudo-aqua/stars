@@ -17,10 +17,16 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.EntityDataType
 
-/** Abstract actor data class. */
-sealed class Actor : EntityType<Actor> {
+/**
+ * Abstract actor data class.
+ *
+ * @property id The ID of the actor.
+ */
+sealed class Actor(
+  val id: Int
+) : EntityDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
 
   /**
    * Clones the actor.

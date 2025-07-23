@@ -22,21 +22,30 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * Data class for tick data.
  *
- * @property currentTick Current tick value.
- * @property entities List of all [Actor]s.
+ * @property currentTickUnit Current tick value.
  * @property trafficLights List of all [TrafficLight]s.
  * @property blocks ist of all [Block]s.
  * @property weather The current [WeatherParameters].
  * @property daytime The current [Daytime].
  */
-data class TickData(
-    override val currentTick: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
-    override var entities: List<Actor>,
-    val trafficLights: List<TrafficLight> = emptyList(),
-    val blocks: List<Block> = emptyList(),
-    val weather: WeatherParameters = WeatherParameters(),
-    val daytime: Daytime = Daytime.Noon
-) : TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds> {
+class TickData(
+  currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
+  entities: Map<Int, Actor>,
+  val trafficLights: List<TrafficLight> = emptyList(),
+  val blocks: List<Block> = emptyList(),
+  val weather: WeatherParameters = WeatherParameters(),
+  val daytime: Daytime = Daytime.Noon
+) : TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(currentTickUnit, entities) {
+
+  /** All pedestrians. */
+  val pedestrians: Map<Int, Pedestrian>
+    get() = TODO() //entities.filterIsInstanceTo<Int, Pedestrian>(mutableMapOf<Int, Pedestrian>())
+
+  /** All vehicles. */
+  val vehicles: List<Vehicle> = listOf() //TODO
+
+  /** The ego vehicle. */
+  val ego: Vehicle
 
   init {
     vehicles
@@ -49,25 +58,20 @@ data class TickData(
         }
   }
 
-  /** All pedestrians. */
-  val pedestrians: List<Pedestrian>
-    get() = entities.filterIsInstance<Pedestrian>()
+//  public inline fun <K, V> Map<*, *>.filterValuesIsInstance(): Map<K, V> =
+//    filterValuesIsInstanceTo(mutableMapOf())
 
-  /** All vehicles. */
-  val vehicles: List<Vehicle>
-    get() = entities.filterIsInstance<Vehicle>()
-
-  /** The ego vehicle. */
-  val ego: Vehicle
+//  public inline fun <reified K, reified V, C : MutableMap<in K, in V>> Map<*, *>.filterValuesIsInstanceTo(destination: C): C {
+//    for ((k, v) in this) if (k is K && v is V) destination.put(k, v)
+//    return destination
+//  }
 
   /** Returns all [Vehicle]s in given [Block]. */
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
 
   /** Clones current [TickData]. */
   fun clone(): TickData =
-      TickData(currentTick, entities, trafficLights, blocks, weather, daytime).also {
-        it.entities = entities.map { t -> t.clone(it) }
-      }
+      TickData(currentTickUnit, entities, trafficLights, blocks, weather, daytime)
 
-  override fun toString(): String = "$currentTick"
+  override fun toString(): String = "$currentTickUnit"
 }

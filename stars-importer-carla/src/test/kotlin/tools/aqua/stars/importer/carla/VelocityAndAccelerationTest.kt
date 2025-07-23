@@ -22,7 +22,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import tools.aqua.stars.data.av.*
 import tools.aqua.stars.data.av.dataclasses.Block
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Location
@@ -52,9 +51,9 @@ class VelocityAndAccelerationTest {
     val vehicle3 = Vehicle(location = Location(8.0, 2.0, 10.0), isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    val tickData1 = TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
-    val tickData2 = TickData(currentTick = TickDataUnitSeconds(1.0), entities = listOf(vehicle2))
-    val tickData3 = TickData(currentTick = TickDataUnitSeconds(2.0), entities = listOf(vehicle3))
+    val tickData1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = mapOf(1 to vehicle1))
+    val tickData2 = TickData(currentTickUnit = TickDataUnitSeconds(1.0), entities = mapOf(2 to vehicle2))
+    val tickData3 = TickData(currentTickUnit = TickDataUnitSeconds(2.0), entities = mapOf(3 to vehicle3))
 
     // Vehicle 0 has no previous state. The velocity and acceleration values should be set to 0.0
     updateActorVelocityAndAcceleration(
@@ -72,7 +71,7 @@ class VelocityAndAccelerationTest {
     updateActorVelocityAndAcceleration(
       vehicle = vehicle2,
       previousActor = vehicle1,
-      timeDelta = (tickData2.currentTick - tickData1.currentTick).differenceSeconds)
+      timeDelta = (tickData2.currentTickUnit - tickData1.currentTickUnit).differenceSeconds)
 
     // Velocity = ((3, 4, 5) - (0, 0, 0)) / 1 = (3, 4, 5)
     assertEquals(3.0, vehicle2.velocity.x)
@@ -88,7 +87,7 @@ class VelocityAndAccelerationTest {
     updateActorVelocityAndAcceleration(
       vehicle = vehicle3,
       previousActor = vehicle2,
-      timeDelta = (tickData3.currentTick - tickData2.currentTick).differenceSeconds)
+      timeDelta = (tickData3.currentTickUnit - tickData2.currentTickUnit).differenceSeconds)
 
     // Velocity = ((8, 2, 10) - (3, 4, 5)) / 1 = (5, -2, 5)
     assertEquals(5.0, vehicle3.velocity.x)
@@ -159,8 +158,8 @@ class VelocityAndAccelerationTest {
     val vehicle2 = Vehicle(isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    val tickData1 = TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
-    val tickData2 = TickData(currentTick = TickDataUnitSeconds(-1.0), entities = listOf(vehicle2))
+    val tickData1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = mapOf(1 to vehicle1))
+    val tickData2 = TickData(currentTickUnit = TickDataUnitSeconds(-1.0), entities = mapOf(2 to vehicle2))
 
     // The time difference between Vehicle2 and Vehicle1 is -1.0. This should throw an
     // IllegalStateException
@@ -168,7 +167,7 @@ class VelocityAndAccelerationTest {
       updateActorVelocityAndAcceleration(
         vehicle = vehicle2,
         previousActor = vehicle1,
-        timeDelta = (tickData2.currentTick - tickData1.currentTick).differenceSeconds)
+        timeDelta = (tickData2.currentTickUnit - tickData1.currentTickUnit).differenceSeconds)
     }
   }
 

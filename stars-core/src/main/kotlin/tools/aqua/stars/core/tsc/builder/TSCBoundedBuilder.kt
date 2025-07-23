@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
 /**
  * Class to assist in creating bounded nodes in the DSL.
  *
- * @param E [EntityType].
+ * @param E [EntityDataType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -35,7 +35,7 @@ import tools.aqua.stars.core.types.*
  * @property bounds (Default: 0 to 0) Bounds of the node.
  */
 open class TSCBoundedBuilder<
-    E : EntityType<E>,
+    E : EntityDataType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -62,18 +62,18 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for edge conditions.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param condition The edge condition.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.condition(
-      condition: (List<T>) -> Boolean
+      condition: (T) -> Boolean
   ) {
     this.condition = condition
   }
@@ -81,18 +81,18 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for a value function.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param valueFunction The value function.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.valueFunction(
-      valueFunction: (List<T>) -> Any
+      valueFunction: (T) -> Any
   ) {
     this.valueFunction = valueFunction
   }
@@ -100,7 +100,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for the projections block.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -108,7 +108,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] that is connected to a projections' node.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.projections(
@@ -118,7 +118,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for the monitors block.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -126,7 +126,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] that is connected to a monitors' node.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.monitors(
@@ -136,7 +136,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for an edge with BoundedNode.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -146,7 +146,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the given bounds.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.bounded(
@@ -163,7 +163,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for an edge with BoundedNode with the limits of (1,1).
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -172,7 +172,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (1,1).
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.exclusive(
@@ -188,7 +188,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for an edge with BoundedNode with the limits of (0,#Edges).
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -197,7 +197,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (0,#Edges).
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.optional(
@@ -213,7 +213,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for an edge with BoundedNode with the limits of (1,#Edges).
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -222,7 +222,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (1,#Edges).
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.any(
@@ -238,7 +238,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges).
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -247,7 +247,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] with the specific bounds (#Edges,#Edges).
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.all(
@@ -263,7 +263,7 @@ open class TSCBoundedBuilder<
   /**
    * DSL function for an edge with LeafNode.
    *
-   * @param E [EntityType].
+   * @param E [EntityDataType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -272,7 +272,7 @@ open class TSCBoundedBuilder<
    * @return The [TSCEdge] that is connected to a leaf node.
    */
   fun <
-      E : EntityType<E>,
+      E : EntityDataType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.leaf(
