@@ -105,7 +105,7 @@ tasks.test {
   testLogging { events(FAILED, PASSED, SKIPPED) }
 }
 
-kotlin { jvmToolchain(17) }
+kotlin { jvmToolchain(21) }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
