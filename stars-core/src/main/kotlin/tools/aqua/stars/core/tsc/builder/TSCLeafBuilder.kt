@@ -64,9 +64,7 @@ open class TSCLeafBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.condition(
-      condition: (T) -> Boolean
-  ) {
+      D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
     this.condition = condition
   }
 
@@ -83,9 +81,7 @@ open class TSCLeafBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.valueFunction(
-      valueFunction: (T) -> Any
-  ) {
+      D : TickDifference<D>> TSCLeafBuilder<E, T, U, D>.valueFunction(valueFunction: (T) -> Any) {
     this.valueFunction = valueFunction
   }
 

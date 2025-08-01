@@ -22,8 +22,8 @@ import tools.aqua.stars.core.hooks.PreTickEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreTickEvaluationHook] that checks if a tick contains at least [minEntities] [EntityType]s
- * in every tick.
+ * [PreTickEvaluationHook] that checks if a tick contains at least [minEntities] [EntityType]s in
+ * every tick.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -45,8 +45,7 @@ open class MinEntitiesPerTickHook<
     PreTickEvaluationHook<E, T, U, D>(
         identifier = "MinEntitiesPerSegmentHook",
         evaluationFunction = { tick ->
-          if (tick.entities.size >= minEntities) EvaluationHookResult.OK
-          else failPolicy
+          if (tick.entities.size >= minEntities) EvaluationHookResult.OK else failPolicy
         }) {
   init {
     require(minEntities >= 0) { "minEntities must be >= 0" }

@@ -22,7 +22,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.*
-import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 
 /** This class tests the CMFTBL operator [maxPrevalence]. */
 class TestMaxPrevalence {

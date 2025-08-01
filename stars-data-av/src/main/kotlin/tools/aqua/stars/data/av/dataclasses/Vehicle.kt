@@ -82,18 +82,18 @@ class Vehicle(
 
   override fun clone(newTickData: TickData): Actor =
       Vehicle(
-              id,
-              positionOnLane,
-              lane,
-              typeId,
-              vehicleType,
-              isEgo,
-              location,
-              forwardVector,
-              rotation,
-              velocity,
-              acceleration,
-              angularVelocity)
+          id,
+          positionOnLane,
+          lane,
+          typeId,
+          vehicleType,
+          isEgo,
+          location,
+          forwardVector,
+          rotation,
+          velocity,
+          acceleration,
+          angularVelocity)
 
   override fun toString(): String =
       "Vehicle(positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"

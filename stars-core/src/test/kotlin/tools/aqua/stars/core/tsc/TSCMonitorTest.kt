@@ -186,5 +186,5 @@ class TSCMonitorTest {
   }
 
   private fun ticks(): Sequence<SimpleTickData> =
-    sequenceOf(SimpleTickData(SimpleTickDataUnit(0), LinkedHashSet(listOf(SimpleEntity(0)))))
+      sequenceOf(SimpleTickData(SimpleTickDataUnit(0), LinkedHashSet(listOf(SimpleEntity(0)))))
 }

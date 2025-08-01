@@ -57,8 +57,8 @@ class TotalTickDifferenceMetric<
    *
    * @param tick The [TickDataType] for which the total [TickDifference] should be tracked.
    * @return The current total [TickDifference] of all analyzed ticks.
-   * @throws IllegalStateException If the [TickDifference] between the previous and the current [TickDataType]
-   *   is not positive.
+   * @throws IllegalStateException If the [TickDifference] between the previous and the current
+   *   [TickDataType] is not positive.
    */
   override fun evaluate(tick: T): Optional<D> {
     // The Segment has at least two TickData objects from which a TickDifference can be calculated.

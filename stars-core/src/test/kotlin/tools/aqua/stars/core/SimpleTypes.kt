@@ -24,8 +24,7 @@ class SimpleEntity(
     val id: Int = 0,
 ) : EntityType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
   override fun equals(other: Any?): Boolean {
-    return if (other !is SimpleEntity) false
-    else id == (other).id
+    return if (other !is SimpleEntity) false else id == (other).id
   }
 
   override fun hashCode(): Int = id
@@ -33,9 +32,11 @@ class SimpleEntity(
 
 /** Simple tick data. */
 class SimpleTickData(
-  currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
-  entities: LinkedHashSet<SimpleEntity> = LinkedHashSet()
-) : TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(currentTickUnit, entities) {
+    currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
+    entities: LinkedHashSet<SimpleEntity> = LinkedHashSet()
+) :
+    TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
+        currentTickUnit, entities) {
   override fun toString(): String = "$currentTickUnit"
 }
 

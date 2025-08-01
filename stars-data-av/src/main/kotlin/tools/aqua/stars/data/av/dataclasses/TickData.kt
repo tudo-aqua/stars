@@ -29,20 +29,22 @@ import tools.aqua.stars.core.types.TickDataType
  * @property daytime The current [Daytime].
  */
 class TickData(
-  currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
-  entities: Set<Actor>,
-  val trafficLights: List<TrafficLight> = emptyList(),
-  val blocks: List<Block> = emptyList(),
-  val weather: WeatherParameters = WeatherParameters(),
-  val daytime: Daytime = Daytime.Noon
-) : TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(currentTickUnit, entities) {
+    currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
+    entities: Set<Actor>,
+    val trafficLights: List<TrafficLight> = emptyList(),
+    val blocks: List<Block> = emptyList(),
+    val weather: WeatherParameters = WeatherParameters(),
+    val daytime: Daytime = Daytime.Noon
+) :
+    TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(
+        currentTickUnit, entities) {
 
   /** All pedestrians. */
   val pedestrians: Map<Int, Pedestrian>
-    get() = TODO() //entities.filterIsInstanceTo<Int, Pedestrian>(mutableMapOf<Int, Pedestrian>())
+    get() = TODO() // entities.filterIsInstanceTo<Int, Pedestrian>(mutableMapOf<Int, Pedestrian>())
 
   /** All vehicles. */
-  val vehicles: List<Vehicle> = listOf() //TODO
+  val vehicles: List<Vehicle> = listOf() // TODO
 
   /** The ego vehicle. */
   val ego: Vehicle
@@ -58,13 +60,14 @@ class TickData(
         }
   }
 
-//  public inline fun <K, V> Map<*, *>.filterValuesIsInstance(): Map<K, V> =
-//    filterValuesIsInstanceTo(mutableMapOf())
+  //  public inline fun <K, V> Map<*, *>.filterValuesIsInstance(): Map<K, V> =
+  //    filterValuesIsInstanceTo(mutableMapOf())
 
-//  public inline fun <reified K, reified V, C : MutableMap<in K, in V>> Map<*, *>.filterValuesIsInstanceTo(destination: C): C {
-//    for ((k, v) in this) if (k is K && v is V) destination.put(k, v)
-//    return destination
-//  }
+  //  public inline fun <reified K, reified V, C : MutableMap<in K, in V>> Map<*,
+  // *>.filterValuesIsInstanceTo(destination: C): C {
+  //    for ((k, v) in this) if (k is K && v is V) destination.put(k, v)
+  //    return destination
+  //  }
 
   /** Returns all [Vehicle]s in given [Block]. */
   fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }

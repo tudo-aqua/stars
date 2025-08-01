@@ -24,7 +24,8 @@ import tools.aqua.stars.core.types.EntityType
  *
  * @property id The ID of this entity.
  */
-class TestEntity(val id: Int) : EntityType<TestEntity, BooleanTickData, TestUnit, TestDifference>() {
+class TestEntity(val id: Int) :
+    EntityType<TestEntity, BooleanTickData, TestUnit, TestDifference>() {
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is TestEntity) return false

@@ -35,10 +35,8 @@ open class PreTickEvaluationHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    identifier: String,
-    evaluationFunction: (T) -> EvaluationHookResult
-) : EvaluationHook<T>(identifier = identifier, evaluationFunction = evaluationFunction) {
+    D : TickDifference<D>>(identifier: String, evaluationFunction: (T) -> EvaluationHookResult) :
+    EvaluationHook<T>(identifier = identifier, evaluationFunction = evaluationFunction) {
   companion object {
     /**
      * Executes all [PreTickEvaluationHook]s on the [List] of [TickDataType]s and returns an

@@ -41,7 +41,7 @@ fun <
     phi: (T) -> Boolean
 ): Boolean = until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
-///**
+/// **
 // * CMFTBL implementation of the 'eventually' operator for one entity i.e. "In a future tick in the
 // * interval phi holds at least once".
 // *
@@ -54,7 +54,7 @@ fun <
 // * @param interval Observation interval.
 // * @param phi Predicate.
 // */
-//fun <
+// fun <
 //    E1 : E,
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
@@ -63,11 +63,12 @@ fun <
 //    entity: E1,
 //    interval: Pair<D, D>? = null,
 //    phi: (E1) -> Boolean
-//): Boolean =
+// ): Boolean =
 //    until(entity = entity, interval = interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
-///**
-// * CMFTBL implementation of the 'eventually' operator for two entities i.e. "In a future tick in the
+/// **
+// * CMFTBL implementation of the 'eventually' operator for two entities i.e. "In a future tick in
+// the
 // * interval phi holds at least once".
 // *
 // * @param E1 [EntityType].
@@ -81,7 +82,7 @@ fun <
 // * @param interval Observation interval.
 // * @param phi Predicate.
 // */
-//fun <
+// fun <
 //    E1 : E,
 //    E2 : E,
 //    E : EntityType<E, T, U, D>,
@@ -92,7 +93,7 @@ fun <
 //    entity2: E2,
 //    interval: Pair<D, D>? = null,
 //    phi: (E1, E2) -> Boolean
-//): Boolean =
+// ): Boolean =
 //    until(
 //        entity1 = entity1,
 //        entity2 = entity2,

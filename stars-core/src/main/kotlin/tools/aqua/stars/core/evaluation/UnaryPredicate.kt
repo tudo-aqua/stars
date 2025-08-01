@@ -48,32 +48,26 @@ class UnaryPredicate<
    * Check if this predicate holds (i.e., is true) in the given context.
    *
    * @param tick The current tick that is beeing evaluated.
-   *    * @param tickUnit The time stamp to evaluate this predicate for.
+   *     * @param tickUnit The time stamp to evaluate this predicate for.
+   *
    * @param entity The entity to evaluate this predicate for.
-   * @return Whether the predicate holds in the given context at the given [tick] for the
-   *   given [entity].
+   * @return Whether the predicate holds in the given context at the given [tick] for the given
+   *   [entity].
    */
-  fun holds(
-    tick: T,
-    tickUnit: U,
-    entity: E1
-  ): Boolean = TODO("Search for tickUnit in tick")
-      //ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it, entity) } ?: false
+  fun holds(tick: T, tickUnit: U, entity: E1): Boolean = TODO("Search for tickUnit in tick")
+
+  // ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it, entity) } ?: false
 
   /**
    * Check if this predicate holds (i.e., is true) in the given context.
    *
    * @param tick The tick to evaluate this predicate for.
    * @param entity The entity to evaluate this predicate for.
-   * @return Whether the predicate holds in the given context at the given [tick] for the
-   *   given [entity].
+   * @return Whether the predicate holds in the given context at the given [tick] for the given
+   *   [entity].
    */
-  fun holds(
-    tick: T,
-    entity: E1
-  ): Boolean  =
-        this.kClass.isInstance(entity) &&
-        this.eval(tick, this.kClass.cast(entity))
+  fun holds(tick: T, entity: E1): Boolean =
+      this.kClass.isInstance(entity) && this.eval(tick, this.kClass.cast(entity))
 
   /** Creates a unary tick predicate. * */
   companion object {

@@ -20,7 +20,8 @@ package tools.aqua.stars.core.types
 /**
  * Class storing data of dynamic objects (entities).
  *
- * The [equals] and [hashCode] functions must be implemented in order to track entities across ticks with altered dynamic values.
+ * The [equals] and [hashCode] functions must be implemented in order to track entities across ticks
+ * with altered dynamic values.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -37,5 +38,6 @@ abstract class EntityType<
     internal set
 
   abstract override fun equals(other: Any?): Boolean
+
   abstract override fun hashCode(): Int
 }

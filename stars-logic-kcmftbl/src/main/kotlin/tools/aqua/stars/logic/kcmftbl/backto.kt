@@ -48,8 +48,9 @@ fun <
         phi1 = { td -> !phi1(td) },
         phi2 = { td -> !phi2(td) })
 
-///**
-// * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi 2
+/// **
+// * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi
+// 2
 // * held, at least since (and including) phi1 held, or forever".
 // *
 // * @param E1 [EntityType].
@@ -62,8 +63,8 @@ fun <
 // * @param phi1 First predicate.
 // * @param phi2 Second predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
@@ -73,15 +74,16 @@ fun <
 //    interval: Pair<D, D>? = null,
 //    phi1: (E1) -> Boolean,
 //    phi2: (E1) -> Boolean
-//): Boolean =
+// ): Boolean =
 //    !since(
 //        entity.tickData,
 //        interval,
 //        phi1 = { td -> td.getEntityById(entity.id)?.let { !phi1(it as E1) } != false },
 //        phi2 = { td -> td.getEntityById(entity.id)?.let { !phi2(it as E1) } != false })
 
-///**
-// * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi 2
+/// **
+// * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi
+// 2
 // * held, at least since (and including) phi1 held, or forever".
 // *
 // * @param E1 [EntityType].
@@ -96,8 +98,8 @@ fun <
 // * @param phi1 First predicate.
 // * @param phi2 Second predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E2 : E,
 //    E : EntityType<E, T, U, D>,
@@ -109,7 +111,7 @@ fun <
 //    interval: Pair<D, D>? = null,
 //    phi1: (E1, E2) -> Boolean,
 //    phi2: (E1, E2) -> Boolean
-//): Boolean {
+// ): Boolean {
 //  checkTick(entity1, entity2)
 //  return !since(
 //      entity1.tickData,
@@ -124,4 +126,4 @@ fun <
 //            (td.getEntityById(entity1.id) ?: return@since true) as E1,
 //            (td.getEntityById(entity2.id) ?: return@since true) as E2)
 //      })
-//}
+// }

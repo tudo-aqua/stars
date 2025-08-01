@@ -17,8 +17,8 @@
 
 package tools.aqua.stars.logic.kcmftbl.data
 
-import tools.aqua.stars.core.types.TickDataType
 import java.util.LinkedHashSet
+import tools.aqua.stars.core.types.TickDataType
 
 /**
  * This class is used for tests and implements the [TickDataType] interface. It holds two [Boolean]
@@ -31,8 +31,8 @@ import java.util.LinkedHashSet
  */
 @Suppress("BooleanPropertyNaming")
 class BooleanTickData(
-  currentTickUnit: TestUnit,
-  entities: LinkedHashSet<TestEntity>,
-  val phi1: Boolean,
-  val phi2: Boolean,
+    currentTickUnit: TestUnit,
+    entities: LinkedHashSet<TestEntity>,
+    val phi1: Boolean,
+    val phi2: Boolean,
 ) : TickDataType<TestEntity, BooleanTickData, TestUnit, TestDifference>(currentTickUnit, entities)

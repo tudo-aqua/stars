@@ -60,8 +60,9 @@ fun <
   //  return phi(nextTick)
 }
 
-///**
-// * CMFTBL implementation of the 'next' operator for one entity i.e. "In the next tick phi holds and
+/// **
+// * CMFTBL implementation of the 'next' operator for one entity i.e. "In the next tick phi holds
+// and
 // * the tick is in the interval".
 // *
 // * @param E1 [EntityType].
@@ -73,8 +74,8 @@ fun <
 // * @param interval Observation interval.
 // * @param phi Predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
@@ -83,13 +84,13 @@ fun <
 //    entity: E1,
 //    interval: Pair<D, D>? = null,
 //    phi: (E1) -> Boolean
-//): Boolean =
+// ): Boolean =
 //    next(
 //        tickData = entity.tickData,
 //        interval = interval,
 //        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
 
-///**
+/// **
 // * CMFTBL implementation of the 'next' operator for two entities i.e. "In the next tick phi holds
 // * and the tick is in the interval".
 // *
@@ -104,8 +105,8 @@ fun <
 // * @param interval Observation interval.
 // * @param phi Predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E2 : E,
 //    E : EntityType<E, T, U, D>,
@@ -116,7 +117,7 @@ fun <
 //    entity2: E2,
 //    interval: Pair<D, D>? = null,
 //    phi: (E1, E2) -> Boolean
-//): Boolean {
+// ): Boolean {
 //  checkTick(entity1, entity2)
 //  return next(
 //      tickData = entity1.tickData,
@@ -126,4 +127,4 @@ fun <
 //            (td.getEntityById(entity1.id) ?: return@next false) as E1,
 //            (td.getEntityById(entity2.id) ?: return@next false) as E2)
 //      })
-//}
+// }

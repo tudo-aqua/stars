@@ -39,8 +39,7 @@ sealed class TSCBuilder<
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
   /** Holds all monitors of the node. */
-  protected val monitorMap: MutableMap<String, (T) -> Boolean> =
-      mutableMapOf()
+  protected val monitorMap: MutableMap<String, (T) -> Boolean> = mutableMapOf()
 
   /** Holds the optional projections. */
   protected var projections: Map<String, Boolean>? = null

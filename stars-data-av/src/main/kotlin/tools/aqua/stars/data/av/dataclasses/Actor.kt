@@ -24,9 +24,8 @@ import tools.aqua.stars.core.types.EntityType
  *
  * @property id The ID of the actor.
  */
-sealed class Actor(
-  val id: Int
-) : EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
+sealed class Actor(val id: Int) :
+    EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
 
   /**
    * Clones the actor.

@@ -49,7 +49,8 @@ class NullaryPredicate<
       tick: T,
       tickUnit: U,
   ): Boolean = TODO("Search for tickUnit in tick")
-    //ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it) } ?: false
+
+  // ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it) } ?: false
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.

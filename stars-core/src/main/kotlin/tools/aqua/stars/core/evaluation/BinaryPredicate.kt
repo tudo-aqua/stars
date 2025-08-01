@@ -53,16 +53,13 @@ class BinaryPredicate<
    * @param tickUnit The time stamp to evaluate this predicate for.
    * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
-   * @return Whether the predicate holds in the given context at the given [tick] for the
-   *   given [entity1] and [entity2]. Returns false if the [tick] is not in the context.
+   * @return Whether the predicate holds in the given context at the given [tick] for the given
+   *   [entity1] and [entity2]. Returns false if the [tick] is not in the context.
    */
-  fun holds(
-      tick: T,
-      tickUnit: U,
-      entity1: E1,
-      entity2: E2
-  ): Boolean = TODO("Search for tickUnit in tick")
-    // ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it, entity1, entity2) } ?: false
+  fun holds(tick: T, tickUnit: U, entity1: E1, entity2: E2): Boolean =
+      TODO("Search for tickUnit in tick")
+
+  // ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it, entity1, entity2) } ?: false
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
@@ -72,17 +69,11 @@ class BinaryPredicate<
    * @param entity2 The second entity to evaluate this predicate for.
    * @return Whether the predicate holds for the current tick for the given [entity1] and [entity2].
    */
-  fun holds(
-    tick: T,
-    entity1: E1,
-    entity2: E2
-  ): Boolean =
-    entity1 != entity2 &&
-        this.kClasses.first.isInstance(entity1) &&
-        this.kClasses.second.isInstance(entity2) &&
-        this.eval(
-          tick, this.kClasses.first.cast(entity1), this.kClasses.second.cast(entity2)
-        )
+  fun holds(tick: T, entity1: E1, entity2: E2): Boolean =
+      entity1 != entity2 &&
+          this.kClasses.first.isInstance(entity1) &&
+          this.kClasses.second.isInstance(entity2) &&
+          this.eval(tick, this.kClasses.first.cast(entity1), this.kClasses.second.cast(entity2))
 
   /** Creates a binary tick predicate in this context. */
   companion object {
@@ -108,9 +99,9 @@ class BinaryPredicate<
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(
-      name: String,
-      kClasses: Pair<KClass<E1>, KClass<E2>>,
-      eval: (T, E1, E2) -> Boolean,
+        name: String,
+        kClasses: Pair<KClass<E1>, KClass<E2>>,
+        eval: (T, E1, E2) -> Boolean,
     ): BinaryPredicate<E1, E2, E, T, U, D> = BinaryPredicate(name, kClasses, eval)
   }
 }

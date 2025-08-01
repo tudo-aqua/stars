@@ -69,7 +69,7 @@ fun <
   //  return false
 }
 
-///**
+/// **
 // * CMFTBL implementation of the 'until' operator for one entity i.e. "In all future ticks in the
 // * interval phi 1 holds, at least until phi 2 holds".
 // *
@@ -83,8 +83,8 @@ fun <
 // * @param phi1 First predicate.
 // * @param phi2 Second predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
@@ -94,14 +94,14 @@ fun <
 //    interval: Pair<D, D>? = null,
 //    phi1: (E1) -> Boolean,
 //    phi2: (E1) -> Boolean
-//): Boolean =
+// ): Boolean =
 //    until(
 //        tickData = entity.tickData,
 //        interval = interval,
 //        phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } == true },
 //        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } == true })
 
-///**
+/// **
 // * CMFTBL implementation of the 'until' operator for two entities i.e. "In all future ticks in the
 // * interval phi 1 holds, at least until phi 2 holds".
 // *
@@ -117,8 +117,8 @@ fun <
 // * @param phi1 First predicate.
 // * @param phi2 Second predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E2 : E,
 //    E : EntityType<E, T, U, D>,
@@ -130,7 +130,7 @@ fun <
 //    interval: Pair<D, D>? = null,
 //    phi1: (E1, E2) -> Boolean,
 //    phi2: (E1, E2) -> Boolean
-//): Boolean {
+// ): Boolean {
 //  checkTick(entity1, entity2)
 //  return until(
 //      tickData = entity1.tickData,
@@ -145,4 +145,4 @@ fun <
 //            (td.getEntityById(entity1.id) ?: return@until false) as E1,
 //            (td.getEntityById(entity2.id) ?: return@until false) as E2)
 //      })
-//}
+// }

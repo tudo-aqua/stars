@@ -72,9 +72,7 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.condition(
-      condition: (T) -> Boolean
-  ) {
+      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
     this.condition = condition
   }
 

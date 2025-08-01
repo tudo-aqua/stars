@@ -24,8 +24,8 @@ import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.computeWhile
 import tools.aqua.stars.core.hooks.*
-import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
+import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerTickHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickHook
@@ -178,8 +178,8 @@ class TSCEvaluation<
   /**
    * Registers all [PreTickEvaluationHook]s to the list of hooks that should be called before the
    * evaluation of each segment of data.
-   * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation
-   *   proceeds with the next segment.
+   * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation proceeds
+   *   with the next segment.
    * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
    *   canceled at this point but post evaluation steps are performed.
    * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
@@ -200,8 +200,8 @@ class TSCEvaluation<
    * - [MinTicksPerTickHook] with a minimum of 1 tick per segment.
    * - [MinNodesInTSCHook] with a minimum of 1 node in each TSC.
    *
-   * The lists of hooks [preTSCEvaluationHooks] and [preTickEvaluationHooks] are NOT cleared
-   * before. [clearHooks] may be called before to clear them.
+   * The lists of hooks [preTSCEvaluationHooks] and [preTickEvaluationHooks] are NOT cleared before.
+   * [clearHooks] may be called before to clear them.
    */
   fun registerDefaultHooks() {
     preTickEvaluationHooks.add(MinEntitiesPerTickHook(minEntities = 1))
@@ -239,7 +239,7 @@ class TSCEvaluation<
       // Evaluate all ticks
       val evaluationTime = measureTime {
 
-        //Housekeeping
+        // Housekeeping
         // TODO: Move to utility class?
         val iterator = ticks.iterator()
         var firstTick = iterator.next()
@@ -258,7 +258,7 @@ class TSCEvaluation<
             lastTick.nextTick = it
             lastTick = it
 
-            if(tickCount == bufferSize) {
+            if (tickCount == bufferSize) {
               firstTick = firstTick.nextTick!!
               firstTick.previousTick = null
             }

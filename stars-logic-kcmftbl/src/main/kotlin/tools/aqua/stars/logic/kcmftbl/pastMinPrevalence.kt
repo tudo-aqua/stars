@@ -70,7 +70,7 @@ fun <
   //  return trueCount >= tickCount * percentage
 }
 
-///**
+/// **
 // * CMFTBL implementation of the 'minPrevalence' operator for one entity i.e. "In all past ticks in
 // * the interval phi holds for at least ([percentage]*100)% of the ticks in the interval".
 // *
@@ -84,8 +84,8 @@ fun <
 // * @param interval Observation interval.
 // * @param phi Predicate.
 // */
-//@Suppress("UNCHECKED_CAST")
-//fun <
+// @Suppress("UNCHECKED_CAST")
+// fun <
 //    E1 : E,
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
@@ -95,15 +95,16 @@ fun <
 //    percentage: Double,
 //    interval: Pair<D, D>? = null,
 //    phi: (E1) -> Boolean
-//): Boolean =
+// ): Boolean =
 //    pastMinPrevalence(
 //        tickData = entity.tickData,
 //        percentage = percentage,
 //        interval = interval,
 //        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
 
-///**
-// * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. "In all past ticks in
+/// **
+// * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. "In all past ticks
+// in
 // * the interval phi holds for at least ([percentage]*100)% of the ticks in the interval".
 // *
 // * @param E1 [EntityType].
@@ -118,8 +119,8 @@ fun <
 // * @param interval Observation interval.
 // * @param phi Predicate.
 // */
-//@Suppress("UNCHECKED_CAST", "DuplicatedCode")
-//fun <
+// @Suppress("UNCHECKED_CAST", "DuplicatedCode")
+// fun <
 //    E1 : E,
 //    E2 : E,
 //    E : EntityType<E, T, U, D>,
@@ -131,7 +132,7 @@ fun <
 //    percentage: Double,
 //    interval: Pair<D, D>? = null,
 //    phi: (E1, E2) -> Boolean
-//): Boolean {
+// ): Boolean {
 //  require(entity1.tickData == entity2.tickData) {
 //    "the two entities provided as argument are not from same tick"
 //  }
@@ -145,4 +146,4 @@ fun <
 //        if (pastEntity1 == null || pastEntity2 == null) false
 //        else phi(pastEntity1 as E1, pastEntity2 as E2)
 //      })
-//}
+// }
