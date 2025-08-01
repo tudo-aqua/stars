@@ -22,21 +22,21 @@ package tools.aqua.stars.core.types
  * Global/Static data should be stored directly in this class, dynamic entities are held in [entities].
  * The current timestamp is represented by [currentTickUnit].
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  *
  * @property currentTickUnit The current [TickUnit].
- * @property entities List of [EntityDataType]s in tick data.
+ * @property entities List of [EntityType]s in tick data.
  */
 abstract class TickDataType<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> (
       val currentTickUnit: U,
-      val entities: Map<Int, E> = HashMap()
+      val entities: Set<E> = LinkedHashSet()
     ) {
   /** The next [TickDataType] in the sequence. */
   var nextTick: T? = null
@@ -70,11 +70,10 @@ abstract class TickDataType<
   val sequenceLength: Int
     get() = numPredecessors + numSuccessors + 1
 
-  /**
-   * Retrieves [EntityDataType] from [entities] by given [entityID].
-   *
-   * @param entityID Entity identifier.
-   * @return The [EntityDataType] with the ID [entityID] if existing. Null otherwise.
-   */
-  fun getEntityDataById(entityID: Int): E? = entities.getOrDefault(entityID, null)
+  init {
+    entities.forEach {
+      @Suppress("UNCHECKED_CAST")
+      it.currentTick = this as T
+    }
+  }
 }

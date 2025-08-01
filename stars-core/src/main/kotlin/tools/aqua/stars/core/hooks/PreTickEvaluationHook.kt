@@ -23,7 +23,7 @@ import tools.aqua.stars.core.types.*
  * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
  * evaluation of a segment of data.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -32,7 +32,7 @@ import tools.aqua.stars.core.types.*
  *   data.
  */
 open class PreTickEvaluationHook<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -44,14 +44,14 @@ open class PreTickEvaluationHook<
      * Executes all [PreTickEvaluationHook]s on the [List] of [TickDataType]s and returns an
      * [EvaluationHookResult] for every [PreTickEvaluationHook].
      *
-     * @param E [EntityDataType].
+     * @param E [EntityType].
      * @param T [TickDataType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param segment The list of [TickDataType]s to evaluate.
      */
     fun <
-        E : EntityDataType<E, T, U, D>,
+        E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> MutableList<PreTickEvaluationHook<E, T, U, D>>.evaluate(

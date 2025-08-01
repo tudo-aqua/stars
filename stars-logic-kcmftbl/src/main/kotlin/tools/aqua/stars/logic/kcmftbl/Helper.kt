@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.core.types.EntityDataType
+import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDifference
 
 /**

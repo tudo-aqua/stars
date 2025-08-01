@@ -29,7 +29,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated node labels on same level throwing exception`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         all("root") {
           projections { projection("all") }
 
@@ -44,7 +44,7 @@ class TSCDuplicatedLabelsTest {
   /** Test duplicated node labels on different levels throwing no exception. */
   @Test
   fun `Test duplicated node labels on different levels throwing no exception`() {
-    tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+    tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
       all("root") {
         projections { projection("all") }
 
@@ -59,7 +59,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated projection labels on same level throwing exception`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         all("root") {
           projections {
             projection("P1")
@@ -74,7 +74,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated projection labels on same level throwing exception 2`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         all("root") {
           projections {
             projection("P1")
@@ -91,7 +91,7 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated monitor labels on same level throwing exception`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
         all("root") {
           monitors {
             monitor("monitor1") { _ -> true }
@@ -105,7 +105,7 @@ class TSCDuplicatedLabelsTest {
   /** Test duplicated monitor labels on different levels throwing no exception. */
   @Test
   fun `Test duplicated monitor labels on different levels throwing no exception`() {
-    tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+    tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
       all("root") {
         monitors { monitor("monitor1") { _ -> true } }
 

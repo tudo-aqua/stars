@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * This class implements the [Serializable] interface. It serializes the [totalTickDifference] for
  * all analyzed ticks.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -42,7 +42,7 @@ import tools.aqua.stars.core.types.*
  */
 @Suppress("unused")
 class TotalTickDifferenceMetric<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

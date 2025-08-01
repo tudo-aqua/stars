@@ -30,7 +30,7 @@ import tools.aqua.stars.core.types.TickDataType
  */
 class TickData(
   currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
-  entities: Map<Int, Actor>,
+  entities: Set<Actor>,
   val trafficLights: List<TrafficLight> = emptyList(),
   val blocks: List<Block> = emptyList(),
   val weather: WeatherParameters = WeatherParameters(),

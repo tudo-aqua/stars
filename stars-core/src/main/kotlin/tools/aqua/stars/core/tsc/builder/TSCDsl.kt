@@ -32,7 +32,7 @@ const val ROOT_NODE_LABEL: String = "root"
 /**
  * Builds root node. Applies [init] function to [TSCNode].
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -40,7 +40,7 @@ const val ROOT_NODE_LABEL: String = "root"
  * @return The [TSCNode] at the root level of the TSC.
  */
 fun <
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> tsc(

@@ -23,7 +23,7 @@ import tools.aqua.stars.core.types.*
  * CMFTBL implementation of the 'since' operator i.e. "In all previous ticks in the interval phi 1
  * held, since phi 2 held".
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @param phi2 Second predicate.
  */
 fun <
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> since(

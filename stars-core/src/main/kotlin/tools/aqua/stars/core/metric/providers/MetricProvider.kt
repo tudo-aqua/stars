@@ -22,13 +22,13 @@ import tools.aqua.stars.core.types.*
 /**
  * The [MetricProvider] interface is the base interface which all metrics are implementing.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 interface MetricProvider<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>

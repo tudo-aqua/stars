@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-import tools.aqua.stars.core.types.EntityDataType
+import tools.aqua.stars.core.types.EntityType
 
 /**
  * Abstract actor data class.
@@ -26,7 +26,7 @@ import tools.aqua.stars.core.types.EntityDataType
  */
 sealed class Actor(
   val id: Int
-) : EntityDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
+) : EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
 
   /**
    * Clones the actor.
@@ -34,4 +34,12 @@ sealed class Actor(
    * @param newTickData New [TickData] to copy to new object.
    */
   abstract fun clone(newTickData: TickData): Actor
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Actor) return false
+    return id == other.id
+  }
+
+  override fun hashCode(): Int = id
 }

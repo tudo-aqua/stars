@@ -35,7 +35,7 @@ class TickCountMetricTest {
 
     val tickCountMetric =
         TickCountMetric<
-            SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
 
     assertEquals(1, tickCountMetric.evaluate(simpleTick))
   }
@@ -52,7 +52,7 @@ class TickCountMetricTest {
 
     val tickCountMetric =
         TickCountMetric<
-            SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
 
     assertEquals(1, tickCountMetric.evaluate(simpleTick1))
     assertEquals(2, tickCountMetric.evaluate(simpleTick2))

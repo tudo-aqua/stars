@@ -51,9 +51,9 @@ class VelocityAndAccelerationTest {
     val vehicle3 = Vehicle(location = Location(8.0, 2.0, 10.0), isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    val tickData1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = mapOf(1 to vehicle1))
-    val tickData2 = TickData(currentTickUnit = TickDataUnitSeconds(1.0), entities = mapOf(2 to vehicle2))
-    val tickData3 = TickData(currentTickUnit = TickDataUnitSeconds(2.0), entities = mapOf(3 to vehicle3))
+    val tickData1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = setOf(vehicle1))
+    val tickData2 = TickData(currentTickUnit = TickDataUnitSeconds(1.0), entities = setOf(vehicle2))
+    val tickData3 = TickData(currentTickUnit = TickDataUnitSeconds(2.0), entities = setOf(vehicle3))
 
     // Vehicle 0 has no previous state. The velocity and acceleration values should be set to 0.0
     updateActorVelocityAndAcceleration(
@@ -158,8 +158,8 @@ class VelocityAndAccelerationTest {
     val vehicle2 = Vehicle(isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    val tickData1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = mapOf(1 to vehicle1))
-    val tickData2 = TickData(currentTickUnit = TickDataUnitSeconds(-1.0), entities = mapOf(2 to vehicle2))
+    val tickData1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = setOf(vehicle1))
+    val tickData2 = TickData(currentTickUnit = TickDataUnitSeconds(-1.0), entities = setOf(vehicle2))
 
     // The time difference between Vehicle2 and Vehicle1 is -1.0. This should throw an
     // IllegalStateException

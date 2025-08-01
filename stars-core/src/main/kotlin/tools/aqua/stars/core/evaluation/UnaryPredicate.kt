@@ -24,18 +24,18 @@ import tools.aqua.stars.core.types.*
 /**
  * Unary predicate.
  *
- * @param E1 [EntityDataType].
- * @param E [EntityDataType].
+ * @param E1 [EntityType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
- * @property kClass The [KClass] of the [EntityDataType] that is evaluated by this predicate.
+ * @property kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
  * @property eval The evaluation function on the context.
  */
 class UnaryPredicate<
     E1 : E,
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -80,20 +80,20 @@ class UnaryPredicate<
     /**
      * Creates a unary tick predicate.
      *
-     * @param E1 [EntityDataType].
-     * @param E [EntityDataType].
+     * @param E1 [EntityType].
+     * @param E [EntityType].
      * @param T [TickDataType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
-     * @param kClass The [KClass] of the [EntityDataType] that is evaluated by this predicate.
+     * @param kClass The [KClass] of the [EntityType] that is evaluated by this predicate.
      * @param eval The evaluation function on the [List] of [TickDataType]s.
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass] of the
      *   entity for which the predicate should be evaluated.
      */
     fun <
         E1 : E,
-        E : EntityDataType<E, T, U, D>,
+        E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(

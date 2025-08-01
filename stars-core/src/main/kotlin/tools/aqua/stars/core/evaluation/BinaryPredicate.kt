@@ -24,20 +24,20 @@ import tools.aqua.stars.core.types.*
 /**
  * Binary predicate.
  *
- * @param E1 [EntityDataType].
- * @param E2 [EntityDataType].
- * @param E [EntityDataType].
+ * @param E1 [EntityType].
+ * @param E2 [EntityType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param name The name of the predicate.
- * @property kClasses The [KClass]es of the [EntityDataType]s that are evaluated by this predicate.
+ * @property kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
  * @property eval The evaluation function on the context.
  */
 class BinaryPredicate<
     E1 : E,
     E2 : E,
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
@@ -89,14 +89,14 @@ class BinaryPredicate<
     /**
      * Creates a binary tick predicate in this context.
      *
-     * @param E1 [EntityDataType].
-     * @param E2 [EntityDataType].
-     * @param E [EntityDataType].
+     * @param E1 [EntityType].
+     * @param E2 [EntityType].
+     * @param E [EntityType].
      * @param T [TickDataType].
      * @param U [TickUnit].
      * @param D [TickDifference].
      * @param name The name of the predicate.
-     * @param kClasses The [KClass]es of the [EntityDataType]s that are evaluated by this predicate.
+     * @param kClasses The [KClass]es of the [EntityType]s that are evaluated by this predicate.
      * @param eval The evaluation function on the [List] of [TickDataType]s.
      * @return The created [UnaryPredicate] with the given [eval] function and the [KClass]es of the
      *   entities for which the predicate should be evaluated.
@@ -104,7 +104,7 @@ class BinaryPredicate<
     fun <
         E1 : E,
         E2 : E,
-        E : EntityDataType<E, T, U, D>,
+        E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>> predicate(

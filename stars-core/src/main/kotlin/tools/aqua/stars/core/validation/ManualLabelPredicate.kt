@@ -18,13 +18,13 @@
 package tools.aqua.stars.core.validation
 
 import tools.aqua.stars.core.evaluation.AbstractPredicate
-import tools.aqua.stars.core.types.EntityDataType
+import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
 class ManualLabelPredicate<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val predicate: AbstractPredicate<E, T, U, D>) {

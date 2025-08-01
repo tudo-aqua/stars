@@ -25,7 +25,7 @@ import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTickData> =
     phi1.indices
         .associate {
-          TestUnit(it) to BooleanTickData(TestUnit(it), mapOf(), phi1[it] == 1, phi2[it] == 1)
+          TestUnit(it) to BooleanTickData(TestUnit(it), LinkedHashSet(), phi1[it] == 1, phi2[it] == 1)
         }
         .values
         .toList()

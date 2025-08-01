@@ -23,7 +23,7 @@ import tools.aqua.stars.core.types.*
 /**
  * This class contains the information of one failing monitor for one [TSCInstanceNode].
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -34,7 +34,7 @@ import tools.aqua.stars.core.types.*
  * @property nodeLabel Specifies the [TSCInstanceNode] at which a monitor failed.
  */
 class TSCFailedMonitorInstance<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(

@@ -22,13 +22,13 @@ import tools.aqua.stars.core.types.*
 /**
  * Class to assist in creating monitors nodes in the DSL.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 open class TSCMonitorsBuilder<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
@@ -39,7 +39,7 @@ open class TSCMonitorsBuilder<
   /**
    * DSL function for a monitor.
    *
-   * @param E [EntityDataType].
+   * @param E [EntityType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
@@ -47,7 +47,7 @@ open class TSCMonitorsBuilder<
    * @param condition The monitor condition.
    */
   fun <
-      E : EntityDataType<E, T, U, D>,
+      E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>> TSCMonitorsBuilder<E, T, U, D>.monitor(

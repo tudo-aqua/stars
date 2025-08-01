@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.*
 /**
  * TSC graph.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @property identifier The identifier of the [TSC].
  */
 class TSC<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val rootNode: TSCNode<E, T, U, D>, val identifier: String = "TSC") :

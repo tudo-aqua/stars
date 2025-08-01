@@ -23,14 +23,14 @@ import tools.aqua.stars.core.types.*
 /**
  * Class to assist in creating objects in the DSL.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 @TSCBuilderMarker
 sealed class TSCBuilder<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> {

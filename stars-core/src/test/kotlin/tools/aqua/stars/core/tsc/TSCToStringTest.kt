@@ -30,7 +30,7 @@ class TSCToStringTest {
   @Test
   fun `Test empty TSC`() {
     assertThrows<IllegalStateException> {
-      tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
     }
   }
 
@@ -39,7 +39,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with single all node`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           all("all")
         }
     assertEquals("all(0..0)", tsc.toString())
@@ -49,7 +49,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with single any node`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           any("any")
         }
     assertEquals("any(1..0)", tsc.toString())
@@ -61,7 +61,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with single exclusive node`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           exclusive("exclusive")
         }
     assertEquals("exclusive(1..1)", tsc.toString())
@@ -73,7 +73,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with single bounded node with bounds (2,3) and no children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           bounded("bounded", 2 to 3)
         }
     assertEquals("bounded(2..3)", tsc.toString())
@@ -83,7 +83,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with single leaf node`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           leaf("leaf")
         }
     assertEquals("leaf", tsc.toString())
@@ -93,7 +93,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with single optional node`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           optional("optional")
         }
     assertEquals("optional(0..0)", tsc.toString())
@@ -109,7 +109,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with all node and 3 children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           all("all") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -126,7 +126,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with exclusive node and 3 children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           exclusive("exclusive") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -140,7 +140,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with any node and 3 children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           any("any") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -157,7 +157,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with bounded node, with bounds (2,3) and 3 children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           bounded("bounded", 2 to 3) {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -174,7 +174,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with optional node and 3 children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           optional("optional") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -194,7 +194,7 @@ class TSCToStringTest {
   @Test
   fun `Test TSC with all node and 1 child node with 2 children`() {
     val tsc =
-        tsc<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
           all("all") {
             any("any") {
               leaf("leaf_1")

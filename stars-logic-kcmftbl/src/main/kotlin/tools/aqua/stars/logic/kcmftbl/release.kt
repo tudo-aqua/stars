@@ -23,7 +23,7 @@ import tools.aqua.stars.core.types.*
  * CMFTBL implementation of the 'release' operator i.e. "In all future ticks in the interval phi 2
  * holds, at least until (and including) phi1 holds, or forever".
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @param phi2 Second predicate.
  */
 fun <
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> release(

@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.*
  * CMFTBL implementation of the 'minPrevalence' operator i.e. "In all future ticks in the interval
  * phi holds for at least ([percentage]*100)% of the ticks in the interval".
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -35,7 +35,7 @@ import tools.aqua.stars.core.types.*
  * @param phi Predicate.
  */
 fun <
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>> minPrevalence(

@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.evaluation
 
-import tools.aqua.stars.core.types.EntityDataType
+import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
@@ -25,14 +25,14 @@ import tools.aqua.stars.core.types.TickUnit
 /**
  * Abstract predicate.
  *
- * @param E [EntityDataType].
+ * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property name The name of the predicate.
  */
 abstract class AbstractPredicate<
-    E : EntityDataType<E, T, U, D>,
+    E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(val name: String)

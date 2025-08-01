@@ -20,11 +20,11 @@ package tools.aqua.stars.core
 import tools.aqua.stars.core.types.*
 
 /** Simple entity. */
-class SimpleEntityData(
+class SimpleEntity(
     val id: Int = 0,
-) : EntityDataType<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+) : EntityType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
   override fun equals(other: Any?): Boolean {
-    return if (other !is SimpleEntityData) false
+    return if (other !is SimpleEntity) false
     else id == (other).id
   }
 
@@ -34,8 +34,8 @@ class SimpleEntityData(
 /** Simple tick data. */
 class SimpleTickData(
   currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
-  entities: Map<Int, SimpleEntityData> = HashMap()
-) : TickDataType<SimpleEntityData, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(currentTickUnit, entities) {
+  entities: LinkedHashSet<SimpleEntity> = LinkedHashSet()
+) : TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(currentTickUnit, entities) {
   override fun toString(): String = "$currentTickUnit"
 }
 
