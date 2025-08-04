@@ -90,6 +90,11 @@ fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
  * Evaluates the given [predicate] on each element of the sequence and stops the computation as soon
  * as the predicate returns false.
  */
-fun <T> Sequence<T>.computeWhile(predicate: (T) -> Boolean): Unit = forEach {
+inline fun <T> Sequence<T>.computeWhile(predicate: (T) -> Boolean): Unit = forEach {
   if (!predicate(it)) return
+}
+
+/** Applies the given [action] to each element of the sequence that is an instance of type [R]. */
+inline fun <reified R> Iterable<*>.forEachInstance(action: (R) -> Unit): Unit = forEach {
+  if (it is R) action(it)
 }

@@ -23,6 +23,7 @@ import java.time.LocalDateTime
 import java.util.logging.Logger
 import kotlin.time.measureTime
 import tools.aqua.stars.core.computeWhile
+import tools.aqua.stars.core.forEachInstance
 import tools.aqua.stars.core.hooks.*
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
@@ -216,58 +217,36 @@ class TSCEvaluation<
   }
 
   /**
+   * @param ticks The [TickSequence] of [TickDataType]s to evaluate.
+   * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
+   *
    * Runs the evaluation of the [TSC]s based on the [ticks]. For each [TickDataType], [TSC] and
    * [TSCInstanceNode], the related [MetricProvider] is called. It requires at least one
    * [MetricProvider].
    *
-   * @param ticks The [Sequence] of [TickDataType]s to evaluate.
-   * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
+   * TODO: Rewrite Docs
    */
-  fun runEvaluation(ticks: Sequence<T>, bufferSize: Int = 20) {
+  fun runEvaluation(ticks: TickSequence<T>) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
-      val tscListToEvaluate =
-          preTSCEvaluationHooks.evaluate(tscList).let { (passingTSCs, results) ->
-            results.forEach { (tsc, results) ->
-              preTSCEvaluationHookResults[tsc] =
-                  results.map { it.key.identifier to it.value }.toMap()
-            }
-            passingTSCs ?: return
-          }
+      // Filter TSCs to be evaluated
+      val tscListToEvaluate = filterTSCs() ?: return
+      if (tscListToEvaluate.isNotEmpty()) {
 
-      // Evaluate all ticks
-      val evaluationTime = measureTime {
-
-        // Housekeeping
-        // TODO: Move to utility class?
-        val iterator = ticks.iterator()
-        var firstTick = iterator.next()
-        var lastTick = firstTick
-        var tickCount = 1
-
-        if (tscListToEvaluate.isNotEmpty()) {
-          tscListToEvaluate.forEach { tsc ->
-            // Run the "evaluate" function for all TSCMetricProviders on the current segment
-            metricProviders.filterIsInstance<TSCMetricProvider<E, T, U, D>>().forEach {
-              it.evaluate(tsc)
-            }
-          }
-
-          ticks.computeWhile {
-            lastTick.nextTick = it
-            lastTick = it
-
-            if (tickCount == bufferSize) {
-              firstTick = firstTick.nextTick!!
-              firstTick.previousTick = null
-            }
-
-            evaluateTick(tick = lastTick, tscList = tscListToEvaluate)
+        // Run the "evaluate" function for all TSCMetricProviders
+        tscListToEvaluate.forEach { tsc ->
+          metricProviders.forEachInstance<TSCMetricProvider<E, T, U, D>> { metric ->
+            metric.evaluate(tsc)
           }
         }
+
+        // Evaluate all ticks
+        val evaluationTime = measureTime {
+          ticks.computeWhile { tick -> evaluateTick(tick = tick, tscList = tscListToEvaluate) }
+        }
+        logInfo("The evaluation of all segments took: $evaluationTime")
       }
-      logInfo("The evaluation of all segments took: $evaluationTime")
     }
     logInfo("The whole evaluation took: $totalEvaluationTime")
     ApplicationConstantsHolder.totalEvaluationTime += totalEvaluationTime
@@ -277,11 +256,28 @@ class TSCEvaluation<
   }
 
   /**
+   * Evaluates the [preTSCEvaluationHooks] on the [tscList], adds the results to the
+   * [preTSCEvaluationHookResults] [Map] and returns the list of TSCs that should be evaluated.
+   * Returns `null` if some [PreTSCEvaluationHook] returned [EvaluationHookResult.CANCEL].
+   *
+   * @return The list of [TSC]s that should be evaluated, or `null` if the evaluation was canceled.
+   */
+  private fun filterTSCs(): List<TSC<E, T, U, D>>? {
+    val (passingTSCs, results) = preTSCEvaluationHooks.evaluate(tscList)
+
+    results.forEach { (tsc, results) ->
+      preTSCEvaluationHookResults[tsc] = results.map { it.key.identifier to it.value }.toMap()
+    }
+
+    return passingTSCs
+  }
+
+  /**
    * Evaluates the given [List] of [TickDataType]s on the given [TSC]s. The function returns `false`
    * if the iteration should be stopped due to an [EvaluationHook] returning
    * [EvaluationHookResult.CANCEL].
    *
-   * @param segment The [List] of [TickDataType]s to evaluate.
+   * @param tick The [TickDataType] to evaluate.
    * @param tscList The list of [TSC]s to evaluate.
    * @return Whether the evaluation should continue.
    */
@@ -290,20 +286,16 @@ class TSCEvaluation<
     preTickEvaluationHooks.evaluate(tick).let { (verdict, results) ->
       if (verdict != null) {
         preTickEvaluationHookResults[tick.toString()] =
-            results
-                .map { it.key.identifier to it.value }
-                .toMap() // TODO: Change segment identifier to range
+            results.map { it.key.identifier to it.value }.toMap()
 
         return verdict
       }
     }
 
-    // Evaluate segment
-    val segmentEvaluationTime = measureTime {
+    // Evaluate tick
+    val tickEvaluationTime = measureTime {
       // Run the "evaluate" function for all TickMetricProviders on the current tick
-      metricProviders.filterIsInstance<TickMetricProvider<E, T, U, D>>().forEach {
-        it.evaluate(tick)
-      }
+      metricProviders.forEachInstance<TickMetricProvider<E, T, U, D>> { it.evaluate(tick) }
 
       val allTSCEvaluationTime = measureTime {
         // Run the evaluation for all TSCs
@@ -314,15 +306,15 @@ class TSCEvaluation<
 
             // Run the "evaluate" function for all TSCInstanceMetricProviders on the
             // current tick
-            metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, U, D>>().forEach {
+            metricProviders.forEachInstance<TSCInstanceMetricProvider<E, T, U, D>> {
               it.evaluate(tscInstance)
             }
 
             // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
             // current tsc and instance
-            metricProviders
-                .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>>()
-                .forEach { it.evaluate(tsc, tscInstance) }
+            metricProviders.forEachInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>> {
+              it.evaluate(tsc, tscInstance)
+            }
           }
           logFine(
               "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime")
@@ -330,8 +322,8 @@ class TSCEvaluation<
       }
       logFine("The evaluation of all TSCs for tick '$tick' took: $allTSCEvaluationTime")
     }
-    logFine("The evaluation of tick '$tick' took: $segmentEvaluationTime")
-    ApplicationConstantsHolder.totalSegmentEvaluationTime += segmentEvaluationTime
+    logFine("The evaluation of tick '$tick' took: $tickEvaluationTime")
+    ApplicationConstantsHolder.totalSegmentEvaluationTime += tickEvaluationTime
 
     return true
   }
@@ -339,11 +331,11 @@ class TSCEvaluation<
   /** Runs post evaluation steps such as printing, logging and plotting. */
   private fun postEvaluate() {
     // Print the results of all Stateful metrics
-    metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }
+    metricProviders.forEachInstance<Stateful> { it.printState() }
 
     // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
     println("Running post evaluation metrics")
-    metricProviders.filterIsInstance<PostEvaluationMetricProvider<E, T, U, D>>().forEach {
+    metricProviders.forEachInstance<PostEvaluationMetricProvider<E, T, U, D>> {
       it.postEvaluate()
       it.printPostEvaluationResult()
     }
@@ -351,13 +343,13 @@ class TSCEvaluation<
     // Plot the results of all Plottable metrics
     if (writePlots) {
       println("Creating Plots")
-      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlots() }
+      metricProviders.forEachInstance<Plottable> { it.writePlots() }
     }
 
     // Write CSV of the results of all Plottable metrics
     if (writePlotDataCSV) {
       println("Writing CSVs")
-      metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
+      metricProviders.forEachInstance<Plottable> { it.writePlotDataCSV() }
     }
 
     val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
