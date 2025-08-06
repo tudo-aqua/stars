@@ -40,7 +40,7 @@ object ApplicationConstantsHolder {
   var totalEvaluationTime: Duration = Duration.ZERO
 
   /** Holds the total time spent on segment evaluation. */
-  var totalSegmentEvaluationTime: Duration = Duration.ZERO
+  var totalTickEvaluationTime: Duration = Duration.ZERO
 
   /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
   val applicationStartTimeString: String =
@@ -138,7 +138,7 @@ object ApplicationConstantsHolder {
         Experiment start              : ${applicationStartTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))}
         Experiment end                : ${experimentEndTime?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) ?: "Not finished"}
         Total evaluation time         : $totalEvaluationTime
-        Total segment evaluation time : $totalSegmentEvaluationTime
+        Total segment evaluation time : $totalTickEvaluationTime
         Execution command             : ${executionCommand
           .prependIndent("                                        ").trimStart()}
                                                   

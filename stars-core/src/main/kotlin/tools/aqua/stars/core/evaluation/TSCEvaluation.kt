@@ -30,7 +30,16 @@ import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerTickHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickHook
-import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.metrics.providers.Loggable
+import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.Plottable
+import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.Stateful
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
 import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
@@ -46,7 +55,8 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
- * the [TSC]s based on the given [Sequence] of [TickDataType]s. This class implements [Loggable].
+ * the [TSC]s based on the given [Sequence] of [TickDataType]s. This class implements
+ * [tools.aqua.stars.core.metric.metrics.providers.Loggable].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -69,14 +79,14 @@ class TSCEvaluation<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val tscList: List<TSC<E, T, U, D>>,
-    val writePlots: Boolean = true,
-    val writePlotDataCSV: Boolean = false,
-    val writeSerializedResults: Boolean = true,
-    val compareToBaselineResults: Boolean = false,
-    val compareToPreviousRun: Boolean = false,
-    override val loggerIdentifier: String = "evaluation-time",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
+  val tscList: List<TSC<E, T, U, D>>,
+  val writePlots: Boolean = true,
+  val writePlotDataCSV: Boolean = false,
+  val writeSerializedResults: Boolean = true,
+  val compareToBaselineResults: Boolean = false,
+  val compareToPreviousRun: Boolean = false,
+  override val loggerIdentifier: String = "evaluation-time",
+  override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : Loggable {
 
   /** Mutex. */
@@ -125,7 +135,7 @@ class TSCEvaluation<
   private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, U, D>> = mutableListOf()
 
   /**
-   * Holds the results (Map of [PreSegmentEvaluationHook.identifier] to [EvaluationHookResult]) of
+   * Holds the results (Map of [PreTickEvaluationHook.identifier] to [EvaluationHookResult]) of
    * the [PreTickEvaluationHook]s after calling [runEvaluation] that did not return
    * [EvaluationHookResult.OK] for each segment identifier.
    */
@@ -150,11 +160,11 @@ class TSCEvaluation<
    * @throws IllegalArgumentException When a given [MetricProvider] is already added.
    */
   fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, U, D>) {
-    metricProviders.forEach {
-      require(it.javaClass !in this.metricProviders.map { t -> t.javaClass }) {
-        "The MetricProvider ${it.javaClass.simpleName} is already registered."
+    metricProviders.forEach { provider ->
+      require(this.metricProviders.none { it.javaClass == provider.javaClass }) {
+        "The MetricProvider ${provider.javaClass.simpleName} is already registered."
       }
-      this.metricProviders.add(it)
+      this.metricProviders.add(provider)
     }
   }
 
@@ -297,33 +307,30 @@ class TSCEvaluation<
       // Run the "evaluate" function for all TickMetricProviders on the current tick
       metricProviders.forEachInstance<TickMetricProvider<E, T, U, D>> { it.evaluate(tick) }
 
-      val allTSCEvaluationTime = measureTime {
-        // Run the evaluation for all TSCs
-        tscList.forEach { tsc ->
-          val tscEvaluationTime = measureTime {
-            // Evaluate the TSC on the current tick.
-            val tscInstance = tsc.evaluate(tick)
+      // Run the evaluation for all TSCs
+      tscList.forEach { tsc ->
+        val tscEvaluationTime = measureTime {
+          // Evaluate the TSC on the current tick.
+          val tscInstance = tsc.evaluate(tick)
 
-            // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-            // current tick
-            metricProviders.forEachInstance<TSCInstanceMetricProvider<E, T, U, D>> {
-              it.evaluate(tscInstance)
-            }
-
-            // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
-            // current tsc and instance
-            metricProviders.forEachInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>> {
-              it.evaluate(tsc, tscInstance)
-            }
+          // Run the "evaluate" function for all TSCInstanceMetricProviders on the
+          // current tsc instance
+          metricProviders.forEachInstance<TSCInstanceMetricProvider<E, T, U, D>> {
+            it.evaluate(tscInstance)
           }
-          logFine(
-              "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime")
+
+          // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
+          // current tsc and instance
+          metricProviders.forEachInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>> {
+            it.evaluate(tsc, tscInstance)
+          }
         }
+        logFiner(
+            "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime")
       }
-      logFine("The evaluation of all TSCs for tick '$tick' took: $allTSCEvaluationTime")
     }
     logFine("The evaluation of tick '$tick' took: $tickEvaluationTime")
-    ApplicationConstantsHolder.totalSegmentEvaluationTime += tickEvaluationTime
+    ApplicationConstantsHolder.totalTickEvaluationTime += tickEvaluationTime
 
     return true
   }

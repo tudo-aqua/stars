@@ -15,17 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
-/** This interface should be implemented when a metric has a running state. */
-interface Stateful {
-  /**
-   * This function returns the current state of the implementing class.
-   *
-   * @return The current state.
-   */
-  fun getState(): Any?
+import tools.aqua.stars.core.types.*
 
-  /** This function prints the current state of the implementing class. */
-  fun printState()
-}
+/**
+ * The [MetricProvider] interface is the base interface which all metrics are implementing.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ */
+interface MetricProvider<
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>>

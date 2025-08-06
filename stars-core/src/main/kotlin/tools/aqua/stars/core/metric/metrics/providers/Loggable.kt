@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
 import java.io.File
 import java.util.logging.*

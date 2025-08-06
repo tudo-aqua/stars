@@ -15,18 +15,28 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
-import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 
 /**
- * This interface should be implemented when a metric has a results that should be compared in
- * later/previous evaluations.
+ * Implementing the [Plottable] interface allows the results of a [MetricProvider] to be plotted as
+ * a graph.
  */
-interface Serializable {
+interface Plottable {
   /**
-   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
-   * later/previous evaluations.
+   * This function is called after the evaluation phase and should plot the data collected during
+   * the evaluation.
+   *
+   * @see TSCEvaluation.runEvaluation
    */
-  fun getSerializableResults(): List<SerializableResult>
+  fun writePlots()
+
+  /**
+   * This function is called after the evaluation phase and writes the plot data collected during
+   * the evaluation into CSV files.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
+  fun writePlotDataCSV()
 }

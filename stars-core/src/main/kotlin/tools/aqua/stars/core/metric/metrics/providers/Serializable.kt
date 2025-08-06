@@ -15,20 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
-import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 
 /**
- * The [MetricProvider] interface is the base interface which all metrics are implementing.
- *
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
+ * This interface should be implemented when a metric has a results that should be compared in
+ * later/previous evaluations.
  */
-interface MetricProvider<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>>
+interface Serializable {
+  /**
+   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
+   * later/previous evaluations.
+   */
+  fun getSerializableResults(): List<SerializableResult>
+}

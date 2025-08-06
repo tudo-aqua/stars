@@ -15,28 +15,17 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
-import tools.aqua.stars.core.evaluation.TSCEvaluation
-
-/**
- * Implementing the [Plottable] interface allows the results of a [MetricProvider] to be plotted as
- * a graph.
- */
-interface Plottable {
+/** This interface should be implemented when a metric has a running state. */
+interface Stateful {
   /**
-   * This function is called after the evaluation phase and should plot the data collected during
-   * the evaluation.
+   * This function returns the current state of the implementing class.
    *
-   * @see TSCEvaluation.runEvaluation
+   * @return The current state.
    */
-  fun writePlots()
+  fun getState(): Any?
 
-  /**
-   * This function is called after the evaluation phase and writes the plot data collected during
-   * the evaluation into CSV files.
-   *
-   * @see TSCEvaluation.runEvaluation
-   */
-  fun writePlotDataCSV()
+  /** This function prints the current state of the implementing class. */
+  fun printState()
 }

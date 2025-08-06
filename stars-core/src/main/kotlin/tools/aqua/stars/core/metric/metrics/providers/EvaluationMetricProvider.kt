@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.types.*
 
 /**
- * The [TickMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
- * function which gets a tick which is called during the evaluation phase.
+ * The [EvaluationMetricProvider] implements the [MetricProvider] and provides an interface to all
+ * metrics that should be called during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -30,17 +30,8 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface TickMetricProvider<
+interface EvaluationMetricProvider<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : EvaluationMetricProvider<E, T, U, D> {
-
-  /**
-   * Evaluate the metric based on the given parameter.
-   *
-   * @param tick The current [TickDataType].
-   * @return The evaluation result.
-   */
-  fun evaluate(tick: T): Any?
-}
+    D : TickDifference<D>> : MetricProvider<E, T, U, D>
