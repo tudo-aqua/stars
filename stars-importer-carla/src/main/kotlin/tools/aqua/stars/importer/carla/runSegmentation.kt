@@ -56,17 +56,17 @@ fun getSeed(fileName: String): Int =
 /**
  * Returns the lane progress of a vehicle.
  *
- * @param blocks The list of [Block]s.
+ * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  * @param vehicle The [JsonVehicle].
  */
 fun getLaneProgressionForVehicle(
-    blocks: List<Block>,
-    jsonSimulationRun: List<JsonTickData>,
-    vehicle: JsonVehicle
+  world: World,
+  jsonSimulationRun: List<JsonTickData>,
+  vehicle: JsonVehicle
 ): MutableList<Pair<Lane?, Boolean>> {
-  val roads = blocks.flatMap { it.roads }
-  val lanes = roads.flatMap { it.lanes }
+  val roads = world.getAllRoads()
+  val lanes = world.getAllLanes()
   val laneProgression: MutableList<Pair<Lane?, Boolean>> = mutableListOf()
 
   jsonSimulationRun.forEach { jsonTickData ->
@@ -89,17 +89,17 @@ fun getLaneProgressionForVehicle(
 /**
  * Convert Json data.
  *
- * @param blocks The list of [Block]s.
+ * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  * @param simulationRunId Identifier of the simulation run.
  */
 @Suppress("unused")
 fun convertTickData(
-    blocks: List<Block>,
-    jsonSimulationRun: List<JsonTickData>,
-    simulationRunId: String
+  world: World,
+  jsonSimulationRun: List<JsonTickData>,
+  simulationRunId: String
 ): List<TickData> {
-  cleanJsonData(blocks, jsonSimulationRun)
+  cleanJsonData(world, jsonSimulationRun)
 
   // Extract vehicles from the JSON file
   val jsonVehicles: List<JsonVehicle> =
@@ -116,7 +116,7 @@ fun convertTickData(
   }
 
   return jsonSimulationRun
-      .map { it.toTickData(blocks) }
+      .map { it.toTickData(world) }
       .also { updateActorVelocityForSimulationRun(it) }
 }
 
@@ -173,10 +173,10 @@ fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, 
 /**
  * Cleans Json data.
  *
- * @param blocks The list of [Block]s.
+ * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  */
-fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
+fun cleanJsonData(world: World, jsonSimulationRun: List<JsonTickData>) {
   val vehicles =
       jsonSimulationRun
           .flatMap { it.actorPositions }
@@ -184,7 +184,7 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
           .filterIsInstance<JsonVehicle>()
           .distinctBy { it.id }
   vehicles.forEach { vehicle ->
-    val laneProgression = getLaneProgressionForVehicle(blocks, jsonSimulationRun, vehicle)
+    val laneProgression = getLaneProgressionForVehicle(world, jsonSimulationRun, vehicle)
 
     // Saves the lane progression of the current vehicle as a list of Triple(RoadId, LaneId,
     // IsJunction)

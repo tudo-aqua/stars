@@ -26,14 +26,13 @@ import tools.aqua.stars.importer.carla.dataclasses.*
 /**
  * Converts [JsonTickData] to [TickData].
  *
- * @param blocks List ob [Block]s.
+ * @param world The [World].
  */
-fun JsonTickData.toTickData(blocks: List<Block>): TickData =
+fun JsonTickData.toTickData(world: World): TickData =
     TickData(
         currentTickUnit = TickDataUnitSeconds(currentTick),
-        entities = actorPositions.mapNotNull { it.toActorOrNull(blocks = blocks) }.toSet(),
+        entities = actorPositions.mapNotNull { it.toActorOrNull(world = world) }.toSet(),
         trafficLights = actorPositions.mapNotNull { it.toTrafficLightOrNull() },
-        blocks = blocks,
         weather = weatherParameters.toWeatherParameters(),
         daytime = weatherParameters.type.toDaytime(),
     )
@@ -41,11 +40,11 @@ fun JsonTickData.toTickData(blocks: List<Block>): TickData =
 /**
  * Converts [JsonActorPosition] to [Actor].
  *
- * @param blocks List ob [Block]s.
+ * @param world The [World].
  */
-fun JsonActorPosition.toActorOrNull(blocks: List<Block>): Actor? =
+fun JsonActorPosition.toActorOrNull(world: World): Actor? =
     actor.let {
-      val lane = checkNotNull(blocks.getLane(roadId, laneId))
+      val lane = checkNotNull(world.getLane(roadId, laneId))
       when (it) {
         is JsonPedestrian -> it.toPedestrian(positionOnLane = positionOnLane, lane = lane)
         is JsonVehicle -> it.toVehicle(positionOnLane = positionOnLane, lane = lane)
@@ -88,15 +87,35 @@ fun JsonVehicle.toVehicle(positionOnLane: Double, lane: Lane): Vehicle =
 fun JsonPedestrian.toPedestrian(positionOnLane: Double, lane: Lane): Pedestrian =
     Pedestrian(id = id, positionOnLane = positionOnLane, lane = lane)
 
-/** Converts [JsonBlock] to [Block]. */
-fun JsonBlock.toBlock(): Block = Block(id = id, roads = roads.map { it.toRoad() })
+/** Converts [JsonWorld] to [Map]. */
+fun JsonWorld.toWorld(): World = World(
+  straights = straights.map { it.toRoad() },
+  junctions = junctions.map { it.toJunction() },
+  crosswalks = crosswalks.map { it.toCrosswalk() }
+)
 
 /** Converts [JsonRoad] to [Road]. */
-fun JsonRoad.toRoad(): Road =
+fun JsonRoad.toRoad(isJunction: Boolean = false): Road =
     Road(
         id = roadId,
         lanes = lanes.map { jsonLane -> jsonLane.toLane(isJunction = isJunction) },
-        isJunction = isJunction)
+      )
+
+/** Converts [JsonJunction] to [Junction]. */
+fun JsonJunction.toJunction(): Junction =
+  Junction(
+    id = junctionId,
+    roads = roads.map { jsonLane -> jsonLane.toRoad(isJunction = true) }
+  )
+
+/** Converts [JsonCrosswalk] to [Crosswalk]. */
+fun JsonCrosswalk.toCrosswalk(): Crosswalk =
+  Crosswalk(
+    id = crosswalkId,
+    vertices = vertices.map { it.toLocation() }
+  )
+
+
 
 /**
  * Converts [JsonLane] to [Lane].
@@ -207,17 +226,17 @@ fun getVehicleTypeFromTypeId(typeId: String): VehicleType =
     }
 
 /**
- * Calculates static [JsonBlock]s to [Block]s.
+ * Calculates static [JsonWorld] to [World]s.
  *
- * @param staticJsonBlocks List of [JsonBlock]s.
+ * @param world The [JsonWorld].
+ * @return The [World] object.
  */
-fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>): List<Block> =
-    staticJsonBlocks
-        .map { block -> block.toBlock() }
+fun calculateWorld(world: JsonWorld): World =
+     world.toWorld()
         .also {
           updateLanes(
-              jsonLanes = staticJsonBlocks.flatMap { b -> b.roads }.flatMap { b -> b.lanes },
-              lanes = it.flatMap { b -> b.roads }.flatMap { b -> b.lanes })
+              jsonLanes = world.getAllLanes(),
+              lanes = it.getAllLanes())
         }
 
 /** Updates [JsonLane]s and [Lane]s. */

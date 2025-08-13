@@ -15,21 +15,19 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
-
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Json object for roads.
+ * Data class for junctions.
  *
- * @property roadId The identifier of the road.
- * @property lanes List of [JsonLane]s on this road.
- * @property junctionId The identifier of the junction this road belongs to, if any.
+ * @property id The identifier of the junction.
+ * @property roads List of [Road]s on this junction.
  */
-@Serializable
-data class JsonRoad(
-    @SerialName("road_id") val roadId: Int = 0,
-    @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
-    @SerialName("junction_id") val junctionId : Int? = null
-)
+data class Junction(val id: Int, val roads: List<Road>) {
+  init {
+    check(roads.isNotEmpty()) { "Junction must have at least one road" }
+    roads.forEach { it.junction = this }
+  }
+
+  override fun toString(): String = "Junction $id"
+}

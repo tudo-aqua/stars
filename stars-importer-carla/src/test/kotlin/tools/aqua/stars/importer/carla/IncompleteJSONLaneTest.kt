@@ -18,7 +18,7 @@
 package tools.aqua.stars.importer.carla
 
 import kotlin.test.*
-import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.importer.carla.dataclasses.*
@@ -26,7 +26,7 @@ import tools.aqua.stars.importer.carla.dataclasses.*
 /** Tests behaviour on incomplete data from json. */
 class IncompleteJSONLaneTest {
 
-  private lateinit var incompleteBlock: Block
+  private lateinit var incompleteBlock: World
   private lateinit var incompleteRoad: Road
   private lateinit var incompleteJsonLane: JsonLane
   private lateinit var incompleteLane: Lane
@@ -93,7 +93,7 @@ class IncompleteJSONLaneTest {
     lanes = listOf(incompleteLane)
 
     incompleteRoad = Road(lanes = lanes, id = 1, isJunction = false)
-    incompleteBlock = Block(id = "1", roads = listOf(incompleteRoad))
+    incompleteBlock = World(id = "1", roads = listOf(incompleteRoad))
   }
 
   /** Tests [updateLanes] for incomplete [JsonLane] and [Lane]. */

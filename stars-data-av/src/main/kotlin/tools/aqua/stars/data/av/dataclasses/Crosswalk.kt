@@ -15,19 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.importer.carla.dataclasses
-
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Json object for [JsonRoad] blocks.
+ * Data class for junctions.
  *
- * @property id Identifier of the road block.
- * @property roads Roads incorporated in this block.
+ * @property id The identifier of the crosswalk.
+ * @property vertices List of vertices of this crosswalk as [Location]s.
  */
-@Serializable
-data class JsonBlock(
-    @SerialName("id") val id: String = "",
-    @SerialName("roads") val roads: List<JsonRoad> = emptyList(),
-)
+data class Crosswalk(val id: Int, val vertices: List<Location>) {
+  init {
+    check(vertices.size == 4) { "Crosswalk must have exactly four vertices" }
+  }
+
+  override fun toString(): String = "Crosswalk $id"
+}

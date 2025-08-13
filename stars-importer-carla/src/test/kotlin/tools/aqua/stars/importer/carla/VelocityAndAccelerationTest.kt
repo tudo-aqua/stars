@@ -22,7 +22,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Location
 import tools.aqua.stars.data.av.dataclasses.Pedestrian
@@ -40,7 +40,7 @@ class VelocityAndAccelerationTest {
   /** Test setup. */
   @BeforeTest
   fun setup() {
-    lane = Lane().also { Block(roads = listOf(Road(lanes = listOf(it)))) }
+    lane = Lane().also { World(roads = listOf(Road(lanes = listOf(it)))) }
   }
 
   /** Tests the velocity and acceleration calculations on pre-defined values. */

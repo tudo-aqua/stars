@@ -34,7 +34,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.core.evaluation.TickSequence
-import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.importer.carla.dataclasses.*
 
@@ -91,13 +91,13 @@ inline fun <reified T> getJsonContentOfPath(file: Path): T {
 }
 
 /**
- * Return a [Sequence] of [Block]s from a given [mapDataFile] path.
+ * Return a [World] object from a given [staticDataFile] path.
  *
- * @param mapDataFile The [Path] which points to the file that contains the static map data
- * @return The loaded [Block]s as a [Sequence] based on the given [mapDataFile] [Path]
+ * @param staticDataFile The [Path] which points to the file that contains the static map data.
+ * @return The loaded [World]s as a [Sequence] based on the given [staticDataFile] [Path].
  */
-fun loadBlocks(mapDataFile: Path): Sequence<Block> =
-    calculateStaticBlocks(getJsonContentOfPath<List<JsonBlock>>(mapDataFile)).asSequence()
+fun loadWorld(staticDataFile: Path): World =
+    calculateWorld(getJsonContentOfPath<JsonWorld>(staticDataFile))
 
 /**
  * Returns a [Sequence] of [TickSequence]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
@@ -148,7 +148,7 @@ fun loadTicks(
       // Calculate Blocks for current file and add each Segment to the Sequence
       val ticks =
           convertTickData(
-              blocks = currentSimulationRunsWrapper.blocks,
+              world = currentSimulationRunsWrapper.world,
               jsonSimulationRun = simulationRun,
               simulationRunId = currentDynamicDataPath.nameWithoutExtension)
 
@@ -215,17 +215,17 @@ fun loadTicks(
 /**
  * Returns a [Sequence] of [TickSequence]s given a map of static data to dynamic data files.
  *
- * @param mapToDynamicDataFiles The [Map] of static data to dynamic data.
+ * @param mapToDynamicDataFiles The [World] of static data to dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
- * @return A [Sequence] of [TickSequence]s based on the given [Map] of static data to dynamic data.
+ * @return A [Sequence] of [TickSequence]s based on the given [World] of static data to dynamic data.
  */
 fun loadTicks(
-    mapToDynamicDataFiles: Map<Path, List<Path>>,
-    bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false
+  mapToDynamicDataFiles: kotlin.collections.Map<Path, List<Path>>,
+  bufferSize: Int = 100,
+  orderFilesBySeed: Boolean = false
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =

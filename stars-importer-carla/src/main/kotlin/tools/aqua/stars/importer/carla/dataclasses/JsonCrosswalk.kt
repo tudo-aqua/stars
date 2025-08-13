@@ -21,15 +21,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for roads.
+ * Json object for junctions.
  *
- * @property roadId The identifier of the road.
- * @property lanes List of [JsonLane]s on this road.
- * @property junctionId The identifier of the junction this road belongs to, if any.
+ * @property crosswalkId The identifier of the crosswalk.
+ * @property vertices List of vertices of this crosswalk as [JsonLocation]s.
  */
 @Serializable
-data class JsonRoad(
-    @SerialName("road_id") val roadId: Int = 0,
-    @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
-    @SerialName("junction_id") val junctionId : Int? = null
+data class JsonCrosswalk(
+    @SerialName("crosswalk_id") val crosswalkId: Int,
+    @SerialName("vertices") val vertices: List<JsonLocation>,
 )

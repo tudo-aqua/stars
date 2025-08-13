@@ -21,7 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
@@ -75,7 +75,7 @@ class JSONTrafficLightTest {
 
     val lane = Lane(trafficLights = listOf(staticTrafficLight))
     val road = Road(lanes = listOf(lane))
-    val block = Block(roads = listOf(road))
+    val block = World(roads = listOf(road))
     val blocks = listOf(block)
     val vehicles = setOf(Vehicle(isEgo = true, lane = lane))
 
@@ -141,7 +141,7 @@ class JSONTrafficLightTest {
 
     val lane = Lane(jsonActorPosition.laneId)
     val road = Road(jsonActorPosition.roadId, lanes = listOf(lane))
-    val block = Block(roads = listOf(road))
+    val block = World(roads = listOf(road))
 
     assertNull(jsonActorPosition.toActorOrNull(blocks = listOf(block)))
   }
