@@ -17,8 +17,10 @@
 
 package tools.aqua.stars.importer.carla.dataclasses
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
 /**
  * Json object for roads.
@@ -28,6 +30,8 @@ import kotlinx.serialization.Serializable
  * @property junctionId The identifier of the junction this road belongs to, if any.
  */
 @Serializable
+@OptIn(ExperimentalSerializationApi::class)
+@JsonIgnoreUnknownKeys // ignore is_junction key in JSON file
 data class JsonRoad(
     @SerialName("road_id") val roadId: Int = 0,
     @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
