@@ -79,14 +79,14 @@ class TSCEvaluation<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-  val tscList: List<TSC<E, T, U, D>>,
-  val writePlots: Boolean = true,
-  val writePlotDataCSV: Boolean = false,
-  val writeSerializedResults: Boolean = true,
-  val compareToBaselineResults: Boolean = false,
-  val compareToPreviousRun: Boolean = false,
-  override val loggerIdentifier: String = "evaluation-time",
-  override val logger: Logger = Loggable.getLogger(loggerIdentifier),
+    val tscList: List<TSC<E, T, U, D>>,
+    val writePlots: Boolean = true,
+    val writePlotDataCSV: Boolean = false,
+    val writeSerializedResults: Boolean = true,
+    val compareToBaselineResults: Boolean = false,
+    val compareToPreviousRun: Boolean = false,
+    override val loggerIdentifier: String = "evaluation-time",
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : Loggable {
 
   /** Mutex. */
@@ -135,8 +135,8 @@ class TSCEvaluation<
   private val preTSCEvaluationHooks: MutableList<PreTSCEvaluationHook<E, T, U, D>> = mutableListOf()
 
   /**
-   * Holds the results (Map of [PreTickEvaluationHook.identifier] to [EvaluationHookResult]) of
-   * the [PreTickEvaluationHook]s after calling [runEvaluation] that did not return
+   * Holds the results (Map of [PreTickEvaluationHook.identifier] to [EvaluationHookResult]) of the
+   * [PreTickEvaluationHook]s after calling [runEvaluation] that did not return
    * [EvaluationHookResult.OK] for each segment identifier.
    */
   val preTickEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
@@ -227,16 +227,12 @@ class TSCEvaluation<
   }
 
   /**
-   * @param ticks The [TickSequence] of [TickDataType]s to evaluate.
+   * Runs the evaluation of the [TSC]s based on a sequence of [TickSequence]s.
+   *
+   * @param ticks The [Sequence] of [TickSequence]s to evaluate.
    * @throws IllegalArgumentException When there are no [MetricProvider]s registered.
-   *
-   * Runs the evaluation of the [TSC]s based on the [ticks]. For each [TickDataType], [TSC] and
-   * [TSCInstanceNode], the related [MetricProvider] is called. It requires at least one
-   * [MetricProvider].
-   *
-   * TODO: Rewrite Docs
    */
-  fun runEvaluation(ticks: TickSequence<T>) {
+  fun runEvaluation(ticks: Sequence<TickSequence<T>>) {
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
@@ -253,7 +249,11 @@ class TSCEvaluation<
 
         // Evaluate all ticks
         val evaluationTime = measureTime {
-          ticks.computeWhile { tick -> evaluateTick(tick = tick, tscList = tscListToEvaluate) }
+          ticks.forEach { tickSequence ->
+            tickSequence.computeWhile { tick ->
+              evaluateTick(tick = tick, tscList = tscListToEvaluate)
+            }
+          }
         }
         logInfo("The evaluation of all segments took: $evaluationTime")
       }

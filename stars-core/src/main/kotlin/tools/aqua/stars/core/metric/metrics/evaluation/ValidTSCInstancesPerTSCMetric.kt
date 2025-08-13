@@ -19,13 +19,13 @@
 
 package tools.aqua.stars.core.metric.metrics.evaluation
 
+import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.providers.Loggable
 import tools.aqua.stars.core.metric.metrics.providers.Plottable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.Serializable
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
-import java.util.logging.Logger
 import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
@@ -42,22 +42,25 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 
 /**
- * This class implements the [tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider] and tracks the occurred valid
- * [TSCInstance] for each [TSC].
+ * This class implements the
+ * [tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider] and tracks
+ * the occurred valid [TSCInstance] for each [TSC].
  *
- * This class implements the [tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider] which evaluates the combined results of
- * valid [TSCInstance]s for all [TSC]s.
+ * This class implements the
+ * [tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider] which evaluates the
+ * combined results of valid [TSCInstance]s for all [TSC]s.
  *
- * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Stateful] interface. Its state contains the [Map] of [TSC]s to a
- * [List] of valid [TSCInstance]s.
+ * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Stateful] interface.
+ * Its state contains the [Map] of [TSC]s to a [List] of valid [TSCInstance]s.
  *
- * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Serializable] interface. It serializes all valid [TSCInstance] for
- * their respective [TSC].
+ * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Serializable]
+ * interface. It serializes all valid [TSCInstance] for their respective [TSC].
  *
- * This class implements [tools.aqua.stars.core.metric.metrics.providers.Loggable] and logs the final [Map] of invalid [TSCInstance]s for [TSC]s.
+ * This class implements [tools.aqua.stars.core.metric.metrics.providers.Loggable] and logs the
+ * final [Map] of invalid [TSCInstance]s for [TSC]s.
  *
- * This class implements [tools.aqua.stars.core.metric.metrics.providers.Plottable] and plots the distribution and temporal change of valid
- * [TSCInstance]s.
+ * This class implements [tools.aqua.stars.core.metric.metrics.providers.Plottable] and plots the
+ * distribution and temporal change of valid [TSCInstance]s.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -75,11 +78,11 @@ class ValidTSCInstancesPerTSCMetric<
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) :
     TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>,
-  PostEvaluationMetricProvider<E, T, U, D>,
-  Stateful,
-  Serializable,
-  Loggable,
-  Plottable {
+    PostEvaluationMetricProvider<E, T, U, D>,
+    Stateful,
+    Serializable,
+    Loggable,
+    Plottable {
   /**
    * Map a [TSC] to a map in which the occurrences of valid [TSCInstanceNode]s are stored:
    * - Map<tsc,Map<referenceInstance,List<TSCInstance>>>.

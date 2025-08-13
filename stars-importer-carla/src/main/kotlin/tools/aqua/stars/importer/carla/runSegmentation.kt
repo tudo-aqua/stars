@@ -91,21 +91,16 @@ fun getLaneProgressionForVehicle(
  *
  * @param blocks The list of [Block]s.
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
- * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in the
- *   Json data.
- * @param useEveryVehicleAsEgo Whether to treat every vehicle as ego.
- * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
  * @param simulationRunId Identifier of the simulation run.
  */
 @Suppress("unused")
 fun convertTickData(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
-    egoIds: List<Int> = emptyList(),
-    useEveryVehicleAsEgo: Boolean = false,
-    useFirstVehicleAsEgo: Boolean = false,
     simulationRunId: String
-): List<List<TickData>> {
+): List<TickData> {
+  cleanJsonData(blocks, jsonSimulationRun)
+
   // Extract vehicles from the JSON file
   val jsonVehicles: List<JsonVehicle> =
       jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
@@ -115,71 +110,14 @@ fun convertTickData(
     "There are vehicles with the same id in the Json data."
   }
 
-  // Extract ego vehicles
-  val egosToUse =
-      when {
-        // Every vehicle should be used as ego. Ignore egoIds parameter and ego flag in Json data.
-        useEveryVehicleAsEgo -> jsonVehicles.map { it.id }
-
-        // Ego ids to use have been specified. Ignore ego flag in Json data.
-        egoIds.isNotEmpty() -> {
-          // Extract vehicles with ego ids
-          jsonVehicles
-              .map { it.id }
-              .filter { it in egoIds }
-              .also {
-                check(it.size == egoIds.size) {
-                  "Not all ego ids were found in the Json data. Found ${it.size}"
-                }
-              }
-        }
-
-        jsonVehicles.none { it.egoVehicle } -> {
-          if (useFirstVehicleAsEgo) {
-            // Get the first vehicle that is present in every Tick
-            listOf(
-                jsonSimulationRun
-                    .map { tick ->
-                      tick.actorPositions.filter { it.actor is JsonVehicle }.map { it.actor.id }
-                    }
-                    .reduce { acc, vehicles -> (acc.intersect(vehicles)).toList() }
-                    .first())
-          } else {
-            listOf()
-          }
-        }
-
-        else -> {
-          jsonVehicles
-              .filter { it.egoVehicle }
-              .map { it.id }
-              .also {
-                check(it.size == 1) {
-                  "There must be exactly one ego vehicle in the Json data. Found ${it.size}: $it."
-                }
-              }
-        }
-      }
-
-  // Create TickData for each ego vehicle
-  return egosToUse.map { t ->
-    // For every ego to use map the list of JsonTickData to TickData objects
-    jsonSimulationRun
-        .mapNotNull {
-          // Set ego flag for each vehicle
-          val vehiclesInRun = it.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
-          vehiclesInRun.forEach { v -> v.egoVehicle = (v.id == t) }
-
-          if (vehiclesInRun.none { v -> v.egoVehicle }) {
-            println(
-                "Vehicle with id $t not found in tick data at tick ${it.currentTick}, skipping.")
-            null
-          } else {
-            it.toTickData(blocks)
-          }
-        }
-        .also { updateActorVelocityForSimulationRun(it) }
+  val egoCount = jsonVehicles.count { it.egoVehicle }
+  check(egoCount == 1) {
+    "There must be exactly one ego vehicle in the Json data. Found $egoCount."
   }
+
+  return jsonSimulationRun
+      .map { it.toTickData(blocks) }
+      .also { updateActorVelocityForSimulationRun(it) }
 }
 
 /**
@@ -209,7 +147,6 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
 fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, timeDelta: Double) {
-
   // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousActor == null) {
     vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
@@ -232,71 +169,6 @@ fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, 
         (Vector3D(vehicle.velocity) - Vector3D(previousActor.velocity) / timeDelta)
   }
 }
-
-/// **
-// * Slices run into segments.
-// *
-// * @param blocks The list of [Block]s.
-// * @param jsonSimulationRun The list of [JsonTickData] in current observation.
-// * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in
-// the
-// *   Json data.
-// * @param useEveryVehicleAsEgo Whether to treat every vehicle as own.
-// * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
-// * @param simulationRunId Identifier of the simulation run.
-// * @param minSegmentTickCount Minimal count of ticks per segment.
-// */
-// fun sliceRunIntoSegments(
-//    blocks: List<Block>,
-//    jsonSimulationRun: List<JsonTickData>,
-//    egoIds: List<Int> = emptyList(),
-//    useEveryVehicleAsEgo: Boolean,
-//    useFirstVehicleAsEgo: Boolean,
-//    simulationRunId: String,
-//    minSegmentTickCount: Int
-// ): List<Segment> {
-//  cleanJsonData(blocks, jsonSimulationRun)
-//  val tickData =
-//      convertTickData(
-//          blocks,
-//          jsonSimulationRun,
-//          egoIds,
-//          useEveryVehicleAsEgo,
-//          useFirstVehicleAsEgo,
-//          simulationRunId)
-//
-//  val segments = mutableListOf<Segment>()
-//
-//  tickData.forEach { tickData ->
-//    val blockRanges = mutableListOf<Pair<TickDataUnitSeconds, TickDataUnitSeconds>>()
-//    var prevBlockID = tickData.first().ego.lane.road.block.id
-//    var firstTickInBlock = tickData.first().currentTick
-//
-//    tickData.forEachIndexed { index, tick ->
-//      val currentBlockID = tick.ego.lane.road.block.id
-//      if (currentBlockID != prevBlockID) {
-//        blockRanges += (firstTickInBlock to tickData[index - 1].currentTick)
-//        prevBlockID = currentBlockID
-//        firstTickInBlock = tick.currentTick
-//      }
-//    }
-//    blockRanges += (firstTickInBlock to tickData.last().currentTick)
-//
-//    blockRanges.forEachIndexed { _, blockRange ->
-//      val mainSegment =
-//          tickData
-//              .filter { it.currentTick in blockRange.first..blockRange.second }
-//              .map { it.clone() }
-//      if (mainSegment.size >= minSegmentTickCount) {
-//        segments +=
-//            Segment(mainSegment, simulationRunId = simulationRunId, segmentSource =
-// simulationRunId)
-//      }
-//    }
-//  }
-//
-//  return segments
-// }
 
 /**
  * Cleans Json data.

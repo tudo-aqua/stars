@@ -26,13 +26,16 @@ import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
+import kotlin.io.path.nameWithoutExtension
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
+import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.data.av.dataclasses.Block
+import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 /** Carla data serializer module. */
@@ -96,229 +99,136 @@ inline fun <reified T> getJsonContentOfPath(file: Path): T {
 fun loadBlocks(mapDataFile: Path): Sequence<Block> =
     calculateStaticBlocks(getJsonContentOfPath<List<JsonBlock>>(mapDataFile)).asSequence()
 
-/// **
-// * Returns a [Sequence] of [Segment]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
-// * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
-// * data, each as [Path]s.
-// *
-// * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map
-// data
-// *   to its dynamic data
-// * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in
-// the
-// *   Json data.
-// * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
-// *   vehicle as the "ego" vehicle
-// * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
-// * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a
-// [Segment]
-// * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead
-// of
-// *   the map
-// * @return A [Sequence] of [Segment]s based on the given [simulationRunsWrappers]
-// */
-// fun loadSegments(
-//    simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
-//    egoIds: List<Int> = emptyList(),
-//    useEveryVehicleAsEgo: Boolean = false,
-//    useFirstVehicleAsEgo: Boolean = false,
-//    minSegmentTickCount: Int = 10,
-//    orderFilesBySeed: Boolean = false
-// ): Sequence<Segment> {
-//  var simulationRunsWrapperList = simulationRunsWrappers
-//  // Check that every SimulationRunsWrapper has dynamic data files loaded
-//  simulationRunsWrapperList.forEach {
-//    check(it.dynamicDataFiles.any()) {
-//      "The SimulationRunsWrapper with map data file '${it.mapDataFile}' has no dynamic files.
-// Dynamic file " +
-//          "paths: ${it.dynamicDataFiles.map { dynamicDataFilePath ->  dynamicDataFilePath.toUri()
-// }}"
-//    }
-//  }
-//
-//  // If orderFilesBySeed is set, order the dynamic data files by seed instead of grouped by map
-// name
-//  if (orderFilesBySeed) {
-//    // Create a single CarlaSimulationRunsWrapper for each dynamic file
-//    var sortedSimulationRunsWrapperList =
-//        simulationRunsWrapperList.flatMap { wrapper ->
-//          wrapper.dynamicDataFiles.map {
-//            CarlaSimulationRunsWrapper(wrapper.mapDataFile, listOf(it))
-//          }
-//        }
-//    // Sort the list by the seed name in the dynamic file name
-//    sortedSimulationRunsWrapperList =
-//        sortedSimulationRunsWrapperList.sortedBy {
-//          getSeed(it.dynamicDataFiles.first().fileName.toString())
-//        }
-//    // Set simulationRunsWrapperList to sorted list to proceed with the sorted list
-//    simulationRunsWrapperList = sortedSimulationRunsWrapperList
-//  }
-//
-//  // Load Blocks and save in SimulationRunsWrapper
-//  simulationRunsWrapperList.forEach { it.blocks = loadBlocks(it.mapDataFile).toList() }
-//
-//  // Holds the [ArrayDeque] of [CarlaSimulationRunsWrapper] from the parameters
-//  val simulationRunsWrappersDeque = ArrayDeque(simulationRunsWrapperList)
-//  // Holds the [Segment]s that still need to be calculated for the [Sequence] of [Segment]s
-//  val segmentBuffer = ArrayDeque<Segment>()
-//
-//  return generateSequence {
-//    // There currently is another Segment that was already calculated
-//    if (segmentBuffer.size > 0) {
-//      return@generateSequence segmentBuffer.removeFirst()
-//    }
-//    // No calculated Segment is left. Calculate new Segments
-//    if (simulationRunsWrappersDeque.size > 0) {
-//      // Holds the current [CarlaSimulationRunsWrapper]
-//      val simulationRunsWrapper = simulationRunsWrappersDeque.first()
-//      // Remove current simulationRunsWrapper only if there is no dynamic data file left to
-// analyze
-//      if (simulationRunsWrapper.dynamicDataFilesArrayDeque.size == 1) {
-//        simulationRunsWrappersDeque.removeFirst()
-//      }
-//      // Holds the current [InputStream] of the next dynamic data file to be calculated
-//      val currentDynamicDataPath = simulationRunsWrapper.dynamicDataFilesArrayDeque.removeFirst()
-//
-//      println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
-//
-//      // Holds the current simulationRun object
-//      val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
-//
-//      // Calculate Blocks for current file and add each Segment to the Sequence
-//      segmentBuffer.addAll(
-//          sliceRunIntoSegments(
-//              simulationRunsWrapper.blocks,
-//              simulationRun,
-//              egoIds,
-//              useEveryVehicleAsEgo,
-//              useFirstVehicleAsEgo,
-//              currentDynamicDataPath.nameWithoutExtension,
-//              minSegmentTickCount))
-//      return@generateSequence segmentBuffer.removeFirst()
-//    }
-//    // If there are no Segments nor Files to process, return null to indicate the end of the
-//    // Sequence
-//    return@generateSequence null
-//  }
-// }
-//
-/// **
-// * Return a [Sequence] of [Segment]s given a path to a [mapDataFile] in combination with a
-// * [dynamicDataFile] path. [useEveryVehicleAsEgo] lets you decide whether to use every vehicle to
-// be
-// * used as the ego vehicle. This will multiply the size of the resulting sequence of [Segment]s by
-// * the number of vehicles.
-// *
-// * @param mapDataFile The [Path] to map data file containing all static information
-// * @param dynamicDataFile The [Path] to the data file which contains the timed state data for the
-// *   simulation
-// * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in
-// the
-// *   Json data.
-// * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
-// *   vehicle as the "ego" vehicle
-// * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
-// * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a
-// [Segment]
-// * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead
-// of
-// *   the map
-// * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFile]
-// */
-// fun loadSegments(
-//    mapDataFile: Path,
-//    dynamicDataFile: Path,
-//    egoIds: List<Int> = emptyList(),
-//    useEveryVehicleAsEgo: Boolean = false,
-//    useFirstVehicleAsEgo: Boolean = false,
-//    minSegmentTickCount: Int = 10,
-//    orderFilesBySeed: Boolean = false
-// ): Sequence<Segment> =
-//    // Call actual implementation of loadSegments with correct data structure
-//    loadSegments(
-//        listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
-//        egoIds,
-//        useEveryVehicleAsEgo,
-//        useFirstVehicleAsEgo,
-//        minSegmentTickCount,
-//        orderFilesBySeed)
-//
-/// **
-// * Load [Segment]s for one specific map. The map data comes from the file [mapDataFile] and the
-// * dynamic data from multiple files [dynamicDataFiles].
-// *
-// * @param mapDataFile The [Path] to map data file containing all static information
-// * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state
-// data
-// *   for the simulation
-// * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in
-// the
-// *   Json data.
-// * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
-// *   vehicle as the "ego" vehicle
-// * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
-// * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a
-// [Segment]
-// * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead
-// of
-// *   the map
-// * @return A [Sequence] of [Segment]s based on the given [mapDataFile] and [dynamicDataFiles]
-// */
-// fun loadSegments(
-//    mapDataFile: Path,
-//    dynamicDataFiles: List<Path>,
-//    egoIds: List<Int> = emptyList(),
-//    useEveryVehicleAsEgo: Boolean = false,
-//    useFirstVehicleAsEgo: Boolean = false,
-//    minSegmentTickCount: Int = 10,
-//    orderFilesBySeed: Boolean = false
-// ): Sequence<Segment> =
-//    // Call actual implementation of loadSegments with correct data structure
-//    loadSegments(
-//        listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
-//        egoIds,
-//        useEveryVehicleAsEgo,
-//        useFirstVehicleAsEgo,
-//        minSegmentTickCount,
-//        orderFilesBySeed)
-//
-/// **
-// * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[Path],
-// * List[Path]> with the semantics: Map<MapDataPath, List<DynamicDataPath>>. As each dynamic data
-// is
-// * linked to a map data, they are linked in the [Map].
-// *
-// * @param mapToDynamicDataFiles Maps the [Path] of the static file to a [List] of [Path]s of
-// dynamic
-// *   files related to the static file.
-// * @param egoIds The optional list of ids of the ego vehicles to take. Overrides the ego flag in
-// the
-// *   Json data.
-// * @param useEveryVehicleAsEgo Whether the [Segment]s should be enriched by considering every
-// *   vehicle as the "ego" vehicle.
-// * @param useFirstVehicleAsEgo Whether to treat the first vehicle as ego.
-// * @param minSegmentTickCount The amount of ticks there should be at minimum to generate a
-// [Segment]
-// *   .
-// * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead
-// of
-// *   the map.
-// * @return A [Sequence] of [Segment]s based on the given 'mapDataFile' and 'dynamicDataFiles'.
-// */
-// fun loadSegments(
-//    mapToDynamicDataFiles: Map<Path, List<Path>>,
-//    egoIds: List<Int> = emptyList(),
-//    useEveryVehicleAsEgo: Boolean = false,
-//    useFirstVehicleAsEgo: Boolean = false,
-//    minSegmentTickCount: Int = 10,
-//    orderFilesBySeed: Boolean = false
-// ): Sequence<Segment> =
-//    // Call actual implementation of loadSegments with correct data structure
-//    loadSegments(
-//        mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
-//        egoIds,
-//        useEveryVehicleAsEgo,
-//        useFirstVehicleAsEgo,
-//        minSegmentTickCount,
-//        orderFilesBySeed)
+/**
+ * Returns a [Sequence] of [TickSequence]s given a [List] of [CarlaSimulationRunsWrapper]s. Each
+ * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
+ * data, each as [Path]s.
+ *
+ * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
+ *   to its dynamic data.
+ * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
+ *   that gets supplied to the TSCEvaluation.
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ *   the map.
+ * @return A [Sequence] of [TickSequence]s based on the given [simulationRunsWrappers].
+ */
+fun loadTicks(
+    simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
+    bufferSize: Int = 100,
+    orderFilesBySeed: Boolean = false
+): Sequence<TickSequence<TickData>> {
+  // Check that the simulationRunsWrappers are not empty
+  check(simulationRunsWrappers.isNotEmpty()) {
+    "The list of SimulationRunsWrapper is empty. Cannot load ticks without simulation runs."
+  }
+
+  // Check that every SimulationRunsWrapper has dynamic data files loaded
+  check(simulationRunsWrappers.none { it.dynamicDataFiles.isEmpty() }) {
+    "Some SimulationRunsWrappers do not have dynamic data files loaded. " +
+        "Cannot load ticks without dynamic data files."
+  }
+
+  val simulationRunsWrapperIterator = simulationRunsWrappers.iterator()
+  var currentSimulationRunsWrapper = simulationRunsWrapperIterator.next()
+  var currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
+
+  return generateSequence {
+    if (!currentDynamicDataPathIterator.hasNext() && simulationRunsWrapperIterator.hasNext()) {
+      currentSimulationRunsWrapper = simulationRunsWrapperIterator.next()
+      currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
+    }
+
+    if (currentDynamicDataPathIterator.hasNext()) {
+      val currentDynamicDataPath = currentDynamicDataPathIterator.next()
+      println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
+
+      // Holds the current simulationRun object
+      val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
+
+      // Calculate Blocks for current file and add each Segment to the Sequence
+      val ticks =
+          convertTickData(
+              blocks = currentSimulationRunsWrapper.blocks,
+              jsonSimulationRun = simulationRun,
+              simulationRunId = currentDynamicDataPath.nameWithoutExtension)
+
+      val iterator = ticks.iterator()
+      return@generateSequence TickSequence(bufferSize) {
+        if (iterator.hasNext()) iterator.next() else null
+      }
+    }
+
+    // No more dynamic data files left to process. Terminate the sequence.
+    return@generateSequence null
+  }
+}
+
+/**
+ * Returns a [Sequence] of [TickSequence]s given a path to a [mapDataFile] in combination with a
+ * [dynamicDataFile] path.
+ *
+ * @param mapDataFile The [Path] to map data file containing all static information.
+ * @param dynamicDataFile The [Path] to the data file which contains the timed state data for the
+ *   simulation.
+ * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
+ *   that gets supplied to the TSCEvaluation.
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ *   the map.
+ * @return A [Sequence] of [TickSequence]s based on the given [mapDataFile] and [dynamicDataFile].
+ */
+fun loadTicks(
+    mapDataFile: Path,
+    dynamicDataFile: Path,
+    bufferSize: Int = 100,
+    orderFilesBySeed: Boolean = false
+): Sequence<TickSequence<TickData>> =
+    loadTicks(
+        simulationRunsWrappers =
+            listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+        bufferSize = bufferSize,
+        orderFilesBySeed = orderFilesBySeed)
+
+/**
+ * Returns a [Sequence] of [TickSequence]s given a path to a [mapDataFile] in combination with a
+ * [List] of [dynamicDataFiles] paths.
+ *
+ * @param mapDataFile The [Path] to map data file containing all static information.
+ * @param dynamicDataFiles The [List] of [Path]s to the data files which contain the timed state
+ *   data for the simulation.
+ * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
+ *   that gets supplied to the TSCEvaluation.
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ *   the map.
+ * @return A [Sequence] of [TickSequence]s based on the given [mapDataFile] and [dynamicDataFiles].
+ */
+fun loadTicks(
+    mapDataFile: Path,
+    dynamicDataFiles: List<Path>,
+    bufferSize: Int = 100,
+    orderFilesBySeed: Boolean = false
+): Sequence<TickSequence<TickData>> =
+    loadTicks(
+        simulationRunsWrappers = listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
+        bufferSize = bufferSize,
+        orderFilesBySeed = orderFilesBySeed)
+
+/**
+ * Returns a [Sequence] of [TickSequence]s given a map of static data to dynamic data files.
+ *
+ * @param mapToDynamicDataFiles The [Map] of static data to dynamic data.
+ * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
+ *   that gets supplied to the TSCEvaluation.
+ * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ *   the map.
+ * @return A [Sequence] of [TickSequence]s based on the given [Map] of static data to dynamic data.
+ */
+fun loadTicks(
+    mapToDynamicDataFiles: Map<Path, List<Path>>,
+    bufferSize: Int = 100,
+    orderFilesBySeed: Boolean = false
+): Sequence<TickSequence<TickData>> =
+    loadTicks(
+        simulationRunsWrappers =
+            mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
+        bufferSize = bufferSize,
+        orderFilesBySeed = orderFilesBySeed)

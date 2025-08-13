@@ -19,7 +19,10 @@ package tools.aqua.stars.core.evaluation
 
 import tools.aqua.stars.core.types.TickDataType
 
-class TickSequence<T : TickDataType<*, T, *, *>>(val bufferSize: Int = 100, private val getNextValue: () -> T?) : Sequence<T> {
+class TickSequence<T : TickDataType<*, T, *, *>>(
+    val bufferSize: Int = 100,
+    private val getNextValue: () -> T?
+) : Sequence<T> {
   /** Constrains the sequence to be consumed only once. */
   private val onceConstraint = java.util.concurrent.atomic.AtomicBoolean(false)
 
@@ -28,7 +31,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(val bufferSize: Int = 100, priv
   }
 
   override fun iterator(): Iterator<T> {
-    if (!onceConstraint.getAndSet( true)) {
+    if (!onceConstraint.getAndSet(true)) {
       throw IllegalStateException("This TickSequence can only be consumed once.")
     }
 
@@ -57,7 +60,8 @@ class TickSequence<T : TickDataType<*, T, *, *>>(val bufferSize: Int = 100, priv
         if (size > bufferSize) {
           firstItem = first.nextTick
           firstItem?.previousTick = null
-          first.nextTick = null // Clear the next reference of the last item to avoid strange behavior
+          first.nextTick =
+              null // Clear the next reference of the last item to avoid strange behavior
           size--
         }
 
@@ -69,7 +73,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(val bufferSize: Int = 100, priv
 
         nextItem = getNextValue()
 
-        if(firstItem == null) {
+        if (firstItem == null) {
           firstItem = nextItem
           currentItem = nextItem
         }
