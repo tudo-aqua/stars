@@ -50,4 +50,7 @@ sealed class JsonActor {
 
   /** The [JsonBoundingBox] of the [JsonActor]. */
   @SerialName("bounding_box") abstract val boundingBox: JsonBoundingBox?
+
+  /** The [List] of all collision events ([List] of ActorIDs). */
+  @SerialName("collisions") abstract val collisions: List<Int>
 }
