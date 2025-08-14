@@ -1,7 +1,13 @@
 ---
 import publications from '../data/publications.json';
 
-const sortedPublicationsDesc = publications.sort((publication) => publication.year).reverse();
+const publicationsWithIndex = publications.map((pub, index) => ({ ...pub, originalIndex: index }));
+const sortedPublicationsDesc = publicationsWithIndex.sort((a, b) => {
+    if (a.year !== b.year) {
+        return b.year - a.year;
+    }
+    return b.originalIndex - a.originalIndex;
+});
 
 ---
 <div class="bg-white py-10" id="publications">

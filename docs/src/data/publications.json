@@ -41,8 +41,17 @@
     "authors": "Till Schallau, Dominik Schmid, Nick Pawlinorz, Harun Teper, Stefan Naujokat, Jian-Jia Chen, Falk Howar",
     "year": 2025,
     "in": "Intelligent Vehicles (IV 2025)",
+    "doi": "https://doi.org/10.1109/IV64158.2025.11097740",
+    "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2025_Post-hoc_Scenario-based_Testing_of_Automated_Driving_Systems.pdf",
+    "comment": ""
+  },
+  {
+    "title": "A Qualitative Analysis of the German Road Traffic Regulations (StVO) for Automated Driving",
+    "authors": "Dominik Schmid, Till Schallau, Nick Pawlinorz, Stefan Naujokat, Robin Philipp, Zhijing Zhu, Falk Howar",
+    "year": 2025,
+    "in": "IEEE International Automated Vehicle Validation Conference (IAVVC 2025)",
     "doi": null,
-    "preprintUrl": "",
-    "comment": "to be published"
+    "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schmid2025QualitativeAnalysisGermana_-_A_Qualitative_Analysis_of_the_German_Road_Traffic_Regulations__stvo__for_Automated_Driving.pdf",
+    "comment": "To be published"
   }
 ]
