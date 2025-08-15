@@ -27,10 +27,10 @@ package tools.aqua.stars.data.av.dataclasses
  * @see TrafficLight
  */
 data class StaticTrafficLight(
-    var id: Int,
-    val location: Location,
-    val rotation: Rotation,
-    val stopLocations: List<Location>,
+    var id: Int = 0,
+    val location: Location = Location(),
+    val rotation: Rotation = Rotation(),
+    val stopLocations: List<Location> = emptyList(),
 ) {
 
   /** Returns [TrafficLightState] from [TickData]. */

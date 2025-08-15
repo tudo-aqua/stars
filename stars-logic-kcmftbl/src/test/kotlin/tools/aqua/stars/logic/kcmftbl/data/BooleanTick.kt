@@ -29,6 +29,7 @@ import tools.aqua.stars.core.types.TickDataType
  * @property phi1 Represents the evaluation results of the formula 'phi1'.
  * @property phi2 Represents the evaluation results of the formula 'phi2'.
  */
+@Suppress("BooleanPropertyNaming")
 class BooleanTick(
     override var currentTick: TestUnit,
     override var entities: List<TestEntity>,

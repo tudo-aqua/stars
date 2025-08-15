@@ -32,7 +32,8 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 
 // region TSC 1 definition
 /** Holds a simple [TSC] with two mandatory leaf nodes. */
-val simpleTSC =
+val simpleTSC:
+    TSC<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     tsc<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
       all("root") {
         leaf("leaf1")
@@ -71,7 +72,9 @@ val simpleTSCLeafNode2:
     simpleTSCLeafEdge2.destination
 
 /** Holds a valid [TSCInstance] for the [simpleTSC]. */
-val simpleTSCValidInstance =
+val simpleTSCValidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC.rootNode).apply {
@@ -84,7 +87,9 @@ val simpleTSCValidInstance =
         sourceSegmentIdentifier = "file 1")
 
 /** Holds a valid [TSCInstance] for the [simpleTSC]. */
-val simpleTSCValidInstance2 =
+val simpleTSCValidInstance2:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC.rootNode).apply {
@@ -97,7 +102,9 @@ val simpleTSCValidInstance2 =
         sourceSegmentIdentifier = "file 1")
 
 /** Holds a valid [TSCInstance] for the [simpleTSC]. */
-val simpleTSCValidInstance3 =
+val simpleTSCValidInstance3:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC.rootNode).apply {
@@ -110,7 +117,9 @@ val simpleTSCValidInstance3 =
         sourceSegmentIdentifier = "file 2")
 
 /** Holds an invalid [TSCInstance] for the [simpleTSC]. */
-val simpleTSCInvalidInstance =
+val simpleTSCInvalidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC.rootNode).apply {
@@ -124,7 +133,8 @@ val simpleTSCInvalidInstance =
 
 // region TSC 2 definition
 /** Holds a simple [TSC] with one mandatory leaf nodes. */
-val simpleTSC2 =
+val simpleTSC2:
+    TSC<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     tsc<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
       any("root") { leaf("leaf1") { monitors { monitor("leaf1monitor") { true } } } }
     }
@@ -136,7 +146,10 @@ val simpleTSC2RootNode:
     simpleTSC2.rootNode
 
 /** Holds the edge to the first leaf node of the [simpleTSC2]. */
-val simpleTSC2LeafEdge = simpleTSC2RootNode.edges[0]
+val simpleTSC2LeafEdge:
+    TSCEdge<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
+    simpleTSC2RootNode.edges[0]
 
 /** Holds the node of the first leaf node of the [simpleTSC2]. */
 val simpleTSC2LeafNode:
@@ -145,7 +158,9 @@ val simpleTSC2LeafNode:
     simpleTSC2LeafEdge.destination
 
 /** Holds a valid [TSCInstance] for the [simpleTSC2]. */
-val simpleTSC2ValidInstance =
+val simpleTSC2ValidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC2.rootNode).apply {
@@ -163,7 +178,8 @@ val simpleTSC2ValidInstance =
 
 // region TSC 3 definition
 /** Holds a simple [TSC] with one mandatory leaf nodes. */
-val simpleTSC3 =
+val simpleTSC3:
+    TSC<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     tsc<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
       optional("root") {
         leaf("leaf1") {
@@ -206,7 +222,9 @@ val simpleTSC3LeafNode2:
     simpleTSC3LeafEdge2.destination
 
 /** Holds a valid [TSCInstance] for the [simpleTSC3] with both leaf nodes present. */
-val simpleTSC3ValidInstance =
+val simpleTSC3ValidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC3.rootNode).apply {
@@ -220,7 +238,9 @@ val simpleTSC3ValidInstance =
         sourceSegmentIdentifier = "file 1")
 
 /** Holds a valid [TSCInstance] for the [simpleTSC3] with only one leaf node present. */
-val simpleTSC3ValidInstance2 =
+val simpleTSC3ValidInstance2:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC3.rootNode).apply {
@@ -232,7 +252,9 @@ val simpleTSC3ValidInstance2 =
         sourceSegmentIdentifier = "file 1")
 
 /** Holds an invalid [TSCInstance] for the [simpleTSC3]. */
-val simpleTSC3InvalidInstance =
+val simpleTSC3InvalidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC3.rootNode).apply {
@@ -247,7 +269,8 @@ val simpleTSC3InvalidInstance =
 
 // region TSC 4 definition
 /** Holds a simple [TSC] with one mandatory leaf nodes. */
-val simpleTSC4 =
+val simpleTSC4:
+    TSC<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     tsc<SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
       optional("root") {
         leaf("leaf1") {
@@ -305,7 +328,9 @@ val simpleTSC4LeafNode3:
     simpleTSC4LeafEdge3.destination
 
 /** Holds a valid [TSCInstance] for the [simpleTSC4] with both leaf nodes present. */
-val simpleTSC4ValidInstance =
+val simpleTSC4ValidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC4.rootNode).apply {
@@ -319,7 +344,9 @@ val simpleTSC4ValidInstance =
         sourceSegmentIdentifier = "file 1")
 
 /** Holds a valid [TSCInstance] for the [simpleTSC4] with only one leaf node present. */
-val simpleTSC4ValidInstance2 =
+val simpleTSC4ValidInstance2:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC4.rootNode).apply {
@@ -344,11 +371,15 @@ val simpleTSC4ValidInstance2 =
         sourceSegmentIdentifier = "file 1")
 
 /** Holds a valid [TSCInstance] for the [simpleTSC4] with no leaf node present. */
-val simpleTSC4ValidInstance3 =
+val simpleTSC4ValidInstance3:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(rootNode = TSCInstanceNode(simpleTSC4.rootNode), sourceSegmentIdentifier = "file 1")
 
 /** Holds an invalid [TSCInstance] for the [simpleTSC4]. */
-val simpleTSC4InvalidInstance =
+val simpleTSC4InvalidInstance:
+    TSCInstance<
+        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> =
     TSCInstance(
         rootNode =
             TSCInstanceNode(simpleTSC4.rootNode).apply {
@@ -358,5 +389,4 @@ val simpleTSC4InvalidInstance =
                           TSCInstanceNode(simpleTSC4LeafNode), simpleTSC4LeafEdge, false))
             },
         sourceSegmentIdentifier = "file 1")
-
 // endregion

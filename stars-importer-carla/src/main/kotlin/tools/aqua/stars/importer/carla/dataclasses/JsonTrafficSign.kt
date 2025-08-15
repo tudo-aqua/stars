@@ -33,10 +33,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("TrafficSign")
 data class JsonTrafficSign(
-    @SerialName("id") override val id: Int,
-    @SerialName("traffic_sign_type") val trafficSignType: JsonTrafficSignType,
-    @SerialName("speed_limit") val speedLimit: Double?,
-    @SerialName("type_id") val typeId: String,
-    @SerialName("location") override val location: JsonLocation,
-    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("id") override val id: Int = 0,
+    @SerialName("traffic_sign_type")
+    val trafficSignType: JsonTrafficSignType = JsonTrafficSignType.INVALID,
+    @SerialName("speed_limit") val speedLimit: Double? = null,
+    @SerialName("type_id") val typeId: String = "",
+    @SerialName("location") override val location: JsonLocation = JsonLocation(),
+    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
 ) : JsonActor()

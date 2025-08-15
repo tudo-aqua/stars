@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.data.av.dataclasses
+package tools.aqua.stars.logic.kcmftbl
 
 /**
- * Data class for rotations.
+ * CMFTBL implementation of the 'for all' operator.
  *
- * @property pitch The pitch.
- * @property yaw The yaw.
- * @property roll The roll.
+ * @param T Type of the field.
+ * @param collection The collection.
+ * @param phi The predicate.
  */
-data class Rotation(val pitch: Double = 0.0, val yaw: Double = 0.0, val roll: Double = 0.0)
+fun <T> forAll(collection: Collection<T>, phi: (T) -> Boolean): Boolean = collection.all { phi(it) }

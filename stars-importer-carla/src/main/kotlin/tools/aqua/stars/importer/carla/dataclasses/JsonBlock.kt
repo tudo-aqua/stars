@@ -28,6 +28,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class JsonBlock(
-    @SerialName("id") val id: String,
-    @SerialName("roads") val roads: List<JsonRoad>,
+    @SerialName("id") val id: String = "",
+    @SerialName("roads") val roads: List<JsonRoad> = emptyList(),
 )

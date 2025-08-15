@@ -6,30 +6,28 @@
 detekt-rules-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-libraries", version ="1.23.7" }
 
 # Kotlinx
-# kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.10.1" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.8.0" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.9.0" }
 
 # SLF4J
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.16"}
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.16"}
 
 # Lets-Plot
-letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.9.3" }
-letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.5.2" }
+letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.11.0" }
+letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.7.0" }
 
 # Tests
 kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
 
 # Gradle Plugins
-gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.1.0" }
+gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.2.0" }
 gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "1.9.20" }
 gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.6" }
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.51.0" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.4.4" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "4.0.0" }
-gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "7.0.2" }
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "7.2.1" }
 gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
-# gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.6.1" }
 
 # Other
 dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "1.9.20" }

@@ -26,162 +26,106 @@ import tools.aqua.stars.importer.carla.dataclasses.*
 /**
  * Converts [JsonTickData] to [TickData].
  *
- * @param jsonTickData The [JsonTickData].
  * @param blocks List ob [Block]s.
  */
-fun convertJsonTickDataToTickData(jsonTickData: JsonTickData, blocks: List<Block>): TickData {
-  // Create new empty TickData
-  val tickData =
-      TickData(
-          currentTick = TickDataUnitSeconds(jsonTickData.currentTick),
-          trafficLights =
-              jsonTickData.actorPositions.mapNotNull { convertJsonActorPositionToTrafficLight(it) },
-          blocks = blocks,
-          weather = jsonTickData.weatherParameters.toWeatherParameters(),
-          daytime = jsonTickData.weatherParameters.type.toDaytime(),
-          entities = emptyList())
-
-  tickData.entities =
-      jsonTickData.actorPositions.mapNotNull {
-        convertJsonActorPositionToEntity(it, tickData, blocks)
-      }
-
-  return tickData
-}
+fun JsonTickData.toTickData(blocks: List<Block>): TickData =
+    TickData(
+        currentTick = TickDataUnitSeconds(currentTick),
+        entities = actorPositions.mapNotNull { it.toActorOrNull(blocks = blocks) },
+        trafficLights = actorPositions.mapNotNull { it.toTrafficLightOrNull() },
+        blocks = blocks,
+        weather = weatherParameters.toWeatherParameters(),
+        daytime = weatherParameters.type.toDaytime(),
+    )
 
 /**
  * Converts [JsonActorPosition] to [Actor].
  *
- * @param position The [JsonActorPosition].
- * @param tickData The [TickData].
  * @param blocks List ob [Block]s.
  */
-fun convertJsonActorPositionToEntity(
-    position: JsonActorPosition,
-    tickData: TickData,
-    blocks: List<Block>
-): Actor? {
-  val lane = checkNotNull(blocks.getLane(position.roadId, position.laneId))
+fun JsonActorPosition.toActorOrNull(blocks: List<Block>): Actor? =
+    actor.let {
+      val lane = checkNotNull(blocks.getLane(roadId, laneId))
+      when (it) {
+        is JsonPedestrian -> it.toPedestrian(positionOnLane = positionOnLane, lane = lane)
+        is JsonVehicle -> it.toVehicle(positionOnLane = positionOnLane, lane = lane)
+        is JsonTrafficLight -> null
+        is JsonTrafficSign -> null
+      }
+    }
 
-  return when (position.actor) {
-    is JsonPedestrian ->
-        convertJsonPedestrianToPedestrian(
-            position.actor as JsonPedestrian, tickData, position.positionOnLane, lane)
-    is JsonTrafficLight -> null
-    is JsonTrafficSign -> null
-    is JsonVehicle ->
-        convertJsonVehicleToVehicle(
-            position.actor as JsonVehicle, tickData, position.positionOnLane, lane)
-  }
-}
-
-/**
- * Converts [JsonActorPosition] to [TrafficLight].
- *
- * @param position The [JsonActorPosition].
- */
-fun convertJsonActorPositionToTrafficLight(position: JsonActorPosition): TrafficLight? =
-    (position.actor as? JsonTrafficLight)?.toTrafficLight()
+/** Converts [JsonActorPosition] to [TrafficLight]. */
+fun JsonActorPosition.toTrafficLightOrNull(): TrafficLight? =
+    (actor as? JsonTrafficLight)?.toTrafficLight()
 
 /**
  * Converts [JsonVehicle] to [Vehicle].
  *
- * @param vehicle The [JsonVehicle].
- * @param tickData The [TickData].
  * @param positionOnLane The position on the [Lane].
  * @param lane The [Lane].
  */
-fun convertJsonVehicleToVehicle(
-    vehicle: JsonVehicle,
-    tickData: TickData,
-    positionOnLane: Double,
-    lane: Lane
-): Vehicle =
+fun JsonVehicle.toVehicle(positionOnLane: Double, lane: Lane): Vehicle =
     Vehicle(
-        id = vehicle.id,
-        tickData = tickData,
+        id = id,
         positionOnLane = positionOnLane,
         lane = lane,
-        typeId = vehicle.typeId,
-        vehicleType = getVehicleTypeFromTypeId(vehicle.typeId),
-        isEgo = vehicle.egoVehicle,
-        location = vehicle.location.toLocation(),
-        forwardVector = vehicle.forwardVector.toVector3D(),
-        rotation = vehicle.rotation.toRotation(),
-        velocity = vehicle.velocity.toVector3D(),
-        acceleration = vehicle.acceleration.toVector3D(),
-        angularVelocity = vehicle.angularVelocity.toVector3D())
+        typeId = typeId,
+        vehicleType = getVehicleTypeFromTypeId(typeId),
+        isEgo = egoVehicle,
+        location = location.toLocation(),
+        forwardVector = forwardVector.toVector3D(),
+        rotation = rotation.toRotation(),
+        velocity = velocity.toVector3D(),
+        acceleration = acceleration.toVector3D(),
+        angularVelocity = angularVelocity.toVector3D())
 
 /**
  * Converts [JsonPedestrian] to [Pedestrian].
  *
- * @param pedestrian The [JsonPedestrian].
- * @param tickData The [TickData].
  * @param positionOnLane The position on the [Lane].
  * @param lane The [Lane].
  */
-fun convertJsonPedestrianToPedestrian(
-    pedestrian: JsonPedestrian,
-    tickData: TickData,
-    positionOnLane: Double,
-    lane: Lane
-): Pedestrian =
-    Pedestrian(
-        id = pedestrian.id, tickData = tickData, positionOnLane = positionOnLane, lane = lane)
+fun JsonPedestrian.toPedestrian(positionOnLane: Double, lane: Lane): Pedestrian =
+    Pedestrian(id = id, positionOnLane = positionOnLane, lane = lane)
 
-/**
- * Converts [JsonBlock] to [Block].
- *
- * @param jsonBlock The [JsonBlock].
- * @param fileName The filename.
- */
-fun convertJsonBlockToBlock(jsonBlock: JsonBlock, fileName: String): Block =
-    Block(id = jsonBlock.id, roads = emptyList(), fileName = fileName).apply {
-      roads = jsonBlock.roads.map { convertJsonRoadToRoad(it, this) }
-    }
+/** Converts [JsonBlock] to [Block]. */
+fun JsonBlock.toBlock(): Block = Block(id = id, roads = roads.map { it.toRoad() })
 
-/**
- * Converts [JsonRoad] to [Road].
- *
- * @param jsonRoad The [JsonRoad].
- * @param block The [Block].
- */
-fun convertJsonRoadToRoad(jsonRoad: JsonRoad, block: Block): Road =
-    Road(id = jsonRoad.roadId, block = block, lanes = emptyList(), isJunction = jsonRoad.isJunction)
-        .apply { lanes = jsonRoad.lanes.map { lane -> convertJsonLaneToLane(lane, this) } }
+/** Converts [JsonRoad] to [Road]. */
+fun JsonRoad.toRoad(): Road =
+    Road(
+        id = roadId,
+        lanes = lanes.map { jsonLane -> jsonLane.toLane(isJunction = isJunction) },
+        isJunction = isJunction)
 
 /**
  * Converts [JsonLane] to [Lane].
  *
- * @param jsonLane The [JsonLane].
- * @param road The [Road].
+ * @param isJunction Whether the [Lane] is in a junction.
  */
-fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane =
+fun JsonLane.toLane(isJunction: Boolean): Lane =
     Lane(
-            laneId = jsonLane.laneId,
-            road = road,
-            laneType = LaneType.getByValue(jsonLane.laneType.value),
-            laneWidth = jsonLane.laneWidth,
-            laneLength = jsonLane.laneLength,
+            laneId = laneId,
+            laneType = LaneType.getByValue(laneType.value),
+            laneWidth = laneWidth,
+            laneLength = laneLength,
             predecessorLanes = emptyList(),
             successorLanes = emptyList(),
             intersectingLanes = emptyList(),
             yieldLanes = emptyList(),
-            laneMidpoints = jsonLane.laneMidpoints.map { it.toLaneMidpoint() },
+            laneMidpoints = laneMidpoints.map { it.toLaneMidpoint() },
             speedLimits = emptyList(),
             landmarks =
-                jsonLane.landmarks
-                    .filter { it.type != JsonLandmarkType.LightPost }
-                    .map { it.toLandmark() },
+                landmarks.filter { it.type != JsonLandmarkType.LightPost }.map { it.toLandmark() },
             contactAreas = emptyList(),
             trafficLights = emptyList(),
             laneDirection = LaneDirection.UNKNOWN,
         )
         .apply {
-          trafficLights = jsonLane.trafficLights.map { it.toStaticTrafficLight() }
-          speedLimits = getSpeedLimitsFromLandmarks(this, jsonLane.landmarks)
+          trafficLights = this@toLane.trafficLights.map { it.toStaticTrafficLight() }
+          speedLimits = getSpeedLimitsFromLandmarks(this, this@toLane.landmarks)
 
-          if (road.isJunction) {
+          if (isJunction) {
             val firstYaw = laneMidpoints.first().rotation.yaw
             val lastYaw = laneMidpoints.last().rotation.yaw
 
@@ -205,22 +149,17 @@ fun convertJsonLaneToLane(jsonLane: JsonLane, road: Road): Lane =
 /**
  * Converts [JsonContactArea] to [ContactArea].
  *
- * @param jsonContactArea The [JsonContactArea].
  * @param lane1 [Lane] 1.
  * @param lane2 [Lane] 2.
  */
-fun convertJsonContactAreaToContactArea(
-    jsonContactArea: JsonContactArea,
-    lane1: Lane,
-    lane2: Lane
-): ContactArea =
+fun JsonContactArea.toContactArea(lane1: Lane, lane2: Lane): ContactArea =
     ContactArea(
-        id = jsonContactArea.id,
-        contactLocation = jsonContactArea.contactLocation.toLocation(),
-        lane1EndPos = jsonContactArea.lane1EndPos,
-        lane1StartPos = jsonContactArea.lane1StartPos,
-        lane2EndPos = jsonContactArea.lane2EndPos,
-        lane2StartPos = jsonContactArea.lane2StartPos,
+        id = id,
+        contactLocation = contactLocation.toLocation(),
+        lane1EndPos = lane1EndPos,
+        lane1StartPos = lane1StartPos,
+        lane2EndPos = lane2EndPos,
+        lane2StartPos = lane2StartPos,
         lane1 = lane1,
         lane2 = lane2)
 
@@ -271,11 +210,10 @@ fun getVehicleTypeFromTypeId(typeId: String): VehicleType =
  * Calculates static [JsonBlock]s to [Block]s.
  *
  * @param staticJsonBlocks List of [JsonBlock]s.
- * @param fileName File name.
  */
-fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>, fileName: String): List<Block> =
+fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>): List<Block> =
     staticJsonBlocks
-        .map { block -> convertJsonBlockToBlock(block, fileName) }
+        .map { block -> block.toBlock() }
         .also {
           updateLanes(
               jsonLanes = staticJsonBlocks.flatMap { b -> b.roads }.flatMap { b -> b.lanes },
@@ -331,7 +269,7 @@ private fun JsonLane.update(lanes: List<Lane>) {
             lanes.first {
               it.laneId == jsonContactArea.lane2Id && it.road.id == jsonContactArea.lane2RoadId
             }
-        convertJsonContactAreaToContactArea(jsonContactArea, contactLane1, contactLane2)
+        jsonContactArea.toContactArea(contactLane1, contactLane2)
       }
 }
 
