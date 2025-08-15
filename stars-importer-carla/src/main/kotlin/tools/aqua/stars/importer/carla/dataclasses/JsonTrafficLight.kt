@@ -42,24 +42,17 @@ import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 @Serializable
 @SerialName("TrafficLight")
 data class JsonTrafficLight(
-    @SerialName("id") override var id: Int = 0,
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("state") var state: Int = 0,
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
-    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int = 0,
-    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
-    @SerialName("is_alive") override val isAlive: Boolean = false,
-    @SerialName("is_active") override val isActive: Boolean = false,
-    @SerialName("is_dormant") override val isDormant: Boolean = false,
-    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
-) : JsonActor() {
-
-  /** Converts [JsonTrafficLight] to [TrafficLight]. */
-  fun toTrafficLight(): TrafficLight =
-      TrafficLight(
-          id = this.id,
-          state = TrafficLightState.getByValue(this.state),
-          relatedOpenDriveId = this.relatedOpenDriveId)
-}
+    @SerialName("id") override var id: Int,
+    @SerialName("type_id") val typeId: String,
+    @SerialName("state") var state: Int,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
+    @SerialName("collisions") override val collisions: List<Int>
+) : JsonActor()

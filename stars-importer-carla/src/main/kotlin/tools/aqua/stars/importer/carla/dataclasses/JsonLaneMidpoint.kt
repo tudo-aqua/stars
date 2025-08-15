@@ -32,16 +32,9 @@ import tools.aqua.stars.data.av.dataclasses.LaneMidpoint
  */
 @Serializable
 data class JsonLaneMidpoint(
-    @SerialName("lane_id") val laneId: Int = 0,
-    @SerialName("road_id") val roadId: Int = 0,
-    @SerialName("distance_to_start") val distanceToStart: Double = 0.0,
-    @SerialName("location") val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") val rotation: JsonRotation = JsonRotation(),
-) {
-  /** Converts [JsonLaneMidpoint] to [LaneMidpoint]. */
-  fun toLaneMidpoint(): LaneMidpoint =
-      LaneMidpoint(
-          distanceToStart = this.distanceToStart,
-          location = this.location.toLocation(),
-          rotation = this.rotation.toRotation())
-}
+    @SerialName("lane_id") val laneId: Int,
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("distance_to_start") val distanceToStart: Double,
+    @SerialName("location") val location: JsonLocation,
+    @SerialName("rotation") val rotation: JsonRotation
+)

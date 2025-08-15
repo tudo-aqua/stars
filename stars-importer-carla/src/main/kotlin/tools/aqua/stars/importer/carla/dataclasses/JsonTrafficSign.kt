@@ -41,16 +41,16 @@ import kotlinx.serialization.Serializable
 @SerialName("TrafficSign")
 data class JsonTrafficSign(
     @SerialName("id") override val id: Int = 0,
-    @SerialName("traffic_sign_type")
-    val trafficSignType: JsonTrafficSignType = JsonTrafficSignType.INVALID,
-    @SerialName("speed_limit") val speedLimit: Double? = null,
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
-    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
-    @SerialName("is_alive") override val isAlive: Boolean = false,
-    @SerialName("is_active") override val isActive: Boolean = false,
-    @SerialName("is_dormant") override val isDormant: Boolean = false,
-    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
+    @SerialName("traffic_sign_type") val trafficSignType: JsonTrafficSignType,
+    @SerialName("speed_limit") val speedLimit: Double?,
+    @SerialName("type_id") val typeId: String,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
+    @SerialName("collisions") override val collisions: List<Int>
 ) : JsonActor()

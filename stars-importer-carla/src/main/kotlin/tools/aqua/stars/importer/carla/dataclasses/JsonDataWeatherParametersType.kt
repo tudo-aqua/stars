@@ -43,45 +43,5 @@ enum class JsonDataWeatherParametersType(val value: Int) {
   @SerialName("11") WetCloudySunset(11),
   @SerialName("12") SoftRainSunset(12),
   @SerialName("13") MidRainSunset(13),
-  @SerialName("14") HardRainSunset(14);
-
-  /** Extracts [WeatherType] from [JsonDataWeatherParametersType]. */
-  fun toWeatherType(): WeatherType =
-      when (this) {
-        ClearNoon,
-        ClearSunset,
-        Default -> WeatherType.Clear
-        CloudyNoon,
-        CloudySunset -> WeatherType.Cloudy
-        WetNoon,
-        WetSunset -> WeatherType.Wet
-        WetCloudyNoon,
-        WetCloudySunset -> WeatherType.WetCloudy
-        SoftRainNoon,
-        SoftRainSunset -> WeatherType.SoftRainy
-        MidRainNoon,
-        MidRainSunset -> WeatherType.MidRainy
-        HardRainNoon,
-        HardRainSunset -> WeatherType.HardRainy
-      }
-
-  /** Extracts [Daytime] from [JsonDataWeatherParametersType]. */
-  fun toDaytime(): Daytime =
-      when (this) {
-        HardRainNoon,
-        WetNoon,
-        MidRainNoon,
-        SoftRainNoon,
-        CloudyNoon,
-        WetCloudyNoon,
-        ClearNoon -> Daytime.Noon
-        HardRainSunset,
-        SoftRainSunset,
-        MidRainSunset,
-        WetSunset,
-        WetCloudySunset,
-        CloudySunset,
-        ClearSunset,
-        Default -> Daytime.Sunset
-      }
+  @SerialName("14") HardRainSunset(14)
 }

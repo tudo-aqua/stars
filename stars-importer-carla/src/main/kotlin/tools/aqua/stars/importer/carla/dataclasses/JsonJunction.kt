@@ -29,5 +29,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class JsonJunction(
     @SerialName("junction_id") val junctionId: Int,
-    @SerialName("roads") val roads: List<JsonRoad>,
+    @SerialName("roads") val roads: List<JsonRoad>
 )

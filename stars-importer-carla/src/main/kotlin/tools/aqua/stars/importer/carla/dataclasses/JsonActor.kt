@@ -25,16 +25,16 @@ import kotlinx.serialization.Serializable
 @SerialName("Actor")
 sealed class JsonActor {
   /** Identifier of the actor. */
-  abstract val id: Int
+  @SerialName("id") abstract val id: Int
 
   /** Current [JsonLocation]. */
-  abstract val location: JsonLocation
+  @SerialName("location") abstract val location: JsonLocation
 
   /** Current [JsonRotation]. */
-  abstract val rotation: JsonRotation
+  @SerialName("rotation") abstract val rotation: JsonRotation
 
   /** All additional attributes from CARLA. */
-  abstract val attributes: Map<String, String>
+  @SerialName("attributes") abstract val attributes: Map<String, String>
 
   /** Whether the [JsonActor] is alive in the simulation. */
   @SerialName("is_alive") abstract val isAlive: Boolean

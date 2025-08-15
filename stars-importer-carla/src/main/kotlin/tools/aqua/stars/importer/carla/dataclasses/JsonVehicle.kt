@@ -45,21 +45,22 @@ import kotlinx.serialization.Serializable
 @SerialName("Vehicle")
 @Suppress("BooleanPropertyNaming")
 data class JsonVehicle(
-    @SerialName("id") override val id: Int = 0,
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("ego_vehicle") var egoVehicle: Boolean = false,
-    @SerialName("forward_vector") val forwardVector: JsonVector3D = JsonVector3D(),
-    @SerialName("velocity") val velocity: JsonVector3D = JsonVector3D(),
-    @SerialName("acceleration") val acceleration: JsonVector3D = JsonVector3D(),
-    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D(),
-    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
-    @SerialName("is_alive") override val isAlive: Boolean = false,
-    @SerialName("is_active") override val isActive: Boolean = false,
-    @SerialName("is_dormant") override val isDormant: Boolean = false,
-    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
+    @SerialName("id") override val id: Int,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("type_id") val typeId: String,
+    @SerialName("ego_vehicle") var egoVehicle: Boolean,
+    @SerialName("forward_vector") val forwardVector: JsonVector3D,
+    @SerialName("velocity") val velocity: JsonVector3D,
+    @SerialName("acceleration") val acceleration: JsonVector3D,
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
+    @SerialName("collisions") override val collisions: List<Int>
 ) : JsonActor() {
 
   /** The effective velocity. */

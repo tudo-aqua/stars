@@ -20,16 +20,19 @@ package tools.aqua.stars.importer.carla.dataclasses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** JSON bounding box. */
+/**
+ * Json object for [JsonActor] bounding boxes.
+ *
+ * @property extent The extent of the bounding box.
+ * @property location The location of the bounding box.
+ * @property rotation The rotation of the bounding box.
+ * @property vertices All vertices of the bounding box.
+ */
 @Serializable
-@SerialName("BoundingBox")
-class JsonBoundingBox {
-  /** The extent of the bounding box. */
-  val extent: JsonVector3D = JsonVector3D()
-  /** The location of the bounding box. */
-  val location: JsonLocation = JsonLocation()
-  /** The rotation of the bounding box. */
-  val rotation: JsonRotation = JsonRotation()
-  /** All vertices of the bounding box. */
-  val vertices: List<JsonLocation>? = emptyList()
-}
+@SerialName("BoundingBox") //TODO: Why is renaming required here?
+data class JsonBoundingBox(
+  val extent: JsonVector3D,
+  val location: JsonLocation,
+  val rotation: JsonRotation,
+  val vertices: List<JsonLocation>
+)

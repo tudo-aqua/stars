@@ -43,38 +43,19 @@ import tools.aqua.stars.data.av.dataclasses.WeatherParameters
 @Serializable
 data class JsonDataWeatherParameters(
     @SerialName("type")
-    val type: JsonDataWeatherParametersType = JsonDataWeatherParametersType.Default,
-    @SerialName("dust_storm") val dustStorm: Double = 0.0,
-    @SerialName("cloudiness") val cloudiness: Double = 0.0,
-    @SerialName("precipitation") val precipitation: Double = 0.0,
-    @SerialName("precipitation_deposits") val precipitationDeposits: Double = 0.0,
-    @SerialName("wind_intensity") val windIntensity: Double = 0.0,
-    @SerialName("sun_azimuth_angle") val sunAzimuthAngle: Double = 0.0,
-    @SerialName("sun_altitude_angle") val sunAltitudeAngle: Double = 0.0,
-    @SerialName("fog_density") val fogDensity: Double = 0.0,
-    @SerialName("fog_distance") val fogDistance: Double = 0.0,
-    @SerialName("wetness") val wetness: Double = 0.0,
-    @SerialName("fog_falloff") val fogFalloff: Double = 0.0,
-    @SerialName("scattering_intensity") val scatteringIntensity: Double = 0.0,
-    @SerialName("mie_scattering_scale") val mieScatteringScale: Double = 0.0,
-    @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double = 0.0,
-) {
-
-  /** Converts [JsonDataWeatherParameters] to [WeatherParameters]. */
-  fun toWeatherParameters(): WeatherParameters =
-      WeatherParameters(
-          type = this.type.toWeatherType(),
-          cloudiness = this.cloudiness,
-          precipitation = this.precipitation,
-          precipitationDeposits = this.precipitationDeposits,
-          windIntensity = this.windIntensity,
-          sunAzimuthAngle = this.sunAzimuthAngle,
-          sunAltitudeAngle = this.sunAltitudeAngle,
-          fogDensity = this.fogDensity,
-          fogDistance = this.fogDistance,
-          wetness = this.wetness,
-          fogFalloff = this.fogFalloff,
-          scatteringIntensity = this.scatteringIntensity,
-          mieScatteringScale = this.mieScatteringScale,
-          rayleighScatteringScale = this.rayleighScatteringScale)
-}
+    val type: JsonDataWeatherParametersType,
+    @SerialName("dust_storm") val dustStorm: Double,
+    @SerialName("cloudiness") val cloudiness: Double,
+    @SerialName("precipitation") val precipitation: Double,
+    @SerialName("precipitation_deposits") val precipitationDeposits: Double,
+    @SerialName("wind_intensity") val windIntensity: Double,
+    @SerialName("sun_azimuth_angle") val sunAzimuthAngle: Double,
+    @SerialName("sun_altitude_angle") val sunAltitudeAngle: Double,
+    @SerialName("fog_density") val fogDensity: Double,
+    @SerialName("fog_distance") val fogDistance: Double,
+    @SerialName("wetness") val wetness: Double,
+    @SerialName("fog_falloff") val fogFalloff: Double,
+    @SerialName("scattering_intensity") val scatteringIntensity: Double,
+    @SerialName("mie_scattering_scale") val mieScatteringScale: Double,
+    @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double
+)

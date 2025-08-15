@@ -21,6 +21,21 @@ import kotlin.math.abs
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.data.av.dataclasses.VehicleType.*
 import tools.aqua.stars.importer.carla.dataclasses.*
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.ClearNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.ClearSunset
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.CloudyNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.CloudySunset
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.Default
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.HardRainNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.HardRainSunset
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.MidRainNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.MidRainSunset
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.SoftRainNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.SoftRainSunset
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.WetCloudyNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.WetCloudySunset
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.WetNoon
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.WetSunset
 
 // region converter
 /**
@@ -165,6 +180,21 @@ fun JsonLane.toLane(isJunction: Boolean): Lane =
           }
         }
 
+/** Converts [JsonLandmark] to [Landmark]. */
+fun JsonLandmark.toLandmark(): Landmark =
+  Landmark(
+    id = this.id,
+    name = this.name,
+    distance = this.distance,
+    s = this.s,
+    country = this.country,
+    type = LandmarkType.getByValue(this.type.value),
+    value = this.value,
+    unit = this.unit,
+    text = this.text,
+    location = this.location.toLocation(),
+    rotation = this.rotation.toRotation())
+
 /**
  * Converts [JsonContactArea] to [ContactArea].
  *
@@ -182,6 +212,92 @@ fun JsonContactArea.toContactArea(lane1: Lane, lane2: Lane): ContactArea =
         lane1 = lane1,
         lane2 = lane2)
 
+fun JsonVector3D.toVector3D(): Vector3D = Vector3D(x, y, z)
+
+/** Converts [JsonLocation] to [Location]. */
+fun JsonLocation.toLocation(): Location = Location(x, y, z)
+
+fun JsonRotation.toRotation(): Rotation = Rotation(pitch, yaw, roll)
+
+/** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */
+fun JsonStaticTrafficLight.toStaticTrafficLight(): StaticTrafficLight =
+  StaticTrafficLight(
+    id = this.id,
+    location = this.location.toLocation(),
+    rotation = this.rotation.toRotation(),
+    stopLocations = this.stopLocations.map { it.toLocation() })
+
+/** Converts [JsonTrafficLight] to [TrafficLight]. */
+fun JsonTrafficLight.toTrafficLight(): TrafficLight =
+  TrafficLight(
+    id = this.id,
+    state = TrafficLightState.getByValue(this.state),
+    relatedOpenDriveId = this.relatedOpenDriveId)
+
+/** Converts [JsonLaneMidpoint] to [LaneMidpoint]. */
+fun JsonLaneMidpoint.toLaneMidpoint(): LaneMidpoint =
+  LaneMidpoint(
+    distanceToStart = this.distanceToStart,
+    location = this.location.toLocation(),
+    rotation = this.rotation.toRotation())
+
+/** Converts [JsonDataWeatherParameters] to [WeatherParameters]. */
+fun JsonDataWeatherParameters.toWeatherParameters(): WeatherParameters =
+  WeatherParameters(
+    type = type.toWeatherType(),
+    cloudiness = cloudiness,
+    precipitation = precipitation,
+    precipitationDeposits = precipitationDeposits,
+    windIntensity = windIntensity,
+    sunAzimuthAngle = sunAzimuthAngle,
+    sunAltitudeAngle = sunAltitudeAngle,
+    fogDensity = fogDensity,
+    fogDistance = fogDistance,
+    wetness = wetness,
+    fogFalloff = fogFalloff,
+    scatteringIntensity = scatteringIntensity,
+    mieScatteringScale = mieScatteringScale,
+    rayleighScatteringScale = rayleighScatteringScale)
+
+/** Extracts [WeatherType] from [JsonDataWeatherParametersType]. */
+fun JsonDataWeatherParametersType.toWeatherType(): WeatherType =
+  when (this) {
+    ClearNoon,
+    ClearSunset,
+    Default -> WeatherType.Clear
+    CloudyNoon,
+    CloudySunset -> WeatherType.Cloudy
+    WetNoon,
+    WetSunset -> WeatherType.Wet
+    WetCloudyNoon,
+    WetCloudySunset -> WeatherType.WetCloudy
+    SoftRainNoon,
+    SoftRainSunset -> WeatherType.SoftRainy
+    MidRainNoon,
+    MidRainSunset -> WeatherType.MidRainy
+    HardRainNoon,
+    HardRainSunset -> WeatherType.HardRainy
+  }
+
+/** Extracts [Daytime] from [JsonDataWeatherParametersType]. */
+fun JsonDataWeatherParametersType.toDaytime(): Daytime =
+  when (this) {
+    HardRainNoon,
+    WetNoon,
+    MidRainNoon,
+    SoftRainNoon,
+    CloudyNoon,
+    WetCloudyNoon,
+    ClearNoon -> Daytime.Noon
+    HardRainSunset,
+    SoftRainSunset,
+    MidRainSunset,
+    WetSunset,
+    WetCloudySunset,
+    CloudySunset,
+    ClearSunset,
+    Default -> Daytime.Sunset
+  }
 // endregion
 
 // region helper

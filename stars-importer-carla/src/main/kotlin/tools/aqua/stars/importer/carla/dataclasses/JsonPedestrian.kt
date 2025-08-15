@@ -38,14 +38,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("Pedestrian")
 data class JsonPedestrian(
-    @SerialName("id") override val id: Int = 0,
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
-    @SerialName("attributes") override val attributes: Map<String, String> = emptyMap(),
-    @SerialName("is_alive") override val isAlive: Boolean = false,
-    @SerialName("is_active") override val isActive: Boolean = false,
-    @SerialName("is_dormant") override val isDormant: Boolean = false,
-    @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
+  @SerialName("id") override val id: Int,
+  @SerialName("type_id") val typeId: String,
+  @SerialName("location") override val location: JsonLocation,
+  @SerialName("rotation") override val rotation: JsonRotation,
+  @SerialName("attributes") override val attributes: Map<String, String>,
+  @SerialName("is_alive") override val isAlive: Boolean,
+  @SerialName("is_active") override val isActive: Boolean,
+  @SerialName("is_dormant") override val isDormant: Boolean,
+  @SerialName("semantic_tags") override val semanticTags: List<Int>,
+  @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
+  @SerialName("collisions") override val collisions: List<Int>
 ) : JsonActor()

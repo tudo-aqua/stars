@@ -33,7 +33,7 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @OptIn(ExperimentalSerializationApi::class)
 @JsonIgnoreUnknownKeys // ignore is_junction key in JSON file
 data class JsonRoad(
-    @SerialName("road_id") val roadId: Int = 0,
-    @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
-    @SerialName("junction_id") val junctionId : Int? = null
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("lanes") val lanes: List<JsonLane>,
+    @SerialName("junction_id") val junctionId : Int?
 )

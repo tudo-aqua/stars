@@ -36,14 +36,14 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class JsonContactArea(
-    @SerialName("id") val id: String = "",
-    @SerialName("contact_location") val contactLocation: JsonLocation = JsonLocation(),
-    @SerialName("lane_1_road_id") val lane1RoadId: Int = 0,
-    @SerialName("lane_1_id") val lane1Id: Int = 0,
-    @SerialName("lane_1_start_pos") val lane1StartPos: Double = 0.0,
-    @SerialName("lane_1_end_pos") val lane1EndPos: Double = 0.0,
-    @SerialName("lane_2_road_id") val lane2RoadId: Int = 0,
-    @SerialName("lane_2_id") val lane2Id: Int = 0,
-    @SerialName("lane_2_start_pos") val lane2StartPos: Double = 0.0,
-    @SerialName("lane_2_end_pos") val lane2EndPos: Double = 0.0,
+    @SerialName("id") val id: String,
+    @SerialName("contact_location") val contactLocation: JsonLocation ,
+    @SerialName("lane_1_road_id") val lane1RoadId: Int,
+    @SerialName("lane_1_id") val lane1Id: Int,
+    @SerialName("lane_1_start_pos") val lane1StartPos: Double,
+    @SerialName("lane_1_end_pos") val lane1EndPos: Double,
+    @SerialName("lane_2_road_id") val lane2RoadId: Int,
+    @SerialName("lane_2_id") val lane2Id: Int,
+    @SerialName("lane_2_start_pos") val lane2StartPos: Double,
+    @SerialName("lane_2_end_pos") val lane2EndPos: Double
 )
