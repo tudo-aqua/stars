@@ -255,7 +255,9 @@ class TSCEvaluation<
             }
           }
         }
-        logInfo("The evaluation of all segments took: $evaluationTime")
+        logInfo("The evaluation of all ticks took: $evaluationTime")
+      } else {
+        logWarning("No TSCs to evaluate. Skipping evaluation.")
       }
     }
     logInfo("The whole evaluation took: $totalEvaluationTime")

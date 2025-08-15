@@ -69,17 +69,37 @@ fun convertTickData(
   cleanJsonData(world, jsonSimulationRun)
 
   // Extract vehicles from the JSON file
-  val jsonVehicles: List<JsonVehicle> =
-    jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+  val jsonVehicles: List<List<JsonVehicle>> =
+    jsonSimulationRun.map{ v -> v.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>() }
 
-  // Check that no two actors have the same id
-  check(jsonVehicles.map { it.id }.distinct().size == jsonVehicles.size) {
-    "There are vehicles with the same id in the Json data."
+  // Check that no two actors have the same id in every tick
+  jsonVehicles.forEachIndexed { index, vehicles ->
+    check(vehicles.map { it.id }.distinct().size == vehicles.size) {
+      "There are vehicles with the same id in the Json data at tick $index: \n${vehicles.joinToString(
+        separator = "\n"
+      ) { "JsonVehicle(id=${it.id}, type=${it.typeId}, ...)" }}."
+    }
   }
 
-  val egoCount = jsonVehicles.count { it.egoVehicle }
-  check(egoCount == 1) {
-    "There must be exactly one ego vehicle in the Json data. Found $egoCount."
+  // Get the ego vehicle id from the first tick
+  val egoId = jsonVehicles.first().first { it.egoVehicle }
+
+  // Check that the ego vehicle is present in every tick and there is only one ego vehicle
+  jsonVehicles.forEachIndexed { index, vehicles ->
+    val egos = vehicles.filter { it.egoVehicle }
+    //Check that there is only one ego vehicle in the current tick
+    check(egos.size == 1) {
+      "There must be exactly one ego vehicle in the Json data at tick $index. Found ${egos.size} in tick $index: \n${
+        egos.joinToString(
+          separator = "\n"
+        ) { "JsonVehicle(id=${it.id}, type=${it.typeId}, ...)" }
+      }."
+    }
+
+    // Check that the ego vehicle is the same as in the first tick
+    check(egos.first().id == egoId.id) {
+      "The ego vehicle id in tick $index is different from the first tick. Expected: ${egoId.id}, found: ${egos.first().id}."
+    }
   }
 
   return jsonSimulationRun

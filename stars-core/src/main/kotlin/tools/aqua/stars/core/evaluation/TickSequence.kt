@@ -31,7 +31,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
   }
 
   override fun iterator(): Iterator<T> {
-    if (!onceConstraint.getAndSet(true)) {
+    if (onceConstraint.getAndSet(true)) {
       throw IllegalStateException("This TickSequence can only be consumed once.")
     }
 
@@ -43,18 +43,21 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
       var finished: Boolean = false
 
       override fun next(): T {
+        // Call hasNext() to ensure we have a next item
         if (!hasNext()) throw NoSuchElementException("No more elements in the sequence")
 
         val first = checkNotNull(firstItem)
         val current = checkNotNull(currentItem)
         val next = checkNotNull(nextItem)
 
-        // Link new tick to the doubly linked list
-        current.nextTick = next
-        next.previousTick = current
-
         // Update current buffer size
         size++
+
+        // Link new tick to the doubly linked list
+        if(size > 1) {
+          current.nextTick = next
+          next.previousTick = current
+        }
 
         // If the buffer size exceeds the limit, remove the oldest tick
         if (size > bufferSize) {
@@ -65,22 +68,35 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
           size--
         }
 
-        return next
+        return next.also {
+          currentItem = next
+          nextItem = null
+        }
       }
 
       override fun hasNext(): Boolean {
+        // If the sequence is finished, return false
         if (finished) return false
 
+        // If we already have a next item, return true
+        if(nextItem != null) return true
+
+        // Retrieve next item from the provided function
         nextItem = getNextValue()
 
+        // If no next item is available, mark as finished and return false
+        if (nextItem == null) {
+          finished = true
+          return false
+        }
+
+        // If this is the first item, initialize firstItem and currentItem
         if (firstItem == null) {
           firstItem = nextItem
           currentItem = nextItem
         }
 
-        if (nextItem == null) finished = true
-
-        return nextItem != null
+        return true
       }
     }
   }
