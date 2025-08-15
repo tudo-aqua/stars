@@ -54,13 +54,47 @@ fun getSeed(fileName: String): Int =
     }
 
 /**
+ * Convert Json data.
+ *
+ * @param world The [World].
+ * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ * @param simulationRunId Identifier of the simulation run.
+ */
+@Suppress("unused")
+fun convertTickData(
+  world: World,
+  jsonSimulationRun: List<JsonTickData>,
+  simulationRunId: String
+): List<TickData> {
+  cleanJsonData(world, jsonSimulationRun)
+
+  // Extract vehicles from the JSON file
+  val jsonVehicles: List<JsonVehicle> =
+    jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+
+  // Check that no two actors have the same id
+  check(jsonVehicles.map { it.id }.distinct().size == jsonVehicles.size) {
+    "There are vehicles with the same id in the Json data."
+  }
+
+  val egoCount = jsonVehicles.count { it.egoVehicle }
+  check(egoCount == 1) {
+    "There must be exactly one ego vehicle in the Json data. Found $egoCount."
+  }
+
+  return jsonSimulationRun
+    .map { it.toTickData(world) }
+    .also { updateActorVelocityForSimulationRun(it) }
+}
+
+/**
  * Returns the lane progress of a vehicle.
  *
  * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  * @param vehicle The [JsonVehicle].
  */
-fun getLaneProgressionForVehicle(
+private fun getLaneProgressionForVehicle(
   world: World,
   jsonSimulationRun: List<JsonTickData>,
   vehicle: JsonVehicle
@@ -87,45 +121,11 @@ fun getLaneProgressionForVehicle(
 }
 
 /**
- * Convert Json data.
- *
- * @param world The [World].
- * @param jsonSimulationRun The list of [JsonTickData] in current observation.
- * @param simulationRunId Identifier of the simulation run.
- */
-@Suppress("unused")
-fun convertTickData(
-  world: World,
-  jsonSimulationRun: List<JsonTickData>,
-  simulationRunId: String
-): List<TickData> {
-  cleanJsonData(world, jsonSimulationRun)
-
-  // Extract vehicles from the JSON file
-  val jsonVehicles: List<JsonVehicle> =
-      jsonSimulationRun.first().actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
-
-  // Check that no two actors have the same id
-  check(jsonVehicles.map { it.id }.distinct().size == jsonVehicles.size) {
-    "There are vehicles with the same id in the Json data."
-  }
-
-  val egoCount = jsonVehicles.count { it.egoVehicle }
-  check(egoCount == 1) {
-    "There must be exactly one ego vehicle in the Json data. Found $egoCount."
-  }
-
-  return jsonSimulationRun
-      .map { it.toTickData(world) }
-      .also { updateActorVelocityForSimulationRun(it) }
-}
-
-/**
  * Updates velocity of actors.
  *
  * @param simulationRun List of [TickData].
  */
-fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
+private fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
   for (i in 1 until simulationRun.size) {
     val currentTick = simulationRun[i]
     val previousTick = simulationRun[i - 1]
@@ -146,7 +146,7 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  * @param previousActor The previous [Actor].
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
-fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, timeDelta: Double) {
+private fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, timeDelta: Double) {
   // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousActor == null) {
     vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
