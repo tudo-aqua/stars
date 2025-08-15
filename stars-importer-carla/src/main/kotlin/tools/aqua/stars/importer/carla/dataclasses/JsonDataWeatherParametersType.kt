@@ -19,8 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Daytime
-import tools.aqua.stars.data.av.dataclasses.WeatherType
 
 /**
  * Json object for weather types. [Default] is equal to [ClearSunset].

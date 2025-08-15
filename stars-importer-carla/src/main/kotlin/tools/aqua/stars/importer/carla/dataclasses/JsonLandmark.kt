@@ -19,8 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Landmark
-import tools.aqua.stars.data.av.dataclasses.LandmarkType
 
 /**
  * Json object for landmarks.
@@ -51,7 +49,7 @@ import tools.aqua.stars.data.av.dataclasses.LandmarkType
 data class JsonLandmark(
     @SerialName("id") var id: Int,
     @SerialName("road_id") val roadId: Int,
-    @SerialName("name") val name: String ,
+    @SerialName("name") val name: String,
     @SerialName("distance") val distance: Double,
     @SerialName("s") var s: Double,
     @SerialName("is_dynamic") val isDynamic: Boolean,

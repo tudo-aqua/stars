@@ -29,13 +29,15 @@ import tools.aqua.stars.core.types.TickDataType
  * @property daytime The current [Daytime].
  */
 class TickData(
-  currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
-  entities: Set<Actor>,
-  val trafficLights: List<TrafficLight> = emptyList(),
-  val blocks: List<World> = emptyList(),
-  val weather: WeatherParameters = WeatherParameters(),
-  val daytime: Daytime = Daytime.Noon
-) : TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(currentTickUnit, entities) {
+    currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
+    entities: Set<Actor>,
+    val trafficLights: List<TrafficLight> = emptyList(),
+    val blocks: List<World> = emptyList(),
+    val weather: WeatherParameters = WeatherParameters(),
+    val daytime: Daytime = Daytime.Noon
+) :
+    TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(
+        currentTickUnit, entities) {
 
   /** All pedestrians. */
   val pedestrians: List<Pedestrian>

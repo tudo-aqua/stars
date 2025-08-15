@@ -22,8 +22,8 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'minPrevalence' operator i.e. "In all past ticks in the interval
- * phi holds for at least ([percentage]*100)% of the ticks in the interval".
+ * CMFTBL implementation of the 'minPrevalence' operator i.e. "In all past ticks in the interval phi
+ * holds for at least ([percentage]*100)% of the ticks in the interval".
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -51,18 +51,15 @@ fun <
   var tickCount = 0
   var trueCount = 0
 
-  for(tick in tickData.forward()) {
+  for (tick in tickData.forward()) {
     // Check if the current tick is before the start of the interval
-    if (interval != null && tick.currentTickUnit < now + interval.first)
-      continue
+    if (interval != null && tick.currentTickUnit < now + interval.first) continue
 
     // Check if the current tick is after the end of the interval
-    if (interval != null && tick.currentTickUnit > now + interval.second)
-      break
+    if (interval != null && tick.currentTickUnit > now + interval.second) break
 
     // Count the tick if the predicate holds true
-    if (phi(tick))
-      trueCount++
+    if (phi(tick)) trueCount++
 
     tickCount++
   }

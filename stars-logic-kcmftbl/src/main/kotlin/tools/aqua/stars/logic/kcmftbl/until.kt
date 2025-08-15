@@ -46,17 +46,17 @@ fun <
 
   val now = tickData.currentTickUnit
   for (tick in tickData.forward()) {
-   // Interval not reached yet, phi1 must hold
+    // Interval not reached yet, phi1 must hold
     if (interval != null && tick.currentTickUnit < now + interval.first)
         if (phi1(tick)) continue else return false
 
-   // Interval left, but phi2 did not hold
+    // Interval left, but phi2 did not hold
     if (interval != null && tick.currentTickUnit >= now + interval.second) return false
 
-   // In interval: if phi2 holds, return true
+    // In interval: if phi2 holds, return true
     if (phi2(tick)) return true
 
-   // In interval: phi2 did not hold, phi1 must hold
+    // In interval: phi2 did not hold, phi1 must hold
     if (!phi1(tick)) return false
   }
 

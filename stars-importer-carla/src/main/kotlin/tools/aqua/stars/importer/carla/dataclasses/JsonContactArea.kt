@@ -37,7 +37,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class JsonContactArea(
     @SerialName("id") val id: String,
-    @SerialName("contact_location") val contactLocation: JsonLocation ,
+    @SerialName("contact_location") val contactLocation: JsonLocation,
     @SerialName("lane_1_road_id") val lane1RoadId: Int,
     @SerialName("lane_1_id") val lane1Id: Int,
     @SerialName("lane_1_start_pos") val lane1StartPos: Double,

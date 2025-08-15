@@ -34,8 +34,8 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.core.evaluation.TickSequence
-import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.TickData
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 /** Carla data serializer module. */
@@ -220,12 +220,13 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
- * @return A [Sequence] of [TickSequence]s based on the given [World] of static data to dynamic data.
+ * @return A [Sequence] of [TickSequence]s based on the given [World] of static data to dynamic
+ *   data.
  */
 fun loadTicks(
-  mapToDynamicDataFiles: kotlin.collections.Map<Path, List<Path>>,
-  bufferSize: Int = 100,
-  orderFilesBySeed: Boolean = false
+    mapToDynamicDataFiles: kotlin.collections.Map<Path, List<Path>>,
+    bufferSize: Int = 100,
+    orderFilesBySeed: Boolean = false
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =

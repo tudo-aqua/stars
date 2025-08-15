@@ -35,5 +35,5 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 data class JsonRoad(
     @SerialName("road_id") val roadId: Int,
     @SerialName("lanes") val lanes: List<JsonLane>,
-    @SerialName("junction_id") val junctionId : Int?
+    @SerialName("junction_id") val junctionId: Int?
 )

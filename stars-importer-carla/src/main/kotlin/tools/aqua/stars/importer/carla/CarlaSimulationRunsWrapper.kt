@@ -22,8 +22,8 @@ import tools.aqua.stars.data.av.dataclasses.World
 
 /**
  * Contains the information for all simulation runs for one specific map. Each
- * [CarlaSimulationRunsWrapper] contains a [Path] to the [staticDataFile] and a list of [Path]s for the
- * [dynamicDataFiles]. It also holds properties for calculated [World]s and the [Path]s as an
+ * [CarlaSimulationRunsWrapper] contains a [Path] to the [staticDataFile] and a list of [Path]s for
+ * the [dynamicDataFiles]. It also holds properties for calculated [World]s and the [Path]s as an
  * [ArrayDeque] in [dynamicDataFiles]. The [dynamicDataFiles] are sorted by the seed if
  * [sortFilesBySeed] is set to true.
  *
@@ -33,9 +33,9 @@ import tools.aqua.stars.data.av.dataclasses.World
  *     @param sortFilesBySeed Whether to sort the [dynamicDataFiles] by the seed.
  */
 class CarlaSimulationRunsWrapper(
-  val staticDataFile: Path,
-  dynamicDataFiles: List<Path>,
-  sortFilesBySeed: Boolean = true
+    val staticDataFile: Path,
+    dynamicDataFiles: List<Path>,
+    sortFilesBySeed: Boolean = true
 ) {
   /** Holds the [World] object. */
   val world: World = loadWorld(staticDataFile)

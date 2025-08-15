@@ -22,7 +22,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Location
 import tools.aqua.stars.data.av.dataclasses.Pedestrian
@@ -30,6 +29,7 @@ import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.data.av.dataclasses.TickDataUnitSeconds
 import tools.aqua.stars.data.av.dataclasses.Vehicle
+import tools.aqua.stars.data.av.dataclasses.World
 
 /** Tests the velocity and acceleration calculations. */
 class VelocityAndAccelerationTest {

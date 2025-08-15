@@ -54,7 +54,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         size++
 
         // Link new tick to the doubly linked list
-        if(size > 1) {
+        if (size > 1) {
           current.nextTick = next
           next.previousTick = current
         }
@@ -79,7 +79,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         if (finished) return false
 
         // If we already have a next item, return true
-        if(nextItem != null) return true
+        if (nextItem != null) return true
 
         // Retrieve next item from the provided function
         nextItem = getNextValue()

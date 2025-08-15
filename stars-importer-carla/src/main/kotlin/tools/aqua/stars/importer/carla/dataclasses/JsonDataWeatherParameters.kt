@@ -19,7 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.WeatherParameters
 
 /**
  * JSON object for weather parameters.
@@ -42,8 +41,7 @@ import tools.aqua.stars.data.av.dataclasses.WeatherParameters
  */
 @Serializable
 data class JsonDataWeatherParameters(
-    @SerialName("type")
-    val type: JsonDataWeatherParametersType,
+    @SerialName("type") val type: JsonDataWeatherParametersType,
     @SerialName("dust_storm") val dustStorm: Double,
     @SerialName("cloudiness") val cloudiness: Double,
     @SerialName("precipitation") val precipitation: Double,

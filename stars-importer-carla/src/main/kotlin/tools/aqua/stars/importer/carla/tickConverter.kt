@@ -62,15 +62,19 @@ fun getSeed(fileName: String): Int =
  */
 @Suppress("unused")
 fun convertTickData(
-  world: World,
-  jsonSimulationRun: List<JsonTickData>,
-  simulationRunId: String
+    world: World,
+    jsonSimulationRun: List<JsonTickData>,
+    simulationRunId: String
 ): List<TickData> {
   cleanJsonData(world, jsonSimulationRun)
 
   // Extract vehicles from the JSON file
   val jsonVehicles: List<List<JsonVehicle>> =
-    jsonSimulationRun.map{ v -> v.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>() }
+      jsonSimulationRun.map { v ->
+        v.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+      }
+
+  FIXEGOS(jsonVehicles) // Todo: Remove
 
   // Check that no two actors have the same id in every tick
   jsonVehicles.forEachIndexed { index, vehicles ->
@@ -87,7 +91,7 @@ fun convertTickData(
   // Check that the ego vehicle is present in every tick and there is only one ego vehicle
   jsonVehicles.forEachIndexed { index, vehicles ->
     val egos = vehicles.filter { it.egoVehicle }
-    //Check that there is only one ego vehicle in the current tick
+    // Check that there is only one ego vehicle in the current tick
     check(egos.size == 1) {
       "There must be exactly one ego vehicle in the Json data at tick $index. Found ${egos.size} in tick $index: \n${
         egos.joinToString(
@@ -103,8 +107,16 @@ fun convertTickData(
   }
 
   return jsonSimulationRun
-    .map { it.toTickData(world) }
-    .also { updateActorVelocityForSimulationRun(it) }
+      .map { it.toTickData(world) }
+      .also { updateActorVelocityForSimulationRun(it) }
+}
+
+private fun FIXEGOS(jsonVehicles: List<List<JsonVehicle>>) {
+  jsonVehicles.forEach { vehicles ->
+    vehicles
+        .filter { it.egoVehicle }
+        .forEach { ego -> if (ego.typeId != "vehicle.lincoln.mkz_2020") ego.egoVehicle = false }
+  }
 }
 
 /**
@@ -115,9 +127,9 @@ fun convertTickData(
  * @param vehicle The [JsonVehicle].
  */
 private fun getLaneProgressionForVehicle(
-  world: World,
-  jsonSimulationRun: List<JsonTickData>,
-  vehicle: JsonVehicle
+    world: World,
+    jsonSimulationRun: List<JsonTickData>,
+    vehicle: JsonVehicle
 ): MutableList<Pair<Lane?, Boolean>> {
   val roads = world.getAllRoads()
   val lanes = world.getAllLanes()
@@ -166,7 +178,11 @@ private fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  * @param previousActor The previous [Actor].
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
-private fun updateActorVelocityAndAcceleration(vehicle: Vehicle, previousActor: Actor?, timeDelta: Double) {
+private fun updateActorVelocityAndAcceleration(
+    vehicle: Vehicle,
+    previousActor: Actor?,
+    timeDelta: Double
+) {
   // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousActor == null) {
     vehicle.velocity = Vector3D(0.0, 0.0, 0.0)

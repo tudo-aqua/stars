@@ -103,34 +103,26 @@ fun JsonPedestrian.toPedestrian(positionOnLane: Double, lane: Lane): Pedestrian 
     Pedestrian(id = id, positionOnLane = positionOnLane, lane = lane)
 
 /** Converts [JsonWorld] to [Map]. */
-fun JsonWorld.toWorld(): World = World(
-  straights = straights.map { it.toRoad() },
-  junctions = junctions.map { it.toJunction() },
-  crosswalks = crosswalks.map { it.toCrosswalk() }
-)
+fun JsonWorld.toWorld(): World =
+    World(
+        straights = straights.map { it.toRoad() },
+        junctions = junctions.map { it.toJunction() },
+        crosswalks = crosswalks.map { it.toCrosswalk() })
 
 /** Converts [JsonRoad] to [Road]. */
 fun JsonRoad.toRoad(isJunction: Boolean = false): Road =
     Road(
         id = roadId,
         lanes = lanes.map { jsonLane -> jsonLane.toLane(isJunction = isJunction) },
-      )
+    )
 
 /** Converts [JsonJunction] to [Junction]. */
 fun JsonJunction.toJunction(): Junction =
-  Junction(
-    id = junctionId,
-    roads = roads.map { jsonLane -> jsonLane.toRoad(isJunction = true) }
-  )
+    Junction(id = junctionId, roads = roads.map { jsonLane -> jsonLane.toRoad(isJunction = true) })
 
 /** Converts [JsonCrosswalk] to [Crosswalk]. */
 fun JsonCrosswalk.toCrosswalk(): Crosswalk =
-  Crosswalk(
-    id = crosswalkId,
-    vertices = vertices.map { it.toLocation() }
-  )
-
-
+    Crosswalk(id = crosswalkId, vertices = vertices.map { it.toLocation() })
 
 /**
  * Converts [JsonLane] to [Lane].
@@ -182,18 +174,18 @@ fun JsonLane.toLane(isJunction: Boolean): Lane =
 
 /** Converts [JsonLandmark] to [Landmark]. */
 fun JsonLandmark.toLandmark(): Landmark =
-  Landmark(
-    id = this.id,
-    name = this.name,
-    distance = this.distance,
-    s = this.s,
-    country = this.country,
-    type = LandmarkType.getByValue(this.type.value),
-    value = this.value,
-    unit = this.unit,
-    text = this.text,
-    location = this.location.toLocation(),
-    rotation = this.rotation.toRotation())
+    Landmark(
+        id = this.id,
+        name = this.name,
+        distance = this.distance,
+        s = this.s,
+        country = this.country,
+        type = LandmarkType.getByValue(this.type.value),
+        value = this.value,
+        unit = this.unit,
+        text = this.text,
+        location = this.location.toLocation(),
+        rotation = this.rotation.toRotation())
 
 /**
  * Converts [JsonContactArea] to [ContactArea].
@@ -221,83 +213,84 @@ fun JsonRotation.toRotation(): Rotation = Rotation(pitch, yaw, roll)
 
 /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */
 fun JsonStaticTrafficLight.toStaticTrafficLight(): StaticTrafficLight =
-  StaticTrafficLight(
-    id = this.id,
-    location = this.location.toLocation(),
-    rotation = this.rotation.toRotation(),
-    stopLocations = this.stopLocations.map { it.toLocation() })
+    StaticTrafficLight(
+        id = this.id,
+        location = this.location.toLocation(),
+        rotation = this.rotation.toRotation(),
+        stopLocations = this.stopLocations.map { it.toLocation() })
 
 /** Converts [JsonTrafficLight] to [TrafficLight]. */
 fun JsonTrafficLight.toTrafficLight(): TrafficLight =
-  TrafficLight(
-    id = this.id,
-    state = TrafficLightState.getByValue(this.state),
-    relatedOpenDriveId = this.relatedOpenDriveId)
+    TrafficLight(
+        id = this.id,
+        state = TrafficLightState.getByValue(this.state),
+        relatedOpenDriveId = this.relatedOpenDriveId)
 
 /** Converts [JsonLaneMidpoint] to [LaneMidpoint]. */
 fun JsonLaneMidpoint.toLaneMidpoint(): LaneMidpoint =
-  LaneMidpoint(
-    distanceToStart = this.distanceToStart,
-    location = this.location.toLocation(),
-    rotation = this.rotation.toRotation())
+    LaneMidpoint(
+        distanceToStart = this.distanceToStart,
+        location = this.location.toLocation(),
+        rotation = this.rotation.toRotation())
 
 /** Converts [JsonDataWeatherParameters] to [WeatherParameters]. */
 fun JsonDataWeatherParameters.toWeatherParameters(): WeatherParameters =
-  WeatherParameters(
-    type = type.toWeatherType(),
-    cloudiness = cloudiness,
-    precipitation = precipitation,
-    precipitationDeposits = precipitationDeposits,
-    windIntensity = windIntensity,
-    sunAzimuthAngle = sunAzimuthAngle,
-    sunAltitudeAngle = sunAltitudeAngle,
-    fogDensity = fogDensity,
-    fogDistance = fogDistance,
-    wetness = wetness,
-    fogFalloff = fogFalloff,
-    scatteringIntensity = scatteringIntensity,
-    mieScatteringScale = mieScatteringScale,
-    rayleighScatteringScale = rayleighScatteringScale)
+    WeatherParameters(
+        type = type.toWeatherType(),
+        cloudiness = cloudiness,
+        precipitation = precipitation,
+        precipitationDeposits = precipitationDeposits,
+        windIntensity = windIntensity,
+        sunAzimuthAngle = sunAzimuthAngle,
+        sunAltitudeAngle = sunAltitudeAngle,
+        fogDensity = fogDensity,
+        fogDistance = fogDistance,
+        wetness = wetness,
+        fogFalloff = fogFalloff,
+        scatteringIntensity = scatteringIntensity,
+        mieScatteringScale = mieScatteringScale,
+        rayleighScatteringScale = rayleighScatteringScale)
 
 /** Extracts [WeatherType] from [JsonDataWeatherParametersType]. */
 fun JsonDataWeatherParametersType.toWeatherType(): WeatherType =
-  when (this) {
-    ClearNoon,
-    ClearSunset,
-    Default -> WeatherType.Clear
-    CloudyNoon,
-    CloudySunset -> WeatherType.Cloudy
-    WetNoon,
-    WetSunset -> WeatherType.Wet
-    WetCloudyNoon,
-    WetCloudySunset -> WeatherType.WetCloudy
-    SoftRainNoon,
-    SoftRainSunset -> WeatherType.SoftRainy
-    MidRainNoon,
-    MidRainSunset -> WeatherType.MidRainy
-    HardRainNoon,
-    HardRainSunset -> WeatherType.HardRainy
-  }
+    when (this) {
+      ClearNoon,
+      ClearSunset,
+      Default -> WeatherType.Clear
+      CloudyNoon,
+      CloudySunset -> WeatherType.Cloudy
+      WetNoon,
+      WetSunset -> WeatherType.Wet
+      WetCloudyNoon,
+      WetCloudySunset -> WeatherType.WetCloudy
+      SoftRainNoon,
+      SoftRainSunset -> WeatherType.SoftRainy
+      MidRainNoon,
+      MidRainSunset -> WeatherType.MidRainy
+      HardRainNoon,
+      HardRainSunset -> WeatherType.HardRainy
+    }
 
 /** Extracts [Daytime] from [JsonDataWeatherParametersType]. */
 fun JsonDataWeatherParametersType.toDaytime(): Daytime =
-  when (this) {
-    HardRainNoon,
-    WetNoon,
-    MidRainNoon,
-    SoftRainNoon,
-    CloudyNoon,
-    WetCloudyNoon,
-    ClearNoon -> Daytime.Noon
-    HardRainSunset,
-    SoftRainSunset,
-    MidRainSunset,
-    WetSunset,
-    WetCloudySunset,
-    CloudySunset,
-    ClearSunset,
-    Default -> Daytime.Sunset
-  }
+    when (this) {
+      HardRainNoon,
+      WetNoon,
+      MidRainNoon,
+      SoftRainNoon,
+      CloudyNoon,
+      WetCloudyNoon,
+      ClearNoon -> Daytime.Noon
+      HardRainSunset,
+      SoftRainSunset,
+      MidRainSunset,
+      WetSunset,
+      WetCloudySunset,
+      CloudySunset,
+      ClearSunset,
+      Default -> Daytime.Sunset
+    }
+
 // endregion
 
 // region helper
@@ -348,12 +341,7 @@ fun getVehicleTypeFromTypeId(typeId: String): VehicleType =
  * @return The [World] object.
  */
 fun calculateWorld(world: JsonWorld): World =
-     world.toWorld()
-        .also {
-          updateLanes(
-              jsonLanes = world.getAllLanes(),
-              lanes = it.getAllLanes())
-        }
+    world.toWorld().also { updateLanes(jsonLanes = world.getAllLanes(), lanes = it.getAllLanes()) }
 
 /** Updates [JsonLane]s and [Lane]s. */
 fun updateLanes(jsonLanes: List<JsonLane>, lanes: List<Lane>) {

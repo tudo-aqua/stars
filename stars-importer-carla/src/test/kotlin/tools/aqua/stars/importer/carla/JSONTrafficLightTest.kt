@@ -21,7 +21,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Road
 import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
@@ -29,6 +28,7 @@ import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.data.av.dataclasses.TrafficLight
 import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 import tools.aqua.stars.data.av.dataclasses.Vehicle
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.importer.carla.dataclasses.JsonActorPosition
 import tools.aqua.stars.importer.carla.dataclasses.JsonLane
 import tools.aqua.stars.importer.carla.dataclasses.JsonLocation

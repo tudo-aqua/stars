@@ -18,9 +18,9 @@
 package tools.aqua.stars.importer.carla
 
 import kotlin.test.*
-import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Road
+import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 /** Tests behaviour on incomplete data from json. */

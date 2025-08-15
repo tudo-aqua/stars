@@ -77,22 +77,23 @@ abstract class TickDataType<
   }
 
   @Suppress("UNCHECKED_CAST")
-  fun forward() : TickDataIterator<T> = TickDataIterator(this as T) { it.nextTick }
+  fun forward(): TickDataIterator<T> = TickDataIterator(this as T) { it.nextTick }
 
   @Suppress("UNCHECKED_CAST")
-  fun backward() : TickDataIterator<T> = TickDataIterator(this as T) { it.previousTick }
+  fun backward(): TickDataIterator<T> = TickDataIterator(this as T) { it.previousTick }
 
   class TickDataIterator<T>(private val tick: T, private val iter: (T) -> T?) : Iterable<T> {
-    override fun iterator(): Iterator<T> = object : Iterator<T> {
-      private var current: T? = tick
+    override fun iterator(): Iterator<T> =
+        object : Iterator<T> {
+          private var current: T? = tick
 
-      override fun hasNext(): Boolean = current != null
+          override fun hasNext(): Boolean = current != null
 
-      override fun next(): T {
-        val nextTick = current ?: throw NoSuchElementException("No more ticks in the sequence")
-        current = iter(nextTick)
-        return nextTick
-      }
-    }
+          override fun next(): T {
+            val nextTick = current ?: throw NoSuchElementException("No more ticks in the sequence")
+            current = iter(nextTick)
+            return nextTick
+          }
+        }
   }
 }

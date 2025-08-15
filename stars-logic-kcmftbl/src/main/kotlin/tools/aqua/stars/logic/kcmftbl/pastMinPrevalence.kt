@@ -51,18 +51,15 @@ fun <
   var tickCount = 0
   var trueCount = 0
 
-  for(tick in tickData.backward()) {
+  for (tick in tickData.backward()) {
     // Check if the current tick is before the start of the interval
-    if (interval != null && tick.currentTickUnit > now - interval.first)
-      continue
+    if (interval != null && tick.currentTickUnit > now - interval.first) continue
 
     // Check if the current tick is after the end of the interval
-    if (interval != null && tick.currentTickUnit < now - interval.second)
-      break
+    if (interval != null && tick.currentTickUnit < now - interval.second) break
 
     // Count the tick if the predicate holds true
-    if (phi(tick))
-      trueCount++
+    if (phi(tick)) trueCount++
 
     tickCount++
   }
