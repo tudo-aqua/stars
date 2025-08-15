@@ -66,6 +66,9 @@ abstract class TickDataType<
   val sequenceLength: Int
     get() = numPredecessors + numSuccessors + 1
 
+  /** The ego [EntityType]. */
+  abstract val ego: E
+
   init {
     entities.forEach {
       @Suppress("UNCHECKED_CAST")

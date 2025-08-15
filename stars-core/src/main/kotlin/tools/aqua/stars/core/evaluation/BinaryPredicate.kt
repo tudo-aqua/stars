@@ -69,7 +69,8 @@ class BinaryPredicate<
    * @param entity2 The second entity to evaluate this predicate for.
    * @return Whether the predicate holds for the current tick for the given [entity1] and [entity2].
    */
-  fun holds(tick: T, entity1: E1, entity2: E2): Boolean =
+  @Suppress("UNCHECKED_CAST")
+  fun holds(tick: T, entity1: E1 = tick.ego as E1, entity2: E2): Boolean =
       entity1 != entity2 &&
           this.kClasses.first.isInstance(entity1) &&
           this.kClasses.second.isInstance(entity2) &&

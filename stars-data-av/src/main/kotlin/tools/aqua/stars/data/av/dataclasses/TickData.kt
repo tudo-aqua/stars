@@ -46,5 +46,5 @@ class TickData(
     get() = entities.filterIsInstance<Vehicle>()
 
   /** The ego vehicle. */
-  val ego: Vehicle = vehicles.first { it.isEgo }
+  override val ego: Vehicle = vehicles.first { it.isEgo }
 }

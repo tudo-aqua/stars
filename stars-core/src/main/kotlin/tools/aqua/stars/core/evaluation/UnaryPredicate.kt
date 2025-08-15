@@ -66,7 +66,8 @@ class UnaryPredicate<
    * @return Whether the predicate holds in the given context at the given [tick] for the given
    *   [entity].
    */
-  fun holds(tick: T, entity: E1): Boolean =
+  @Suppress("UNCHECKED_CAST")
+  fun holds(tick: T, entity: E1 = tick.ego as E1): Boolean =
       this.kClass.isInstance(entity) && this.eval(tick, this.kClass.cast(entity))
 
   /** Creates a unary tick predicate. * */
