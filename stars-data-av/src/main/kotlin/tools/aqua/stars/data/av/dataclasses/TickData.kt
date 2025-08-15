@@ -40,7 +40,7 @@ class TickData(
         currentTickUnit, entities) {
 
   /** All pedestrians. */
-  val pedestrians: kotlin.collections.Map<Int, Pedestrian>
+  val pedestrians: Map<Int, Pedestrian>
     get() = TODO() // entities.filterIsInstanceTo<Int, Pedestrian>(mutableMapOf<Int, Pedestrian>())
 
   /** All vehicles. */
