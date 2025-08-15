@@ -43,7 +43,11 @@ fun <
     percentage: Double,
     interval: Pair<D, D>? = null,
     phi: (T) -> Boolean
-): Boolean = pastMinPrevalence(tickData, 1 - percentage, interval, phi = { td -> !phi(td) })
+): Boolean = pastMinPrevalence(
+  tickData = tickData,
+  percentage = 1 - percentage,
+  interval = interval,
+  phi = { td -> !phi(td) })
 
 /// **
 // * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all past ticks in

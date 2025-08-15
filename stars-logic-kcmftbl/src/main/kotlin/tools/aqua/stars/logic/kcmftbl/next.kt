@@ -42,22 +42,17 @@ fun <
 ): Boolean {
   checkInterval(interval)
 
-  TODO()
+  // There needs to be a next tick
+  val nextTick = tickData.nextTick ?: return false
 
-  //  val segment = tickData.segment
-  //  val nowIndex = segment.tickData.indexOf(tickData)
-  //
-  //  // There needs to be a next tick
-  //  if (nowIndex == segment.tickData.lastIndex) return false
-  //  val nextTick = segment.tickData[nowIndex + 1]
-  //
-  //  // The next tick has to be in the interval
-  //  if (interval != null &&
-  //      (nextTick.currentTick < tickData.currentTick + interval.first ||
-  //          nextTick.currentTick >= tickData.currentTick + interval.second))
-  //      return false
-  //
-  //  return phi(nextTick)
+  // The next tick has to be in the interval
+  val now = tickData.currentTickUnit
+  if (interval != null &&
+      (nextTick.currentTickUnit < now + interval.first ||
+          nextTick.currentTickUnit >= now + interval.second))
+      return false
+
+  return phi(nextTick)
 }
 
 /// **

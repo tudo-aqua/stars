@@ -29,7 +29,15 @@ fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTickData> =
               BooleanTickData(TestUnit(it), LinkedHashSet(), phi1[it] == 1, phi2[it] == 1)
         }
         .values
-        .toList()
+        .toList().also {
+        it.forEachIndexed { index, tick ->
+          if (index > 0)
+            tick.previousTick = it[index - 1]
+
+          if (index < it.size - 1)
+            tick.nextTick = it[index + 1]
+        }
+      }
 
 /**
  * Creates ticks and returns first by parsing INT-Lists to Boolean values. Phi2 is set to always

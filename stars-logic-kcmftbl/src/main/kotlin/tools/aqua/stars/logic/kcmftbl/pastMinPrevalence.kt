@@ -47,27 +47,27 @@ fun <
   checkInterval(interval)
   checkPercentage(percentage)
 
-  TODO()
+  val now = tickData.currentTickUnit
+  var tickCount = 0
+  var trueCount = 0
 
-  //  val segment = tickData.segment
-  //  val now = tickData.currentTick
-  //  val nowIndex = segment.tickData.indexOf(tickData)
-  //
-  //  var tickCount = 0
-  //  val trueCount =
-  //      (0..nowIndex).count { currentIndex ->
-  //        val currentTickData = segment.tickData[currentIndex]
-  //
-  //        if (interval != null &&
-  //            (currentTickData.currentTick > now - interval.first ||
-  //                currentTickData.currentTick <= now - interval.second))
-  //            return@count false
-  //
-  //        tickCount++
-  //        phi(currentTickData)
-  //      }
-  //
-  //  return trueCount >= tickCount * percentage
+  for(tick in tickData.backward()) {
+    // Check if the current tick is before the start of the interval
+    if (interval != null && tick.currentTickUnit > now - interval.first)
+      continue
+
+    // Check if the current tick is after the end of the interval
+    if (interval != null && tick.currentTickUnit < now - interval.second)
+      break
+
+    // Count the tick if the predicate holds true
+    if (phi(tick))
+      trueCount++
+
+    tickCount++
+  }
+
+  return trueCount >= tickCount * percentage
 }
 
 /// **

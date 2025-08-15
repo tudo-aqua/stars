@@ -22,7 +22,7 @@ package tools.aqua.stars.logic.kcmftbl
 import tools.aqua.stars.core.types.*
 
 /**
- * CMFTBL implementation of the 'minPrevalence' operator i.e. "In all future ticks in the interval
+ * CMFTBL implementation of the 'minPrevalence' operator i.e. "In all past ticks in the interval
  * phi holds for at least ([percentage]*100)% of the ticks in the interval".
  *
  * @param E [EntityType].
@@ -47,27 +47,27 @@ fun <
   checkInterval(interval)
   checkPercentage(percentage)
 
-  TODO()
+  val now = tickData.currentTickUnit
+  var tickCount = 0
+  var trueCount = 0
 
-  //  val segment = tickData.segment
-  //  val now = tickData.currentTick
-  //  val nowIndex = segment.tickData.indexOf(tickData)
-  //
-  //  var tickCount = 0
-  //  val trueCount =
-  //      (nowIndex..segment.tickData.lastIndex).count { currentIndex ->
-  //        val currentTickData = segment.tickData[currentIndex]
-  //
-  //        if (interval != null &&
-  //            (currentTickData.currentTick < now + interval.first ||
-  //                currentTickData.currentTick >= now + interval.second))
-  //            return@count false
-  //
-  //        tickCount++
-  //        phi(currentTickData)
-  //      }
-  //
-  //  return trueCount >= tickCount * percentage
+  for(tick in tickData.forward()) {
+    // Check if the current tick is before the start of the interval
+    if (interval != null && tick.currentTickUnit < now + interval.first)
+      continue
+
+    // Check if the current tick is after the end of the interval
+    if (interval != null && tick.currentTickUnit > now + interval.second)
+      break
+
+    // Count the tick if the predicate holds true
+    if (phi(tick))
+      trueCount++
+
+    tickCount++
+  }
+
+  return trueCount >= tickCount * percentage
 }
 
 /// **

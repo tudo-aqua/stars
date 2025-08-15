@@ -135,7 +135,7 @@ class TestPastMinPrevalence {
   fun `Test when phi is true for 8 of 10 ticks and percentage is 80, and 4 of 5 in interval are true`() {
     val phi = listOf(1, 1, 1, 1, 0, 1, 1, 0, 1, 1)
     val percentage = 0.8
-    val interval = 0 to 5
+    val interval = 0 to 4
 
     assertTrue {
       pastMinPrevalence(
@@ -154,7 +154,7 @@ class TestPastMinPrevalence {
   fun `Test when phi is true for 8 of 10 ticks and percentage is 80, and 3 of 5 in interval are true`() {
     val phi = listOf(1, 1, 1, 1, 1, 1, 0, 0, 1, 1)
     val percentage = 0.8
-    val interval = 0 to 5
+    val interval = 0 to 4
 
     assertFalse {
       pastMinPrevalence(
