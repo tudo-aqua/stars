@@ -27,8 +27,7 @@ import tools.aqua.stars.core.types.*
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property segmentIdentifier Uniquely identifies the segment from which the TSCInstanceNode
- *   results.
+ * @property identifier Uniquely identifies the tick from which the TSCInstanceNode results.
  * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
  * @property monitorLabel The label of the monitor that failed.
  * @property nodeLabel Specifies the [TSCInstanceNode] at which a monitor failed.
@@ -38,7 +37,7 @@ class TSCFailedMonitorInstance<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    val segmentIdentifier: String,
+    val identifier: String,
     var tscInstance: TSCInstanceNode<E, T, U, D>,
     val monitorLabel: String,
     var nodeLabel: String,

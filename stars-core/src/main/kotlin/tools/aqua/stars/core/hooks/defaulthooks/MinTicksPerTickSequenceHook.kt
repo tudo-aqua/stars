@@ -22,17 +22,17 @@ import tools.aqua.stars.core.hooks.PreTickEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreTickEvaluationHook] that checks if a segment contains at least [minTicks] [TickDataType]s.
+ * [PreTickEvaluationHook] that checks if a tick contains at least [minTicks] [TickDataType]s.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minTicks The minimum number of [TickDataType]s a segment must contain.
- * @param failPolicy The [EvaluationHookResult] to return if the segment contains less than
- *   [minTicks] [TickDataType]s.
+ * @param minTicks The minimum number of [TickDataType]s a tick must contain.
+ * @param failPolicy The [EvaluationHookResult] to return if the tick contains less than [minTicks]
+ *   [TickDataType]s.
  */
-open class MinTicksPerTickHook<
+open class MinTicksPerTickSequenceHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
@@ -41,7 +41,7 @@ open class MinTicksPerTickHook<
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
     PreTickEvaluationHook<E, T, U, D>(
-        identifier = "MinTicksPerSegmentHook",
+        identifier = "MinTicksPerTickSequenceHook",
         evaluationFunction = { tick ->
           if (tick.sequenceLength >= minTicks) EvaluationHookResult.OK else failPolicy
         }) {

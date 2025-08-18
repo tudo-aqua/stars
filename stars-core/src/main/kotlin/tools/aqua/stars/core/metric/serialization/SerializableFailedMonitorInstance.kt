@@ -25,15 +25,14 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 /**
  * This is a serializable wrapper class for [TSCFailedMonitorInstance].
  *
- * @property segmentIdentifier Uniquely identifies the segment from which the TSCInstanceNode
- *   results.
+ * @property identifier Uniquely identifies the tick from which the TSCInstanceNode results.
  * @property tscInstance The root [TSCInstanceNode] on which the monitor failed.
  * @property monitorLabel The label of the monitor that failed.
  * @property nodeLabel Specifies the [TSCInstanceNode] at which a monitor failed.
  */
 @Serializable
 data class SerializableFailedMonitorInstance(
-    val segmentIdentifier: String,
+    val identifier: String,
     var tscInstance: SerializableTSCNode,
     val monitorLabel: String,
     var nodeLabel: String,

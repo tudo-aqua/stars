@@ -39,7 +39,7 @@ object ApplicationConstantsHolder {
   /** Holds the total time spent on evaluation. */
   var totalEvaluationTime: Duration = Duration.ZERO
 
-  /** Holds the total time spent on segment evaluation. */
+  /** Holds the total time spent on tick evaluation. */
   var totalTickEvaluationTime: Duration = Duration.ZERO
 
   /** Holds the [LocalDateTime] at the start of the application in the yyyy-MM-dd-HH-mm format. */
@@ -135,24 +135,24 @@ object ApplicationConstantsHolder {
         ====================================================================================================
         Experiment run metadata
         ====================================================================================================
-        Experiment start              : ${applicationStartTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))}
-        Experiment end                : ${experimentEndTime?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) ?: "Not finished"}
-        Total evaluation time         : $totalEvaluationTime
-        Total segment evaluation time : $totalTickEvaluationTime
-        Execution command             : ${executionCommand
+        Experiment start           : ${applicationStartTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))}
+        Experiment end             : ${experimentEndTime?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) ?: "Not finished"}
+        Total evaluation time      : $totalEvaluationTime
+        Total tick evaluation time : $totalTickEvaluationTime
+        Execution command          : ${executionCommand
           .prependIndent("                                        ").trimStart()}
                                                   
         
         ====================================================================================================
         System information
         ====================================================================================================
-        User                          : ${System.getProperty("user.name")}
-        Hostname                      : ${java.net.InetAddress.getLocalHost().hostName}
-        OS                            : ${System.getProperty("os.name")} ${System.getProperty("os.arch")} ${System.getProperty("os.version")}
-        CPU                           : ${Runtime.getRuntime().availableProcessors()} cores
-        Memory                        : ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB
-        Java version                  : ${System.getProperty("java.version")}
-        Java vendor                   : ${System.getProperty("java.vendor")}
+        User                       : ${System.getProperty("user.name")}
+        Hostname                   : ${java.net.InetAddress.getLocalHost().hostName}
+        OS                         : ${System.getProperty("os.name")} ${System.getProperty("os.arch")} ${System.getProperty("os.version")}
+        CPU                        : ${Runtime.getRuntime().availableProcessors()} cores
+        Memory                     : ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB
+        Java version               : ${System.getProperty("java.version")}
+        Java vendor                : ${System.getProperty("java.vendor")}
       """
                 .trimIndent())
       }

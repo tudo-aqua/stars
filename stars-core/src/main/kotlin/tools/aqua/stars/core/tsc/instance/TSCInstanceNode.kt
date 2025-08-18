@@ -122,17 +122,17 @@ class TSCInstanceNode<
    * [TSCNode<E,T,S,U,D>.monitorFunction] results and returns a [TSCFailedMonitorInstance] for each
    * incoming edge label with results != true.
    *
-   * @param segmentIdentifier Identifier of the segment.
+   * @param identifier Identifier of the tick.
    * @param label specifies the starting point in the TSC for the search.
    * @return list of edge labels leading to a node with `false` monitor result.
    */
   fun validateMonitors(
-      segmentIdentifier: String,
+      identifier: String,
       label: String = ROOT_NODE_LABEL
   ): List<TSCFailedMonitorInstance<E, T, U, D>> =
       validateMonitorsRec(label).map {
         TSCFailedMonitorInstance(
-            segmentIdentifier = segmentIdentifier,
+            identifier = identifier,
             tscInstance = this,
             monitorLabel = it.first,
             nodeLabel = it.second)

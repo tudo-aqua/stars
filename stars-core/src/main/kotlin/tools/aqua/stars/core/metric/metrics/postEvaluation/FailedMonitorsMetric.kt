@@ -75,7 +75,7 @@ class FailedMonitorsMetric<
         dependsOn.getState().mapValues { (_, validInstancesMap) ->
           validInstancesMap.flatMap { (_, validInstances) ->
             validInstances.flatMap { validInstance ->
-              validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
+              validInstance.rootNode.validateMonitors(validInstance.sourceIdentifier)
             }
           }
         })
@@ -92,8 +92,7 @@ class FailedMonitorsMetric<
 
       logFine("Failed monitors for tsc '${tsc.identifier}':")
       failedMonitors.forEach { failedMonitor ->
-        logFine(
-            "Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.segmentIdentifier}")
+        logFine("Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.identifier}")
         logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }
@@ -106,7 +105,7 @@ class FailedMonitorsMetric<
         val resultList =
             failedMonitorInstances.map {
               SerializableFailedMonitorInstance(
-                  segmentIdentifier = it.segmentIdentifier,
+                  identifier = it.identifier,
                   tscInstance = SerializableTSCNode(it.tscInstance),
                   monitorLabel = it.monitorLabel,
                   nodeLabel = it.nodeLabel)

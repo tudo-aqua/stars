@@ -179,7 +179,7 @@ class ValidTSCInstancesPerTSCMetric<
         logFine("The following instance occurred ${values.size} times:")
         logFine(key)
         logFiner("Occurred in:")
-        values.forEach { logFiner(it.sourceSegmentIdentifier) }
+        values.forEach { logFiner(it.sourceIdentifier) }
         logFine("----------------")
       }
     }
@@ -229,7 +229,7 @@ class ValidTSCInstancesPerTSCMetric<
             validInstances.map { (tscInstanceNode, tscInstances) ->
               SerializableTSCOccurrence(
                   tscInstance = SerializableTSCNode(tscInstanceNode),
-                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
+                  identifiers = tscInstances.map { it.sourceIdentifier })
             }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,

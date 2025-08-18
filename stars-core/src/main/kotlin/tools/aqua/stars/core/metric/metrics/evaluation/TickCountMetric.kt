@@ -27,7 +27,7 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class is an implementation of [TickMetricProvider] which provides the count of evaluated
- * segments. This Metric is stateful as it has to track the count of observed [TickDataType]s.
+ * ticks. This Metric is stateful as it has to track the count of observed [TickDataType]s.
  *
  * This class implements the [Stateful] interface. Its state contains the [tickCount].
  *
@@ -47,7 +47,7 @@ class TickCountMetric<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>>(
-    override val loggerIdentifier: String = "segment-count",
+    override val loggerIdentifier: String = "tick-count",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
 ) : TickMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
   /** Holds the count of [TickDataType]s that are analyzed. */

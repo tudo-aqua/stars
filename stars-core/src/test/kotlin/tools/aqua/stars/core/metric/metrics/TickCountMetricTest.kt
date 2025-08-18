@@ -46,7 +46,7 @@ class TickCountMetricTest {
    * observed [SimpleTickData].
    */
   @Test
-  fun testTwoEmptySegments() {
+  fun testTwoEmptyTicks() {
     val simpleTick1 = SimpleTickData()
     val simpleTick2 = SimpleTickData()
 

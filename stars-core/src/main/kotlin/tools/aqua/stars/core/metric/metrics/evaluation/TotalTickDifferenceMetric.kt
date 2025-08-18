@@ -61,7 +61,8 @@ class TotalTickDifferenceMetric<
    *   [TickDataType] is not positive.
    */
   override fun evaluate(tick: T): Optional<D> {
-    // The Segment has at least two TickData objects from which a TickDifference can be calculated.
+    // The tick has at least one previous TickData object from which a TickDifference can be
+    // calculated.
     tick.previousTick?.let { previousTick ->
 
       // Calculate the TickDifference between the previous and the current tick.

@@ -145,7 +145,7 @@ fun loadTicks(
       // Holds the current simulationRun object
       val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
 
-      // Calculate Blocks for current file and add each Segment to the Sequence
+      // Calculate TickData objects from JSON
       val ticks =
           convertTickData(
               world = currentSimulationRunsWrapper.world,

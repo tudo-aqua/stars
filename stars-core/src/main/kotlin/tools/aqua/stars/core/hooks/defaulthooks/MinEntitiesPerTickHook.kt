@@ -43,7 +43,7 @@ open class MinEntitiesPerTickHook<
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
     PreTickEvaluationHook<E, T, U, D>(
-        identifier = "MinEntitiesPerSegmentHook",
+        identifier = "MinEntitiesPerTickHook",
         evaluationFunction = { tick ->
           if (tick.entities.size >= minEntities) EvaluationHookResult.OK else failPolicy
         }) {

@@ -125,7 +125,7 @@ class InvalidTSCInstancesPerTSCMetric<
         referenceInstance.validate().forEach { validation -> logFiner("- ${validation.second}") }
         logFiner("Occurred in:")
         invalidInstances.forEachIndexed { index, instance ->
-          logFiner("- $index -  ${instance.sourceSegmentIdentifier}")
+          logFiner("- $index -  ${instance.sourceIdentifier}")
         }
         logFiner()
       }
@@ -138,7 +138,7 @@ class InvalidTSCInstancesPerTSCMetric<
             invalidInstances.map { (tscInstanceNode, tscInstances) ->
               SerializableTSCOccurrence(
                   tscInstance = SerializableTSCNode(tscInstanceNode),
-                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
+                  identifiers = tscInstances.map { it.sourceIdentifier })
             }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,

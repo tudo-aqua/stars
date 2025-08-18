@@ -21,15 +21,14 @@ import tools.aqua.stars.core.types.*
 
 /**
  * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
- * evaluation of a segment of data.
+ * evaluation of a tick of data.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param identifier The identifier to be used in the error message.
- * @param evaluationFunction The function to be executed before the evaluation of the segment of
- *   data.
+ * @param evaluationFunction The function to be executed before the evaluation of the tick.
  */
 open class PreTickEvaluationHook<
     E : EntityType<E, T, U, D>,
@@ -46,7 +45,7 @@ open class PreTickEvaluationHook<
      * @param T [TickDataType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @param segment The list of [TickDataType]s to evaluate.
+     * @param tick The [TickDataType] to evaluate.
      */
     fun <
         E : EntityType<E, T, U, D>,
@@ -69,7 +68,7 @@ open class PreTickEvaluationHook<
           EvaluationHookStringWrapper.cancel(tick, hooks)
           false
         }
-        // Return without evaluating the segment
+        // Return without evaluating the tick
         EvaluationHookResult.SKIP -> {
           EvaluationHookStringWrapper.skip(tick, hooks)
           true

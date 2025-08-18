@@ -79,7 +79,7 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
           validInstancesMap.values
               .flatten()
               .flatMap { tscInstance ->
-                tscInstance.rootNode.validateMonitors(tscInstance.sourceSegmentIdentifier).map {
+                tscInstance.rootNode.validateMonitors(tscInstance.sourceIdentifier).map {
                     failedMonitor ->
                   failedMonitor to tscInstance
                 }
@@ -109,7 +109,7 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
           logFine("Failed ${tscInstances.size} times for the following tsc instance:")
           tscInstances.forEach {
             logFiner()
-            logFiner(it.sourceSegmentIdentifier)
+            logFiner(it.sourceIdentifier)
           }
           logFine(tscInstanceNode)
         }

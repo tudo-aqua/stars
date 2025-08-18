@@ -29,7 +29,7 @@ import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerTickHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
-import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickHook
+import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickSequenceHook
 import tools.aqua.stars.core.metric.metrics.providers.Loggable
 import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.Plottable
@@ -137,14 +137,13 @@ class TSCEvaluation<
   /**
    * Holds the results (Map of [PreTickEvaluationHook.identifier] to [EvaluationHookResult]) of the
    * [PreTickEvaluationHook]s after calling [runEvaluation] that did not return
-   * [EvaluationHookResult.OK] for each segment identifier.
+   * [EvaluationHookResult.OK] for each identifier.
    */
   val preTickEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
-      mutableMapOf() // TODO: String = SegmentIdentifier -> Change to range
+      mutableMapOf() // TODO: String = Tick Identifier -> Change to range
 
   /**
-   * Holds a [List] of all [PreTickEvaluationHook]s registered by
-   * [registerPreSegmentEvaluationHooks].
+   * Holds a [List] of all [PreTickEvaluationHook]s registered by [registerPreTickEvaluationHooks].
    */
   private val preTickEvaluationHooks: MutableList<PreTickEvaluationHook<E, T, U, D>> =
       mutableListOf()
@@ -188,9 +187,9 @@ class TSCEvaluation<
 
   /**
    * Registers all [PreTickEvaluationHook]s to the list of hooks that should be called before the
-   * evaluation of each segment of data.
+   * evaluation of each tick of data.
    * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation proceeds
-   *   with the next segment.
+   *   with the next tick.
    * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
    *   canceled at this point but post evaluation steps are performed.
    * - If the [PreTickEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
@@ -198,7 +197,7 @@ class TSCEvaluation<
    *
    * @param preTickEvaluationHooks The [PreTickEvaluationHook]s that should be registered.
    */
-  fun registerPreSegmentEvaluationHooks(
+  fun registerPreTickEvaluationHooks(
       vararg preTickEvaluationHooks: PreTickEvaluationHook<E, T, U, D>
   ) {
     this.preTickEvaluationHooks.addAll(preTickEvaluationHooks)
@@ -207,8 +206,8 @@ class TSCEvaluation<
   /**
    * Registers all default hooks to the list of hooks that should be called during evaluation. This
    * includes:
-   * - [MinEntitiesPerTickHook] with a minimum of 1 entity per segment.
-   * - [MinTicksPerTickHook] with a minimum of 1 tick per segment.
+   * - [MinEntitiesPerTickHook] with a minimum of 1 entity per tick.
+   * - [MinTicksPerTickSequenceHook] with a minimum of 1 tick per [TickSequence].
    * - [MinNodesInTSCHook] with a minimum of 1 node in each TSC.
    *
    * The lists of hooks [preTSCEvaluationHooks] and [preTickEvaluationHooks] are NOT cleared before.
@@ -216,7 +215,7 @@ class TSCEvaluation<
    */
   fun registerDefaultHooks() {
     preTickEvaluationHooks.add(MinEntitiesPerTickHook(minEntities = 1))
-    preTickEvaluationHooks.add(MinTicksPerTickHook(minTicks = 1))
+    preTickEvaluationHooks.add(MinTicksPerTickSequenceHook(minTicks = 1))
     preTSCEvaluationHooks.add(MinNodesInTSCHook(minNodes = 1))
   }
 
@@ -294,7 +293,7 @@ class TSCEvaluation<
    * @return Whether the evaluation should continue.
    */
   private fun evaluateTick(tick: T, tscList: List<TSC<E, T, U, D>>): Boolean {
-    // Evaluate PreSegmentEvaluationHooks
+    // Evaluate PreTickEvaluationHooks
     preTickEvaluationHooks.evaluate(tick).let { (verdict, results) ->
       if (verdict != null) {
         preTickEvaluationHookResults[tick.toString()] =

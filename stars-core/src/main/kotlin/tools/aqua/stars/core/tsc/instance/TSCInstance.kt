@@ -27,13 +27,10 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property rootNode The root node.
- * @property sourceSegmentIdentifier Segment identifier.
+ * @property sourceIdentifier Source identifier.
  */
 data class TSCInstance<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    val rootNode: TSCInstanceNode<E, T, U, D>,
-    val sourceSegmentIdentifier: String
-)
+    D : TickDifference<D>>(val rootNode: TSCInstanceNode<E, T, U, D>, val sourceIdentifier: String)
