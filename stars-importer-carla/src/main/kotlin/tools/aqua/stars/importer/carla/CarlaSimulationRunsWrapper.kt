@@ -28,9 +28,9 @@ import tools.aqua.stars.data.av.dataclasses.World
  * [sortFilesBySeed] is set to true.
  *
  * @property staticDataFile The [Path] to map data file containing all static information.
- * @property dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state.
- *   data for the simulation
- *     @param sortFilesBySeed Whether to sort the [dynamicDataFiles] by the seed.
+ * @param dynamicDataFiles A [List] of [Path]s to the data files which contain the timed state. data
+ *   for the simulation
+ * @param sortFilesBySeed Whether to sort the [dynamicDataFiles] by the seed.
  */
 class CarlaSimulationRunsWrapper(
     val staticDataFile: Path,

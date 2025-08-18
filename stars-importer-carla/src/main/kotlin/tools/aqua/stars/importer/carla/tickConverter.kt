@@ -176,6 +176,7 @@ private fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  *
  * @param vehicle The [Vehicle] to update.
  * @param previousActor The previous [Actor].
+ * @param timeDelta The time difference between the current and previous tick.
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
 private fun updateActorVelocityAndAcceleration(

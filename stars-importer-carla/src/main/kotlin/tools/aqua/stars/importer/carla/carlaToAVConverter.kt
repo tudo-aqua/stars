@@ -204,11 +204,13 @@ fun JsonContactArea.toContactArea(lane1: Lane, lane2: Lane): ContactArea =
         lane1 = lane1,
         lane2 = lane2)
 
+/** Converts [JsonVector3D] to [Vector3D]. */
 fun JsonVector3D.toVector3D(): Vector3D = Vector3D(x, y, z)
 
 /** Converts [JsonLocation] to [Location]. */
 fun JsonLocation.toLocation(): Location = Location(x, y, z)
 
+/** Converts [JsonRotation] to [Rotation]. */
 fun JsonRotation.toRotation(): Rotation = Rotation(pitch, yaw, roll)
 
 /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */

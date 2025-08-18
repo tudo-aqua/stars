@@ -40,6 +40,7 @@ import kotlinx.serialization.Serializable
  * @property isDormant Whether the [JsonVehicle] is dormant in the simulation.
  * @property semanticTags The semantic tags of the [JsonVehicle] from the CARLA simulation.
  * @property boundingBox The bounding box of the [JsonVehicle].
+ * @property collisions The list of actor IDs, this [JsonVehicle] is colliding with.
  */
 @Serializable
 @SerialName("Vehicle")

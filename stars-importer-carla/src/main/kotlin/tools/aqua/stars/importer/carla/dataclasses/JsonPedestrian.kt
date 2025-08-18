@@ -34,6 +34,7 @@ import kotlinx.serialization.Serializable
  * @property isDormant Whether the [JsonPedestrian] is dormant in the simulation.
  * @property semanticTags The semantic tags of the [JsonPedestrian] from the CARLA simulation.
  * @property boundingBox The bounding box of the [JsonPedestrian].
+ * @property collisions The list of actor IDs, this [JsonPedestrian] is colliding with.
  */
 @Serializable
 @SerialName("Pedestrian")
