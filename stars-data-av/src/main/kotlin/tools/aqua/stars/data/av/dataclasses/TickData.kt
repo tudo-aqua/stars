@@ -22,7 +22,8 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * Data class for tick data.
  *
- * @property currentTickUnit Current tick value.
+ * @param currentTickUnit Current tick value.
+ * @param entities Set of all [Actor]s in the current tick.
  * @property trafficLights List of all [TrafficLight]s.
  * @property blocks ist of all [World]s.
  * @property weather The current [WeatherParameters].
