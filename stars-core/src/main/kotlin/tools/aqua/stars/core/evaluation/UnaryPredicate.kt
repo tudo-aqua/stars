@@ -47,9 +47,8 @@ class UnaryPredicate<
   /**
    * Check if this predicate holds (i.e., is true) in the given context.
    *
-   * @param tick The current tick that is beeing evaluated.
-   *     * @param tickUnit The time stamp to evaluate this predicate for.
-   *
+   * @param tick The current tick that is being evaluated.
+   * @param tickUnit The time stamp to evaluate this predicate for.
    * @param entity The entity to evaluate this predicate for.
    * @return Whether the predicate holds in the given context at the given [tick] for the given
    *   [entity].

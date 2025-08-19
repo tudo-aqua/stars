@@ -19,13 +19,16 @@ package tools.aqua.stars.core
 
 import tools.aqua.stars.core.types.*
 
-/** Simple entity. */
+/**
+ * Simple entity.
+ *
+ * @property id The unique identifier of the entity.
+ */
 class SimpleEntity(
     val id: Int = 0,
 ) : EntityType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
-  override fun equals(other: Any?): Boolean {
-    return if (other !is SimpleEntity) false else id == (other).id
-  }
+  override fun equals(other: Any?): Boolean =
+      if (other !is SimpleEntity) false else id == (other).id
 
   override fun hashCode(): Int = id
 }
@@ -37,6 +40,9 @@ class SimpleTickData(
 ) :
     TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
         currentTickUnit, entities) {
+  override val ego: SimpleEntity
+    get() = throw UnsupportedOperationException("Ego not defined for SimpleTickData")
+
   override fun toString(): String = "$currentTickUnit"
 }
 

@@ -25,14 +25,17 @@ import org.junit.jupiter.api.Test
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataUnit
 
+/** Test for [TickSequence]. */
 class TickSequenceTest {
 
+  /** Test empty [TickSequence]. */
   @Test
   fun `Test empty TickSequence`() {
     val sequence = TickSequence { null }
     assertTrue(sequence.toList().isEmpty())
   }
 
+  /** Test correct iteration order. */
   @Test
   fun `Test correct iteration order`() {
     var i = 0L
@@ -43,6 +46,7 @@ class TickSequenceTest {
     }
   }
 
+  /** Test correct linking. */
   @Test
   fun `Test correct linking`() {
     var i = 0L

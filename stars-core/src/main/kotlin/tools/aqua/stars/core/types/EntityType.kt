@@ -34,6 +34,7 @@ abstract class EntityType<
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
 
+  /** The associated [TickDataType]. */
   lateinit var currentTick: T
     internal set
 

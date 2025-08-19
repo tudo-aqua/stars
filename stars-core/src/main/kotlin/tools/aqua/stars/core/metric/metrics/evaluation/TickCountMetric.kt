@@ -56,7 +56,7 @@ class TickCountMetric<
   /**
    * Increases the count of evaluated [TickDataType]s.
    *
-   * @param tickCount The current [TickDataType] that is evaluated.
+   * @param tick The current [TickDataType] that is evaluated.
    * @return The number of analyzed [TickDataType]s so far.
    */
   override fun evaluate(tick: T): Int =

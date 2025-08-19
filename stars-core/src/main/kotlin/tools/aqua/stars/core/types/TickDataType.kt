@@ -76,13 +76,33 @@ abstract class TickDataType<
     }
   }
 
+  /**
+   * Returns a forward iterator over the ticks in the sequence.
+   *
+   * @return A [TickDataIterator] that iterates over the ticks in the sequence in forward order.
+   */
   @Suppress("UNCHECKED_CAST")
   fun forward(): TickDataIterator<T> = TickDataIterator(this as T) { it.nextTick }
 
+  /**
+   * Returns a backward iterator over the ticks in the sequence.
+   *
+   * @return A [TickDataIterator] that iterates over the ticks in the sequence in backward order.
+   */
   @Suppress("UNCHECKED_CAST")
   fun backward(): TickDataIterator<T> = TickDataIterator(this as T) { it.previousTick }
 
-  class TickDataIterator<T>(private val tick: T, private val iter: (T) -> T?) : Iterable<T> {
+  /**
+   * Iterator implementation for [TickDataType]. Instanced may be retrieved using [forward] or
+   * [backward] methods.
+   *
+   * @param T [TickDataType].
+   * @param tick The initial tick to start the iteration from.
+   * @param iter The function to get the next tick from the current tick.
+   * @return An [Iterable] that allows iteration over the ticks in the sequence.
+   */
+  class TickDataIterator<T> internal constructor(private val tick: T, private val iter: (T) -> T?) :
+      Iterable<T> {
     override fun iterator(): Iterator<T> =
         object : Iterator<T> {
           private var current: T? = tick

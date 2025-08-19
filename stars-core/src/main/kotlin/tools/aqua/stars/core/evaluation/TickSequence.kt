@@ -19,6 +19,20 @@ package tools.aqua.stars.core.evaluation
 
 import tools.aqua.stars.core.types.TickDataType
 
+/**
+ * A sequence that returns ticks of type [T] in a doubly linked list structure. The [getNextValue]
+ * function is used to lazily retrieve the next tick value. The iterator returns ticks one by one
+ * and creates the doubly linked list structure. This list is cropped to a maximum size of
+ * [bufferSize], meaning that the oldest ticks are removed when the size exceeds this limit and
+ * their predecessors are set to null.
+ *
+ * The sequence can only be consumed once.
+ *
+ * @param T [TickDataType].
+ * @property bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
+ *   tick is removed.
+ * @param getNextValue The generator function that lazily returns the next tick.
+ */
 class TickSequence<T : TickDataType<*, T, *, *>>(
     val bufferSize: Int = 100,
     private val getNextValue: () -> T?
@@ -31,9 +45,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
   }
 
   override fun iterator(): Iterator<T> {
-    if (onceConstraint.getAndSet(true)) {
-      throw IllegalStateException("This TickSequence can only be consumed once.")
-    }
+    check(onceConstraint.getAndSet(true)) { "This TickSequence can only be consumed once." }
 
     return object : Iterator<T> {
       var firstItem: T? = null
