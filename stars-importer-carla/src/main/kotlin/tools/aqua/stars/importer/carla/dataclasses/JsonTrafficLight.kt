@@ -53,7 +53,8 @@ data class JsonTrafficLight(
     @SerialName("is_active") override val isActive: Boolean = false,
     @SerialName("is_dormant") override val isDormant: Boolean = false,
     @SerialName("semantic_tags") override val semanticTags: List<Int> = emptyList(),
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = JsonBoundingBox(),
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = null,
+    @SerialName("collisions") override val collisions: List<Int> = emptyList()
 ) : JsonActor() {
 
   /** Converts [JsonTrafficLight] to [TrafficLight]. */

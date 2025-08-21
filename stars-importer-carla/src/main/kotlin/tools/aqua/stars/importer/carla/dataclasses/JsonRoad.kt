@@ -26,10 +26,12 @@ import kotlinx.serialization.Serializable
  * @property roadId The identifier of the road.
  * @property isJunction Whether this is a junction.
  * @property lanes List of [JsonLane]s on this road.
+ * @property junctionId The optional ID of the junction.
  */
 @Serializable
 data class JsonRoad(
     @SerialName("road_id") val roadId: Int = 0,
     @SerialName("is_junction") val isJunction: Boolean = false,
     @SerialName("lanes") val lanes: List<JsonLane> = emptyList(),
+    @SerialName("junction_id") val junctionId: Int? = null
 )

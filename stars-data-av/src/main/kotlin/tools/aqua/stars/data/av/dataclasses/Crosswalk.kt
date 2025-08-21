@@ -18,20 +18,15 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for roads.
+ * Data class for junctions.
  *
- * @property id The identifier of the road.
- * @property lanes List of [Lane]s on this road.
+ * @property id The identifier of the crosswalk.
+ * @property vertices List of vertices of this crosswalk as [Location]s.
  */
-data class Road(var id: Int = 0, val isJunction: Boolean = false, val lanes: List<Lane>) {
-
-  /** The [Block] this [Road] belongs to. */
-  lateinit var block: Block
-
+data class Crosswalk(val id: Int, val vertices: List<Location>) {
   init {
-    check(lanes.isNotEmpty()) { "Road must have at least one lane" }
-    lanes.forEach { it.road = this }
+    check(vertices.size == 4) { "Crosswalk must have exactly four vertices" }
   }
 
-  override fun toString(): String = "$id"
+  override fun toString(): String = "Crosswalk $id"
 }

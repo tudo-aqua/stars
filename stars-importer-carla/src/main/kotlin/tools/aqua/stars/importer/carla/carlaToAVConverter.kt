@@ -20,6 +20,7 @@ package tools.aqua.stars.importer.carla
 import kotlin.math.abs
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.data.av.dataclasses.VehicleType.*
+import tools.aqua.stars.data.av.dataclasses.lanes
 import tools.aqua.stars.importer.carla.dataclasses.*
 
 // region converter
@@ -209,16 +210,27 @@ fun getVehicleTypeFromTypeId(typeId: String): VehicleType =
 /**
  * Calculates static [JsonBlock]s to [Block]s.
  *
- * @param staticJsonBlocks List of [JsonBlock]s.
+ * @param staticWorld List of [JsonBlock]s.
  */
-fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>): List<Block> =
-    staticJsonBlocks
-        .map { block -> block.toBlock() }
-        .also {
-          updateLanes(
-              jsonLanes = staticJsonBlocks.flatMap { b -> b.roads }.flatMap { b -> b.lanes },
-              lanes = it.flatMap { b -> b.roads }.flatMap { b -> b.lanes })
-        }
+fun calculateStaticBlocks(staticWorld: JsonWorld): List<Block> {
+  val blocks = mutableListOf<JsonBlock>()
+  blocks.addAll(
+      staticWorld.junctions.map { junction ->
+        JsonBlock(id = "${junction.junctionId}", roads = junction.roads)
+      })
+  blocks.addAll(
+      staticWorld.straights.map { straight ->
+        JsonBlock(id = "${straight.roadId}", roads = listOf(straight))
+      })
+
+  return blocks
+      .map { block -> block.toBlock() }
+      .also {
+        updateLanes(
+            jsonLanes = blocks.flatMap { b -> b.roads }.flatMap { b -> b.lanes },
+            lanes = it.flatMap { b -> b.roads }.flatMap { b -> b.lanes })
+      }
+}
 
 /** Updates [JsonLane]s and [Lane]s. */
 fun updateLanes(jsonLanes: List<JsonLane>, lanes: List<Lane>) {

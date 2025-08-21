@@ -29,4 +29,12 @@ sealed class Actor :
    * @param newTickData New [TickData] to copy to new object.
    */
   abstract fun clone(newTickData: TickData): Actor
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Actor) return false
+    return id == other.id
+  }
+
+  override fun hashCode(): Int = id
 }

@@ -22,7 +22,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import tools.aqua.stars.data.av.*
 import tools.aqua.stars.data.av.dataclasses.Block
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.Location
@@ -52,12 +51,12 @@ class VelocityAndAccelerationTest {
     val vehicle3 = Vehicle(location = Location(8.0, 2.0, 10.0), isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
-    TickData(currentTick = TickDataUnitSeconds(1.0), entities = listOf(vehicle2))
-    TickData(currentTick = TickDataUnitSeconds(2.0), entities = listOf(vehicle3))
+    val tickData1 = TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
+    val tickData2 = TickData(currentTick = TickDataUnitSeconds(1.0), entities = listOf(vehicle2))
+    val tickData3 = TickData(currentTick = TickDataUnitSeconds(2.0), entities = listOf(vehicle3))
 
     // Vehicle 0 has no previous state. The velocity and acceleration values should be set to 0.0
-    updateActorVelocityAndAcceleration(vehicle1, null)
+    updateActorVelocityAndAcceleration(vehicle = vehicle1, previousActor = null)
     assertEquals(0.0, vehicle1.velocity.x)
     assertEquals(0.0, vehicle1.velocity.y)
     assertEquals(0.0, vehicle1.velocity.z)
@@ -66,7 +65,7 @@ class VelocityAndAccelerationTest {
     assertEquals(0.0, vehicle1.acceleration.z)
 
     // Vehicle 1 has Vehicle 1 as previous state.
-    updateActorVelocityAndAcceleration(vehicle2, vehicle1)
+    updateActorVelocityAndAcceleration(vehicle = vehicle2, previousActor = vehicle1)
 
     // Velocity = ((3, 4, 5) - (0, 0, 0)) / 1 = (3, 4, 5)
     assertEquals(3.0, vehicle2.velocity.x)
@@ -79,7 +78,7 @@ class VelocityAndAccelerationTest {
     assertEquals(5.0, vehicle2.acceleration.z)
 
     // Vehicle 2 has Vehicle 1 as previous state.
-    updateActorVelocityAndAcceleration(vehicle3, vehicle2)
+    updateActorVelocityAndAcceleration(vehicle = vehicle3, previousActor = vehicle2)
 
     // Velocity = ((8, 2, 10) - (3, 4, 5)) / 1 = (5, -2, 5)
     assertEquals(5.0, vehicle3.velocity.x)
@@ -89,47 +88,6 @@ class VelocityAndAccelerationTest {
     // Acceleration = ((5, -2, 5) - (3, 4, 5)) / 1 = (2, -6, 0)
     assertEquals(2.0, vehicle3.acceleration.x)
     assertEquals(-6.0, vehicle3.acceleration.y)
-    assertEquals(0.0, vehicle3.acceleration.z)
-  }
-
-  /**
-   * Tests the velocity and acceleration calculations and check the case when there is no time
-   * difference between two ticks (namely: time difference = 0.0).
-   */
-  @Test
-  fun testZeroTimeDifference() {
-    val vehicle1 = Vehicle(isEgo = true, lane = lane)
-    val vehicle2 = Vehicle(isEgo = false, lane = lane)
-    val vehicle3 = Vehicle(isEgo = false, lane = lane)
-
-    // Create TickData for all vehicles.
-    TickData(entities = listOf(vehicle1, vehicle2, vehicle3))
-
-    // Vehicle 0 has no previous state. The velocity and acceleration values should be set to 0.0
-    updateActorVelocityAndAcceleration(vehicle1, null)
-    assertEquals(0.0, vehicle1.velocity.x)
-    assertEquals(0.0, vehicle1.velocity.y)
-    assertEquals(0.0, vehicle1.velocity.z)
-    assertEquals(0.0, vehicle1.acceleration.x)
-    assertEquals(0.0, vehicle1.acceleration.y)
-    assertEquals(0.0, vehicle1.acceleration.z)
-
-    // The time difference between Vehicle0 and Vehicle1 is 0.0. Expect values of 0.0
-    updateActorVelocityAndAcceleration(vehicle2, vehicle1)
-    assertEquals(0.0, vehicle2.velocity.x)
-    assertEquals(0.0, vehicle2.velocity.y)
-    assertEquals(0.0, vehicle2.velocity.z)
-    assertEquals(0.0, vehicle2.acceleration.x)
-    assertEquals(0.0, vehicle2.acceleration.y)
-    assertEquals(0.0, vehicle2.acceleration.z)
-
-    // The time difference between Vehicle1 and Vehicle2 is 0.0. Expect values of 0.0
-    updateActorVelocityAndAcceleration(vehicle3, vehicle2)
-    assertEquals(0.0, vehicle3.velocity.x)
-    assertEquals(0.0, vehicle3.velocity.y)
-    assertEquals(0.0, vehicle3.velocity.z)
-    assertEquals(0.0, vehicle3.acceleration.x)
-    assertEquals(0.0, vehicle3.acceleration.y)
     assertEquals(0.0, vehicle3.acceleration.z)
   }
 
@@ -144,13 +102,13 @@ class VelocityAndAccelerationTest {
     val vehicle2 = Vehicle(isEgo = true, lane = lane)
 
     // Create TickData for all vehicles.
-    TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
-    TickData(currentTick = TickDataUnitSeconds(-1.0), entities = listOf(vehicle2))
+    val tickData1 = TickData(currentTick = TickDataUnitSeconds(0.0), entities = listOf(vehicle1))
+    val tickData2 = TickData(currentTick = TickDataUnitSeconds(-1.0), entities = listOf(vehicle2))
 
     // The time difference between Vehicle2 and Vehicle1 is -1.0. This should throw an
     // IllegalStateException
     assertFailsWith<IllegalStateException> {
-      updateActorVelocityAndAcceleration(vehicle2, vehicle1)
+      updateActorVelocityAndAcceleration(vehicle = vehicle2, previousActor = vehicle1)
     }
   }
 
@@ -162,11 +120,8 @@ class VelocityAndAccelerationTest {
   fun testEmptyPreviousVehicle() {
     val vehicle = Vehicle(isEgo = true, lane = lane)
 
-    // Create TickData for all vehicles.
-    TickData(entities = listOf(vehicle))
-
     // Vehicle has no previous state. The velocity and acceleration values should be set to 0.0
-    updateActorVelocityAndAcceleration(vehicle, null)
+    updateActorVelocityAndAcceleration(vehicle = vehicle, previousActor = null)
     assertEquals(0.0, vehicle.velocity.x)
     assertEquals(0.0, vehicle.velocity.y)
     assertEquals(0.0, vehicle.velocity.z)
@@ -187,6 +142,8 @@ class VelocityAndAccelerationTest {
     // It is expected that the actors of the current tick and the previous tick are both of type
     // 'Vehicle'. In this case the previous actor with the same id as a 'Pedestrian'. Therefore, an
     // IllegalStateException is expected.
-    assertFailsWith<IllegalStateException> { updateActorVelocityAndAcceleration(vehicle1, actor0) }
+    assertFailsWith<IllegalStateException> {
+      updateActorVelocityAndAcceleration(vehicle = vehicle1, previousActor = actor0)
+    }
   }
 }

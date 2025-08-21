@@ -100,5 +100,5 @@ enum class JsonTrafficSignType(val value: Int) {
   @SerialName("69") DIRECTION_TURN_TO_LOCAL(69),
   @SerialName("70") DESTINATION_BOARD(70),
   @SerialName("71") FREE_TEXT(71),
-  @SerialName("72") UNKNOWN(72),
+  @SerialName("72") UNKNOWN(72)
 }
