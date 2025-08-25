@@ -19,6 +19,7 @@ package tools.aqua.stars.core.validation
 
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.AbstractPredicate
+import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
@@ -28,15 +29,25 @@ class ManualLabelFile<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val ticksToTest: List<T>) {
-  internal val predicates = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
+    D : TickDifference<D>>(val ticksToTest: Sequence<TickSequence<T>>) {
+  internal val predicatesToHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
+  internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
 
-  fun predicate(
+  fun predicateHolds(
       predicate: AbstractPredicate<E, T, U, D>,
       manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)
-    predicates += manualLabelPredicate
+    predicatesToHold += manualLabelPredicate
+  }
+
+  fun predicateDoesNotHold(
+      predicate: AbstractPredicate<E, T, U, D>,
+      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit
+  ) {
+    val manualLabelPredicate = ManualLabelPredicate(predicate)
+    manualLabelPredicate.apply(manualLabelPredicateInvocation)
+    predicatesToNotHold += manualLabelPredicate
   }
 }

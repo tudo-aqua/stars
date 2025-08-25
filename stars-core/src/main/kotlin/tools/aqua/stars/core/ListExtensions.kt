@@ -19,6 +19,11 @@
 
 package tools.aqua.stars.core
 
+import kotlin.sequences.forEach
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
+
 /**
  * Creates TxT cross product.
  *
@@ -100,3 +105,16 @@ inline fun <reified R> Iterable<*>.forEachInstance(action: (R) -> Unit): Unit = 
 }
 
 fun <T> Iterator<T>.nextOrNull(): T? = if (hasNext()) next() else null
+
+fun <T : TickDataType<*, *, U, *>, U : TickUnit<U, D>, D : TickDifference<D>> List<T>
+    .getTicksInInterval(start: U, end: U): List<T> {
+  val ticksInInterval: MutableList<T> = mutableListOf()
+  this.forEach { tick ->
+    if (tick.currentTickUnit in start..end) {
+      ticksInInterval.add(tick)
+    } else if (tick.currentTickUnit > end) {
+      return ticksInInterval
+    }
+  }
+  return ticksInInterval
+}
