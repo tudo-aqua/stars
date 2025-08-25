@@ -58,7 +58,7 @@ class IncompleteJSONLaneTest {
                         lane1EndPos = 10.0,
                         lane2StartPos = 5.0,
                         lane2EndPos = 5.0,
-                        contactLocation = JsonLocation(),
+                        contactLocation = JsonLocation(x = 0.0, y = 0.0, z = 0.0),
                         id = "")),
             successorLanes = listOf(JsonContactLaneInfo(laneId = 1, roadId = 3)),
             speedLimits = emptyList(),
@@ -68,14 +68,14 @@ class IncompleteJSONLaneTest {
                     JsonLandmark(
                         id = 100,
                         roadId = 1,
-                        location = JsonLocation(),
+                        location = JsonLocation(x = 0.0, y = 0.0, z = 0.0),
                         text = "",
                         unit = "mph",
                         value = 30.0,
                         type = JsonLandmarkType.MaximumSpeed,
                         country = "Test",
                         distance = 10.0,
-                        rotation = JsonRotation(),
+                        rotation = JsonRotation(pitch = 0.0, yaw = 0.0, roll = 0.0),
                         hOffset = 0.0,
                         height = 2.3,
                         isDynamic = false,
@@ -92,8 +92,8 @@ class IncompleteJSONLaneTest {
     jsonLanes = listOf(incompleteJsonLane)
     lanes = listOf(incompleteLane)
 
-    incompleteRoad = Road(lanes = lanes, id = 1, isJunction = false)
-    incompleteBlock = World(id = "1", roads = listOf(incompleteRoad))
+    incompleteRoad = Road(lanes = lanes, id = 1)
+    incompleteBlock = World(straights = listOf(incompleteRoad), junctions = emptyList(), crosswalks = emptyList())
   }
 
   /** Tests [updateLanes] for incomplete [JsonLane] and [Lane]. */

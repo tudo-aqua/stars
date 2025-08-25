@@ -29,7 +29,6 @@ import kotlinx.serialization.Serializable
  * @property vertices All vertices of the bounding box.
  */
 @Serializable
-@SerialName("BoundingBox") // TODO: Why is renaming required here?
 data class JsonBoundingBox(
     val extent: JsonVector3D,
     val location: JsonLocation,

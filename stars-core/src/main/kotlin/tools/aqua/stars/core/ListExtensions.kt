@@ -98,3 +98,5 @@ inline fun <T> Sequence<T>.computeWhile(predicate: (T) -> Boolean): Unit = forEa
 inline fun <reified R> Iterable<*>.forEachInstance(action: (R) -> Unit): Unit = forEach {
   if (it is R) action(it)
 }
+
+fun <T> Iterator<T>.nextOrNull(): T? = if (hasNext()) next() else null

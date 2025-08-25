@@ -41,7 +41,7 @@ class MinNodesInTSCHookTest {
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.OK))
 
-      runEvaluation(ticks = ticks())
+      runEvaluation(ticks = generateTicks())
 
       assertEquals(1, tickCountMetric.getState())
     }
@@ -59,7 +59,7 @@ class MinNodesInTSCHookTest {
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.SKIP))
 
-      runEvaluation(ticks = ticks())
+      runEvaluation(ticks = generateTicks())
 
       assertEquals(0, tickCountMetric.getState())
     }
@@ -77,7 +77,7 @@ class MinNodesInTSCHookTest {
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT))
 
-      assertThrows<EvaluationHookAbort> { runEvaluation(ticks = ticks()) }
+      assertThrows<EvaluationHookAbort> { runEvaluation(ticks = generateTicks()) }
     }
   }
 
@@ -93,7 +93,7 @@ class MinNodesInTSCHookTest {
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
 
-      runEvaluation(ticks = ticks())
+      runEvaluation(ticks = generateTicks())
 
       assertEquals(1, tickCountMetric.getState())
     }
@@ -111,7 +111,7 @@ class MinNodesInTSCHookTest {
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
 
-      runEvaluation(ticks = ticks())
+      runEvaluation(ticks = generateTicks())
 
       assertEquals(1, tickCountMetric.getState())
     }
@@ -136,13 +136,4 @@ class MinNodesInTSCHookTest {
             clearHooks()
             registerMetricProviders(it)
           }
-
-  private fun ticks(): Sequence<SimpleTickData> {
-    val entities = mutableListOf<SimpleEntity>()
-    val tickDataList = mutableListOf<SimpleTickData>()
-
-    entities.add(SimpleEntity(0))
-
-    return tickDataList.asSequence()
-  }
 }

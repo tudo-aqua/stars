@@ -17,7 +17,10 @@
 
 package tools.aqua.stars.core
 
+import tools.aqua.stars.core.evaluation.TickSequence
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.core.types.*
+import kotlin.sequences.Sequence
 
 /**
  * Simple entity.
@@ -36,7 +39,7 @@ class SimpleEntity(
 /** Simple tick data. */
 class SimpleTickData(
     currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
-    entities: LinkedHashSet<SimpleEntity> = LinkedHashSet()
+    entities: Set<SimpleEntity> = LinkedHashSet()
 ) :
     TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
         currentTickUnit, entities) {
@@ -86,3 +89,12 @@ class SimpleTickDataDifference(val tickDifference: Long) :
   override fun deserialize(str: String): SimpleTickDataDifference =
       SimpleTickDataDifference(str.toLong())
 }
+
+fun generateTicks() : Sequence<TickSequence<SimpleTickData>> =
+    sequenceOf(
+      mutableListOf(
+        SimpleTickData(
+          SimpleTickDataUnit(0),
+          setOf(SimpleEntity(0)),
+        ))
+        .asTickSequence())

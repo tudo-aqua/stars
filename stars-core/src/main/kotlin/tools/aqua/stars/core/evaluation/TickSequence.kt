@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.evaluation
 
+import tools.aqua.stars.core.nextOrNull
 import tools.aqua.stars.core.types.TickDataType
 
 /**
@@ -38,14 +39,14 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
     private val getNextValue: () -> T?
 ) : Sequence<T> {
   /** Constrains the sequence to be consumed only once. */
-  private val onceConstraint = java.util.concurrent.atomic.AtomicBoolean(false)
+  private val onceConstraint = java.util.concurrent.atomic.AtomicBoolean(true)
 
   init {
     check(bufferSize > 0) { "Buffer size must be greater than 0" }
   }
 
   override fun iterator(): Iterator<T> {
-    check(onceConstraint.getAndSet(true)) { "This TickSequence can only be consumed once." }
+    check(onceConstraint.getAndSet(false)) { "This TickSequence can only be consumed once." }
 
     return object : Iterator<T> {
       var firstItem: T? = null
@@ -111,5 +112,11 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         return true
       }
     }
+  }
+
+  companion object {
+    fun <T : TickDataType<*, T, *, *>> Iterable<T>.asTickSequence(
+        bufferSize: Int = 100
+    ): TickSequence<T> = TickSequence(bufferSize, iterator()::nextOrNull)
   }
 }

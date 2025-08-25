@@ -53,7 +53,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = ticks())
+          runEvaluation(ticks = generateTicks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -88,7 +88,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = ticks())
+          runEvaluation(ticks = generateTicks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -128,7 +128,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = ticks())
+          runEvaluation(ticks = generateTicks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -173,7 +173,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = ticks())
+          runEvaluation(ticks = generateTicks())
         }
 
     assertTrue { failedMonitorsMetric.failedMonitors.any() }
@@ -184,7 +184,4 @@ class TSCMonitorTest {
     assertTrue(failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "MonitorFalse" })
     assertTrue(failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "MonitorFalse" })
   }
-
-  private fun ticks(): Sequence<SimpleTickData> =
-      sequenceOf(SimpleTickData(SimpleTickDataUnit(0), LinkedHashSet(listOf(SimpleEntity(0)))))
 }
