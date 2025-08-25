@@ -59,6 +59,15 @@ class BinaryPredicate<
   fun holds(tick: T, tickUnit: U, entity1: E1, entity2: E2): Boolean =
       TODO("Search for tickUnit in tick")
 
+  /**
+   * Checks if this predicate holds (i.e., is true) in the given context.
+   *
+   * @param tick The current tick that is beeing evaluated.
+   * @return Whether the predicate holds in the given context at the given [tick]. Returns false if
+   *   the [tick] is not in the context.
+   */
+  fun holds(tick: T): Boolean = TODO("Search for tickUnit in tick")
+
   // ctx.firstOrNull { it.currentTickUnit == tick }?.let { holds(it, entity1, entity2) } ?: false
 
   /**
