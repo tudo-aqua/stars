@@ -17,10 +17,10 @@
 
 package tools.aqua.stars.core
 
+import kotlin.sequences.Sequence
 import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.core.types.*
-import kotlin.sequences.Sequence
 
 /**
  * Simple entity.
@@ -90,11 +90,11 @@ class SimpleTickDataDifference(val tickDifference: Long) :
       SimpleTickDataDifference(str.toLong())
 }
 
-fun generateTicks() : Sequence<TickSequence<SimpleTickData>> =
+fun generateTicks(): Sequence<TickSequence<SimpleTickData>> =
     sequenceOf(
-      mutableListOf(
-        SimpleTickData(
-          SimpleTickDataUnit(0),
-          setOf(SimpleEntity(0)),
-        ))
-        .asTickSequence())
+        mutableListOf(
+                SimpleTickData(
+                    SimpleTickDataUnit(0),
+                    setOf(SimpleEntity(0)),
+                ))
+            .asTickSequence())

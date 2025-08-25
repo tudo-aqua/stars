@@ -93,7 +93,8 @@ class IncompleteJSONLaneTest {
     lanes = listOf(incompleteLane)
 
     incompleteRoad = Road(lanes = lanes, id = 1)
-    incompleteBlock = World(straights = listOf(incompleteRoad), junctions = emptyList(), crosswalks = emptyList())
+    incompleteBlock =
+        World(straights = listOf(incompleteRoad), junctions = emptyList(), crosswalks = emptyList())
   }
 
   /** Tests [updateLanes] for incomplete [JsonLane] and [Lane]. */

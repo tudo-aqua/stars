@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.importer.carla.dataclasses
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
