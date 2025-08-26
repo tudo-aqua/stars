@@ -26,14 +26,14 @@ import tools.aqua.stars.importer.carla.dataclasses.*
 /** Tests behaviour on incomplete data from json. */
 class IncompleteJSONLaneTest {
 
-  private lateinit var incompleteBlock: World
+  private lateinit var incompleteWorld: World
   private lateinit var incompleteRoad: Road
   private lateinit var incompleteJsonLane: JsonLane
   private lateinit var incompleteLane: Lane
   private lateinit var jsonLanes: List<JsonLane>
   private lateinit var lanes: List<Lane>
 
-  /** Creates block, road and lane. */
+  /** Creates world, road and lane. */
   @BeforeTest
   fun setupData() {
     incompleteJsonLane =
@@ -93,7 +93,7 @@ class IncompleteJSONLaneTest {
     lanes = listOf(incompleteLane)
 
     incompleteRoad = Road(lanes = lanes, id = 1)
-    incompleteBlock =
+    incompleteWorld =
         World(straights = listOf(incompleteRoad), junctions = emptyList(), crosswalks = emptyList())
   }
 

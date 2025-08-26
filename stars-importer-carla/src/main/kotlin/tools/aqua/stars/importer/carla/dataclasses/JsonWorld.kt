@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for [JsonRoad] blocks.
+ * Json object for the world.
  *
  * @property straights All straight roads in the map that are not pat of a junction.
  * @property junctions All junctions in the map, which contain multiple roads.
