@@ -40,7 +40,7 @@ class VelocityAndAccelerationTest {
   /** Test setup. */
   @BeforeTest
   fun setup() {
-    lane = Lane().also { World(roads = listOf(Road(lanes = listOf(it)))) }
+    lane = Lane().also { World(straights = listOf(Road(lanes = listOf(it)))) }
   }
 
   /** Tests the velocity and acceleration calculations on pre-defined values. */

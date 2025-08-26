@@ -179,11 +179,15 @@ private fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
  * @param timeDelta The time difference between the current and previous tick.
  * @throws IllegalStateException iff [previousActor] is not [Vehicle].
  */
-private fun updateActorVelocityAndAcceleration(
+internal fun updateActorVelocityAndAcceleration(
     vehicle: Vehicle,
     previousActor: Actor?,
     timeDelta: Double
 ) {
+  check(timeDelta >= 0.0) {
+    "The time difference between the current tick and the previous tick is negative ($timeDelta)."
+  }
+
   // When there is no previous actor position, set velocity and acceleration to 0.0
   if (previousActor == null) {
     vehicle.velocity = Vector3D(0.0, 0.0, 0.0)
