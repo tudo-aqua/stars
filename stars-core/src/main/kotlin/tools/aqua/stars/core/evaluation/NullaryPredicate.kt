@@ -41,7 +41,7 @@ class NullaryPredicate<
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
    *
-   * @param tick The current tick that is beeing evaluated.
+   * @param tick The current tick that is being evaluated.
    * @param tickUnit The time stamp to evaluate this predicate for.
    * @return Whether the predicate holds in the given context and at the given [tick].
    */

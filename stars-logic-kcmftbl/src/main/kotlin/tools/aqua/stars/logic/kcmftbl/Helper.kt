@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
+import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDifference
 
 /**
@@ -39,19 +40,19 @@ fun <D : TickDifference<D>> checkInterval(interval: Pair<D, D>?) {
   }
 }
 
-/// **
-// * Checks the given [EntityType]s to be from the same tick.
-// *
-// * @param E [EntityType].
-// * @param entity1 The first entity.
-// * @param entity2 The second entity.
-// * @throws IllegalArgumentException if the entities are not from the same tick.
-// */
-// fun <E : EntityType<E, T, U, D>> checkTick(entity1: E, entity2: E) {
-//  require(entity1.tickData == entity2.tickData) {
-//    "The two entities provided as argument are not from same tick."
-//  }
-// }
+/**
+ * Checks the given [EntityType]s to be from the same tick.
+ *
+ * @param E [EntityType].
+ * @param entity1 The first entity.
+ * @param entity2 The second entity.
+ * @throws IllegalArgumentException if the entities are not from the same tick.
+ */
+fun <E : EntityType<E, *, *, *>> checkTick(entity1: E, entity2: E) {
+  require(entity1.currentTick == entity2.currentTick) {
+    "The two entities provided as argument are not from same tick."
+  }
+}
 
 /**
  * Checks the given [percentage]:

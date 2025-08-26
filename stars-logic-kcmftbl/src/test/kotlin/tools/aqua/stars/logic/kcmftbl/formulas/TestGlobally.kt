@@ -26,7 +26,7 @@ import tools.aqua.stars.logic.kcmftbl.*
 class TestGlobally {
 
   /**
-   * Test equivalence to eventually.
+   * Test equivalence with eventually.
    *
    * Globally phi === !Eventually !phi
    * - phi: All combinations of 0-1 arrays with length 5

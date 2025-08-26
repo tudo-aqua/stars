@@ -58,14 +58,8 @@ fun getSeed(fileName: String): Int =
  *
  * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
- * @param simulationRunId Identifier of the simulation run.
  */
-@Suppress("unused")
-fun convertTickData(
-    world: World,
-    jsonSimulationRun: List<JsonTickData>,
-    simulationRunId: String
-): List<TickData> {
+fun convertTickData(world: World, jsonSimulationRun: List<JsonTickData>): List<TickData> {
   cleanJsonData(world, jsonSimulationRun)
 
   // Extract vehicles from the JSON file

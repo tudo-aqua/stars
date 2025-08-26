@@ -115,6 +115,14 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
   }
 
   companion object {
+    /**
+     * Creates a [TickSequence] from an [Iterable] of [TickDataType]s.
+     *
+     * @param T [TickDataType].
+     * @param bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
+     *   tick is removed.
+     * @return A [TickSequence] that iterates over the elements of the given [Iterable].
+     */
     fun <T : TickDataType<*, T, *, *>> Iterable<T>.asTickSequence(
         bufferSize: Int = 100
     ): TickSequence<T> = TickSequence(bufferSize, iterator()::nextOrNull)

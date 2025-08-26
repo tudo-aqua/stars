@@ -36,7 +36,7 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> backto(
+    D : TickDifference<D>> backTo(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
@@ -69,7 +69,7 @@ fun <
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
 //    U : TickUnit<U, D>,
-//    D : TickDifference<D>> backto(
+//    D : TickDifference<D>> backTo(
 //    entity: E1,
 //    interval: Pair<D, D>? = null,
 //    phi1: (E1) -> Boolean,
@@ -105,7 +105,7 @@ fun <
 //    E : EntityType<E, T, U, D>,
 //    T : TickDataType<E, T, U, D>,
 //    U : TickUnit<U, D>,
-//    D : TickDifference<D>> backto(
+//    D : TickDifference<D>> backTo(
 //    entity1: E1,
 //    entity2: E2,
 //    interval: Pair<D, D>? = null,

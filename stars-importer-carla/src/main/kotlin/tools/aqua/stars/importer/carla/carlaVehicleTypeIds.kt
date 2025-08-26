@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("SpellCheckingInspection")
+
 package tools.aqua.stars.importer.carla
 
 /*

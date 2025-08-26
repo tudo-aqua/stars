@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("DuplicatedCode")
-
 package tools.aqua.stars.logic.kcmftbl
 
 import tools.aqua.stars.core.types.*

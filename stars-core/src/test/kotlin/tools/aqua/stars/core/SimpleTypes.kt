@@ -90,6 +90,7 @@ class SimpleTickDataDifference(val tickDifference: Long) :
       SimpleTickDataDifference(str.toLong())
 }
 
+/** Generates a simple tick sequence with one tick. */
 fun generateTicks(): Sequence<TickSequence<SimpleTickData>> =
     sequenceOf(
         mutableListOf(

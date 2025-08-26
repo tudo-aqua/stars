@@ -26,7 +26,6 @@ import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
-import kotlin.io.path.nameWithoutExtension
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -148,9 +147,7 @@ fun loadTicks(
       // Calculate TickData objects from JSON
       val ticks =
           convertTickData(
-              world = currentSimulationRunsWrapper.world,
-              jsonSimulationRun = simulationRun,
-              simulationRunId = currentDynamicDataPath.nameWithoutExtension)
+              world = currentSimulationRunsWrapper.world, jsonSimulationRun = simulationRun)
 
       val iterator = ticks.iterator()
       return@generateSequence TickSequence(bufferSize) {
@@ -224,7 +221,7 @@ fun loadTicks(
  *   data.
  */
 fun loadTicks(
-    mapToDynamicDataFiles: kotlin.collections.Map<Path, List<Path>>,
+    mapToDynamicDataFiles: Map<Path, List<Path>>,
     bufferSize: Int = 100,
     orderFilesBySeed: Boolean = false
 ): Sequence<TickSequence<TickData>> =

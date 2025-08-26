@@ -29,7 +29,7 @@ data class Road(var id: Int = 0, val lanes: List<Lane>) {
   var junction: Junction? = null
 
   /** The [World] this [Road] belongs to. */
-  lateinit var block: World
+  lateinit var world: World
 
   /** Whether this [Road] is part of a junction. */
   val isJunction: Boolean

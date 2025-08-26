@@ -49,7 +49,7 @@ class BinaryPredicate<
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
    *
-   * @param tick The current tick that is beeing evaluated.
+   * @param tick The current tick that is being evaluated.
    * @param tickUnit The time stamp to evaluate this predicate for.
    * @param entity1 The first entity to evaluate this predicate for.
    * @param entity2 The second entity to evaluate this predicate for.
@@ -62,7 +62,7 @@ class BinaryPredicate<
   /**
    * Checks if this predicate holds (i.e., is true) in the given context.
    *
-   * @param tick The current tick that is beeing evaluated.
+   * @param tick The current tick that is being evaluated.
    * @return Whether the predicate holds in the given context at the given [tick]. Returns false if
    *   the [tick] is not in the context.
    */

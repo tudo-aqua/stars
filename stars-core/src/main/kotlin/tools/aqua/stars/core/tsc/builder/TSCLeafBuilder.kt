@@ -93,7 +93,7 @@ open class TSCLeafBuilder<
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a projections node.
+   * @return The [TSCEdge] that is connected to a 'projections' node.
    */
   fun <
       E : EntityType<E, T, U, D>,
@@ -111,7 +111,7 @@ open class TSCLeafBuilder<
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a monitors node.
+   * @return The [TSCEdge] that is connected to a 'monitors' node.
    */
   fun <
       E : EntityType<E, T, U, D>,
