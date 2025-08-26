@@ -25,9 +25,9 @@ package tools.aqua.stars.data.av.dataclasses
  * @property crosswalks All crosswalks in the map.
  */
 data class World(
-    val straights: List<Road>,
-    val junctions: List<Junction>,
-    val crosswalks: List<Crosswalk>
+    val straights: List<Road> = emptyList(),
+    val junctions: List<Junction> = emptyList(),
+    val crosswalks: List<Crosswalk> = emptyList()
 ) {
 
   init {
