@@ -63,6 +63,21 @@ class UnaryPredicate<
    * Check if this predicate holds (i.e., is true) in the given context.
    *
    * @param ctx The context this predicate is evaluated in.
+   * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
+   * @param entityId (Default: Primary entity) The ID of the entity to evaluate this predicate for.
+   * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
+   *   given [entityId].
+   */
+  fun holds(
+      ctx: PredicateContext<E, T, S, U, D>,
+      tick: T = ctx.segment.ticks.values.first(),
+      entityId: Int = ctx.primaryEntityId
+  ): Boolean = ctx.holds(this, tick.currentTick, entityId)
+
+  /**
+   * Check if this predicate holds (i.e., is true) in the given context.
+   *
+   * @param ctx The context this predicate is evaluated in.
    * @param entity The entity to evaluate this predicate for.
    * @return Whether the predicate holds in the given [PredicateContext] for the given [entity].
    */

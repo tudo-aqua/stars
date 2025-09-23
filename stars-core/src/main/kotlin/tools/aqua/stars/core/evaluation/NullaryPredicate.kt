@@ -52,6 +52,18 @@ class NullaryPredicate<
       tick: U = ctx.segment.ticks.keys.first()
   ): Boolean = ctx.holds(this, tick)
 
+  /**
+   * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
+   *
+   * @param ctx The context this predicate is evaluated in.
+   * @param tick (Default: First tick in context) The tick to evaluate this predicate in.
+   * @return Whether the predicate holds in the given [PredicateContext] and at the given [tick].
+   */
+  fun holds(
+      ctx: PredicateContext<E, T, S, U, D>,
+      tick: T = ctx.segment.ticks.values.first()
+  ): Boolean = ctx.holds(this, tick.currentTick)
+
   /** Creates a nullary tick predicate. */
   companion object {
     /**

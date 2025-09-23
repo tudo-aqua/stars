@@ -30,15 +30,25 @@ class ManualLabelFile<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val segmentsToTest: List<S>) {
-  internal val predicates = mutableListOf<ManualLabelPredicate<E, T, S, U, D>>()
+    D : TickDifference<D>>(val segmentToTest: S) {
+  internal val predicatesToHold = mutableListOf<ManualLabelPredicate<E, T, S, U, D>>()
+  internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<E, T, S, U, D>>()
 
-  fun predicate(
+  fun predicateHolds(
       predicate: AbstractPredicate<E, T, S, U, D>,
       manualLabelPredicateInvocation: ManualLabelPredicate<E, T, S, U, D>.() -> Unit
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)
-    predicates += manualLabelPredicate
+    predicatesToHold += manualLabelPredicate
+  }
+
+  fun predicateDoesNotHold(
+      predicate: AbstractPredicate<E, T, S, U, D>,
+      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, S, U, D>.() -> Unit
+  ) {
+    val manualLabelPredicate = ManualLabelPredicate(predicate)
+    manualLabelPredicate.apply(manualLabelPredicateInvocation)
+    predicatesToNotHold += manualLabelPredicate
   }
 }

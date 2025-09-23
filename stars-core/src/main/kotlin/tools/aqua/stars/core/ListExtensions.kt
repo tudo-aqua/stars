@@ -19,6 +19,10 @@
 
 package tools.aqua.stars.core
 
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
+
 /**
  * Creates TxT cross product.
  *
@@ -92,4 +96,17 @@ fun <T> List<List<List<T>>>.crossProduct(): List<List<T>> {
  */
 fun <T> Sequence<T>.computeWhile(predicate: (T) -> Boolean): Unit = forEach {
   if (!predicate(it)) return
+}
+
+fun <T : TickDataType<*, *, *, U, *>, U : TickUnit<U, D>, D : TickDifference<D>> List<T>
+    .getTicksInInterval(start: U, end: U): List<T> {
+  val ticksInInterval: MutableList<T> = mutableListOf()
+  this.forEach { tick ->
+    if (tick.currentTick in start..end) {
+      ticksInInterval.add(tick)
+    } else if (tick.currentTick > end) {
+      return ticksInInterval
+    }
+  }
+  return ticksInInterval
 }

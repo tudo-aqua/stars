@@ -69,6 +69,24 @@ class BinaryPredicate<
    *
    * @param ctx The context this predicate is evaluated in.
    * @param tick (Default: first tick in context) The time stamp to evaluate this predicate in.
+   * @return Whether the predicate holds in the given [PredicateContext] at the given [tick] for the
+   *   primary entity and any other entity.
+   */
+  fun holds(
+      ctx: PredicateContext<E, T, S, U, D>,
+      tick: T = ctx.segment.ticks.values.first(),
+  ): Boolean =
+      ctx.holds(
+          this,
+          tick.currentTick,
+          ctx.segment.primaryEntityId,
+          ctx.segment.tickData.first().entities.first { it.id != ctx.primaryEntityId }.id)
+
+  /**
+   * Checks if this predicate holds (i.e., is true) in the given context.
+   *
+   * @param ctx The context this predicate is evaluated in.
+   * @param tick (Default: first tick in context) The time stamp to evaluate this predicate in.
    * @param entityId1 (Default: Primary entity) The ID of the first entity to evaluate this
    *   predicate for.
    * @param entityId2 The ID of the second entity to evaluate this predicate for.
