@@ -27,6 +27,14 @@ sealed class JsonActor {
   /** Identifier of the actor. */
   @SerialName("id") abstract val id: Int
 
+  abstract val typeId: String // TODO: Documentation needed
+  abstract val attributes: Map<String, String>
+  abstract val isAlive: Boolean
+  abstract val isActive: Boolean
+  abstract val isDormant: Boolean
+  abstract val semanticTags: List<Int>
+  abstract val boundingBox: JsonBoundingBox
+
   /** Current [JsonLocation]. */
   @SerialName("location") abstract val location: JsonLocation
 

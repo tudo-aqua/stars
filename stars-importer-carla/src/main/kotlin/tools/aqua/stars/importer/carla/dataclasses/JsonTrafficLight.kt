@@ -41,11 +41,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("TrafficLight")
 data class JsonTrafficLight(
-    @SerialName("id") override var id: Int,
-    @SerialName("type_id") val typeId: String,
-    @SerialName("state") var state: Int,
+    @SerialName("id") override val id: Int,
+    @SerialName("type_id") override val typeId: String,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("state") val state: Int,
     @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
     @SerialName("attributes") override val attributes: Map<String, String>,
     @SerialName("is_alive") override val isAlive: Boolean,

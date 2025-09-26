@@ -25,33 +25,45 @@ import kotlin.math.sqrt
 /**
  * Data class for vehicles.
  *
- * @param id The ID of the vehicle.
- * @property positionOnLane The [Vehicle]'s position in the [Lane].
- * @property lane The [Vehicle]'s [Lane].
+ * @property id The identifier of the vehicle.
  * @property typeId The type identifier.
- * @property vehicleType The [VehicleType].
- * @property isEgo Whether this is the own vehicle.
+ * @property attributes The attributes of the vehicle.
+ * @property isAlive Whether the vehicle is alive.
+ * @property isActive Whether the vehicle is active.
+ * @property isDormant Whether the vehicle is dormant.
+ * @property semanticTags The semantic tags of the vehicle.
+ * @property boundingBox The [BoundingBox] of the vehicle.
  * @property location The [Location] of the vehicle.
- * @property forwardVector The current forward vector.
  * @property rotation The [Rotation] of the vehicle.
+ * @property isEgo Whether this is the own vehicle.
+ * @property forwardVector The current forward vector.
  * @property velocity The current velocity in m/s.
  * @property acceleration The current acceleration m/s².
  * @property angularVelocity The current angular velocity.
+ * @property lane The [Vehicle]'s [Lane].
+ * @property positionOnLane The [Vehicle]'s position in the [Lane].
+ * @property vehicleType The [VehicleType].
  */
-class Vehicle(
-    id: Int = 0,
-    var positionOnLane: Double = 0.0,
-    var lane: Lane,
-    val typeId: String = "",
-    val vehicleType: VehicleType = VehicleType.CAR,
-    var isEgo: Boolean = false,
-    val location: Location = Location(),
-    val forwardVector: Vector3D = Vector3D(),
-    val rotation: Rotation = Rotation(),
-    var velocity: Vector3D = Vector3D(),
-    var acceleration: Vector3D = Vector3D(),
-    val angularVelocity: Vector3D = Vector3D(),
-) : Actor(id) {
+data class Vehicle(
+    override val id: Int,
+    override val typeId: String,
+    override val attributes: Map<String, String>,
+    override val isAlive: Boolean,
+    override val isActive: Boolean,
+    override val isDormant: Boolean,
+    override val semanticTags: List<Int>,
+    override val boundingBox: BoundingBox,
+    override val location: Location,
+    override val rotation: Rotation,
+    override var isEgo: Boolean,
+    val forwardVector: Vector3D,
+    var velocity: Vector3D,
+    var acceleration: Vector3D,
+    val angularVelocity: Vector3D,
+    val lane: Lane,
+    val positionOnLane: Double,
+    val vehicleType: VehicleType,
+) : Actor() {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -82,18 +94,25 @@ class Vehicle(
 
   override fun clone(newTickData: TickData): Actor =
       Vehicle(
-          id,
-          positionOnLane,
-          lane,
-          typeId,
-          vehicleType,
-          isEgo,
-          location,
-          forwardVector,
-          rotation,
-          velocity,
-          acceleration,
-          angularVelocity)
+          id = id,
+          typeId = typeId,
+          attributes = attributes,
+          isAlive = isAlive,
+          isActive = isActive,
+          isDormant = isDormant,
+          semanticTags = semanticTags,
+          boundingBox = boundingBox,
+          location = location,
+          rotation = rotation,
+          isEgo = isEgo,
+          forwardVector = forwardVector,
+          velocity = velocity,
+          acceleration = acceleration,
+          angularVelocity = angularVelocity,
+          lane = lane,
+          positionOnLane = positionOnLane,
+          vehicleType = vehicleType
+      )
 
   override fun toString(): String =
       "Vehicle(positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"

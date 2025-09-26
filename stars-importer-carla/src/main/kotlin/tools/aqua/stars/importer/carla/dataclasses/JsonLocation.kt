@@ -19,6 +19,7 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.data.av.dataclasses.Location
 
 /**
  * Json object for 3D locations.

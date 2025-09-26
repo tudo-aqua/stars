@@ -21,10 +21,12 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import tools.aqua.stars.data.av.*
 import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.SpeedLimit
 import tools.aqua.stars.data.av.dataclasses.Vehicle
-import tools.aqua.stars.importer.carla.dataclasses.*
+import tools.aqua.stars.importer.carla.dataclasses.JsonLandmark
+import tools.aqua.stars.importer.carla.dataclasses.JsonLandmarkType
 
 /** Tests various configurations of speed limits on a lane. */
 class JSONSpeedLimitTest {

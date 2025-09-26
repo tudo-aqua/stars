@@ -26,7 +26,9 @@ import kotlinx.serialization.Serializable
  * @property value Json value.
  */
 @Serializable
-enum class JsonDataWeatherParametersType(val value: Int) {
+enum class JsonDataWeatherParametersType(
+    val value: Int
+) { // TODO: Check whether to include dust storm
   @SerialName("0") Default(0),
   @SerialName("1") ClearNoon(1),
   @SerialName("2") CloudyNoon(2),

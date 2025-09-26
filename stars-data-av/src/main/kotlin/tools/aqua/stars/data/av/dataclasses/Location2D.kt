@@ -21,38 +21,41 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
- * Data class for 3D locations.
+ * Data class for 2D locations.
  *
  * @property x The x ordinate.
  * @property y The y ordinate.
- * @property z The z ordinate.
- * @see Vector3D
+ * @see Vector2D
  */
-data class Location(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
-  fun toVector3D() = Vector3D(x, y, z)
+data class Location2D(val x: Double, val y: Double) {
+
+  constructor(location: Vector2D) : this(location.x, location.y)
+
+  /** Converts this [Location2D] to a 2D [Vector2D]. */
+  fun toVector2D() = Vector2D(x, y)
 
   /** Addition operator. */
-  operator fun plus(other: Location): Vector3D =
-      Vector3D(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
+  operator fun plus(other: Location2D): Vector2D =
+      Vector2D(x = this.x + other.x, y = this.y + other.y)
 
   /** Addition operator. */
-  operator fun plus(other: Vector3D): Location =
-      Location(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
+  operator fun plus(other: Vector2D): Location2D =
+      Location2D(x = this.x + other.x, y = this.y + other.y)
 
   /** Subtraction operator. */
-  operator fun minus(other: Location): Vector3D =
-      Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
+  operator fun minus(other: Location2D): Vector2D =
+      Vector2D(x = this.x - other.x, y = this.y - other.y)
 
   /** Subtraction operator. */
-  operator fun minus(other: Vector3D): Location =
-      Location(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
+  operator fun minus(other: Vector2D): Location2D =
+      Location2D(x = this.x - other.x, y = this.y - other.y)
 
   companion object {
     /**
      * Calculates the Euclidean distance between two locations, i.e., the square root of the sum of
      * the squared ordinates.
      */
-    fun euclideanDistance(loc1: Location, loc2: Location): Double =
-        sqrt((loc1.x - loc2.x).pow(2) + (loc1.y - loc2.y).pow(2) + (loc1.z - loc2.z).pow(2))
+    fun euclideanDistance(loc1: Location2D, loc2: Location2D): Double =
+        sqrt((loc1.x - loc2.x).pow(2) + (loc1.y - loc2.y).pow(2))
   }
 }

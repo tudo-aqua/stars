@@ -33,5 +33,5 @@ data class JsonActorPosition(
     @SerialName("position_on_lane") val positionOnLane: Double,
     @SerialName("lane_id") var laneId: Int,
     @SerialName("road_id") var roadId: Int,
-    @SerialName("actor") var actor: JsonActor
+    @SerialName("actor") val actor: JsonActor
 )

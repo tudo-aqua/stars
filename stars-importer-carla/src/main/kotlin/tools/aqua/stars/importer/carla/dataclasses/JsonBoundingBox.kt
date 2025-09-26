@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The STARS Project Authors
+ * Copyright 2023-2025 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,34 @@
 
 package tools.aqua.stars.importer.carla.dataclasses
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.data.av.dataclasses.BoundingBox
 
 /**
  * Json object for [JsonActor] bounding boxes.
  *
  * @property extent The extent of the bounding box.
- * @property location The location of the bounding box.
+ * @property location The location of the center bounding box.
  * @property rotation The rotation of the bounding box.
  * @property vertices All vertices of the bounding box.
  */
 @Serializable
 data class JsonBoundingBox(
-    val extent: JsonVector3D,
-    val location: JsonLocation,
-    val rotation: JsonRotation,
-    val vertices: List<JsonLocation>
-)
+    @SerialName("extent") val extent: JsonVector3D,
+    @SerialName("location") val location: JsonLocation,
+    @SerialName("rotation") val rotation: JsonRotation,
+    @SerialName("vertices") val vertices: List<JsonLocation>,
+) {
+  /** Converts [JsonBoundingBox] to [BoundingBox]. */
+  fun toBoundingBox(): BoundingBox =
+      BoundingBox(
+          bottomLeftBack = vertices[0].toLocation(),
+          topLeftBack = vertices[1].toLocation(),
+          bottomRightBack = vertices[2].toLocation(),
+          topRightBack = vertices[3].toLocation(),
+          bottomLeftFront = vertices[4].toLocation(),
+          topLeftFront = vertices[5].toLocation(),
+          bottomRightFront = vertices[6].toLocation(),
+          topRightFront = vertices[7].toLocation())
+}

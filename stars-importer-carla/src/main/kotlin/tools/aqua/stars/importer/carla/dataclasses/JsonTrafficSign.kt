@@ -44,7 +44,7 @@ data class JsonTrafficSign(
     @SerialName("id") override val id: Int = 0,
     @SerialName("traffic_sign_type") val trafficSignType: JsonTrafficSignType,
     @SerialName("speed_limit") val speedLimit: Double?,
-    @SerialName("type_id") val typeId: String,
+    @SerialName("type_id") override val typeId: String,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
     @SerialName("attributes") override val attributes: Map<String, String>,
@@ -53,5 +53,5 @@ data class JsonTrafficSign(
     @SerialName("is_dormant") override val isDormant: Boolean,
     @SerialName("semantic_tags") override val semanticTags: List<Int>,
     @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
-    @SerialName("collisions") override val collisions: List<Int>
+    @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor()

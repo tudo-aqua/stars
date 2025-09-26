@@ -27,6 +27,16 @@ import tools.aqua.stars.core.types.EntityType
 sealed class Actor(val id: Int) :
     EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
 
+  abstract val typeId: String // TODO: Documentation needed
+  abstract val attributes: Map<String, String>
+  abstract val isAlive: Boolean
+  abstract val isActive: Boolean
+  abstract val isDormant: Boolean
+  abstract val semanticTags: List<Int>
+  abstract val boundingBox: BoundingBox
+  abstract val location: Location
+  abstract val rotation: Rotation
+
   /**
    * Clones the actor.
    *
