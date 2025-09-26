@@ -26,7 +26,13 @@ import tools.aqua.stars.data.av.dataclasses.Lane
 import tools.aqua.stars.data.av.dataclasses.SpeedLimit
 import tools.aqua.stars.data.av.dataclasses.Vehicle
 import tools.aqua.stars.importer.carla.dataclasses.JsonLandmark
+import tools.aqua.stars.importer.carla.dataclasses.JsonLandmarkOrientation
 import tools.aqua.stars.importer.carla.dataclasses.JsonLandmarkType
+import tools.aqua.stars.importer.carla.dataclasses.JsonLane
+import tools.aqua.stars.importer.carla.dataclasses.JsonLaneType
+import tools.aqua.stars.importer.carla.dataclasses.JsonLocation
+import tools.aqua.stars.importer.carla.dataclasses.JsonRotation
+import tools.aqua.stars.importer.carla.dataclasses.JsonSpeedLimit
 
 /** Tests various configurations of speed limits on a lane. */
 class JSONSpeedLimitTest {

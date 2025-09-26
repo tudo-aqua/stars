@@ -61,7 +61,7 @@ fun JsonActorPosition.toActorOrNull(world: World): Actor? =
     actor.let {
       val lane = checkNotNull(world.getLane(roadId, laneId))
       when (it) {
-        is JsonPedestrian -> it.toPedestrian(positionOnLane = positionOnLane, lane = lane)
+        is JsonPedestrian -> it.toPedestrian()
         is JsonVehicle -> it.toVehicle(positionOnLane = positionOnLane, lane = lane)
         is JsonTrafficLight -> null
         is JsonTrafficSign -> null
@@ -81,26 +81,41 @@ fun JsonActorPosition.toTrafficLightOrNull(): TrafficLight? =
 fun JsonVehicle.toVehicle(positionOnLane: Double, lane: Lane): Vehicle =
     Vehicle(
         id = id,
-        positionOnLane = positionOnLane,
-        lane = lane,
         typeId = typeId,
-        vehicleType = getVehicleTypeFromTypeId(typeId),
-        isEgo = egoVehicle,
+        attributes = attributes,
+        isAlive = isAlive,
+        isActive = isActive,
+        isDormant = isDormant,
+        semanticTags = semanticTags,
+        boundingBox = boundingBox.toBoundingBox(),
         location = location.toLocation(),
-        forwardVector = forwardVector.toVector3D(),
         rotation = rotation.toRotation(),
+        collisions = collisions,
+        isEgo = egoVehicle,
+        forwardVector = forwardVector.toVector3D(),
         velocity = velocity.toVector3D(),
         acceleration = acceleration.toVector3D(),
-        angularVelocity = angularVelocity.toVector3D())
+        angularVelocity = angularVelocity.toVector3D(),
+        lane = lane,
+        positionOnLane = positionOnLane,
+        vehicleType = getVehicleTypeFromTypeId(typeId),
+    )
 
-/**
- * Converts [JsonPedestrian] to [Pedestrian].
- *
- * @param positionOnLane The position on the [Lane].
- * @param lane The [Lane].
- */
-fun JsonPedestrian.toPedestrian(positionOnLane: Double, lane: Lane): Pedestrian =
-    Pedestrian(id = id, positionOnLane = positionOnLane, lane = lane)
+/** Converts [JsonPedestrian] to [Pedestrian]. */
+fun JsonPedestrian.toPedestrian(): Pedestrian =
+    Pedestrian(
+        id = id,
+        typeId = typeId,
+        attributes = attributes,
+        isAlive = isAlive,
+        isActive = isActive,
+        isDormant = isDormant,
+        semanticTags = semanticTags,
+        boundingBox = boundingBox.toBoundingBox(),
+        location = location.toLocation(),
+        rotation = rotation.toRotation(),
+        collisions = collisions,
+    )
 
 /** Converts [JsonWorld] to [Map]. */
 fun JsonWorld.toWorld(): World =
@@ -212,6 +227,18 @@ fun JsonLocation.toLocation(): Location = Location(x, y, z)
 
 /** Converts [JsonRotation] to [Rotation]. */
 fun JsonRotation.toRotation(): Rotation = Rotation(pitch, yaw, roll)
+
+/** Converts [JsonBoundingBox] to [BoundingBox]. */
+fun JsonBoundingBox.toBoundingBox(): BoundingBox =
+    BoundingBox(
+        bottomLeftBack = vertices[0].toLocation(),
+        topLeftBack = vertices[1].toLocation(),
+        bottomRightBack = vertices[2].toLocation(),
+        topRightBack = vertices[3].toLocation(),
+        bottomLeftFront = vertices[4].toLocation(),
+        topLeftFront = vertices[5].toLocation(),
+        bottomRightFront = vertices[6].toLocation(),
+        topRightFront = vertices[7].toLocation())
 
 /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */
 fun JsonStaticTrafficLight.toStaticTrafficLight(): StaticTrafficLight =

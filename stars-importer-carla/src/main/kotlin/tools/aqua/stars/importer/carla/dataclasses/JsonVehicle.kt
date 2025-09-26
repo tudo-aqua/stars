@@ -61,12 +61,8 @@ data class JsonVehicle(
     @SerialName("velocity") val velocity: JsonVector3D,
     @SerialName("acceleration") val acceleration: JsonVector3D,
     @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
-    @SerialName("attributes") override val attributes: Map<String, String>,
-    @SerialName("is_alive") override val isAlive: Boolean,
-    @SerialName("is_active") override val isActive: Boolean,
-    @SerialName("is_dormant") override val isDormant: Boolean,
-    @SerialName("semantic_tags") override val semanticTags: List<Int>,
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
+    @SerialName("lane") val lane: JsonLane,
+    @SerialName("position_on_lane") val positionOnLane: Double,
     @SerialName("collisions") override val collisions: List<Int>
 ) : JsonActor() {
 

@@ -25,10 +25,6 @@ import kotlinx.serialization.Serializable
  *
  * @property id The identifier of the traffic light.
  * @property typeId The type identifier.
- * @property state The current state oif the traffic light.
- * @property location The [JsonLocation] of the traffic light
- * @property rotation The [JsonRotation] of the traffic light
- * @property relatedOpenDriveId The related open drive identifier.
  * @property attributes The additional attributes for the [JsonTrafficLight] from the CARLA
  *   simulation.
  * @property isAlive Whether the [JsonTrafficLight] is alive in the simulation.
@@ -36,7 +32,11 @@ import kotlinx.serialization.Serializable
  * @property isDormant Whether the [JsonTrafficLight] is dormant in the simulation.
  * @property semanticTags The semantic tags of the [JsonTrafficLight] from the CARLA simulation.
  * @property boundingBox The bounding box of the [JsonTrafficLight].
+ * @property location The [JsonLocation] of the traffic light
+ * @property rotation The [JsonRotation] of the traffic light
  * @property collisions The list of actor IDs, this [JsonTrafficLight] is colliding with.
+ * @property state The current state oif the traffic light.
+ * @property relatedOpenDriveId The related open drive identifier.
  */
 @Serializable
 @SerialName("TrafficLight")
@@ -51,13 +51,7 @@ data class JsonTrafficLight(
     @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
-    @SerialName("state") val state: Int,
-    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
-    @SerialName("attributes") override val attributes: Map<String, String>,
-    @SerialName("is_alive") override val isAlive: Boolean,
-    @SerialName("is_active") override val isActive: Boolean,
-    @SerialName("is_dormant") override val isDormant: Boolean,
-    @SerialName("semantic_tags") override val semanticTags: List<Int>,
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
-    @SerialName("collisions") override val collisions: List<Int>
+    @SerialName("collisions") override val collisions: List<Int>,
+    @SerialName("state") var state: Int,
+    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int
 ) : JsonActor()

@@ -21,17 +21,32 @@ package tools.aqua.stars.data.av.dataclasses
  * Data class for pedestrians.
  *
  * @param id The identifier of the pedestrian.
- * @property positionOnLane The [Pedestrian]'s position on the [Lane].
- * @property lane The [Pedestrian]'s [Lane].
  */
 class Pedestrian(
-    id: Int,
-    val positionOnLane: Double = 0.0,
-    val lane: Lane,
+    id: Int = 0,
+    override val typeId: String = "",
+    override val attributes: Map<String, String> = emptyMap(),
+    override val isAlive: Boolean = true,
+    override val isActive: Boolean = true,
+    override val isDormant: Boolean = false,
+    override val semanticTags: List<Int> = emptyList(),
+    override val boundingBox: BoundingBox = BoundingBox(),
+    override val location: Location = Location(),
+    override val rotation: Rotation = Rotation(),
+    override val collisions: List<Int> = emptyList()
 ) : Actor(id) {
 
-  override fun clone(newTickData: TickData): Actor = Pedestrian(id, positionOnLane, lane)
-
-  override fun toString(): String =
-      "Pedestrian(positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+  override fun clone(newTickData: TickData): Actor =
+      Pedestrian(
+          id = id,
+          typeId = typeId,
+          attributes = attributes,
+          isAlive = isAlive,
+          isActive = isActive,
+          isDormant = isDormant,
+          semanticTags = semanticTags,
+          boundingBox = boundingBox,
+          location = location,
+          rotation = rotation,
+          collisions = collisions)
 }

@@ -44,26 +44,27 @@ import kotlin.math.sqrt
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property vehicleType The [VehicleType].
  */
-data class Vehicle(
-    override val id: Int,
-    override val typeId: String,
-    override val attributes: Map<String, String>,
-    override val isAlive: Boolean,
-    override val isActive: Boolean,
-    override val isDormant: Boolean,
-    override val semanticTags: List<Int>,
-    override val boundingBox: BoundingBox,
-    override val location: Location,
-    override val rotation: Rotation,
-    override var isEgo: Boolean,
-    val forwardVector: Vector3D,
-    var velocity: Vector3D,
-    var acceleration: Vector3D,
-    val angularVelocity: Vector3D,
-    val lane: Lane,
-    val positionOnLane: Double,
-    val vehicleType: VehicleType,
-) : Actor() {
+class Vehicle(
+    id: Int = 0,
+    override val typeId: String = "",
+    override val attributes: Map<String, String> = emptyMap(),
+    override val isAlive: Boolean = true,
+    override val isActive: Boolean = true,
+    override val isDormant: Boolean = false,
+    override val semanticTags: List<Int> = emptyList(),
+    override val boundingBox: BoundingBox = BoundingBox(),
+    override val location: Location = Location(),
+    override val rotation: Rotation = Rotation(),
+    override val collisions: List<Int> = emptyList(),
+    var isEgo: Boolean = false,
+    val forwardVector: Vector3D = Vector3D(),
+    var velocity: Vector3D = Vector3D(),
+    var acceleration: Vector3D = Vector3D(),
+    val angularVelocity: Vector3D = Vector3D(),
+    val lane: Lane = Lane(),
+    var positionOnLane: Double = 0.0,
+    val vehicleType: VehicleType = VehicleType.CAR,
+) : Actor(id) {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -104,6 +105,7 @@ data class Vehicle(
           boundingBox = boundingBox,
           location = location,
           rotation = rotation,
+          collisions = collisions,
           isEgo = isEgo,
           forwardVector = forwardVector,
           velocity = velocity,
@@ -111,8 +113,7 @@ data class Vehicle(
           angularVelocity = angularVelocity,
           lane = lane,
           positionOnLane = positionOnLane,
-          vehicleType = vehicleType
-      )
+          vehicleType = vehicleType)
 
   override fun toString(): String =
       "Vehicle(positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"

@@ -36,6 +36,7 @@ sealed class Actor(val id: Int) :
   abstract val boundingBox: BoundingBox
   abstract val location: Location
   abstract val rotation: Rotation
+  abstract val collisions: List<Int>
 
   /**
    * Clones the actor.

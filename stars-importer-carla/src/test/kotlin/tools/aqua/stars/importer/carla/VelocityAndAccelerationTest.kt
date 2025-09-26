@@ -186,8 +186,8 @@ class VelocityAndAccelerationTest {
    */
   @Test
   fun testWrongActorType() {
-    val actor0 = Pedestrian(id = 0, lane = lane)
-    val vehicle1 = Vehicle(id = 0, lane = lane)
+    val actor0 = Pedestrian(id = 0)
+    val vehicle1 = Vehicle(id = 0)
 
     // It is expected that the actors of the current tick and the previous tick are both of type
     // 'Vehicle'. In this case the previous actor with the same id as a 'Pedestrian'. Therefore, an

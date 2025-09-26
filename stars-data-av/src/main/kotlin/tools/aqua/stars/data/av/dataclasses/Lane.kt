@@ -47,11 +47,11 @@ data class Lane(
     var intersectingLanes: List<ContactLaneInfo> = emptyList(),
     var yieldLanes: List<ContactLaneInfo> = emptyList(),
     val laneMidpoints: List<LaneMidpoint> = emptyList(),
-    val speedLimits: List<SpeedLimit> = emptyList(),
+    var speedLimits: List<SpeedLimit> = emptyList(),
     val landmarks: List<Landmark> = emptyList(),
     var contactAreas: List<ContactArea> = emptyList(),
-    val trafficLights: List<StaticTrafficLight> = emptyList(),
-    val laneDirection: LaneDirection = LaneDirection.STRAIGHT,
+    var trafficLights: List<StaticTrafficLight> = emptyList(),
+    var laneDirection: LaneDirection = LaneDirection.STRAIGHT,
 ) {
 
   /** The [Road] this [Lane] belongs to. */
