@@ -26,7 +26,7 @@ gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-p
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.51.0" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.4.4" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "4.0.0" }
-gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "7.2.1" }
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "8.0.0" }
 gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
 
 # Other
