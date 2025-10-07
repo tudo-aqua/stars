@@ -25,6 +25,16 @@ import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
+/**
+ * Represents a manually labeled file that stores predicates to be tested against sequences of ticks
+ * which manually labeled results for the predicates.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property ticksToTest A sequence of tick data sequences that the predicates will be tested on.
+ */
 class ManualLabelFile<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
@@ -33,6 +43,14 @@ class ManualLabelFile<
   internal val predicatesToHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
   internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
 
+  /**
+   * Adds a manually labeled predicate to the list of predicates that are expected to hold true for
+   * specified intervals of tick sequences within a [ManualLabelFile].
+   *
+   * @param predicate The abstract predicate to be evaluated against tick sequences.
+   * @param manualLabelPredicateInvocation A lambda for configuring the manual label predicate,
+   *   including defining the intervals where the predicate is expected to hold true.
+   */
   fun predicateHolds(
       predicate: AbstractPredicate<E, T, U, D>,
       manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit
@@ -42,6 +60,14 @@ class ManualLabelFile<
     predicatesToHold += manualLabelPredicate
   }
 
+  /**
+   * Adds a manually labeled predicate to the list of predicates that are expected *not* to hold
+   * true for specified intervals of tick sequences within a [ManualLabelFile].
+   *
+   * @param predicate The abstract predicate to be evaluated against tick sequences.
+   * @param manualLabelPredicateInvocation A lambda for configuring the manual label predicate,
+   *   including defining the intervals where the predicate is expected not to hold true.
+   */
   fun predicateDoesNotHold(
       predicate: AbstractPredicate<E, T, U, D>,
       manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit

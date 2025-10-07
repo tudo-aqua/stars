@@ -116,6 +116,9 @@ fun <T> Iterator<T>.nextOrNull(): T? = if (hasNext()) next() else null
  * Returns all ticks in the given interval [start], [end]. Assumes that the list is sorted by tick
  * unit in ascending order.
  *
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
  * @param start Start of the interval (inclusive).
  * @param end End of the interval (inclusive).
  * @return List of all ticks in the given interval.

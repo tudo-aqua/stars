@@ -31,6 +31,16 @@ import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
+/**
+ * Abstract base class for testing predicates within manually labeled test files, which are
+ * associated with ticks and intervals. This class provides a test factory for generating dynamic
+ * tests which can be used in actual testing classes.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ */
 abstract class ManualLabelTests<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
@@ -38,6 +48,16 @@ abstract class ManualLabelTests<
     D : TickDifference<D>> {
   protected abstract val manualLabelTestFiles: List<ManualLabelFile<E, T, U, D>>
 
+  /**
+   * Generates dynamic tests for manually labeled test files by validating predicates on specified
+   * intervals of tick sequences. The method processes manually labeled test files to generate test
+   * cases for predicates expected to hold and not to hold in certain intervals of given tick
+   * sequences.
+   *
+   * @return A list of dynamically generated tests based on the manual labeling configurations
+   *   provided in the test files. For each entry in [manualLabelTestFiles], a list of dynamic tests
+   *   for each predicate is generated.
+   */
   @TestFactory
   fun testManualLabeledTestFiles(): List<DynamicTest> =
       manualLabelTestFiles.flatMap { manualLabelTestFile ->
@@ -61,6 +81,18 @@ abstract class ManualLabelTests<
         }
       }
 
+  /**
+   * Creates a dynamic test that evaluates whether a given predicate holds or does not hold for a
+   * specified interval within a sequence of ticks.
+   *
+   * @param predicate The predicate to be evaluated.
+   * @param from The start of the interval (inclusive).
+   * @param to The end of the interval (inclusive).
+   * @param allTicks The list of all ticks to be analyzed.
+   * @param shouldHold Indicates whether the predicate is expected to hold (true) or not hold
+   *   (false) in the interval.
+   * @return A dynamically generated test case for the specified predicate and interval.
+   */
   private fun createDynamicTest(
       predicate: AbstractPredicate<E, T, U, D>,
       from: U,
@@ -80,6 +112,19 @@ abstract class ManualLabelTests<
         }
   }
 
+  /**
+   * Evaluates whether the specified predicate holds at a given tick.
+   *
+   * The behavior of this method is determined by the type of predicate:
+   * - For [NullaryPredicate], it invokes the `holds` method to determine the evaluation result.
+   * - For [UnaryPredicate], it evaluates its `holds` method.
+   * - For [BinaryPredicate], it executes its `holds` method as well. If the predicate type is
+   *   unsupported, an error is thrown.
+   *
+   * @param predicate The predicate to be evaluated. It determines the logic for evaluation.
+   * @param tick The specific tick at which the predicate is evaluated.
+   * @return The boolean result of evaluating the predicate at the given tick.
+   */
   private fun evaluatePredicateAtTick(predicate: AbstractPredicate<E, T, U, D>, tick: T) =
       when (predicate) {
         is NullaryPredicate<E, T, U, D> -> predicate.holds(tick)

@@ -36,6 +36,7 @@ const val ROOT_NODE_LABEL: String = "root"
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param identifier The identifier of the TSC.
  * @param init The init function. Must add exactly one edge.
  * @return The [TSCNode] at the root level of the TSC.
  */

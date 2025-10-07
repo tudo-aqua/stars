@@ -23,6 +23,22 @@ import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
+/**
+ * Creates and configures a [ManualLabelFile] using the provided tick sequence and configuration
+ * function.
+ *
+ * This function initializes a [ManualLabelFile] with a sequence of tick data and applies a
+ * user-defined configuration function to it.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param ticksToTest A sequence of tick data representing the tick sequences for entity tracking.
+ * @param manualLabelFile A configuration function applied to the `[ManualLabelFile] for
+ *   customization.
+ * @return The configured [ManualLabelFile].
+ */
 fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,

@@ -20,6 +20,15 @@ package tools.aqua.stars.core.validation
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
 
+/**
+ * Represents an interval defined by two [TickUnit]s, specifying a range in which manual labels
+ * apply.
+ *
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @property fromTickUnit The starting tick unit of the interval.
+ * @property toTickUnit The ending tick unit of the interval.
+ */
 data class ManualLabelInterval<U : TickUnit<U, D>, D : TickDifference<D>>(
     val fromTickUnit: U,
     val toTickUnit: U
