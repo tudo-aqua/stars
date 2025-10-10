@@ -52,7 +52,8 @@ data class Segment(
         vehicleIdsCache.addAll(
             tickData
                 .flatMap { tickData -> tickData.entities.filterIsInstance<Vehicle>().map { it.id } }
-                .distinct())
+                .distinct()
+        )
       }
       return vehicleIdsCache
     }
@@ -70,7 +71,8 @@ data class Segment(
                 .flatMap { tickData ->
                   tickData.entities.filterIsInstance<Pedestrian>().map { it.id }
                 }
-                .distinct())
+                .distinct()
+        )
       }
       return pedestrianIdsCache
     }

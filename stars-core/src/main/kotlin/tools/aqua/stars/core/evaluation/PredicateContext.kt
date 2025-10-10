@@ -35,7 +35,8 @@ class PredicateContext<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val segment: S) {
+    D : TickDifference<D>,
+>(val segment: S) {
 
   /** Identifier of the primary entity. */
   var primaryEntityId: Int = segment.primaryEntityId
@@ -49,7 +50,8 @@ class PredicateContext<
     get() {
       if (entityIdsCache.isEmpty()) {
         entityIdsCache.addAll(
-            segment.tickData.flatMap { tickData -> tickData.entities.map { it.id } }.distinct())
+            segment.tickData.flatMap { tickData -> tickData.entities.map { it.id } }.distinct()
+        )
       }
       return entityIdsCache
     }
@@ -97,7 +99,7 @@ class PredicateContext<
   fun <E1 : E> holds(
       predicate: UnaryPredicate<E1, E, T, S, U, D>,
       tick: U,
-      entityId: Int
+      entityId: Int,
   ): Boolean =
       unaryPredicateCache.getOrPut(predicate to (tick to entityId)) {
         val currentTick = segment.ticks[tick]
@@ -124,7 +126,7 @@ class PredicateContext<
       predicate: BinaryPredicate<E1, E2, E, T, S, U, D>,
       tick: U,
       entityId1: Int,
-      entityId2: Int
+      entityId2: Int,
   ): Boolean =
       binaryPredicateCache.getOrPut(predicate to (Triple(tick, entityId1, entityId2))) {
         val currentTick = segment.ticks[tick]
@@ -138,6 +140,7 @@ class PredicateContext<
             predicate.eval(
                 this,
                 predicate.kClasses.first.cast(entity1),
-                predicate.kClasses.second.cast(entity2))
+                predicate.kClasses.second.cast(entity2),
+            )
       }
 }

@@ -27,7 +27,7 @@ package tools.aqua.stars.core.hooks
  */
 sealed class EvaluationHook<T>(
     val identifier: String,
-    val evaluationFunction: (T) -> EvaluationHookResult
+    val evaluationFunction: (T) -> EvaluationHookResult,
 ) {
   companion object {
     /**

@@ -77,7 +77,8 @@ fun JsonVehicle.toVehicle(positionOnLane: Double, lane: Lane): Vehicle =
         rotation = rotation.toRotation(),
         velocity = velocity.toVector3D(),
         acceleration = acceleration.toVector3D(),
-        angularVelocity = angularVelocity.toVector3D())
+        angularVelocity = angularVelocity.toVector3D(),
+    )
 
 /**
  * Converts [JsonPedestrian] to [Pedestrian].
@@ -96,7 +97,8 @@ fun JsonRoad.toRoad(): Road =
     Road(
         id = roadId,
         lanes = lanes.map { jsonLane -> jsonLane.toLane(isJunction = isJunction) },
-        isJunction = isJunction)
+        isJunction = isJunction,
+    )
 
 /**
  * Converts [JsonLane] to [Lane].
@@ -161,7 +163,8 @@ fun JsonContactArea.toContactArea(lane1: Lane, lane2: Lane): ContactArea =
         lane2EndPos = lane2EndPos,
         lane2StartPos = lane2StartPos,
         lane1 = lane1,
-        lane2 = lane2)
+        lane2 = lane2,
+    )
 
 // endregion
 
@@ -217,7 +220,8 @@ fun calculateStaticBlocks(staticJsonBlocks: List<JsonBlock>): List<Block> =
         .also {
           updateLanes(
               jsonLanes = staticJsonBlocks.flatMap { b -> b.roads }.flatMap { b -> b.lanes },
-              lanes = it.flatMap { b -> b.roads }.flatMap { b -> b.lanes })
+              lanes = it.flatMap { b -> b.roads }.flatMap { b -> b.lanes },
+          )
         }
 
 /** Updates [JsonLane]s and [Lane]s. */

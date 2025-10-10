@@ -32,7 +32,7 @@ data class SerializableResultComparison(
     /** The value of the old [SerializableResult]. */
     val oldValue: String,
     /** The value of the [SerializableResult] that was produced during this evaluation. */
-    val newValue: String
+    val newValue: String,
 ) {
   companion object {
     /**

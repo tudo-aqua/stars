@@ -41,7 +41,8 @@ fun KotlinExtension.defaultFormat(rootProject: Project) {
 fun KotlinGradleExtension.defaultFormat(rootProject: Project) {
   licenseHeaderFile(
           rootProject.file("contrib/license-header.template.kt"),
-          "(import |@file|plugins |dependencyResolutionManagement|rootProject.name)")
+          "(import |@file|plugins |dependencyResolutionManagement|rootProject.name)",
+      )
       .also { it.updateYearWithLatest(true) }
   ktfmt()
 }

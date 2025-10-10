@@ -37,7 +37,8 @@ open class TSCLeafBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val label: String) : TSCBuilder<E, T, S, U, D>() {
+    D : TickDifference<D>,
+>(val label: String) : TSCBuilder<E, T, S, U, D>() {
 
   /**
    * Creates a [TSCEdge] with a [TSCLeafNode].
@@ -52,7 +53,9 @@ open class TSCLeafBuilder<
                   label = label,
                   monitorsMap = monitors,
                   projectionsMap = projections,
-                  valueFunction = valueFunction))
+                  valueFunction = valueFunction,
+              ),
+      )
 
   /**
    * DSL function for edge conditions.
@@ -69,7 +72,8 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.condition(
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, S, U, D>.condition(
       condition: (PredicateContext<E, T, S, U, D>) -> Boolean
   ) {
     this.condition = condition
@@ -90,7 +94,8 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.valueFunction(
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, S, U, D>.valueFunction(
       valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
   ) {
     this.valueFunction = valueFunction
@@ -112,7 +117,8 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.projections(
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, S, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
   ) = TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.also { this.projections = it.build() }
 
@@ -132,7 +138,8 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCLeafBuilder<E, T, S, U, D>.monitors(
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, S, U, D>.monitors(
       init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
   ) = TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.also { this.monitors = it.build() }
 }

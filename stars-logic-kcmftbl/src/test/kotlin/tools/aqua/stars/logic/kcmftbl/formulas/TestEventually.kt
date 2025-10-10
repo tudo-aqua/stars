@@ -46,7 +46,8 @@ class TestEventually {
             expected = u,
             actual = e,
             message =
-                "Unmatched result between Eventually ($e) and Until ($u) for phi = $phi2 with interval $interval")
+                "Unmatched result between Eventually ($e) and Until ($u) for phi = $phi2 with interval $interval",
+        )
       }
     }
   }

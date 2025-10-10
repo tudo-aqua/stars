@@ -20,7 +20,8 @@ plugins { id("tools.aqua.stars.library-conventions") }
 mavenMetadata {
   name.set("STARS Kotlin CMFTBL")
   description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of CMFTBL")
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of CMFTBL"
+  )
 }
 
 dependencies { implementation(project(":stars-core")) }

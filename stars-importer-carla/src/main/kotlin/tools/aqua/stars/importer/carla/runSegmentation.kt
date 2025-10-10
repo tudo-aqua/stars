@@ -63,7 +63,7 @@ fun getSeed(fileName: String): Int =
 fun getLaneProgressionForVehicle(
     blocks: List<Block>,
     jsonSimulationRun: List<JsonTickData>,
-    vehicle: JsonVehicle
+    vehicle: JsonVehicle,
 ): MutableList<Pair<Lane?, Boolean>> {
   val roads = blocks.flatMap { it.roads }
   val lanes = roads.flatMap { it.lanes }
@@ -104,7 +104,7 @@ fun convertTickData(
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
-    simulationRunId: String
+    simulationRunId: String,
 ): List<List<TickData>> {
   // Extract vehicles from the JSON file
   val jsonVehicles: List<JsonVehicle> =
@@ -143,7 +143,8 @@ fun convertTickData(
                       tick.actorPositions.filter { it.actor is JsonVehicle }.map { it.actor.id }
                     }
                     .reduce { acc, vehicles -> (acc.intersect(vehicles)).toList() }
-                    .first())
+                    .first()
+            )
           } else {
             listOf()
           }
@@ -172,7 +173,8 @@ fun convertTickData(
 
           if (vehiclesInRun.none { it.egoVehicle }) {
             println(
-                "Vehicle with id $t not found in tick data at tick ${it.currentTick}, skipping.")
+                "Vehicle with id $t not found in tick data at tick ${it.currentTick}, skipping."
+            )
             null
           } else {
             it.toTickData(blocks)
@@ -193,7 +195,9 @@ fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
     val previousTick = simulationRun[i - 1]
     currentTick.vehicles.forEach { currentActor ->
       updateActorVelocityAndAcceleration(
-          currentActor, previousTick.vehicles.firstOrNull { it.id == currentActor.id })
+          currentActor,
+          previousTick.vehicles.firstOrNull { it.id == currentActor.id },
+      )
     }
   }
 }
@@ -259,7 +263,7 @@ fun sliceRunIntoSegments(
     useEveryVehicleAsEgo: Boolean,
     useFirstVehicleAsEgo: Boolean,
     simulationRunId: String,
-    minSegmentTickCount: Int
+    minSegmentTickCount: Int,
 ): List<Segment> {
   cleanJsonData(blocks, jsonSimulationRun)
   val tickData =
@@ -269,7 +273,8 @@ fun sliceRunIntoSegments(
           egoIds,
           useEveryVehicleAsEgo,
           useFirstVehicleAsEgo,
-          simulationRunId)
+          simulationRunId,
+      )
 
   val segments = mutableListOf<Segment>()
 
@@ -333,7 +338,12 @@ fun cleanJsonData(blocks: List<Block>, jsonSimulationRun: List<JsonTickData>) {
         if (currentJunction.isNotEmpty()) {
           nextMultilane = lane
           cleanJunctionData(
-              jsonSimulationRun, currentJunction, previousMultilane, nextMultilane, vehicle)
+              jsonSimulationRun,
+              currentJunction,
+              previousMultilane,
+              nextMultilane,
+              vehicle,
+          )
           currentJunction.clear()
           previousMultilane = lane
         } else {
@@ -365,7 +375,7 @@ private fun cleanJunctionData(
     junctionIndices: List<Pair<Int, Lane>>,
     laneFrom: Lane?,
     laneTo: Lane?,
-    vehicle: JsonVehicle
+    vehicle: JsonVehicle,
 ) {
   // Check if the lanes are already all the same
   val junctionLaneGroups = junctionIndices.groupBy { it.second.toString() }

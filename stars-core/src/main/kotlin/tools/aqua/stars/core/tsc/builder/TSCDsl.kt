@@ -46,9 +46,8 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> tsc(
-    init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}
-): TSC<E, T, S, U, D> {
+    D : TickDifference<D>,
+> tsc(init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}): TSC<E, T, S, U, D> {
   val rootEdge =
       TSCBoundedBuilder<E, T, S, U, D>(ROOT_NODE_LABEL)
           .apply { init() }

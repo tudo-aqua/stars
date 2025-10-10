@@ -38,11 +38,12 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> until(
+    D : TickDifference<D>,
+> until(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
-    phi2: (T) -> Boolean
+    phi2: (T) -> Boolean,
 ): Boolean {
   checkInterval(interval)
 
@@ -91,17 +92,19 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> until(
+    D : TickDifference<D>,
+> until(
     entity: E1,
     interval: Pair<D, D>? = null,
     phi1: (E1) -> Boolean,
-    phi2: (E1) -> Boolean
+    phi2: (E1) -> Boolean,
 ): Boolean =
     until(
         tickData = entity.tickData,
         interval = interval,
         phi1 = { td -> td.getEntityById(entity.id)?.let { phi1(it as E1) } == true },
-        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } == true })
+        phi2 = { td -> td.getEntityById(entity.id)?.let { phi2(it as E1) } == true },
+    )
 
 /**
  * CMFTBL implementation of the 'until' operator for two entities i.e. "In all future ticks in the
@@ -128,12 +131,13 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> until(
+    D : TickDifference<D>,
+> until(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
     phi1: (E1, E2) -> Boolean,
-    phi2: (E1, E2) -> Boolean
+    phi2: (E1, E2) -> Boolean,
 ): Boolean {
   checkTick(entity1, entity2)
   return until(
@@ -142,11 +146,14 @@ fun <
       phi1 = { td ->
         phi1(
             (td.getEntityById(entity1.id) ?: return@until false) as E1,
-            (td.getEntityById(entity2.id) ?: return@until false) as E2)
+            (td.getEntityById(entity2.id) ?: return@until false) as E2,
+        )
       },
       phi2 = { td ->
         phi2(
             (td.getEntityById(entity1.id) ?: return@until false) as E1,
-            (td.getEntityById(entity2.id) ?: return@until false) as E2)
-      })
+            (td.getEntityById(entity2.id) ?: return@until false) as E2,
+        )
+      },
+  )
 }

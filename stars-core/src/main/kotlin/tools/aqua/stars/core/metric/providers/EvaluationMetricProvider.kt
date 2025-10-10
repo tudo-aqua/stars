@@ -36,4 +36,5 @@ interface EvaluationMetricProvider<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : MetricProvider<E, T, S, U, D>
+    D : TickDifference<D>,
+> : MetricProvider<E, T, S, U, D>

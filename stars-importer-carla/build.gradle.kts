@@ -23,7 +23,8 @@ plugins {
 mavenMetadata {
   name.set("STARS Carla Importer")
   description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter")
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter"
+  )
 }
 
 dependencies {

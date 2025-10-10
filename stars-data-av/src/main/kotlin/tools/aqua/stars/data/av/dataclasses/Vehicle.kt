@@ -95,7 +95,8 @@ data class Vehicle(
               rotation,
               velocity,
               acceleration,
-              angularVelocity)
+              angularVelocity,
+          )
           .apply { tickData = newTickData }
 
   override fun toString(): String =

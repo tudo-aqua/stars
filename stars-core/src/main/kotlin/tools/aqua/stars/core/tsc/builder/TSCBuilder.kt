@@ -36,7 +36,8 @@ sealed class TSCBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> {
+    D : TickDifference<D>,
+> {
 
   /** Holds all edges of the node. */
   protected val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
