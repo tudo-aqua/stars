@@ -35,6 +35,7 @@ import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.Serializable
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndSegmentMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
@@ -293,10 +294,6 @@ class TSCEvaluation<
       val allTSCEvaluationTime = measureTime {
         tscList.forEach { tsc ->
           val tscEvaluationTime = measureTime {
-            // Run the "evaluate" function for all TSCMetricProviders on the current segment
-            metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
-              it.evaluate(tsc)
-            }
             // Holds the PredicateContext for the current segment
             val context = PredicateContext(segment)
 
@@ -304,17 +301,20 @@ class TSCEvaluation<
             // [PredicateContext], representing a whole TSC.
             val segmentTSCInstance = tsc.evaluate(context)
 
-            // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-            // current segment
+            // Run the "evaluate" function for all Metric providers
+            // Run the "evaluate" function for all TSCMetricProviders on the current segment
+            metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
+              it.evaluate(tsc)
+            }
             metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>().forEach {
               it.evaluate(segmentTSCInstance)
             }
-
-            // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
-            // current tsc and instance
             metricProviders
                 .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
                 .forEach { it.evaluate(tsc, segmentTSCInstance) }
+            metricProviders
+                .filterIsInstance<TSCInstanceAndSegmentMetricProvider<E, T, S, U, D>>()
+                .forEach { it.evaluate(segmentTSCInstance, segment) }
           }
           logFine(
               "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime")

@@ -22,7 +22,7 @@ import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.*
 
 /**
- * The [TSCInstanceAndTickMetricProvider] implements the [EvaluationMetricProvider] and provides an
+ * The [TSCInstanceAndSegmentMetricProvider] implements the [EvaluationMetricProvider] and provides an
  * [evaluate] function which gets a [TSCInstance] and the current [TickDataType] and is called
  * during the evaluation phase.
  *
@@ -33,7 +33,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface TSCInstanceAndTickMetricProvider<
+interface TSCInstanceAndSegmentMetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -44,8 +44,8 @@ interface TSCInstanceAndTickMetricProvider<
    * Evaluate the metric based on the given parameter.
    *
    * @param tscInstance The current [TSCInstance].
-   * @param tick The current [TickDataType].
+   * @param segment The current [SegmentType].
    * @return The evaluation result.
    */
-  fun evaluate(tscInstance: TSCInstance<E, T, S, U, D>, tick: T): Any?
+  fun evaluate(tscInstance: TSCInstance<E, T, S, U, D>, segment: S): Any?
 }
