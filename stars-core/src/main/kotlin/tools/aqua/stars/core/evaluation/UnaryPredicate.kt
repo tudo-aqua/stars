@@ -77,6 +77,7 @@ class UnaryPredicate<
   fun holds(ctx: PredicateContext<E, T, S, U, D>): Boolean =
       holds(ctx, ctx.segment.ticks.keys.first(), ctx.primaryEntityId)
 
+  /** Companion object containing utility methods for working with [UnaryPredicate]. */
   companion object {
     /**
      * Creates a unary tick predicate.

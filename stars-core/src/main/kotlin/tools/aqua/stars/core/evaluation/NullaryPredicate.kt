@@ -51,6 +51,7 @@ class NullaryPredicate<
       tick: U = ctx.segment.ticks.keys.first(),
   ): Boolean = ctx.holds(this, tick)
 
+  /** Companion object containing utility methods for working with [NullaryPredicate]. */
   companion object {
     /**
      * Creates a nullary tick predicate.

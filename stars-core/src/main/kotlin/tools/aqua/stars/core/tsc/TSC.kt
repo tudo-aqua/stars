@@ -44,7 +44,7 @@ class TSC<
     Iterable<TSCNode<E, T, S, U, D>> {
 
   init {
-    arrayOf('"', '*', '<', '>', '?', '|', '\u0000').forEach {
+    charArrayOf('"', '*', '<', '>', '?', '|', '\u0000').forEach {
       check(!identifier.contains(it)) { "Identifier must not contain illegal character $it." }
     }
   }

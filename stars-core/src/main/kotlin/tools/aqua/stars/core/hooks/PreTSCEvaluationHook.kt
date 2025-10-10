@@ -43,6 +43,7 @@ open class PreTSCEvaluationHook<
         identifier = identifier,
         evaluationFunction = evaluationFunction,
     ) {
+  /** Companion object containing utility methods for working with [PreTSCEvaluationHook]. */
   companion object {
     /**
      * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs.
