@@ -27,7 +27,16 @@ import tools.aqua.stars.core.hooks.*
 import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
-import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.metrics.providers.Loggable
+import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.Plottable
+import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.Stateful
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
 import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
@@ -44,7 +53,8 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
- * the [TSC]s based on the given [Sequence] of [SegmentType]s. This class implements [Loggable].
+ * the [TSC]s based on the given [Sequence] of [SegmentType]s. This class implements
+ * [tools.aqua.stars.core.metric.metrics.providers.Loggable].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -112,7 +122,10 @@ class TSCEvaluation<
       }
     }
 
-  /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
+  /**
+   * Holds a [List] of all [tools.aqua.stars.core.metric.metrics.providers.MetricProvider]s
+   * registered by [registerMetricProviders].
+   */
   private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 
   /** Holds the results of the [PreTSCEvaluationHook]s after calling [runEvaluation]. */

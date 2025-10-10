@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.Serializable
 import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
 import tools.aqua.stars.core.metric.utils.getJsonContentFromString
 

@@ -15,34 +15,22 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
-import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.types.*
 
 /**
- * The [SegmentMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
- * function which gets a [SegmentType] which is called during the evaluation phase.
+ * The [MetricProvider] interface is the base interface which all metrics are implementing.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @see TSCEvaluation.runEvaluation
  */
-interface SegmentMetricProvider<
+interface MetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
-
-  /**
-   * Evaluate the metric based on the given parameter.
-   *
-   * @param segment The current [SegmentType].
-   * @return The evaluation result.
-   */
-  fun evaluate(segment: S): Any?
-}
+    D : TickDifference<D>>

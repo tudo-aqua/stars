@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.*
 
 /**
- * The [TSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides an
- * [evaluate] function which gets a [TSCInstance] which is called during the evaluation phase.
+ * The [PostEvaluationMetricProvider] implements the [MetricProvider] and provides an [postEvaluate]
+ * function which is called after the evaluation phase. It also may depend on the results of metrics
+ * that evaluated during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -32,18 +32,33 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface TSCInstanceMetricProvider<
+interface PostEvaluationMetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
+    D : TickDifference<D>> : MetricProvider<E, T, S, U, D> {
 
   /**
-   * Evaluate the metric based on the given parameter.
+   * Holds a reference to another metric that is evaluated during the evaluation phase.
    *
-   * @param tscInstance The current [TSCInstance].
-   * @return The evaluation result.
+   * @see TSCEvaluation.runEvaluation
    */
-  fun evaluate(tscInstance: TSCInstance<E, T, S, U, D>): Any?
+  val dependsOn: Any?
+
+  /**
+   * Evaluate the metric after the evaluation phase.
+   *
+   * @return The post evaluation result.
+   * @see TSCEvaluation.runEvaluation
+   */
+  fun postEvaluate(): Any?
+
+  /**
+   * Print the results of the [postEvaluate] function. This function is called after the evaluation
+   * phase.
+   *
+   * @see TSCEvaluation.runEvaluation
+   */
+  fun printPostEvaluationResult()
 }
