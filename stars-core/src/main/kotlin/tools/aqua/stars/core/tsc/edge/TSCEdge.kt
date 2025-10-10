@@ -38,7 +38,8 @@ open class TSCEdge<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val condition: (PredicateContext<E, T, S, U, D>) -> Boolean = CONST_TRUE,
     val destination: TSCNode<E, T, S, U, D>,
 ) {

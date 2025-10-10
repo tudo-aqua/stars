@@ -68,7 +68,8 @@ class TSCEvaluation<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val tscList: List<TSC<E, T, S, U, D>>,
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
@@ -304,7 +305,8 @@ class TSCEvaluation<
                 .forEach { it.evaluate(tsc, segmentTSCInstance) }
           }
           logFine(
-              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime")
+              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime"
+          )
         }
       }
       logFine("The evaluation of all TSCs for segment '$segment' took: $allTSCEvaluationTime")
@@ -339,7 +341,7 @@ class TSCEvaluation<
       metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
     }
 
-    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    val serializableMetrics = metricProviders.filterIsInstance<SerializableMetric>()
     if (serializableMetrics.any()) {
       ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
 
@@ -347,7 +349,8 @@ class TSCEvaluation<
       if (writeSerializedResults) {
         println("Writing serialized results")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$serializedResultsFolder/$applicationStartTimeString/")
+            "$serializedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.forEach { t -> t.writeSerializedResults() }
       }
 
@@ -355,7 +358,8 @@ class TSCEvaluation<
       if (compareToBaselineResults) {
         println("Comparing to baseline")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/")
+            "$comparedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.compareToBaselineResults().let {
           resultsReproducedFromBaseline = it.noMismatch()
 
@@ -367,7 +371,8 @@ class TSCEvaluation<
       if (compareToPreviousRun) {
         println("Comparing to previous run")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/")
+            "$comparedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.compareToPreviousResults().let {
           resultsReproducedFromPreviousRun = it.noMismatch()
 

@@ -30,5 +30,5 @@ import kotlinx.serialization.Serializable
 data class SerializableTickDifferenceResult(
     override val identifier: String,
     override val source: String,
-    override val value: String
+    override val value: String,
 ) : SerializableResult()

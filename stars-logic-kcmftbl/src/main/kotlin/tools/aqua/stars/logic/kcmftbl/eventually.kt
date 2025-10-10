@@ -37,11 +37,9 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> eventually(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean = until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
+    D : TickDifference<D>,
+> eventually(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean =
+    until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
  * CMFTBL implementation of the 'eventually' operator for one entity i.e. "In a future tick in the
@@ -63,11 +61,8 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> eventually(
-    entity: E1,
-    interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
-): Boolean =
+    D : TickDifference<D>,
+> eventually(entity: E1, interval: Pair<D, D>? = null, phi: (E1) -> Boolean): Boolean =
     until(entity = entity, interval = interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
@@ -93,15 +88,17 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> eventually(
+    D : TickDifference<D>,
+> eventually(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
+    phi: (E1, E2) -> Boolean,
 ): Boolean =
     until(
         entity1 = entity1,
         entity2 = entity2,
         interval = interval,
         phi1 = { _, _ -> true },
-        phi2 = { e1, e2 -> phi(e1, e2) })
+        phi2 = { e1, e2 -> phi(e1, e2) },
+    )

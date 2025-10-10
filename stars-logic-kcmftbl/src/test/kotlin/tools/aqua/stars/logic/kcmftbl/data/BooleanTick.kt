@@ -36,4 +36,4 @@ class BooleanTick(
     override var segment: TestSegment,
     val phi1: Boolean,
     val phi2: Boolean,
-) : TickDataType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>
+) : TickDataType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>()

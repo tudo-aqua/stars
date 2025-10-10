@@ -19,7 +19,7 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
@@ -39,8 +39,8 @@ import tools.aqua.stars.core.types.*
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
  * [List] of invalid [TSCInstance]s.
  *
- * This class implements the [Serializable] interface. It serializes all invalid [TSCInstance] for
- * their respective [TSC].
+ * This class implements the [SerializableMetric] interface. It serializes all invalid [TSCInstance]
+ * for their respective [TSC].
  *
  * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for [TSC]s.
  *
@@ -58,15 +58,17 @@ class InvalidTSCInstancesPerTSCMetric<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
+) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<
           TSC<E, T, S, U, D>,
-          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>,
+      > =
       mutableMapOf()
 
   /**
@@ -95,8 +97,8 @@ class InvalidTSCInstancesPerTSCMetric<
   override fun getState():
       MutableMap<
           TSC<E, T, S, U, D>,
-          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>> =
-      invalidInstancesMap
+          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>,
+      > = invalidInstancesMap
 
   /**
    * Logs and prints the number of invalid [TSCInstance] for each [TSC]. Also logs count of invalid
@@ -104,15 +106,18 @@ class InvalidTSCInstancesPerTSCMetric<
    */
   override fun printState() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
+    )
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
           "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size} (of " +
-              "${tsc.possibleTSCInstances.size} possible instances).")
+              "${tsc.possibleTSCInstances.size} possible instances)."
+      )
 
       logFine(
           "Count of unique invalid instances for tsc '${tsc.identifier}' per instance: " +
-              invalidInstancesMap.map { it.value.size })
+              invalidInstancesMap.map { it.value.size }
+      )
 
       invalidInstancesMap.forEach { (referenceInstance, invalidInstances) ->
         logFiner(
@@ -121,7 +126,8 @@ class InvalidTSCInstancesPerTSCMetric<
               1 -> "1 time."
               else -> "${invalidInstances.size} times."
             }
-          }")
+          }"
+        )
         logFiner(referenceInstance)
         logFiner("Reasons for invalidity:")
         referenceInstance.validate().forEach { validation -> logFiner("- ${validation.second}") }
@@ -140,12 +146,14 @@ class InvalidTSCInstancesPerTSCMetric<
             invalidInstances.map { (tscInstanceNode, tscInstances) ->
               SerializableTSCOccurrence(
                   tscInstance = SerializableTSCNode(tscInstanceNode),
-                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier })
+                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier },
+              )
             }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
             count = resultList.size,
-            value = resultList)
+            value = resultList,
+        )
       }
 }

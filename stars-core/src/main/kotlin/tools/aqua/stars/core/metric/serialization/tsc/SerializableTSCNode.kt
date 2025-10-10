@@ -34,7 +34,8 @@ data class SerializableTSCNode(val label: String, val outgoingEdges: List<Serial
       tscInstanceNode: TSCInstanceNode<*, *, *, *, *>
   ) : this(
       label = tscInstanceNode.label,
-      outgoingEdges = tscInstanceNode.edges.map { SerializableTSCEdge(it) })
+      outgoingEdges = tscInstanceNode.edges.map { SerializableTSCEdge(it) },
+  )
 
   constructor(
       tscNode: TSCNode<*, *, *, *, *>

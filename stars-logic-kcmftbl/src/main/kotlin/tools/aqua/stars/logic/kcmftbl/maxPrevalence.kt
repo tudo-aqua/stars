@@ -38,17 +38,19 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> maxPrevalence(
+    D : TickDifference<D>,
+> maxPrevalence(
     tickData: T,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
+    phi: (T) -> Boolean,
 ): Boolean =
     minPrevalence(
         tickData = tickData,
         percentage = 1 - percentage,
         interval = interval,
-        phi = { td -> !phi(td) })
+        phi = { td -> !phi(td) },
+    )
 
 /**
  * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all future ticks in
@@ -71,14 +73,19 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> maxPrevalence(
+    D : TickDifference<D>,
+> maxPrevalence(
     entity: E1,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
+    phi: (E1) -> Boolean,
 ): Boolean =
     minPrevalence(
-        entity = entity, percentage = 1 - percentage, interval = interval, phi = { e -> !phi(e) })
+        entity = entity,
+        percentage = 1 - percentage,
+        interval = interval,
+        phi = { e -> !phi(e) },
+    )
 
 /**
  * CMFTBL implementation of the 'maxPrevalence' operator for two entities i.e. "In all future ticks
@@ -104,16 +111,18 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> maxPrevalence(
+    D : TickDifference<D>,
+> maxPrevalence(
     entity1: E1,
     entity2: E2,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
+    phi: (E1, E2) -> Boolean,
 ): Boolean =
     minPrevalence(
         entity1 = entity1,
         entity2 = entity2,
         percentage = 1 - percentage,
         interval = interval,
-        phi = { e1, e2 -> !phi(e1, e2) })
+        phi = { e1, e2 -> !phi(e1, e2) },
+    )

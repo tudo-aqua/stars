@@ -45,20 +45,22 @@ open class TSCBoundedNode<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     label: String,
     edges: List<TSCEdge<E, T, S, U, D>>,
     monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
     valueFunction: (PredicateContext<E, T, S, U, D>) -> Any = {},
-    val bounds: Pair<Int, Int>
+    val bounds: Pair<Int, Int>,
 ) :
     TSCNode<E, T, S, U, D>(
         label = label,
         edges = edges,
         monitorsMap = monitorsMap,
         projectionsMap = projectionsMap,
-        valueFunction = valueFunction) {
+        valueFunction = valueFunction,
+    ) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, S, U, D>>>>()

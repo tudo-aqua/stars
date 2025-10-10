@@ -44,7 +44,8 @@ class TestGlobally {
             expected = e,
             actual = g,
             message =
-                "Unmatched result between Globally ($g) and Eventually ($e) for phi = $phi with interval $interval")
+                "Unmatched result between Globally ($g) and Eventually ($e) for phi = $phi with interval $interval",
+        )
       }
     }
   }

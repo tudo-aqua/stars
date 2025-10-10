@@ -38,7 +38,8 @@ class TSCRootTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all(label)
         }
 
@@ -54,7 +55,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("rooted") { condition { true } }
       }
     }
@@ -69,7 +71,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("all_1")
         all("all_2")
       }
@@ -85,7 +88,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {}
+          SimpleTickDataDifference,
+      > {}
     }
   }
 
@@ -101,7 +105,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") { condition { true } }
       }
     }
@@ -116,7 +121,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         any("root") { condition { true } }
       }
     }
@@ -131,7 +137,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         optional("root") { condition { true } }
       }
     }
@@ -146,7 +153,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         exclusive("root") { condition { true } }
       }
     }
@@ -161,7 +169,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         leaf("root") { condition { true } }
       }
     }
@@ -176,7 +185,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         bounded("root", 2 to 3) { condition { true } }
       }
     }
@@ -194,7 +204,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") { condition { false } }
       }
     }
@@ -209,7 +220,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         any("root") { condition { false } }
       }
     }
@@ -224,7 +236,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         optional("root") { condition { false } }
       }
     }
@@ -239,7 +252,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         exclusive("root") { condition { false } }
       }
     }
@@ -254,7 +268,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         leaf("root") { condition { false } }
       }
     }
@@ -269,7 +284,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         bounded("root", 2 to 3) { condition { false } }
       }
     }
@@ -287,7 +303,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") { condition { LocalDate.now().year > 0 } }
       }
     }
@@ -302,7 +319,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         any("root") { condition { LocalDate.now().year > 0 } }
       }
     }
@@ -317,7 +335,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         optional("root") { condition { LocalDate.now().year > 0 } }
       }
     }
@@ -332,7 +351,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         exclusive("root") { condition { LocalDate.now().year > 0 } }
       }
     }
@@ -347,7 +367,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         leaf("root") { condition { LocalDate.now().year > 0 } }
       }
     }
@@ -362,7 +383,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         bounded("root", 2 to 3) { condition { LocalDate.now().year > 0 } }
       }
     }
@@ -380,7 +402,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -395,7 +418,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         any("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -410,7 +434,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         optional("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -425,7 +450,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         exclusive("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -440,7 +466,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         leaf("root") { condition { LocalDate.now().year < 0 } }
       }
     }
@@ -455,7 +482,8 @@ class TSCRootTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         bounded("root", 2 to 3) { condition { LocalDate.now().year < 0 } }
       }
     }

@@ -32,7 +32,8 @@ fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> {
                 listOf(),
                 TestSegment(listOf(), mapOf(), "", -1),
                 phi1[it] == 1,
-                phi2[it] == 1)
+                phi2[it] == 1,
+            )
       }
 
   TestSegment(ticks.values.toList(), ticks.toMap(), "", -1).also {

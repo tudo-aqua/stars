@@ -37,11 +37,9 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> historically(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean = !once(tickData = tickData, interval = interval, phi = { td -> !phi(td) })
+    D : TickDifference<D>,
+> historically(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean =
+    !once(tickData = tickData, interval = interval, phi = { td -> !phi(td) })
 
 /**
  * CMFTBL implementation of the 'historically' operator for one entity i.e. "In all past ticks in
@@ -63,11 +61,9 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> historically(
-    entity: E1,
-    interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
-): Boolean = !once(entity = entity, interval = interval, phi = { e -> !phi(e) })
+    D : TickDifference<D>,
+> historically(entity: E1, interval: Pair<D, D>? = null, phi: (E1) -> Boolean): Boolean =
+    !once(entity = entity, interval = interval, phi = { e -> !phi(e) })
 
 /**
  * CMFTBL implementation of the 'historically' operator for two entities i.e. "In all past ticks in
@@ -92,11 +88,16 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> historically(
+    D : TickDifference<D>,
+> historically(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
+    phi: (E1, E2) -> Boolean,
 ): Boolean =
     !once(
-        entity1 = entity1, entity2 = entity2, interval = interval, phi = { e1, e2 -> !phi(e1, e2) })
+        entity1 = entity1,
+        entity2 = entity2,
+        interval = interval,
+        phi = { e1, e2 -> !phi(e1, e2) },
+    )

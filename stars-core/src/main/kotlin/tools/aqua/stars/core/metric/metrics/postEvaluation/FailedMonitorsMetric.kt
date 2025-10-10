@@ -21,7 +21,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorInstance
 import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorsResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
@@ -57,11 +57,12 @@ class FailedMonitorsMetric<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
     override val loggerIdentifier: String = "failed-monitors",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
+) : PostEvaluationMetricProvider<E, T, S, U, D>, SerializableMetric, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
   val failedMonitors:
@@ -81,13 +82,15 @@ class FailedMonitorsMetric<
               validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
             }
           }
-        })
+        }
+    )
   }
 
   /** Prints the count of failed monitors for each [TSC]. */
   override fun printPostEvaluationResult() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Count Of Failed Monitors Per TSC \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Count Of Failed Monitors Per TSC \n$CONSOLE_SEPARATOR"
+    )
     failedMonitors.forEach { (tsc, failedMonitors) ->
       logInfo("Count of failed monitors for tsc '${tsc.identifier}': ${failedMonitors.size}")
 
@@ -96,7 +99,8 @@ class FailedMonitorsMetric<
       logFine("Failed monitors for tsc '${tsc.identifier}':")
       failedMonitors.forEach { failedMonitor ->
         logFine(
-            "Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.segmentIdentifier}")
+            "Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.segmentIdentifier}"
+        )
         logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }
@@ -112,13 +116,15 @@ class FailedMonitorsMetric<
                   segmentIdentifier = it.segmentIdentifier,
                   tscInstance = SerializableTSCNode(it.tscInstance),
                   monitorLabel = it.monitorLabel,
-                  nodeLabel = it.nodeLabel)
+                  nodeLabel = it.nodeLabel,
+              )
             }
         SerializableFailedMonitorsResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
             count = resultList.size,
-            value = resultList)
+            value = resultList,
+        )
       }
 }

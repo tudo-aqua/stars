@@ -56,7 +56,7 @@ fun <T1 : Number, T2 : Number> getCSVString(
     columnEntry: String,
     xValues: List<T1>,
     yValues: List<T2>,
-    sliceValue: Int? = null
+    sliceValue: Int? = null,
 ): String = getCSVString(mapOf(columnEntry to (xValues to yValues)), sliceValue)
 
 /**
@@ -72,7 +72,7 @@ fun <T1 : Number, T2 : Number> getCSVString(
 fun <T : Number> getCSVString(
     columnEntry: String,
     yValues: List<T>,
-    sliceValue: Int? = null
+    sliceValue: Int? = null,
 ): String = getCSVString(mapOf(columnEntry to (List(yValues.size) { it } to yValues)), sliceValue)
 
 /**
@@ -89,7 +89,7 @@ fun <T : Number> getCSVString(
 fun <T1 : Number, T2 : Number> getCSVString(
     columnEntries: List<String>,
     xAndYValues: List<Pair<List<T1>, List<T2>>>,
-    sliceValue: Int? = null
+    sliceValue: Int? = null,
 ): String {
   require(columnEntries.size == xAndYValues.size) {
     "The amount of given column entries should equal the size of the given value pairs."
@@ -115,7 +115,7 @@ fun <T1 : Number, T2 : Number> getCSVString(
  */
 fun <T1 : Number, T2 : Number> getCSVString(
     nameToValuesMap: Map<String, Pair<List<T1>, List<T2>>>,
-    sliceValue: Int? = null
+    sliceValue: Int? = null,
 ): String {
   val valueMap: Map<String, Pair<List<T1>, List<T2>>>
   if (sliceValue != null) {

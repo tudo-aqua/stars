@@ -43,7 +43,8 @@ class SerializableFailedMonitorResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Evaluate and populate base metric
     // Uses a valid TSC instance where only one of two leaf nodes is present
@@ -56,8 +57,10 @@ class SerializableFailedMonitorResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>(
-            validTSCInstancesPerTSCMetric)
+            SimpleTickDataDifference,
+        >(
+            validTSCInstancesPerTSCMetric
+        )
 
     // Post evaluate and populate actual metric
     failedMonitorsMetric.postEvaluate()
@@ -81,7 +84,8 @@ class SerializableFailedMonitorResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Evaluate and populate base metric
     // Uses a valid TSC instance where only one of two leaf nodes is present
@@ -94,8 +98,10 @@ class SerializableFailedMonitorResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>(
-            validTSCInstancesPerTSCMetric)
+            SimpleTickDataDifference,
+        >(
+            validTSCInstancesPerTSCMetric
+        )
 
     // Post evaluate and populate actual metric
     failedMonitorsMetric.postEvaluate()
@@ -119,7 +125,8 @@ class SerializableFailedMonitorResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Evaluate and populate base metric
     // Uses a valid TSC instance where only one of two leaf nodes is present
@@ -132,8 +139,10 @@ class SerializableFailedMonitorResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>(
-            validTSCInstancesPerTSCMetric)
+            SimpleTickDataDifference,
+        >(
+            validTSCInstancesPerTSCMetric
+        )
 
     // Post evaluate and populate actual metric
     failedMonitorsMetric.postEvaluate()

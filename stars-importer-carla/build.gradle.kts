@@ -17,13 +17,14 @@
 
 plugins {
   id("tools.aqua.stars.library-conventions")
-  kotlin("plugin.serialization") version "2.1.0"
+  kotlin("plugin.serialization") version "2.2.0"
 }
 
 mavenMetadata {
   name.set("STARS Carla Importer")
   description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter")
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter"
+  )
 }
 
 dependencies {

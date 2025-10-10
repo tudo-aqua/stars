@@ -46,7 +46,8 @@ class TestOnce {
             expected = s,
             actual = o,
             message =
-                "Unmatched result between Once ($o) and Since ($s) for phi = $phi2 with interval $interval")
+                "Unmatched result between Once ($o) and Since ($s) for phi = $phi2 with interval $interval",
+        )
       }
     }
   }

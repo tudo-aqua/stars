@@ -218,7 +218,8 @@ class TestBackto {
           createTicks(phi1, phi2)[2],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -240,7 +241,8 @@ class TestBackto {
           createTicks(phi1, phi2)[2],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -262,7 +264,8 @@ class TestBackto {
           createTicks(phi1, phi2)[2],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -284,7 +287,8 @@ class TestBackto {
           createTicks(phi1, phi2)[3],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -306,7 +310,8 @@ class TestBackto {
           createTicks(phi1, phi2)[3],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -328,7 +333,8 @@ class TestBackto {
           createTicks(phi1, phi2)[4],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 }

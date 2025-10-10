@@ -29,5 +29,5 @@ enum class EvaluationHookResult {
   CANCEL,
 
   /** Abort the evaluation and throw an Exception. */
-  ABORT
+  ABORT,
 }

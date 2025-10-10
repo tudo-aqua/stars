@@ -27,5 +27,5 @@ package tools.aqua.stars.data.av.dataclasses
 data class SpeedLimit(
     val speedLimit: Double,
     val fromDistanceFromStart: Double,
-    val toDistanceFromStart: Double
+    val toDistanceFromStart: Double,
 )
