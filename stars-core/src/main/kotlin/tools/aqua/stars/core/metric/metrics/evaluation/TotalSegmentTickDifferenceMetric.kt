@@ -47,9 +47,10 @@ class TotalSegmentTickDifferenceMetric<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "total-segment-tick-difference",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : SegmentMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /** Holds the current [TickDifference] for all already analyzed [SegmentType]s. */
   private var totalTickDifference: D? = null
@@ -99,6 +100,10 @@ class TotalSegmentTickDifferenceMetric<
       totalTickDifference?.let {
         listOf(
             SerializableTickDifferenceResult(
-                identifier = loggerIdentifier, source = loggerIdentifier, value = it.serialize()))
+                identifier = loggerIdentifier,
+                source = loggerIdentifier,
+                value = it.serialize(),
+            )
+        )
       } ?: emptyList()
 }

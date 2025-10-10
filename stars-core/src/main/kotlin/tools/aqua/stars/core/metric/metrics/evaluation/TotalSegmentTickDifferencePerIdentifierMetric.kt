@@ -49,9 +49,10 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "total-segment-tick-difference-per-identifier",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : SegmentMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /**
    * Holds the Map of [SegmentType.segmentSource] to total [TickDifference] of all [SegmentType]s
@@ -106,13 +107,17 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
   override fun printState() {
     segmentIdentifierToTotalSegmentDurationMap.forEach { (identifier, totalDifference) ->
       logInfo(
-          "The analyzed segments with source '$identifier' yielded a total tick difference of $totalDifference.")
+          "The analyzed segments with source '$identifier' yielded a total tick difference of $totalDifference."
+      )
     }
   }
 
   override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
       segmentIdentifierToTotalSegmentDurationMap.map { (identifier, tickDifference) ->
         SerializableTickDifferenceResult(
-            identifier = identifier, source = loggerIdentifier, value = tickDifference.serialize())
+            identifier = identifier,
+            source = loggerIdentifier,
+            value = tickDifference.serialize(),
+        )
       }
 }
