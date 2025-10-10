@@ -80,6 +80,7 @@ jobs:
     needs: discover-projects
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         project: ${{ fromJson(needs.discover-projects.outputs.matrix) }} # Get gradle projects from previous step
     steps:
