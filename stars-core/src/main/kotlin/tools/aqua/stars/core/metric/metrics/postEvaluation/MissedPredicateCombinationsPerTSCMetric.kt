@@ -22,7 +22,7 @@ import tools.aqua.stars.core.evaluation.PredicateCombination
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializablePredicateCombinationResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
@@ -61,7 +61,7 @@ class MissedPredicateCombinationsPerTSCMetric<
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
     override val loggerIdentifier: String = "missed-predicate-combinations",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
+) : PostEvaluationMetricProvider<E, T, S, U, D>, SerializableMetric, Loggable {
 
   /** Holds the evaluation result after calling [postEvaluate]. */
   private var evaluationResultCache: Map<TSC<E, T, S, U, D>, Set<PredicateCombination>>? = null

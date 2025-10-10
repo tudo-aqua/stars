@@ -21,7 +21,7 @@ import java.util.Optional
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
@@ -32,8 +32,8 @@ import tools.aqua.stars.core.types.*
  * [SegmentType.segmentSource] defines the source of the [SegmentType] (e.g. a map name, analysis
  * name).
  *
- * This class implements the [Serializable] interface. It serializes the total tick difference for
- * all analyzed [SegmentType]s grouped by the segment.
+ * This class implements the [SerializableMetric] interface. It serializes the total tick difference
+ * for all analyzed [SegmentType]s grouped by the segment.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -53,7 +53,7 @@ class TotalSegmentTickDifferencePerIdentifierMetric<
 >(
     override val loggerIdentifier: String = "total-segment-tick-difference-per-identifier",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
+) : SegmentMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /**
    * Holds the Map of [SegmentType.segmentSource] to total [TickDifference] of all [SegmentType]s
    * for the [SegmentType.segmentSource].

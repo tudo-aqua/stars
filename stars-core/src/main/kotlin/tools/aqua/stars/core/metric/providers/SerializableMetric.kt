@@ -15,15 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.logic.kcmftbl.data
+package tools.aqua.stars.core.metric.providers
 
-import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 
 /**
- * This class is used for tests and implements the [EntityType] interface.
- *
- * @property id The ID of this entity.
- * @property tickData The [BooleanTick] this [TestEntity] belongs to.
+ * This interface should be implemented when a metric has a results that should be compared in
+ * later/previous evaluations.
  */
-class TestEntity(override val id: Int, override var tickData: BooleanTick) :
-    EntityType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>()
+interface SerializableMetric {
+  /**
+   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
+   * later/previous evaluations.
+   */
+  fun getSerializableResults(): List<SerializableResult>
+}

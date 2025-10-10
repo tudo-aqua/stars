@@ -341,7 +341,7 @@ class TSCEvaluation<
       metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
     }
 
-    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    val serializableMetrics = metricProviders.filterIsInstance<SerializableMetric>()
     if (serializableMetrics.any()) {
       ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
 

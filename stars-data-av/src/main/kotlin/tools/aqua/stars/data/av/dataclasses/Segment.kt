@@ -30,7 +30,7 @@ data class Segment(
     override val tickData: List<TickData>,
     override val segmentSource: String,
     val simulationRunId: String = "",
-) : SegmentType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
+) : SegmentType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
 
   init {
     tickData.onEach { it.segment = this }

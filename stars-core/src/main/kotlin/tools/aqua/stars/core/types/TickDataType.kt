@@ -26,7 +26,7 @@ package tools.aqua.stars.core.types
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
-interface TickDataType<
+abstract class TickDataType<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -35,13 +35,13 @@ interface TickDataType<
 > {
 
   /** The current tick. */
-  val currentTick: U
+  abstract val currentTick: U
 
   /** List of [EntityType]s in tick data. */
-  var entities: List<E>
+  abstract var entities: List<E>
 
   /** Current [SegmentType]. */
-  var segment: S
+  abstract var segment: S
 
   /**
    * Retrieves [EntityType] from [entities] by given [entityID].

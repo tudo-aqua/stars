@@ -26,7 +26,7 @@ package tools.aqua.stars.core.types
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
-interface EntityType<
+abstract class EntityType<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -35,8 +35,8 @@ interface EntityType<
 > {
 
   /** Entity identifier. */
-  val id: Int
+  abstract val id: Int
 
   /** Tick data. */
-  var tickData: T
+  abstract var tickData: T
 }
