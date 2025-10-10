@@ -51,7 +51,7 @@ abstract class SegmentType<
    *
    * @return The readable [String] representation of this [SegmentType].
    */
-  fun getSegmentIdentifier(): String =
+  open fun getSegmentIdentifier(): String =
       "Segment[(${tickData.first().currentTick}..${tickData.last().currentTick})] from $segmentSource " +
           "with primary entity ${this.primaryEntityId}"
 }
