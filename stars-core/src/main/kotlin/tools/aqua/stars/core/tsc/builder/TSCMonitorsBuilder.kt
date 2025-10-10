@@ -34,7 +34,8 @@ open class TSCMonitorsBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
+    D : TickDifference<D>,
+> : TSCBuilder<E, T, S, U, D>() {
 
   /** Creates the monitors map. */
   fun build(): Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean> = monitorMap
@@ -55,9 +56,10 @@ open class TSCMonitorsBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCMonitorsBuilder<E, T, S, U, D>.monitor(
+      D : TickDifference<D>,
+  > TSCMonitorsBuilder<E, T, S, U, D>.monitor(
       label: String,
-      condition: (PredicateContext<E, T, S, U, D>) -> Boolean
+      condition: (PredicateContext<E, T, S, U, D>) -> Boolean,
   ) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
     monitorMap[label] = condition

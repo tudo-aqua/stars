@@ -22,10 +22,15 @@ import tools.aqua.stars.core.types.*
 /** Simple entity. */
 class SimpleEntity(
     override val id: Int = 0,
-    override var tickData: SimpleTickData = SimpleTickData()
+    override var tickData: SimpleTickData = SimpleTickData(),
 ) :
     EntityType<
-        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
+        SimpleEntity,
+        SimpleTickData,
+        SimpleSegment,
+        SimpleTickDataUnit,
+        SimpleTickDataDifference,
+    > {
   override fun toString(): String = "Entity[$id] in Tick[${tickData}]"
 }
 
@@ -33,10 +38,15 @@ class SimpleEntity(
 class SimpleSegment(
     override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = emptyMap(),
     override val segmentSource: String = "",
-    override val primaryEntityId: Int = 0
+    override val primaryEntityId: Int = 0,
 ) :
     SegmentType<
-        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
+        SimpleEntity,
+        SimpleTickData,
+        SimpleSegment,
+        SimpleTickDataUnit,
+        SimpleTickDataDifference,
+    > {
   override fun toString(): String =
       "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentSource'"
 
@@ -47,10 +57,15 @@ class SimpleSegment(
 class SimpleTickData(
     override val currentTick: SimpleTickDataUnit = SimpleTickDataUnit(0),
     override var entities: List<SimpleEntity> = emptyList(),
-    override var segment: SimpleSegment = SimpleSegment()
+    override var segment: SimpleSegment = SimpleSegment(),
 ) :
     TickDataType<
-        SimpleEntity, SimpleTickData, SimpleSegment, SimpleTickDataUnit, SimpleTickDataDifference> {
+        SimpleEntity,
+        SimpleTickData,
+        SimpleSegment,
+        SimpleTickDataUnit,
+        SimpleTickDataDifference,
+    > {
   override fun toString(): String = "$currentTick"
 }
 

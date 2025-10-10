@@ -39,7 +39,8 @@ class SerializableTSCResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     missedInstancesMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
 
@@ -61,7 +62,8 @@ class SerializableTSCResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     missedInstancesMetric.evaluate(simpleTSC3, simpleTSCInvalidInstance)
 
@@ -83,7 +85,8 @@ class SerializableTSCResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     missedInstancesMetric.evaluate(simpleTSC, simpleTSCValidInstance)
 

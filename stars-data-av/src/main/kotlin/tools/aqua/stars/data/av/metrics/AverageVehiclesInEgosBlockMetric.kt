@@ -46,7 +46,8 @@ class AverageVehiclesInEgosBlockMetric(
     val averageVehiclesInEgosBlock =
         segment.tickData.map { it.vehiclesInBlock(it.ego.lane.road.block).size }.average()
     logFiner(
-        "The average count of vehicles in Segment '$segment' for ego's block is: $averageVehiclesInEgosBlock")
+        "The average count of vehicles in Segment '$segment' for ego's block is: $averageVehiclesInEgosBlock"
+    )
     return averageVehiclesInEgosBlock
   }
 }

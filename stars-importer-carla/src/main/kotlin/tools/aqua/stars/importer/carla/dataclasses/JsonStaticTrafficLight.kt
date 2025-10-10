@@ -45,5 +45,6 @@ data class JsonStaticTrafficLight(
           id = this.id,
           location = this.location.toLocation(),
           rotation = this.rotation.toRotation(),
-          stopLocations = this.stopLocations.map { it.toLocation() })
+          stopLocations = this.stopLocations.map { it.toLocation() },
+      )
 }

@@ -31,7 +31,8 @@ interface TickDataType<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> {
+    D : TickDifference<D>,
+> {
 
   /** The current tick. */
   val currentTick: U

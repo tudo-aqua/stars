@@ -44,7 +44,8 @@ class TSCIterator<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(startNode: TSCNode<E, T, S, U, D>) : Iterator<TSCNode<E, T, S, U, D>> {
+    D : TickDifference<D>,
+>(startNode: TSCNode<E, T, S, U, D>) : Iterator<TSCNode<E, T, S, U, D>> {
 
   private val items: MutableList<TSCNode<E, T, S, U, D>> = mutableListOf()
 

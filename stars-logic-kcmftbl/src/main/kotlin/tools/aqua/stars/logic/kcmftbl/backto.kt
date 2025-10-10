@@ -38,17 +38,19 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> backto(
+    D : TickDifference<D>,
+> backto(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
-    phi2: (T) -> Boolean
+    phi2: (T) -> Boolean,
 ): Boolean =
     !since(
         tickData = tickData,
         interval = interval,
         phi1 = { td -> !phi1(td) },
-        phi2 = { td -> !phi2(td) })
+        phi2 = { td -> !phi2(td) },
+    )
 
 /**
  * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi 2
@@ -72,17 +74,19 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> backto(
+    D : TickDifference<D>,
+> backto(
     entity: E1,
     interval: Pair<D, D>? = null,
     phi1: (E1) -> Boolean,
-    phi2: (E1) -> Boolean
+    phi2: (E1) -> Boolean,
 ): Boolean =
     !since(
         entity.tickData,
         interval,
         phi1 = { td -> td.getEntityById(entity.id)?.let { !phi1(it as E1) } != false },
-        phi2 = { td -> td.getEntityById(entity.id)?.let { !phi2(it as E1) } != false })
+        phi2 = { td -> td.getEntityById(entity.id)?.let { !phi2(it as E1) } != false },
+    )
 
 /**
  * CMFTBL implementation of the 'back-to' operator i.e. "In all previous ticks in the interval phi 2
@@ -109,12 +113,13 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> backto(
+    D : TickDifference<D>,
+> backto(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
     phi1: (E1, E2) -> Boolean,
-    phi2: (E1, E2) -> Boolean
+    phi2: (E1, E2) -> Boolean,
 ): Boolean {
   checkTick(entity1, entity2)
   return !since(
@@ -123,11 +128,14 @@ fun <
       phi1 = { td ->
         !phi1(
             (td.getEntityById(entity1.id) ?: return@since true) as E1,
-            (td.getEntityById(entity2.id) ?: return@since true) as E2)
+            (td.getEntityById(entity2.id) ?: return@since true) as E2,
+        )
       },
       phi2 = { td ->
         !phi2(
             (td.getEntityById(entity1.id) ?: return@since true) as E1,
-            (td.getEntityById(entity2.id) ?: return@since true) as E2)
-      })
+            (td.getEntityById(entity2.id) ?: return@since true) as E2,
+        )
+      },
+  )
 }

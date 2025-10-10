@@ -42,7 +42,8 @@ class SerializableIntResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 2)
@@ -60,7 +61,8 @@ class SerializableIntResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     assertEquals(segmentCountMetric.evaluate(simpleSegment1), 1)
     val serializedResultBaseline = segmentCountMetric.getSerializableResults()

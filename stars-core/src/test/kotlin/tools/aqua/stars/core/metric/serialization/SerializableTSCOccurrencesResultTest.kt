@@ -42,7 +42,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Test serialization and calculation of one valid TSC instance
     validTSCInstancesPerTSCMetric.evaluate(simpleTSC, simpleTSCValidInstance)
@@ -50,9 +51,13 @@ class SerializableTSCOccurrencesResultTest {
     assertEquals(1, serializedResult.size)
     assertEquals("root", serializedResult[0].value[0].tscInstance.label)
     assertEquals(
-        "leaf1", serializedResult[0].value[0].tscInstance.outgoingEdges[0].destination.label)
+        "leaf1",
+        serializedResult[0].value[0].tscInstance.outgoingEdges[0].destination.label,
+    )
     assertEquals(
-        "leaf2", serializedResult[0].value[0].tscInstance.outgoingEdges[1].destination.label)
+        "leaf2",
+        serializedResult[0].value[0].tscInstance.outgoingEdges[1].destination.label,
+    )
 
     // Test serialization and calculation of one additional invalid TSC instance
     validTSCInstancesPerTSCMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
@@ -72,7 +77,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Test serialization and calculation of one invalid TSC instance
     invalidTSCInstancesPerTSCMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
@@ -80,7 +86,9 @@ class SerializableTSCOccurrencesResultTest {
     assertEquals(1, serializedResult.size)
     assertEquals("root", serializedResult[0].value[0].tscInstance.label)
     assertEquals(
-        "leaf1", serializedResult[0].value[0].tscInstance.outgoingEdges[0].destination.label)
+        "leaf1",
+        serializedResult[0].value[0].tscInstance.outgoingEdges[0].destination.label,
+    )
 
     // Test serialization and calculation of one additional valid TSC instance
     invalidTSCInstancesPerTSCMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
@@ -100,7 +108,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     val baselineMetric =
         ValidTSCInstancesPerTSCMetric<
@@ -108,7 +117,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
     baselineMetric.evaluate(simpleTSC2, simpleTSC2ValidInstance)
@@ -134,7 +144,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     val baselineMetric =
         InvalidTSCInstancesPerTSCMetric<
@@ -142,7 +153,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     currentMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
     baselineMetric.evaluate(simpleTSC2, simpleTSCInvalidInstance)
@@ -171,7 +183,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     val baselineMetric =
         ValidTSCInstancesPerTSCMetric<
@@ -179,7 +192,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
     baselineMetric.evaluate(simpleTSC, simpleTSCValidInstance2)
@@ -208,7 +222,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     val baselineMetric =
         ValidTSCInstancesPerTSCMetric<
@@ -216,7 +231,8 @@ class SerializableTSCOccurrencesResultTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     currentMetric.evaluate(simpleTSC, simpleTSCValidInstance)
     baselineMetric.evaluate(simpleTSC, simpleTSCValidInstance3)

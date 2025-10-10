@@ -31,5 +31,5 @@ class TestSegment(
     override val tickData: List<BooleanTick>,
     override val ticks: Map<TestUnit, BooleanTick>,
     override val segmentSource: String,
-    override val primaryEntityId: Int
+    override val primaryEntityId: Int,
 ) : SegmentType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>

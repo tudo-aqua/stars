@@ -34,7 +34,8 @@ class NullaryPredicate<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val eval: (PredicateContext<E, T, S, U, D>) -> Boolean,
 ) {
 
@@ -47,7 +48,7 @@ class NullaryPredicate<
    */
   fun holds(
       ctx: PredicateContext<E, T, S, U, D>,
-      tick: U = ctx.segment.ticks.keys.first()
+      tick: U = ctx.segment.ticks.keys.first(),
   ): Boolean = ctx.holds(this, tick)
 
   companion object {
@@ -67,7 +68,8 @@ class NullaryPredicate<
         T : TickDataType<E, T, S, U, D>,
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> predicate(
+        D : TickDifference<D>,
+    > predicate(
         eval: (PredicateContext<E, T, S, U, D>) -> Boolean
     ): NullaryPredicate<E, T, S, U, D> = NullaryPredicate(eval)
   }

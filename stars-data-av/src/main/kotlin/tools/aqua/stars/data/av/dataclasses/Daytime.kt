@@ -20,5 +20,5 @@ package tools.aqua.stars.data.av.dataclasses
 /** Enum for the current daytime. */
 enum class Daytime {
   Noon,
-  Sunset
+  Sunset,
 }

@@ -74,5 +74,6 @@ data class JSonDataWeatherParameters(
           fogFalloff = this.fogFalloff,
           scatteringIntensity = this.scatteringIntensity,
           mieScatteringScale = this.mieScatteringScale,
-          rayleighScatteringScale = this.rayleighScatteringScale)
+          rayleighScatteringScale = this.rayleighScatteringScale,
+      )
 }

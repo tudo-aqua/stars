@@ -37,11 +37,8 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> previous(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean {
+    D : TickDifference<D>,
+> previous(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean {
   checkInterval(interval)
 
   val segment = tickData.segment
@@ -51,9 +48,11 @@ fun <
   if (nowIndex == 0) return false
   val previousTick = segment.tickData[nowIndex - 1]
 
-  if (interval != null &&
-      (previousTick.currentTick <= tickData.currentTick - interval.second ||
-          previousTick.currentTick > tickData.currentTick - interval.first))
+  if (
+      interval != null &&
+          (previousTick.currentTick <= tickData.currentTick - interval.second ||
+              previousTick.currentTick > tickData.currentTick - interval.first)
+  )
       return false
 
   return phi(previousTick)
@@ -80,15 +79,13 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> previous(
-    entity: E1,
-    interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
-): Boolean =
+    D : TickDifference<D>,
+> previous(entity: E1, interval: Pair<D, D>? = null, phi: (E1) -> Boolean): Boolean =
     previous(
         tickData = entity.tickData,
         interval = interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true },
+    )
 
 /**
  * CMFTBL implementation of the 'previous' operator for two entities i.e. "In the previous tick phi
@@ -114,11 +111,12 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> previous(
+    D : TickDifference<D>,
+> previous(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
+    phi: (E1, E2) -> Boolean,
 ): Boolean {
   checkTick(entity1, entity2)
   return previous(
@@ -127,6 +125,8 @@ fun <
       phi = { td ->
         phi(
             (td.getEntityById(entity1.id) ?: return@previous false) as E1,
-            (td.getEntityById(entity2.id) ?: return@previous false) as E2)
-      })
+            (td.getEntityById(entity2.id) ?: return@previous false) as E2,
+        )
+      },
+  )
 }

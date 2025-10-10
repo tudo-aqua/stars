@@ -85,5 +85,6 @@ data class JsonLandmark(
           unit = this.unit,
           text = this.text,
           location = this.location.toLocation(),
-          rotation = this.rotation.toRotation())
+          rotation = this.rotation.toRotation(),
+      )
 }

@@ -48,5 +48,6 @@ data class JsonTrafficLight(
       TrafficLight(
           id = this.id,
           state = TrafficLightState.getByValue(this.state),
-          relatedOpenDriveId = this.relatedOpenDriveId)
+          relatedOpenDriveId = this.relatedOpenDriveId,
+      )
 }

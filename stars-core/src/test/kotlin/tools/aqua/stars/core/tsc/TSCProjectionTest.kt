@@ -39,7 +39,8 @@ class TSCProjectionTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             projections {
               projection(projection1)
@@ -70,7 +71,8 @@ class TSCProjectionTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             projections {
               projection(projection1)
@@ -131,7 +133,8 @@ class TSCProjectionTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root")
         }
 
@@ -152,7 +155,8 @@ class TSCProjectionTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           any("root") {
             projections {
               projectionRecursive(projectionAll)
@@ -200,7 +204,8 @@ class TSCProjectionTest {
             "leaf_all_2",
             "exclusive",
             "leaf_exclusive_1",
-            "leaf_exclusive_2")
+            "leaf_exclusive_2",
+        )
     assert(projectionAllTSC.map { it.label } == expectedLabelsAll)
 
     val expectedLabelsSub1 = listOf("root", "all", "leaf_all_1", "leaf_all_2")

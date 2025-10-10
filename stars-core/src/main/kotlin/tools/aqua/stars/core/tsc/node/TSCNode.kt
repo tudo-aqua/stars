@@ -44,12 +44,13 @@ sealed class TSCNode<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val label: String,
     open val edges: List<TSCEdge<E, T, S, U, D>>,
     private val monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
     private val projectionsMap: Map<String, Boolean>?,
-    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
+    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
 ) {
 
   /** Map of projection labels to their recursive state. */
@@ -66,13 +67,14 @@ sealed class TSCNode<
   /** Evaluates this TSC in the given context. */
   fun evaluate(
       ctx: PredicateContext<E, T, S, U, D>,
-      depth: Int = 0
+      depth: Int = 0,
   ): TSCInstanceNode<E, T, S, U, D> =
       TSCInstanceNode(
               this,
               this.label,
               this.monitors.mapValues { (_, monitor) -> monitor(ctx) },
-              this.valueFunction(ctx))
+              this.valueFunction(ctx),
+          )
           .also {
             it.edges +=
                 this.edges
@@ -118,7 +120,8 @@ sealed class TSCNode<
                   label = label,
                   monitorsMap = monitorsMap,
                   projectionsMap = projectionsMap,
-                  valueFunction = valueFunction)
+                  valueFunction = valueFunction,
+              )
           is TSCBoundedNode -> {
             val outgoingEdges =
                 edges
@@ -139,7 +142,8 @@ sealed class TSCNode<
                 projectionsMap = this.projectionsMap,
                 valueFunction = this.valueFunction,
                 bounds =
-                    this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff)
+                    this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
+            )
           }
         }
   }
@@ -158,7 +162,8 @@ sealed class TSCNode<
               label = this.label,
               monitorsMap = this.monitorsMap,
               projectionsMap = this.projectionsMap,
-              valueFunction = this.valueFunction)
+              valueFunction = this.valueFunction,
+          )
       is TSCBoundedNode ->
           TSCBoundedNode(
               label = this.label,

@@ -30,5 +30,5 @@ import kotlinx.serialization.Serializable
 data class SerializableIntResult(
     override val identifier: String,
     override val source: String,
-    override val value: Int
+    override val value: Int,
 ) : SerializableResult()

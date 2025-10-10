@@ -140,7 +140,11 @@ class TestPastMinPrevalence {
 
     assertTrue {
       pastMinPrevalence(
-          createTicks(phi)[9], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[9],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -159,7 +163,11 @@ class TestPastMinPrevalence {
 
     assertFalse {
       pastMinPrevalence(
-          createTicks(phi)[9], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[9],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -246,7 +254,11 @@ class TestPastMinPrevalence {
 
     assertFailsWith<IllegalArgumentException> {
       pastMinPrevalence(
-          createTicks(phi)[2], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[2],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -265,7 +277,11 @@ class TestPastMinPrevalence {
 
     assertFailsWith<IllegalArgumentException> {
       pastMinPrevalence(
-          createTicks(phi)[2], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[2],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -284,7 +300,11 @@ class TestPastMinPrevalence {
 
     assertFailsWith<IllegalArgumentException> {
       pastMinPrevalence(
-          createTicks(phi)[2], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[2],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 }
