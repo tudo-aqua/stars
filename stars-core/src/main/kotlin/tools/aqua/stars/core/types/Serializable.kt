@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2025 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +18,14 @@
 package tools.aqua.stars.core.types
 
 /**
- * Interface for entity types.
+ * Interface for serializable types.
  *
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param S [SegmentType].
- * @param U [TickUnit].
- * @param D [TickDifference].
+ * @param T Type to be serialized/deserialized.
  */
-abstract class EntityType<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>,
-> {
+interface Serializable<T> {
+  /** Serializes to a [String]. */
+  fun serialize(): String
 
-  /** Entity identifier. */
-  abstract val id: Int
-
-  /** Tick data. */
-  abstract var tickData: T
+  /** Deserializes from a [String]. */
+  fun deserialize(str: String): T
 }

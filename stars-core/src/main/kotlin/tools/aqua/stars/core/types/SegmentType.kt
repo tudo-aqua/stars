@@ -26,7 +26,7 @@ package tools.aqua.stars.core.types
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
-interface SegmentType<
+abstract class SegmentType<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -34,17 +34,17 @@ interface SegmentType<
     D : TickDifference<D>> {
 
   /** List of Tick data. */
-  val tickData: List<T>
+  open val tickData: List<T>
     get() = ticks.values.toList()
 
   /** Ticks in this [SegmentType]. */
-  val ticks: Map<U, T>
+  abstract val ticks: Map<U, T>
 
   /** Segment source String. */
-  val segmentSource: String
+  abstract val segmentSource: String
 
   /** Identifier of primary entity. */
-  val primaryEntityId: Int
+  abstract val primaryEntityId: Int
 
   /**
    * Returns an Identifier for this segment.
