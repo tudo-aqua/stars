@@ -23,7 +23,7 @@ import tools.aqua.stars.core.metric.serialization.SerializableResult
  * This interface should be implemented when a metric has a results that should be compared in
  * later/previous evaluations.
  */
-interface Serializable {
+interface SerializableMetric {
   /**
    * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
    * later/previous evaluations.

@@ -20,7 +20,7 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.SegmentMetricProvider
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.providers.Stateful
 import tools.aqua.stars.core.metric.serialization.SerializableIntResult
 import tools.aqua.stars.core.types.*
@@ -31,7 +31,7 @@ import tools.aqua.stars.core.types.*
  *
  * This class implements the [Stateful] interface. Its state contains the [segmentCount].
  *
- * This class implements [Serializable] and stores, and compares its evaluation results.
+ * This class implements [SerializableMetric] and stores, and compares its evaluation results.
  *
  * This class implements [Loggable] and logs the final [segmentCount].
  *
@@ -51,7 +51,7 @@ class SegmentCountMetric<
     D : TickDifference<D>>(
     override val loggerIdentifier: String = "segment-count",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : SegmentMetricProvider<E, T, S, U, D>, Stateful, Serializable, Loggable {
+) : SegmentMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /** Holds the count of [SegmentType]s that are analyzed. */
   private var segmentCount: Int = 0
 

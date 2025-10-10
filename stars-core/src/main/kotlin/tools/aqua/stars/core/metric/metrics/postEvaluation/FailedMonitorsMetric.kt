@@ -21,7 +21,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.providers.Loggable
 import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.providers.Serializable
+import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorInstance
 import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorsResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
@@ -61,7 +61,7 @@ class FailedMonitorsMetric<
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
     override val loggerIdentifier: String = "failed-monitors",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier)
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Serializable, Loggable {
+) : PostEvaluationMetricProvider<E, T, S, U, D>, SerializableMetric, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
   val failedMonitors:
