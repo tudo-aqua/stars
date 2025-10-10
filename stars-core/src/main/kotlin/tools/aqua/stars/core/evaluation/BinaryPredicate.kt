@@ -40,7 +40,8 @@ class BinaryPredicate<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val kClasses: Pair<KClass<E1>, KClass<E2>>,
     val eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
 ) {
@@ -60,7 +61,7 @@ class BinaryPredicate<
       ctx: PredicateContext<E, T, S, U, D>,
       tick: U = ctx.segment.ticks.keys.first(),
       entityId1: Int = ctx.primaryEntityId,
-      entityId2: Int
+      entityId2: Int,
   ): Boolean = ctx.holds(this, tick, entityId1, entityId2)
 
   /**
@@ -79,7 +80,8 @@ class BinaryPredicate<
             if (this != entity2.tickData.currentTick) error("ticks don't match")
           },
           entity1.id,
-          entity2.id)
+          entity2.id,
+      )
 
   companion object {
     /**
@@ -104,7 +106,8 @@ class BinaryPredicate<
         T : TickDataType<E, T, S, U, D>,
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> predicate(
+        D : TickDifference<D>,
+    > predicate(
         kClasses: Pair<KClass<E1>, KClass<E2>>,
         eval: (PredicateContext<E, T, S, U, D>, E1, E2) -> Boolean,
     ): BinaryPredicate<E1, E2, E, T, S, U, D> = BinaryPredicate(kClasses, eval)

@@ -37,7 +37,8 @@ open class MinTicksPerSegmentHook<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     minTicks: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
@@ -45,7 +46,8 @@ open class MinTicksPerSegmentHook<
         identifier = "MinTicksPerSegmentHook",
         evaluationFunction = { segment ->
           if (segment.ticks.size >= minTicks) EvaluationHookResult.OK else failPolicy
-        }) {
+        },
+    ) {
   init {
     require(minTicks >= 0) { "minTicks must be >= 0" }
   }

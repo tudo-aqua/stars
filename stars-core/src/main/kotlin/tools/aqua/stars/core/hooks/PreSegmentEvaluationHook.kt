@@ -36,7 +36,8 @@ open class PreSegmentEvaluationHook<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(identifier: String, evaluationFunction: (S) -> EvaluationHookResult) :
+    D : TickDifference<D>,
+>(identifier: String, evaluationFunction: (S) -> EvaluationHookResult) :
     EvaluationHook<S>(identifier = identifier, evaluationFunction = evaluationFunction) {
   companion object {
     /**
@@ -56,7 +57,8 @@ open class PreSegmentEvaluationHook<
         T : TickDataType<E, T, S, U, D>,
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> MutableList<PreSegmentEvaluationHook<E, T, S, U, D>>.evaluate(
+        D : TickDifference<D>,
+    > MutableList<PreSegmentEvaluationHook<E, T, S, U, D>>.evaluate(
         segment: S
     ): Pair<Boolean?, Map<PreSegmentEvaluationHook<E, T, S, U, D>, EvaluationHookResult>> {
       val hookResults = this.associateWith { it.evaluationFunction.invoke(segment) }

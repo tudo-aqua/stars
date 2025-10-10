@@ -43,5 +43,5 @@ data class Landmark(
     val unit: String,
     val text: String,
     val location: Location,
-    val rotation: Rotation
+    val rotation: Rotation,
 )

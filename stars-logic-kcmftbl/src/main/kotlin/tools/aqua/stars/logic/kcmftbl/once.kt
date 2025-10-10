@@ -37,11 +37,8 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean =
+    D : TickDifference<D>,
+> once(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean =
     since(tickData = tickData, interval = interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /**
@@ -64,11 +61,8 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
-    entity: E1,
-    interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
-): Boolean =
+    D : TickDifference<D>,
+> once(entity: E1, interval: Pair<D, D>? = null, phi: (E1) -> Boolean): Boolean =
     since(entity = entity, interval = interval, phi1 = { _ -> true }, phi2 = { e -> phi(e) })
 
 /**
@@ -94,15 +88,12 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
-    entity1: E1,
-    entity2: E2,
-    interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
-): Boolean =
+    D : TickDifference<D>,
+> once(entity1: E1, entity2: E2, interval: Pair<D, D>? = null, phi: (E1, E2) -> Boolean): Boolean =
     since(
         entity1 = entity1,
         entity2 = entity2,
         interval = interval,
         phi1 = { _, _ -> true },
-        phi2 = { e1, e2 -> phi(e1, e2) })
+        phi2 = { e1, e2 -> phi(e1, e2) },
+    )

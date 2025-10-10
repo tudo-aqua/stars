@@ -121,7 +121,7 @@ fun loadSegments(
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<Segment> {
   var simulationRunsWrapperList = simulationRunsWrappers
   // Check that every SimulationRunsWrapper has dynamic data files loaded
@@ -188,7 +188,9 @@ fun loadSegments(
               useEveryVehicleAsEgo,
               useFirstVehicleAsEgo,
               currentDynamicDataPath.nameWithoutExtension,
-              minSegmentTickCount))
+              minSegmentTickCount,
+          )
+      )
       return@generateSequence segmentBuffer.removeFirst()
     }
     // If there are no Segments nor Files to process, return null to indicate the end of the
@@ -223,7 +225,7 @@ fun loadSegments(
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<Segment> =
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
@@ -232,7 +234,8 @@ fun loadSegments(
         useEveryVehicleAsEgo,
         useFirstVehicleAsEgo,
         minSegmentTickCount,
-        orderFilesBySeed)
+        orderFilesBySeed,
+    )
 
 /**
  * Load [Segment]s for one specific map. The map data comes from the file [mapDataFile] and the
@@ -258,7 +261,7 @@ fun loadSegments(
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<Segment> =
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
@@ -267,7 +270,8 @@ fun loadSegments(
         useEveryVehicleAsEgo,
         useFirstVehicleAsEgo,
         minSegmentTickCount,
-        orderFilesBySeed)
+        orderFilesBySeed,
+    )
 
 /**
  * Load [Segment]s based on a [Map]. The [Map] needs to have the following structure. Map<[Path],
@@ -293,7 +297,7 @@ fun loadSegments(
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
     minSegmentTickCount: Int = 10,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<Segment> =
     // Call actual implementation of loadSegments with correct data structure
     loadSegments(
@@ -302,4 +306,5 @@ fun loadSegments(
         useEveryVehicleAsEgo,
         useFirstVehicleAsEgo,
         minSegmentTickCount,
-        orderFilesBySeed)
+        orderFilesBySeed,
+    )

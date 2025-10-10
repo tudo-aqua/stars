@@ -34,7 +34,8 @@ class TSCDuplicatedLabelsTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") {
           projections { projection("all") }
 
@@ -69,7 +70,8 @@ class TSCDuplicatedLabelsTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") {
           projections {
             projection("P1")
@@ -89,7 +91,8 @@ class TSCDuplicatedLabelsTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") {
           projections {
             projection("P1")
@@ -111,7 +114,8 @@ class TSCDuplicatedLabelsTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference> {
+          SimpleTickDataDifference,
+      > {
         all("root") {
           monitors {
             monitor("monitor1") { _ -> true }

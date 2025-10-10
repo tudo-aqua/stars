@@ -20,7 +20,8 @@ plugins { id("tools.aqua.stars.library-conventions") }
 mavenMetadata {
   name.set("STARS Data AV")
   description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles")
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles"
+  )
 }
 
 dependencies {

@@ -33,7 +33,8 @@ open class TSCProjectionsBuilder<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : TSCBuilder<E, T, S, U, D>() {
+    D : TickDifference<D>,
+> : TSCBuilder<E, T, S, U, D>() {
 
   /** Holds all projections of the node. */
   private val projectionIDs: MutableMap<String, Boolean> = mutableMapOf()
@@ -56,7 +57,8 @@ open class TSCProjectionsBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projection(label: String) {
+      D : TickDifference<D>,
+  > TSCProjectionsBuilder<E, T, S, U, D>.projection(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = false
   }
@@ -76,9 +78,8 @@ open class TSCProjectionsBuilder<
       T : TickDataType<E, T, S, U, D>,
       S : SegmentType<E, T, S, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCProjectionsBuilder<E, T, S, U, D>.projectionRecursive(
-      label: String
-  ) {
+      D : TickDifference<D>,
+  > TSCProjectionsBuilder<E, T, S, U, D>.projectionRecursive(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = true
   }

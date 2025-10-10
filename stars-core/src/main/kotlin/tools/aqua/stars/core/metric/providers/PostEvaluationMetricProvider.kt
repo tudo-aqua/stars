@@ -37,7 +37,8 @@ interface PostEvaluationMetricProvider<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : MetricProvider<E, T, S, U, D> {
+    D : TickDifference<D>,
+> : MetricProvider<E, T, S, U, D> {
 
   /**
    * Holds a reference to another metric that is evaluated during the evaluation phase.

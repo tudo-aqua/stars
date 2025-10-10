@@ -83,11 +83,13 @@ class SerializationResultExtensionsTest {
     val currentResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
     val previousResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -105,11 +107,13 @@ class SerializationResultExtensionsTest {
     val currentResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
     val previousResults =
         listOf(
             SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
+        )
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -127,7 +131,8 @@ class SerializationResultExtensionsTest {
     val currentResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
     val previousResults =
         listOf(SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1))
 
@@ -158,7 +163,8 @@ class SerializationResultExtensionsTest {
     val previousResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -185,11 +191,13 @@ class SerializationResultExtensionsTest {
     val currentResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
     val previousResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 2))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 2),
+        )
 
     val compareResults = currentResults.compareTo(previousResults)
 
@@ -216,11 +224,13 @@ class SerializationResultExtensionsTest {
     val currentResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 1),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 1),
+        )
     val previousResults =
         listOf(
             SerializableIntResult(identifier = "result 1", source = "Test case 1", value = 2),
-            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 2))
+            SerializableIntResult(identifier = "result 2", source = "Test case 1", value = 2),
+        )
 
     val compareResults = currentResults.compareTo(previousResults)
 

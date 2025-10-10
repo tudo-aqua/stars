@@ -38,7 +38,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -55,7 +56,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
@@ -79,7 +81,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -98,7 +101,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
@@ -122,7 +126,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -146,7 +151,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
@@ -158,9 +164,11 @@ class TSCMonitorTest {
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(2, failedMonitors.size)
     assertTrue(
-        failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "RootMonitorFalse" })
+        failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "RootMonitorFalse" }
+    )
     assertTrue(
-        failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "LeafMonitorFalse" })
+        failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "LeafMonitorFalse" }
+    )
   }
 
   /**
@@ -175,7 +183,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             projections { projectionRecursive("all") }
 
@@ -199,7 +208,8 @@ class TSCMonitorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)

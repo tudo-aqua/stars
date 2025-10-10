@@ -75,7 +75,7 @@ open class GlobalMavenMetadataExtension @Inject constructor(objects: ObjectFacto
   data class GithubProject(
       val organization: String,
       val project: String,
-      val mainBranch: String = "main"
+      val mainBranch: String = "main",
   )
 
   /**

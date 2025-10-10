@@ -36,7 +36,8 @@ data class TSCInstanceEdge<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val destination: TSCInstanceNode<E, T, S, U, D>,
     val tscEdge: TSCEdge<E, T, S, U, D>,
 ) {

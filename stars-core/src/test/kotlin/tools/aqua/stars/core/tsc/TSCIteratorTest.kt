@@ -32,7 +32,8 @@ class TSCIteratorTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference> {
+            SimpleTickDataDifference,
+        > {
           all("root") {
             exclusive("exclusive") {
               leaf("leaf_exclusive_1")
@@ -64,7 +65,8 @@ class TSCIteratorTest {
             "bounded",
             "leaf_bounded_1",
             "leaf_bounded_2",
-            "leaf_bounded_3")
+            "leaf_bounded_3",
+        )
     val iteratorLabels = tsc.map { it.label }
 
     assert(expectedLabels == iteratorLabels)
