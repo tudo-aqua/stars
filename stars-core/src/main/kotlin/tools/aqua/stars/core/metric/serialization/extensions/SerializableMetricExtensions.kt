@@ -21,7 +21,6 @@ import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.utils.baseline
 import tools.aqua.stars.core.metric.utils.previousResults
 import tools.aqua.stars.core.metric.utils.saveAsJsonFile
 
@@ -35,19 +34,6 @@ import tools.aqua.stars.core.metric.utils.saveAsJsonFile
  */
 fun List<SerializableMetric>.compareToPreviousResults(): List<SerializableResultComparison> =
     map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(previousResults)
-
-/**
- * Extension function of [List] of [SerializableMetric] that compares it to the baseline evaluation
- * results.
- *
- * @return Returns the [List] of [SerializableResultComparison]s that was created by comparing the
- *   [SerializableResult]s of the calling [SerializableMetric] with the baseline
- *   [SerializableResult]s.
- */
-fun List<SerializableMetric>.compareToBaselineResults(): List<SerializableResultComparison> {
-  check(baseline.isNotEmpty()) { "No baseline results found." }
-  return map { it.getSerializableResults() }.flatten().groupBy { it.source }.compareTo(baseline)
-}
 
 /**
  * Extension function for [SerializableMetric] that writes all its [SerializableResult]s as [Json]
