@@ -15,25 +15,18 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.stars.library-conventions") }
+package tools.aqua.stars.core.metric.metrics.providers
 
-mavenMetadata {
-  name.set("STARS Data AV")
-  description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles"
-  )
+import tools.aqua.stars.core.metric.serialization.SerializableResult
+
+/**
+ * This interface should be implemented when a metric has a results that should be compared in
+ * later/previous evaluations.
+ */
+interface SerializableMetric {
+  /**
+   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
+   * later/previous evaluations.
+   */
+  fun getSerializableResults(): List<SerializableResult>
 }
-
-dependencies {
-  implementation(project(":stars-core"))
-  testImplementation(project(":stars-logic-kcmftbl"))
-}
-
-configurations { create("test") }
-
-tasks.register<Jar>("testArchive") {
-  archiveBaseName.set("tools.aqua.stars.data.av.test")
-  from(project.the<SourceSetContainer>()["test"].output)
-}
-
-artifacts { add("test", tasks["testArchive"]) }

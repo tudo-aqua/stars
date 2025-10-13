@@ -25,9 +25,9 @@ import tools.aqua.stars.core.types.TickUnit
  * @property tickMillis Current tick value in milliseconds.
  */
 data class TickDataUnitMilliseconds(val tickMillis: Long) :
-    TickUnit<TickDataUnitMilliseconds, TickDataDifferenceMilliseconds> {
-  override fun compareTo(other: TickDataUnitMilliseconds): Int =
-      this.tickMillis.compareTo(other.tickMillis)
+    TickUnit<TickDataUnitMilliseconds, TickDataDifferenceMilliseconds>() {
+  override fun plus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
+      TickDataUnitMilliseconds(this.tickMillis + other.differenceMillis)
 
   override fun minus(other: TickDataUnitMilliseconds): TickDataDifferenceMilliseconds =
       TickDataDifferenceMilliseconds(this.tickMillis - other.tickMillis)
@@ -35,8 +35,13 @@ data class TickDataUnitMilliseconds(val tickMillis: Long) :
   override fun minus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
       TickDataUnitMilliseconds(this.tickMillis - other.differenceMillis)
 
-  override fun plus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
-      TickDataUnitMilliseconds(this.tickMillis + other.differenceMillis)
+  override fun compareTo(other: TickDataUnitMilliseconds): Int =
+      this.tickMillis.compareTo(other.tickMillis)
+
+  override fun serialize(): String = this.tickMillis.toString()
+
+  override fun deserialize(str: String): TickDataUnitMilliseconds =
+      TickDataUnitMilliseconds(str.toLong())
 
   override fun toString(): String = "TickDataUnitMilliseconds(milliSeconds: ${this.tickMillis})"
 

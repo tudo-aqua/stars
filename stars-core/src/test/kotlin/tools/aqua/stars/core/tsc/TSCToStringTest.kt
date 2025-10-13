@@ -35,7 +35,8 @@ class TSCToStringTest {
           SimpleTickData,
           SimpleSegment,
           SimpleTickDataUnit,
-          SimpleTickDataDifference>()
+          SimpleTickDataDifference,
+      >()
     }
   }
 
@@ -49,7 +50,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           all("all")
         }
     assertEquals("all(0..0)", tsc.toString())
@@ -64,7 +66,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           any("any")
         }
     assertEquals("any(1..0)", tsc.toString())
@@ -81,7 +84,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           exclusive("exclusive")
         }
     assertEquals("exclusive(1..1)", tsc.toString())
@@ -98,7 +102,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           bounded("bounded", 2 to 3)
         }
     assertEquals("bounded(2..3)", tsc.toString())
@@ -113,7 +118,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           leaf("leaf")
         }
     assertEquals("leaf", tsc.toString())
@@ -128,7 +134,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           optional("optional")
         }
     assertEquals("optional(0..0)", tsc.toString())
@@ -149,7 +156,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           all("all") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -171,7 +179,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           exclusive("exclusive") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -190,7 +199,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           any("any") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -212,7 +222,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           bounded("bounded", 2 to 3) {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -234,7 +245,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           optional("optional") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -259,7 +271,8 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>() {
+            SimpleTickDataDifference,
+        >() {
           all("all") {
             any("any") {
               leaf("leaf_1")
@@ -269,7 +282,9 @@ class TSCToStringTest {
           }
         }
     assertEquals(
-        "all(1..1)\n-T-> any(1..3)\n  -T-> leaf_1\n  -T-> leaf_2\n  -T-> leaf_3", tsc.toString())
+        "all(1..1)\n-T-> any(1..3)\n  -T-> leaf_1\n  -T-> leaf_2\n  -T-> leaf_3",
+        tsc.toString(),
+    )
   }
   // endregion
 }

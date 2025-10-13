@@ -38,7 +38,8 @@ class UnaryPredicate<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val kClass: KClass<E1>,
     val eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
 ) {
@@ -54,7 +55,7 @@ class UnaryPredicate<
   fun holds(
       ctx: PredicateContext<E, T, S, U, D>,
       tick: U = ctx.segment.ticks.keys.first(),
-      entityId: Int = ctx.primaryEntityId
+      entityId: Int = ctx.primaryEntityId,
   ): Boolean = ctx.holds(this, tick, entityId)
 
   /**
@@ -97,7 +98,8 @@ class UnaryPredicate<
         T : TickDataType<E, T, S, U, D>,
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> predicate(
+        D : TickDifference<D>,
+    > predicate(
         kClass: KClass<E1>,
         eval: (PredicateContext<E, T, S, U, D>, E1) -> Boolean,
     ): UnaryPredicate<E1, E, T, S, U, D> = UnaryPredicate(kClass, eval)

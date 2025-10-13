@@ -39,7 +39,8 @@ class TSCFailedMonitorInstance<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val segmentIdentifier: String,
     var tscInstance: TSCInstanceNode<E, T, S, U, D>,
     val monitorLabel: String,

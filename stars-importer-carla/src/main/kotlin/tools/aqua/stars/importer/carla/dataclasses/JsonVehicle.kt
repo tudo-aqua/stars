@@ -47,7 +47,7 @@ data class JsonVehicle(
     @SerialName("forward_vector") val forwardVector: JsonVector3D = JsonVector3D(),
     @SerialName("velocity") val velocity: JsonVector3D = JsonVector3D(),
     @SerialName("acceleration") val acceleration: JsonVector3D = JsonVector3D(),
-    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D()
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D(),
 ) : JsonActor() {
 
   /** The effective velocity. */

@@ -37,12 +37,12 @@ open class PreTSCEvaluationHook<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    identifier: String,
-    evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult
-) :
+    D : TickDifference<D>,
+>(identifier: String, evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult) :
     EvaluationHook<TSC<E, T, S, U, D>>(
-        identifier = identifier, evaluationFunction = evaluationFunction) {
+        identifier = identifier,
+        evaluationFunction = evaluationFunction,
+    ) {
   companion object {
     /**
      * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs.
@@ -59,11 +59,13 @@ open class PreTSCEvaluationHook<
         T : TickDataType<E, T, S, U, D>,
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> List<PreTSCEvaluationHook<E, T, S, U, D>>.evaluate(
+        D : TickDifference<D>,
+    > List<PreTSCEvaluationHook<E, T, S, U, D>>.evaluate(
         tscList: List<TSC<E, T, S, U, D>>
     ): Pair<
         List<TSC<E, T, S, U, D>>?,
-        Map<TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>>> {
+        Map<TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>>,
+    > {
       // Evaluate PreEvaluationHooks
       val hookResults =
           tscList.associateWith { tsc -> this.associateWith { it.evaluationFunction.invoke(tsc) } }

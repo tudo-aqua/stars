@@ -40,5 +40,5 @@ enum class SerializableResultComparisonVerdict(val shortString: String) {
   MISSING_IDENTIFIER("MIS"),
 
   /** No matching identifier has been found in the compared results. */
-  NEW_IDENTIFIER("NEW")
+  NEW_IDENTIFIER("NEW"),
 }

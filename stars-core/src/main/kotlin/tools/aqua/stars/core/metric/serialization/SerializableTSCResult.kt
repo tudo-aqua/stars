@@ -34,5 +34,5 @@ data class SerializableTSCResult(
     override val identifier: String,
     override val source: String,
     val count: Int,
-    override val value: List<SerializableTSCNode>
+    override val value: List<SerializableTSCNode>,
 ) : SerializableResult()

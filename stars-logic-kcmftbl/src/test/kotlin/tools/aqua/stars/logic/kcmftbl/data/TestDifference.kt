@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.TickDifference
  *
  * @property diff The [Int] difference between two [TestUnit]s.
  */
-class TestDifference(val diff: Int) : TickDifference<TestDifference> {
+class TestDifference(val diff: Int) : TickDifference<TestDifference>() {
   override fun compareTo(other: TestDifference): Int = diff.compareTo(other.diff)
 
   override fun plus(other: TestDifference): TestDifference = TestDifference(diff + other.diff)

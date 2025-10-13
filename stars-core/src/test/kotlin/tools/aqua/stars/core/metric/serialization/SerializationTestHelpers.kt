@@ -17,18 +17,19 @@
 
 package tools.aqua.stars.core.metric.serialization
 
-import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
 import tools.aqua.stars.core.metric.utils.getJsonContentFromString
 
 /**
- * Serializes all[SerializableResult]s of the given [serializable] and deserializes them again.
+ * Serializes all[SerializableResult]s of the given [serializableMetric] and deserializes them
+ * again.
  *
- * @param serializable The [Serializable] from which all [SerializableResult]s should be
+ * @param serializableMetric The [SerializableMetric] from which all [SerializableResult]s should be
  *   (de)serialized.
  */
-fun serializeAndDeserialize(serializable: Serializable): List<SerializableResult> =
-    serializable
+fun serializeAndDeserialize(serializableMetric: SerializableMetric): List<SerializableResult> =
+    serializableMetric
         .getSerializableResults()
         .map { it.getJsonString() }
         .map { getJsonContentFromString(it) }

@@ -22,7 +22,7 @@ package tools.aqua.stars.core.types
  *
  * @param D [TickDifference].
  */
-interface TickDifference<D : TickDifference<D>> : Comparable<D> {
+abstract class TickDifference<D : TickDifference<D>> : Comparable<D>, Serializable<D> {
 
   /**
    * Adds a [TickDifference] to this [TickDifference].
@@ -30,7 +30,7 @@ interface TickDifference<D : TickDifference<D>> : Comparable<D> {
    * @param other The [TickDifference] to add.
    * @return A new [TickDifference] object.
    */
-  operator fun plus(other: D): D
+  abstract operator fun plus(other: D): D
 
   /**
    * Subtracts a [TickDifference] from this [TickDifference].
@@ -38,11 +38,5 @@ interface TickDifference<D : TickDifference<D>> : Comparable<D> {
    * @param other The [TickDifference] to subtract.
    * @return A new [TickDifference] object.
    */
-  operator fun minus(other: D): D
-
-  /** Serializes the [TickDifference] to a [String]. */
-  fun serialize(): String
-
-  /** Deserializes the [TickDifference] from a [String]. */
-  fun deserialize(str: String): D
+  abstract operator fun minus(other: D): D
 }

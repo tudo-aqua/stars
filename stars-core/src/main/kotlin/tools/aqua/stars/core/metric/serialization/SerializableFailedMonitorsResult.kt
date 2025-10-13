@@ -37,5 +37,5 @@ data class SerializableFailedMonitorsResult(
     override val source: String,
     val tsc: SerializableTSCNode,
     val count: Int,
-    override val value: List<SerializableFailedMonitorInstance>
+    override val value: List<SerializableFailedMonitorInstance>,
 ) : SerializableResult()

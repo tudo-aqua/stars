@@ -50,7 +50,8 @@ val cars: List<String> =
         "vehicle.nissan.patrol_2021",
         "vehicle.seat.leon",
         "vehicle.tesla.model3",
-        "vehicle.toyota.prius")
+        "vehicle.toyota.prius",
+    )
 
 /** List for base type: TRUCK. */
 val trucks: List<String> =
@@ -58,7 +59,8 @@ val trucks: List<String> =
         "vehicle.carlamotors.carlacola",
         "vehicle.carlamotors.european_hgv",
         "vehicle.carlamotors.firetruck",
-        "vehicle.tesla.cybertruck")
+        "vehicle.tesla.cybertruck",
+    )
 
 /** List for base type: VAN. */
 val vans: List<String> =
@@ -66,7 +68,8 @@ val vans: List<String> =
         "vehicle.ford.ambulance",
         "vehicle.mercedes.sprinter",
         "vehicle.volkswagen.t2",
-        "vehicle.volkswagen.t2_2021")
+        "vehicle.volkswagen.t2_2021",
+    )
 
 /** List for base type: BUS. */
 val buses: List<String> = listOf("vehicle.mitsubishi.fusorosa")
@@ -77,7 +80,8 @@ val motorcycles: List<String> =
         "vehicle.harley-davidson.low_rider",
         "vehicle.kawasaki.ninja",
         "vehicle.vespa.zx125",
-        "vehicle.yamaha.yzf")
+        "vehicle.yamaha.yzf",
+    )
 
 /** List for base type: BICYCLE. */
 val bicycles: List<String> =

@@ -37,7 +37,8 @@ open class MinNodesInTSCHook<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     minNodes: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
@@ -45,7 +46,8 @@ open class MinNodesInTSCHook<
         identifier = "EmptyTSCHook",
         evaluationFunction = { tsc ->
           if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy
-        }) {
+        },
+    ) {
   init {
     require(minNodes >= 0) { "minNodes must be >= 0" }
   }

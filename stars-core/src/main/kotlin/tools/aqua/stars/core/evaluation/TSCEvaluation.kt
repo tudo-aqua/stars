@@ -32,14 +32,12 @@ import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.Plottable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.Serializable
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndSegmentMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
-import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
 import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
@@ -67,8 +65,6 @@ import tools.aqua.stars.core.types.*
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
  * @property writeSerializedResults (Default: ``true``) Whether to write result files and compare
  *   them to previous runs after the analysis.
- * @property compareToBaselineResults (Default: ``false``) Whether to compare the results to the
- *   baseline results.
  * @property compareToPreviousRun (Default: ``false``) Whether to compare the results to the
  *   previous run.
  * @property loggerIdentifier identifier (name) for the logger.
@@ -79,12 +75,12 @@ class TSCEvaluation<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val tscList: List<TSC<E, T, S, U, D>>,
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
     val writeSerializedResults: Boolean = true,
-    val compareToBaselineResults: Boolean = false,
     val compareToPreviousRun: Boolean = false,
     override val loggerIdentifier: String = "evaluation-time",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
@@ -92,21 +88,6 @@ class TSCEvaluation<
 
   /** Test. */
   private val mutex: Any = Any()
-
-  /**
-   * Holds the aggregated [Boolean] verdict of all compared results with the baseline data. Setting
-   * a new value will be conjugated with the old value such that a verdict 'false' may not be
-   * changed to 'true' again.
-   */
-  var resultsReproducedFromBaseline: Boolean? = null
-    set(value) {
-      synchronized(mutex) {
-        when {
-          field == null -> field = value
-          field != null && value != null -> field = field!! && value
-        }
-      }
-    }
 
   /**
    * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
@@ -118,7 +99,7 @@ class TSCEvaluation<
       synchronized(mutex) {
         when {
           field == null -> field = value
-          field != null && value != null -> field = field!! && value
+          field != null && value != null -> field = checkNotNull(field) && value
         }
       }
     }
@@ -317,7 +298,8 @@ class TSCEvaluation<
                 .forEach { it.evaluate(segmentTSCInstance, segment) }
           }
           logFine(
-              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime")
+              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime"
+          )
         }
       }
       logFine("The evaluation of all TSCs for segment '$segment' took: $allTSCEvaluationTime")
@@ -352,7 +334,7 @@ class TSCEvaluation<
       metricProviders.filterIsInstance<Plottable>().forEach { it.writePlotDataCSV() }
     }
 
-    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    val serializableMetrics = metricProviders.filterIsInstance<SerializableMetric>()
     if (serializableMetrics.any()) {
       ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
 
@@ -360,27 +342,17 @@ class TSCEvaluation<
       if (writeSerializedResults) {
         println("Writing serialized results")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$serializedResultsFolder/$applicationStartTimeString/")
+            "$serializedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.forEach { t -> t.writeSerializedResults() }
-      }
-
-      // Compare the results to the baseline
-      if (compareToBaselineResults) {
-        println("Comparing to baseline")
-        ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/")
-        serializableMetrics.compareToBaselineResults().let {
-          resultsReproducedFromBaseline = it.noMismatch()
-
-          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
-        }
       }
 
       // Compare the results to the latest run
       if (compareToPreviousRun) {
         println("Comparing to previous run")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/")
+            "$comparedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.compareToPreviousResults().let {
           resultsReproducedFromPreviousRun = it.noMismatch()
 

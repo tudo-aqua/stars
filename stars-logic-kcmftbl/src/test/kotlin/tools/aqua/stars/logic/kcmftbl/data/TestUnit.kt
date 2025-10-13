@@ -25,12 +25,16 @@ import tools.aqua.stars.core.types.TickUnit
  *
  * @property tick Stores a tick as an [Int].
  */
-class TestUnit(val tick: Int) : TickUnit<TestUnit, TestDifference> {
-  override fun compareTo(other: TestUnit): Int = tick.compareTo(other.tick)
-
+class TestUnit(val tick: Int) : TickUnit<TestUnit, TestDifference>() {
   override fun plus(other: TestDifference): TestUnit = TestUnit(tick + other.diff)
 
   override fun minus(other: TestDifference): TestUnit = TestUnit(tick - other.diff)
 
   override fun minus(other: TestUnit): TestDifference = TestDifference(tick - other.tick)
+
+  override fun compareTo(other: TestUnit): Int = tick.compareTo(other.tick)
+
+  override fun serialize(): String = tick.toString()
+
+  override fun deserialize(str: String): TestUnit = TestUnit(str.toInt())
 }

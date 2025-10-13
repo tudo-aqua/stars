@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2025 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,17 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.metrics.providers
-
-import tools.aqua.stars.core.metric.serialization.SerializableResult
+package tools.aqua.stars.core.types
 
 /**
- * This interface should be implemented when a metric has a results that should be compared in
- * later/previous evaluations.
+ * Interface for serializable types.
+ *
+ * @param T Type to be serialized/deserialized.
  */
-interface Serializable {
-  /**
-   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
-   * later/previous evaluations.
-   */
-  fun getSerializableResults(): List<SerializableResult>
+interface Serializable<T> {
+  /** Serializes to a [String]. */
+  fun serialize(): String
+
+  /** Deserializes from a [String]. */
+  fun deserialize(str: String): T
 }

@@ -41,7 +41,8 @@ class SerializableSegmentCountMetricTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Evaluate to populate segmentCountMetric with a correct value
     segmentCountMetric.evaluate(simpleSegment)
@@ -66,7 +67,8 @@ class SerializableSegmentCountMetricTest {
             SimpleTickData,
             SimpleSegment,
             SimpleTickDataUnit,
-            SimpleTickDataDifference>()
+            SimpleTickDataDifference,
+        >()
 
     // Evaluate to populate segmentCountMetric with a correct value
     segmentCountMetric.evaluate(simpleSegment)
@@ -79,7 +81,8 @@ class SerializableSegmentCountMetricTest {
     assertTrue(segmentCountResults.any { it.identifier.contains(simpleSegment.segmentSource) })
     assertTrue(segmentCountResults.any { it.identifier.contains(simpleSegment2.segmentSource) })
     assertTrue(
-        segmentCountResults.any { it.identifier.contains(segmentCountMetric.loggerIdentifier) })
+        segmentCountResults.any { it.identifier.contains(segmentCountMetric.loggerIdentifier) }
+    )
 
     // Check concrete values
     val simpleSegmentResult =

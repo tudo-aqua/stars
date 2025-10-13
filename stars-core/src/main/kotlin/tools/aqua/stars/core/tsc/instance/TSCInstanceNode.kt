@@ -42,11 +42,12 @@ class TSCInstanceNode<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val tscNode: TSCNode<E, T, S, U, D>,
     val label: String = tscNode.label,
     val monitorResults: Map<String, Boolean> = emptyMap(),
-    val value: Any = Unit
+    val value: Any = Unit,
 ) {
   /** Edges of this [TSCInstanceNode]. */
   val edges: MutableList<TSCInstanceEdge<E, T, S, U, D>> = mutableListOf()
@@ -58,7 +59,7 @@ class TSCInstanceNode<
   /** Returns a [List] of all [TSCInstanceNode]s that are leaf nodes in the given [currentNode]. */
   fun getLeafNodeEdges(
       currentNode: TSCInstanceNode<E, T, S, U, D>,
-      currentNodeEdge: TSCInstanceEdge<E, T, S, U, D>? = null
+      currentNodeEdge: TSCInstanceEdge<E, T, S, U, D>? = null,
   ): List<TSCInstanceEdge<E, T, S, U, D>> =
       if (currentNodeEdge == null && currentNode.edges.isEmpty()) {
         listOf()
@@ -82,7 +83,9 @@ class TSCInstanceNode<
               currentNode.tscNode,
               currentNode.label,
               currentNode.monitorResults,
-              currentNode.value)) +
+              currentNode.value,
+          )
+      ) +
           if (currentNode.edges.isNotEmpty()) {
             currentNode.edges.flatMap { edge ->
               traverse(edge.destination).map { child ->
@@ -90,7 +93,8 @@ class TSCInstanceNode<
                         currentNode.tscNode,
                         currentNode.label,
                         currentNode.monitorResults,
-                        currentNode.value)
+                        currentNode.value,
+                    )
                     .apply { this.edges += TSCInstanceEdge<E, T, S, U, D>(child, edge.tscEdge) }
               }
             }
@@ -134,14 +138,15 @@ class TSCInstanceNode<
    */
   fun validateMonitors(
       segmentIdentifier: String,
-      label: String = ROOT_NODE_LABEL
+      label: String = ROOT_NODE_LABEL,
   ): List<TSCFailedMonitorInstance<E, T, S, U, D>> =
       validateMonitorsRec(label).map {
         TSCFailedMonitorInstance(
             segmentIdentifier = segmentIdentifier,
             tscInstance = this,
             monitorLabel = it.first,
-            nodeLabel = it.second)
+            nodeLabel = it.second,
+        )
       }
 
   /**

@@ -44,7 +44,8 @@ class TestHistorically {
             expected = e,
             actual = g,
             message =
-                "Unmatched result between Historically ($g) and Once ($e) for phi = $phi with interval $interval")
+                "Unmatched result between Historically ($g) and Once ($e) for phi = $phi with interval $interval",
+        )
       }
     }
   }

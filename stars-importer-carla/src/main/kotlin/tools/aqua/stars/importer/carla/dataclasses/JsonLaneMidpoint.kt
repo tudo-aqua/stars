@@ -43,5 +43,6 @@ data class JsonLaneMidpoint(
       LaneMidpoint(
           distanceToStart = this.distanceToStart,
           location = this.location.toLocation(),
-          rotation = this.rotation.toRotation())
+          rotation = this.rotation.toRotation(),
+      )
 }

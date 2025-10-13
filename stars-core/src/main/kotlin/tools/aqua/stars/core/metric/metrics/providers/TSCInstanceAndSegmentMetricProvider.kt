@@ -38,7 +38,8 @@ interface TSCInstanceAndSegmentMetricProvider<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : EvaluationMetricProvider<E, T, S, U, D> {
+    D : TickDifference<D>,
+> : EvaluationMetricProvider<E, T, S, U, D> {
 
   /**
    * Evaluate the metric based on the given parameter.

@@ -38,7 +38,8 @@ open class TSCLeafNode<
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     label: String,
     monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
@@ -50,4 +51,5 @@ open class TSCLeafNode<
         monitorsMap = monitorsMap,
         projectionsMap = projectionsMap,
         valueFunction = valueFunction,
-        bounds = 0 to 0)
+        bounds = 0 to 0,
+    )

@@ -52,7 +52,8 @@ class ListExtensionsTest {
             listOf(0, 1),
             listOf(0, 2),
             listOf(1, 2),
-            listOf(0, 1, 2))
+            listOf(0, 1, 2),
+        )
     assert(result == expected)
   }
 
@@ -77,8 +78,7 @@ class ListExtensionsTest {
         )
 
     assert(
-        result.size == expected.size &&
-            result.containsAll(expected) &&
-            expected.containsAll(result))
+        result.size == expected.size && result.containsAll(expected) && expected.containsAll(result)
+    )
   }
 }

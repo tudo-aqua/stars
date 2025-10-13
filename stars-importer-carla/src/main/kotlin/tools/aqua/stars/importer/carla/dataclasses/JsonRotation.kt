@@ -32,7 +32,7 @@ import tools.aqua.stars.data.av.dataclasses.Rotation
 data class JsonRotation(
     @SerialName("pitch") val pitch: Double = 0.0,
     @SerialName("yaw") val yaw: Double = 0.0,
-    @SerialName("roll") val roll: Double = 0.0
+    @SerialName("roll") val roll: Double = 0.0,
 ) {
 
   /** Converts [JsonRotation] to [Rotation]. */

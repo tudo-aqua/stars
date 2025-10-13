@@ -40,11 +40,12 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> pastMinPrevalence(
+    D : TickDifference<D>,
+> pastMinPrevalence(
     tickData: T,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
+    phi: (T) -> Boolean,
 ): Boolean {
   checkInterval(interval)
   checkPercentage(percentage)
@@ -58,9 +59,11 @@ fun <
       (0..nowIndex).count { currentIndex ->
         val currentTickData = segment.tickData[currentIndex]
 
-        if (interval != null &&
-            (currentTickData.currentTick > now - interval.first ||
-                currentTickData.currentTick <= now - interval.second))
+        if (
+            interval != null &&
+                (currentTickData.currentTick > now - interval.first ||
+                    currentTickData.currentTick <= now - interval.second)
+        )
             return@count false
 
         tickCount++
@@ -92,17 +95,19 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> pastMinPrevalence(
+    D : TickDifference<D>,
+> pastMinPrevalence(
     entity: E1,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (E1) -> Boolean
+    phi: (E1) -> Boolean,
 ): Boolean =
     pastMinPrevalence(
         tickData = entity.tickData,
         percentage = percentage,
         interval = interval,
-        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true })
+        phi = { td -> td.getEntityById(entity.id)?.let { phi(it as E1) } == true },
+    )
 
 /**
  * CMFTBL implementation of the 'minPrevalence' operator for two entities i.e. "In all past ticks in
@@ -129,12 +134,13 @@ fun <
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> pastMinPrevalence(
+    D : TickDifference<D>,
+> pastMinPrevalence(
     entity1: E1,
     entity2: E2,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (E1, E2) -> Boolean
+    phi: (E1, E2) -> Boolean,
 ): Boolean {
   require(entity1.tickData == entity2.tickData) {
     "the two entities provided as argument are not from same tick"
@@ -148,5 +154,6 @@ fun <
         val pastEntity2 = td.getEntityById(entity2.id)
         if (pastEntity1 == null || pastEntity2 == null) false
         else phi(pastEntity1 as E1, pastEntity2 as E2)
-      })
+      },
+  )
 }

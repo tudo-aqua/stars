@@ -37,5 +37,5 @@ data class ContactArea(
     val lane1EndPos: Double,
     val lane2: Lane,
     val lane2StartPos: Double,
-    val lane2EndPos: Double
+    val lane2EndPos: Double,
 )

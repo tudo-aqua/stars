@@ -30,5 +30,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SerializableTSCOccurrence(
     val tscInstance: SerializableTSCNode,
-    val segmentIdentifiers: List<String>
+    val segmentIdentifiers: List<String>,
 )

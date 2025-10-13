@@ -32,5 +32,5 @@ data class JsonTickData(
     @SerialName("current_tick") val currentTick: Double = 0.0,
     @SerialName("actor_positions") val actorPositions: List<JsonActorPosition> = emptyList(),
     @SerialName("weather_parameters")
-    val weatherParameters: JSonDataWeatherParameters = JSonDataWeatherParameters()
+    val weatherParameters: JSonDataWeatherParameters = JSonDataWeatherParameters(),
 )
