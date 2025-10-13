@@ -44,6 +44,10 @@ All notable changes to this project will be documented in this file.
 
 - Fix range bug in `PlotDataSaver.getCSVString()`
 
+### Removed
+
+- Removed comparison to baseline functionality.
+
 ## [0.5] - 06.11.2024
 
 ### Added
