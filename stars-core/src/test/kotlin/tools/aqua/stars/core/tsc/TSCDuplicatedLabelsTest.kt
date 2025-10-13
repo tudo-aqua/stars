@@ -29,7 +29,11 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated node labels on same level throwing exception`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
       > {
         all("root") {
           projections { projection("all") }
@@ -60,7 +64,11 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated projection labels on same level throwing exception`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
       > {
         all("root") {
           projections {
@@ -76,7 +84,11 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated projection labels on same level throwing exception 2`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
       > {
         all("root") {
           projections {
@@ -94,7 +106,11 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated monitor labels on same level throwing exception`() {
     assertFailsWith<IllegalStateException> {
-      tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
       > {
         all("root") {
           monitors {

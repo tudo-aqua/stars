@@ -33,7 +33,11 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with fail policy OK`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           any("") {}
         }
@@ -53,7 +57,11 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with fail policy SKIP`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           any("") {}
         }
@@ -73,7 +81,11 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with fail policy ABORT`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           any("") {}
         }
@@ -91,7 +103,11 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with #nodes equal to minNodes`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           any("") {}
         }
@@ -111,7 +127,11 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with #nodes greater than minNodes`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           any("") { any("") {} }
         }
@@ -131,8 +151,13 @@ class MinNodesInTSCHookTest {
   @Test
   fun `Test MinNodesInTSCHook with #nodes negative`() {
     assertFailsWith<IllegalArgumentException> {
-      MinNodesInTSCHook<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
-      >(    minNodes = -1
+      MinNodesInTSCHook<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+      >(
+          minNodes = -1
       )
     }
   }

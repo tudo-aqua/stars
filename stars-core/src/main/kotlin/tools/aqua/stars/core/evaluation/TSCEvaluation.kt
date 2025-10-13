@@ -34,14 +34,13 @@ import tools.aqua.stars.core.metric.metrics.providers.Loggable
 import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.Plottable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
-import tools.aqua.stars.core.metric.serialization.extensions.compareToBaselineResults
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
 import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
@@ -233,15 +232,15 @@ class TSCEvaluation<
         }
 
         val tscEvaluationTime = measureTime {
-        tscListToEvaluate.forEach { tsc ->
-          metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
-            it.evaluate(tsc)
+          tscListToEvaluate.forEach { tsc ->
+            metricProviders.filterIsInstance<TSCMetricProvider<E, T, U, D>>().forEach {
+              it.evaluate(tsc)
+            }
           }
         }
-      }
-      logInfo("The evaluation of all TSCs took: $tscEvaluationTime")
+        logInfo("The evaluation of all TSCs took: $tscEvaluationTime")
 
-      // Evaluate all ticks
+        // Evaluate all ticks
         val evaluationTime = measureTime {
           ticks.forEach { tickSequence ->
             tickSequence.computeWhile { tick ->

@@ -19,34 +19,37 @@ package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.tsc.instance.TSCInstance
+import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
 
 /**
- * The [TSCInstanceAndSegmentMetricProvider] implements the [EvaluationMetricProvider] and provides
- * an [evaluate] function which gets a [TSC] and the current [SegmentType] and is called during the
- * evaluation phase.
+ * The [TSCAndTSCInstanceAndTickMetricProvider] implements the [EvaluationMetricProvider] and
+ * provides an [evaluate] function which gets a [TSC], a [TSCInstance] and the current
+ * [TickDataType] and is called during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface TSCAndSegmentMetricProvider<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+interface TSCAndTSCInstanceAndTickMetricProvider<
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> : EvaluationMetricProvider<E, T, S, U, D> {
+> : EvaluationMetricProvider<E, T, U, D> {
 
   /**
    * Evaluate the metric based on the given parameter.
    *
    * @param tsc The current [TSC].
-   * @param segment The current [SegmentType].
+   * @param tscInstance The current [TSCInstance].
+   * @param tick The current [TickDataType].
    * @return The evaluation result.
    */
-  fun evaluate(tsc: TSC<E, T, S, U, D>, segment: S): Any?
+  fun evaluate(tsc: TSC<E, T, U, D>, tscInstance: TSCInstance<E, T, U, D>, tick: T): Any?
 }

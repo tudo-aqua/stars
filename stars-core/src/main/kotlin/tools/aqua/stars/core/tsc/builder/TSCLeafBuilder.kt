@@ -107,7 +107,7 @@ open class TSCLeafBuilder<
       D : TickDifference<D>,
   > TSCLeafBuilder<E, T, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, U, D>.() -> Unit = {}
-  ): TSCProjectionsBuilder<E, T, S, U, D> =
+  ): TSCProjectionsBuilder<E, T, U, D> =
       TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**

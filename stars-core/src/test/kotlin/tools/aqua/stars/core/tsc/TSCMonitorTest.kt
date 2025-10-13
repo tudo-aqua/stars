@@ -33,7 +33,11 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on root node`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           all("root") {
             projections { projectionRecursive("all") }
@@ -70,7 +74,11 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on leaf node`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           all("root") {
             projections { projectionRecursive("all") }
@@ -109,7 +117,11 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on root and leaf node`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           all("root") {
             projections { projectionRecursive("all") }
@@ -160,7 +172,11 @@ class TSCMonitorTest {
   @Test
   fun `Test monitor on root and leaf node with identical label`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
         > {
           all("root") {
             projections { projectionRecursive("all") }

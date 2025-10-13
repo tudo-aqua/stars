@@ -19,7 +19,7 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableIntResult
@@ -50,7 +50,7 @@ class TickCountMetric<
 >(
     override val loggerIdentifier: String = "tick-count",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TickMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
+) : TickMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /** Holds the count of [TickDataType]s that are analyzed. */
   private var tickCount: Int = 0
 

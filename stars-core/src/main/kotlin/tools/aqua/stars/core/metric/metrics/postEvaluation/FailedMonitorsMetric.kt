@@ -95,8 +95,7 @@ class FailedMonitorsMetric<
 
       logFine("Failed monitors for tsc '${tsc.identifier}':")
       failedMonitors.forEach { failedMonitor ->
-        logFine("Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.identifier}"
-        )
+        logFine("Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.identifier}")
         logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }

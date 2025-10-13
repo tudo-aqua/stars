@@ -35,11 +35,7 @@ interface TickMetricProvider<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-<<<<<<<< HEAD:stars-core/src/main/kotlin/tools/aqua/stars/core/metric/metrics/providers/TickMetricProvider.kt
 > : EvaluationMetricProvider<E, T, U, D> {
-========
-> : EvaluationMetricProvider<E, T, S, U, D> {
->>>>>>>> main:stars-core/src/main/kotlin/tools/aqua/stars/core/metric/metrics/providers/SegmentMetricProvider.kt
 
   /**
    * Evaluate the metric based on the given parameter.
