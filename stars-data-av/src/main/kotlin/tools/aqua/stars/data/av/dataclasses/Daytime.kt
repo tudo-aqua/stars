@@ -17,8 +17,15 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Enum for the current daytime. */
+/**
+ * Enum for the current daytime.
+ *
+ * Mirrors the corresponding presets in the CARLA Python API.
+ */
 enum class Daytime {
+  /** Bright daylight / sun high in the sky. */
   Noon,
+
+  /** Low sun angle / golden hour conditions. */
   Sunset,
 }

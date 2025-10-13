@@ -39,6 +39,8 @@ open class PreSegmentEvaluationHook<
     D : TickDifference<D>,
 >(identifier: String, evaluationFunction: (S) -> EvaluationHookResult) :
     EvaluationHook<S>(identifier = identifier, evaluationFunction = evaluationFunction) {
+
+  /** Companion object containing utility methods for working with [PreSegmentEvaluationHook]. */
   companion object {
     /**
      * Executes all [PreSegmentEvaluationHook]s on the [segment].

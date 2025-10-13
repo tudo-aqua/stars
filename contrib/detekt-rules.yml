@@ -154,7 +154,7 @@ naming:
   # Mostly enabled. Rationale: principle of the least surprise
   active: true
   BooleanPropertyNaming:
-    active: true
+    active: false
   ClassNaming:
     active: true
   ConstructorParameterNaming:
@@ -394,7 +394,7 @@ style:
     # Rationale: improves legibility
     active: true
   UnnecessaryAbstractClass:
-    active: true
+    active: false
   UnnecessaryAnnotationUseSiteTarget:
     active: true
   UnnecessaryApply:

@@ -17,12 +17,22 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Enum for vehicle types. */
+/**
+ * Vehicle classes used for categorizing actors and assets.
+ *
+ * Values mirror the CARLA Python API.
+ */
 enum class VehicleType {
+  /** Passenger car. */
   CAR,
+  /** Heavy goods vehicle. */
   TRUCK,
+  /** Light commercial van. */
   VAN,
+  /** Bus / coach. */
   BUS,
+  /** Motorbike. */
   MOTORCYCLE,
+  /** Bicycle. */
   BICYCLE,
 }

@@ -138,7 +138,11 @@ class MissedPredicateCombinationsPerTSCMetric<
       // as they do not represent a predicate
       val predicateTraversals =
           t.traverse()
-              .filter { it.getLeafNodeEdges(it).any { it.tscEdge.condition != CONST_TRUE } }
+              .filter { instance ->
+                instance.getLeafNodeEdges(instance).any { leafNode ->
+                  leafNode.tscEdge.condition != CONST_TRUE
+                }
+              }
               .map { it.toString() }
       // Combine all TSCEdges with each other
       predicateTraversals.forEach { predicatePath1 ->
@@ -153,14 +157,16 @@ class MissedPredicateCombinationsPerTSCMetric<
   }
 
   override fun getSerializableResults(): List<SerializablePredicateCombinationResult> =
-      evaluationResultCache?.map { (tsc, predicates) ->
-        val resultList = predicates.map { it.predicate1 to it.predicate2 }
-        SerializablePredicateCombinationResult(
-            identifier = tsc.identifier,
-            source = loggerIdentifier,
-            tsc = SerializableTSCNode(tsc.rootNode),
-            count = resultList.size,
-            value = resultList,
-        )
-      } ?: emptyList()
+      evaluationResultCache
+          ?.map { (tsc, predicates) ->
+            val resultList = predicates.map { it.predicate1 to it.predicate2 }
+            SerializablePredicateCombinationResult(
+                identifier = tsc.identifier,
+                source = loggerIdentifier,
+                tsc = SerializableTSCNode(tsc.rootNode),
+                count = resultList.size,
+                value = resultList,
+            )
+          }
+          .orEmpty()
 }

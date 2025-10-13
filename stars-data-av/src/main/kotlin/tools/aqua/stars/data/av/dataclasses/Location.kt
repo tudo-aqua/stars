@@ -29,6 +29,7 @@ import kotlin.math.sqrt
  * @see Vector3D
  */
 data class Location(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
+  /** Companion object for [Location]. */
   companion object {
     /**
      * Calculates the Euclidean distance between two locations, i.e., the square root of the sum of

@@ -128,7 +128,8 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>,
   > TSCBoundedBuilder<E, T, S, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ) = TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.also { this.projections = it.build() }
+  ): TSCProjectionsBuilder<E, T, S, U, D> =
+      TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
    * DSL function for the monitors block.
@@ -149,7 +150,8 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>,
   > TSCBoundedBuilder<E, T, S, U, D>.monitors(
       init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ) = TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.also { this.monitors = it.build() }
+  ): TSCMonitorsBuilder<E, T, S, U, D> =
+      TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.also { this.monitors = it.build() }
 
   /**
    * DSL function for an edge with BoundedNode.

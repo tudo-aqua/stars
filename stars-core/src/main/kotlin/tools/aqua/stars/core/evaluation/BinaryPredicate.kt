@@ -83,6 +83,7 @@ class BinaryPredicate<
           entity2.id,
       )
 
+  /** Companion object containing utility methods for working with [BinaryPredicate]. */
   companion object {
     /**
      * Creates a binary tick predicate in this context.
