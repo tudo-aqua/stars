@@ -25,7 +25,7 @@ import tools.aqua.stars.core.metric.metrics.providers.Plottable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
@@ -43,8 +43,8 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class implements the
- * [tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider] and tracks
- * the occurred valid [TSCInstance] for each [TSC].
+ * [tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceMetricProvider] and tracks the
+ * occurred valid [TSCInstance] for each [TSC].
  *
  * This class implements the
  * [tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider] which evaluates the
@@ -78,7 +78,7 @@ class ValidTSCInstancesPerTSCMetric<
     override val loggerIdentifier: String = "valid-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) :
-    TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>,
+    TSCAndTSCInstanceMetricProvider<E, T, U, D>,
     PostEvaluationMetricProvider<E, T, U, D>,
     Stateful,
     SerializableMetric,

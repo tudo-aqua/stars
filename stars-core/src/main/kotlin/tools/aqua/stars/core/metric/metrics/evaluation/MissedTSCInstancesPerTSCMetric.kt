@@ -23,7 +23,7 @@ import kotlin.collections.component2
 import tools.aqua.stars.core.metric.metrics.providers.Loggable
 import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
@@ -34,8 +34,8 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 
 /**
- * This class implements the [TSCAndTSCInstanceNodeMetricProvider] and tracks the missed
- * [TSCInstance]s for each [TSC].
+ * This class implements the [TSCAndTSCInstanceMetricProvider] and tracks the missed [TSCInstance]s
+ * for each [TSC].
  *
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
  * [List] of missed [TSCInstance]s.
@@ -61,7 +61,7 @@ class MissedTSCInstancesPerTSCMetric<
 >(
     override val loggerIdentifier: String = "missed-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
+) : TSCAndTSCInstanceMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /**
    * Map a [TSC] to a map in which the missed valid [TSCInstanceNode]s are stored:
    * Map<tsc,Map<referenceInstance,missed>>.

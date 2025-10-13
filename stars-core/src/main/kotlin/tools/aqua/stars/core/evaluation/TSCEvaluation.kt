@@ -36,7 +36,9 @@ import tools.aqua.stars.core.metric.metrics.providers.Plottable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceAndTickMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndTickMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TickMetricProvider
@@ -224,13 +226,6 @@ class TSCEvaluation<
       val tscListToEvaluate = filterTSCs() ?: return
       if (tscListToEvaluate.isNotEmpty()) {
 
-        // Run the "evaluate" function for all TSCMetricProviders
-        tscListToEvaluate.forEach { tsc ->
-          metricProviders.forEachInstance<TSCMetricProvider<E, T, U, D>> { metric ->
-            metric.evaluate(tsc)
-          }
-        }
-
         val tscEvaluationTime = measureTime {
           tscListToEvaluate.forEach { tsc ->
             metricProviders.filterIsInstance<TSCMetricProvider<E, T, U, D>>().forEach {
@@ -308,16 +303,20 @@ class TSCEvaluation<
           // Evaluate the TSC on the current tick.
           val tscInstance = tsc.evaluate(tick)
 
-          // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-          // current tsc instance
           metricProviders.forEachInstance<TSCInstanceMetricProvider<E, T, U, D>> {
             it.evaluate(tscInstance)
           }
 
-          // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
-          // current tsc and instance
-          metricProviders.forEachInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>> {
+          metricProviders.forEachInstance<TSCInstanceAndTickMetricProvider<E, T, U, D>> {
+            it.evaluate(tscInstance, tick)
+          }
+
+          metricProviders.forEachInstance<TSCAndTSCInstanceMetricProvider<E, T, U, D>> {
             it.evaluate(tsc, tscInstance)
+          }
+
+          metricProviders.forEachInstance<TSCAndTSCInstanceAndTickMetricProvider<E, T, U, D>> {
+            it.evaluate(tsc, tscInstance, tick)
           }
         }
         logFiner(
