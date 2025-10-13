@@ -291,7 +291,7 @@ class TSCEvaluation<
               it.evaluate(tsc, segment)
             }
 
-            /** Holds the PredicateContext for the current segment */
+            /** Holds the PredicateContext for the current segment. */
             val context = PredicateContext(segment)
 
             /**
