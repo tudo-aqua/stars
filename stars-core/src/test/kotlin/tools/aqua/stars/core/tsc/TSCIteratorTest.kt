@@ -27,7 +27,8 @@ class TSCIteratorTest {
   @Test
   fun `Test TSC Iterator`() {
     val tsc =
-        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
+        tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference,
+        > {
           all("root") {
             exclusive("exclusive") {
               leaf("leaf_exclusive_1")

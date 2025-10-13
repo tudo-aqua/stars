@@ -52,7 +52,8 @@ open class TSCMonitorsBuilder<
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCMonitorsBuilder<E, T, U, D>.monitor(label: String, condition: (T) -> Boolean) {
+  > TSCMonitorsBuilder<E, T, U, D>.monitor(label: String, condition: (T) -> Boolean,
+  ) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
     monitorMap[label] = condition
   }

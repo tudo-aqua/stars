@@ -47,6 +47,7 @@ data class Location(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.
   operator fun minus(other: Vector3D): Location =
       Location(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
 
+  /** Companion object for [Location]. */
   companion object {
     /**
      * Calculates the Euclidean distance between two locations, i.e., the square root of the sum of

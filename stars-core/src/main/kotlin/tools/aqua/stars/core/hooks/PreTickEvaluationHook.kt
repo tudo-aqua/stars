@@ -37,6 +37,8 @@ open class PreTickEvaluationHook<
     D : TickDifference<D>,
 >(identifier: String, evaluationFunction: (T) -> EvaluationHookResult) :
     EvaluationHook<T>(identifier = identifier, evaluationFunction = evaluationFunction) {
+
+  /** Companion object containing utility methods for working with [PreSegmentEvaluationHook]. */
   companion object {
     /**
      * Executes all [PreTickEvaluationHook]s on the [List] of [TickDataType]s and returns an

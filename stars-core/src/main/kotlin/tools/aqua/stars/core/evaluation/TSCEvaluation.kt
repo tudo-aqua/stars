@@ -67,8 +67,6 @@ import tools.aqua.stars.core.types.*
  * @property writePlotDataCSV (Default: ``false``) Whether to write CSV files after the analysis.
  * @property writeSerializedResults (Default: ``true``) Whether to write result files and compare
  *   them to previous runs after the analysis.
- * @property compareToBaselineResults (Default: ``false``) Whether to compare the results to the
- *   baseline results.
  * @property compareToPreviousRun (Default: ``false``) Whether to compare the results to the
  *   previous run.
  * @property loggerIdentifier identifier (name) for the logger.
@@ -84,7 +82,6 @@ class TSCEvaluation<
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
     val writeSerializedResults: Boolean = true,
-    val compareToBaselineResults: Boolean = false,
     val compareToPreviousRun: Boolean = false,
     override val loggerIdentifier: String = "evaluation-time",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
@@ -92,21 +89,6 @@ class TSCEvaluation<
 
   /** Mutex. */
   private val mutex: Any = Any()
-
-  /**
-   * Holds the aggregated [Boolean] verdict of all compared results with the baseline data. Setting
-   * a new value will be conjugated with the old value such that a verdict 'false' may not be
-   * changed to 'true' again.
-   */
-  var resultsReproducedFromBaseline: Boolean? = null
-    set(value) {
-      synchronized(mutex) {
-        when {
-          field == null -> field = value
-          field != null && value != null -> field = field!! && value
-        }
-      }
-    }
 
   /**
    * Holds the aggregated [Boolean] verdict of all compared results with the previous evaluation
@@ -118,12 +100,15 @@ class TSCEvaluation<
       synchronized(mutex) {
         when {
           field == null -> field = value
-          field != null && value != null -> field = field!! && value
+          field != null && value != null -> field = checkNotNull(field) && value
         }
       }
     }
 
-  /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
+  /**
+   * Holds a [List] of all [tools.aqua.stars.core.metric.metrics.providers.MetricProvider]s
+   * registered by [registerMetricProviders].
+   */
   private val metricProviders: MutableList<MetricProvider<E, T, U, D>> = mutableListOf()
 
   /** Holds the results of the [PreTSCEvaluationHook]s after calling [runEvaluation]. */
@@ -247,7 +232,16 @@ class TSCEvaluation<
           }
         }
 
-        // Evaluate all ticks
+        val tscEvaluationTime = measureTime {
+        tscListToEvaluate.forEach { tsc ->
+          metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
+            it.evaluate(tsc)
+          }
+        }
+      }
+      logInfo("The evaluation of all TSCs took: $tscEvaluationTime")
+
+      // Evaluate all ticks
         val evaluationTime = measureTime {
           ticks.forEach { tickSequence ->
             tickSequence.computeWhile { tick ->
@@ -362,7 +356,7 @@ class TSCEvaluation<
       metricProviders.forEachInstance<Plottable> { it.writePlotDataCSV() }
     }
 
-    val serializableMetrics = metricProviders.filterIsInstance<Serializable>()
+    val serializableMetrics = metricProviders.filterIsInstance<SerializableMetric>()
     if (serializableMetrics.any()) {
       ApplicationConstantsHolder.writeMetaInfo("$logFolder/$applicationStartTimeString/")
 
@@ -373,19 +367,6 @@ class TSCEvaluation<
             "$serializedResultsFolder/$applicationStartTimeString/"
         )
         serializableMetrics.forEach { t -> t.writeSerializedResults() }
-      }
-
-      // Compare the results to the baseline
-      if (compareToBaselineResults) {
-        println("Comparing to baseline")
-        ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/"
-        )
-        serializableMetrics.compareToBaselineResults().let {
-          resultsReproducedFromBaseline = it.noMismatch()
-
-          if (writeSerializedResults) it.saveAsJsonFiles(comparedToBaseline = true)
-        }
       }
 
       // Compare the results to the latest run

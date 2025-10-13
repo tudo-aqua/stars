@@ -29,7 +29,7 @@ sealed class EvaluationHook<T>(
     val identifier: String,
     val evaluationFunction: (T) -> EvaluationHookResult,
 ) {
-  /** Static functions. */
+  /** Companion object containing utility methods for working with [EvaluationHook]. */
   companion object {
     /**
      * Evaluates given the results map by grouping them by [EvaluationHookResult] and returning the
@@ -40,15 +40,15 @@ sealed class EvaluationHook<T>(
       val groupedResults = this.toList().groupBy({ it.second }, { it.first })
 
       // Abort the evaluation and throw exception if any hook returns ABORT
-      val abortingHooks = groupedResults[EvaluationHookResult.ABORT] ?: emptyList()
+      val abortingHooks = groupedResults[EvaluationHookResult.ABORT].orEmpty()
       if (abortingHooks.isNotEmpty()) return Pair(EvaluationHookResult.ABORT, abortingHooks)
 
       // Cancel the evaluation if any hook returns CANCEL
-      val cancelingHooks = groupedResults[EvaluationHookResult.CANCEL] ?: emptyList()
+      val cancelingHooks = groupedResults[EvaluationHookResult.CANCEL].orEmpty()
       if (cancelingHooks.isNotEmpty()) return Pair(EvaluationHookResult.CANCEL, cancelingHooks)
 
       // Skip all TSCs that have a hook returning SKIP
-      val skippingHooks = groupedResults[EvaluationHookResult.SKIP] ?: emptyList()
+      val skippingHooks = groupedResults[EvaluationHookResult.SKIP].orEmpty()
       if (skippingHooks.isNotEmpty()) return Pair(EvaluationHookResult.SKIP, skippingHooks)
 
       return Pair(EvaluationHookResult.OK, this.keys)

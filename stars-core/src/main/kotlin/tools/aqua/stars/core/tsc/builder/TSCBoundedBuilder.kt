@@ -115,7 +115,8 @@ open class TSCBoundedBuilder<
       D : TickDifference<D>,
   > TSCBoundedBuilder<E, T, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, U, D>.() -> Unit = {}
-  ) = TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
+  ): TSCProjectionsBuilder<E, T, S, U, D> =
+      TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
    * DSL function for the monitors block.

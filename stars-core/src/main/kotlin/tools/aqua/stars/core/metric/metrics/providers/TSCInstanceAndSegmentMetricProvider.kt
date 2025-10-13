@@ -18,34 +18,35 @@
 package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.*
 
 /**
- * The [TickMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
- * function which gets a tick which is called during the evaluation phase.
+ * The [TSCInstanceAndSegmentMetricProvider] implements the [EvaluationMetricProvider] and provides
+ * an [evaluate] function which gets a [TSCInstance] and the current [TickDataType] and is called
+ * during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
+ * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface TickMetricProvider<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+interface TSCInstanceAndSegmentMetricProvider<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-<<<<<<<< HEAD:stars-core/src/main/kotlin/tools/aqua/stars/core/metric/metrics/providers/TickMetricProvider.kt
-> : EvaluationMetricProvider<E, T, U, D> {
-========
 > : EvaluationMetricProvider<E, T, S, U, D> {
->>>>>>>> main:stars-core/src/main/kotlin/tools/aqua/stars/core/metric/metrics/providers/SegmentMetricProvider.kt
 
   /**
    * Evaluate the metric based on the given parameter.
    *
-   * @param tick The current [TickDataType].
+   * @param tscInstance The current [TSCInstance].
+   * @param segment The current [SegmentType].
    * @return The evaluation result.
    */
-  fun evaluate(tick: T): Any?
+  fun evaluate(tscInstance: TSCInstance<E, T, S, U, D>, segment: S): Any?
 }

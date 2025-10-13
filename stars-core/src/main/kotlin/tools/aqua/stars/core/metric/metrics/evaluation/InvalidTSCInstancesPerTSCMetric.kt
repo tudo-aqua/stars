@@ -19,7 +19,7 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
@@ -39,8 +39,8 @@ import tools.aqua.stars.core.types.*
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
  * [List] of invalid [TSCInstance]s.
  *
- * This class implements the [Serializable] interface. It serializes all invalid [TSCInstance] for
- * their respective [TSC].
+ * This class implements the [SerializableMetric] interface. It serializes all invalid [TSCInstance]
+ * for their respective [TSC].
  *
  * This class implements [Loggable] and logs the final [Map] of invalid [TSCInstance]s for [TSC]s.
  *
@@ -60,7 +60,7 @@ class InvalidTSCInstancesPerTSCMetric<
 >(
     override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
+) : TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<
@@ -109,6 +109,7 @@ class InvalidTSCInstancesPerTSCMetric<
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
           "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size}"
+
       )
 
       logFine(

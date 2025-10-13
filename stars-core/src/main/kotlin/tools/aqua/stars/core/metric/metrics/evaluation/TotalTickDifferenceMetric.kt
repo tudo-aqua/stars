@@ -30,8 +30,8 @@ import tools.aqua.stars.core.types.*
  * This class implements the [TickMetricProvider] and tracks the total [TickDifference] of all
  * analyzed ticks.
  *
- * This class implements the [Serializable] interface. It serializes the [totalTickDifference] for
- * all analyzed ticks.
+ * This class implements the [SerializableMetric] interface. It serializes the [totalTickDifference]
+ * for all analyzed ticks.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -49,7 +49,7 @@ class TotalTickDifferenceMetric<
 >(
     override val loggerIdentifier: String = "total-tick-difference",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TickMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
+) : TickMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /** Holds the current [TickDifference] for all already analyzed ticks. */
   private var totalTickDifference: D? = null
 

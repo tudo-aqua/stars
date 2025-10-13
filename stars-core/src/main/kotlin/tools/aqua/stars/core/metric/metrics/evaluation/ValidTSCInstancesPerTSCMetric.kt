@@ -53,8 +53,8 @@ import tools.aqua.stars.core.types.*
  * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Stateful] interface.
  * Its state contains the [Map] of [TSC]s to a [List] of valid [TSCInstance]s.
  *
- * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Serializable]
- * interface. It serializes all valid [TSCInstance] for their respective [TSC].
+ * This class implements the [SerializableMetric] interface. It serializes all valid [TSCInstance]
+ * for their respective [TSC].
  *
  * This class implements [tools.aqua.stars.core.metric.metrics.providers.Loggable] and logs the
  * final [Map] of invalid [TSCInstance]s for [TSC]s.
@@ -81,7 +81,7 @@ class ValidTSCInstancesPerTSCMetric<
     TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>,
     PostEvaluationMetricProvider<E, T, U, D>,
     Stateful,
-    Serializable,
+    SerializableMetric,
     Loggable,
     Plottable {
   /**

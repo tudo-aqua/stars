@@ -21,7 +21,7 @@ import java.util.logging.Logger
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metric.metrics.providers.Loggable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.Serializable
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorInstance
 import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorsResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
@@ -60,7 +60,7 @@ class FailedMonitorsMetric<
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : PostEvaluationMetricProvider<E, T, U, D>, Serializable, Loggable {
+) : PostEvaluationMetricProvider<E, T, U, D>, SerializableMetric, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
   val failedMonitors: MutableMap<TSC<E, T, U, D>, List<TSCFailedMonitorInstance<E, T, U, D>>> =
@@ -95,7 +95,8 @@ class FailedMonitorsMetric<
 
       logFine("Failed monitors for tsc '${tsc.identifier}':")
       failedMonitors.forEach { failedMonitor ->
-        logFine("Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.identifier}")
+        logFine("Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.identifier}"
+        )
         logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }

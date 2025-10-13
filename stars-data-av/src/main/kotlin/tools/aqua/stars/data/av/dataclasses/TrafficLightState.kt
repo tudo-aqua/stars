@@ -18,19 +18,33 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Enum for traffic light states.
+ * Traffic light states.
  *
- * @property value Internal json value.
+ * The integer codes mirror the **CARLA Python API**.
+ *
+ * @property value CARLA's integer identifier for this state (as serialized in JSON).
  */
 enum class TrafficLightState(val value: Int) {
+  /** Red light: stop. */
   Red(0),
+  /** Yellow/amber: prepare to stop. */
   Yellow(1),
+  /** Green: proceed if safe. */
   Green(2),
+  /** Signal off / unlit. */
   Off(3),
+  /** Unknown or not detected. */
   Unknown(4);
 
+  /** Companion object for the [TrafficLightState] class. */
   companion object {
-    /** Retrieves [TrafficLightState] by internal value. */
+    /**
+     * Returns the [TrafficLightState] that matches the given CARLA integer ID.
+     *
+     * @param value CARLA's integer identifier (as found in JSON).
+     * @return The matching [TrafficLightState].
+     * @throws NoSuchElementException if no matching value exists.
+     */
     fun getByValue(value: Int): TrafficLightState = entries.first { it.value == value }
   }
 }

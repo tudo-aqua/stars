@@ -75,10 +75,10 @@ val previousResults: Map<String, List<SerializableResult>>
  *   Otherwise, null.
  */
 fun getPreviousSerializationResultDirectory(): File? =
-    File(serializedResultsFolder)
-        .listFiles()
-        ?.filter { it.name != baselineDirectory && it.name != applicationStartTimeString }
-        ?.maxByOrNull { it.name }
+    File(serializedResultsFolder).listFiles()?.run {
+      filter { it.name != baselineDirectory && it.name != applicationStartTimeString }
+          .maxByOrNull { it.name }
+    }
 
 /**
  * Returns a deserialized [SerializableResult] for the given [file].
@@ -122,6 +122,9 @@ fun getJsonContentFromString(content: String): SerializableResult =
  * @return A map of [SerializableResult.source]s and their respective serialized results.
  */
 fun getSerializedResults(root: File?): Map<String, List<SerializableResult>> =
-    root?.listFiles()?.associate { sourceDir ->
-      sourceDir.name to (sourceDir.listFiles()?.map { getJsonContentOfFile(it) } ?: emptyList())
-    } ?: emptyMap()
+    root
+        ?.listFiles()
+        ?.associate { sourceDir ->
+          sourceDir.name to (sourceDir.listFiles()?.map { getJsonContentOfFile(it) }.orEmpty())
+        }
+        .orEmpty()

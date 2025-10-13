@@ -61,7 +61,7 @@ class NullaryPredicate<
    */
   fun holds(tick: T): Boolean = this.eval(tick)
 
-  /** Creates a nullary tick predicate. */
+  /** Companion object containing utility methods for working with [NullaryPredicate]. */
   companion object {
     /**
      * Creates a nullary tick predicate.

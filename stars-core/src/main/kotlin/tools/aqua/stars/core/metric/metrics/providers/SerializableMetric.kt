@@ -15,17 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.data.av.dataclasses
+package tools.aqua.stars.core.metric.metrics.providers
+
+import tools.aqua.stars.core.metric.serialization.SerializableResult
 
 /**
- * Enum for the current daytime.
- *
- * Mirrors the corresponding presets in the CARLA Python API.
+ * This interface should be implemented when a metric has a results that should be compared in
+ * later/previous evaluations.
  */
-enum class Daytime {
-  /** Bright daylight / sun high in the sky. */
-  Noon,
-
-  /** Low sun angle / golden hour conditions. */
-  Sunset,
+interface SerializableMetric {
+  /**
+   * Returns the [List] of all [SerializableResult]s that are relevant for comparison with
+   * later/previous evaluations.
+   */
+  fun getSerializableResults(): List<SerializableResult>
 }

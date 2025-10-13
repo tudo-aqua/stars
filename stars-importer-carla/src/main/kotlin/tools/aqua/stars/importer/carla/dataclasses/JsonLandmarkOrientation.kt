@@ -21,14 +21,21 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for landmark orientations.
+ * JSON enum for the orientation of a landmark relative to lane direction.
  *
- * @property value Json value.
+ * The numeric codes mirror the **CARLA Python API**.
+ *
+ * @property value Numeric code as present in CARLA JSON. Also encoded in [SerialName].
  */
 @Suppress("unused")
 @Serializable
 enum class JsonLandmarkOrientation(val value: Int) {
+  /** Oriented along the positive (forward) lane direction. */
   @SerialName("0") Positive(0),
+
+  /** Oriented along the negative (opposite) lane direction. */
   @SerialName("1") Negative(1),
+
+  /** Applies to both directions. */
   @SerialName("2") Both(2),
 }

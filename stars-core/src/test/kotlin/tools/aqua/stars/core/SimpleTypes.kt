@@ -57,8 +57,9 @@ class SimpleTickData(
  * @property tickValue The tick value in milliseconds.
  */
 class SimpleTickDataUnit(val tickValue: Long) :
-    TickUnit<SimpleTickDataUnit, SimpleTickDataDifference> {
-  override fun compareTo(other: SimpleTickDataUnit): Int = tickValue.compareTo(other.tickValue)
+    TickUnit<SimpleTickDataUnit, SimpleTickDataDifference>() {
+  override fun plus(other: SimpleTickDataDifference): SimpleTickDataUnit =
+      SimpleTickDataUnit(tickValue + other.tickDifference)
 
   override fun minus(other: SimpleTickDataDifference): SimpleTickDataUnit =
       SimpleTickDataUnit(tickValue - other.tickDifference)
@@ -66,8 +67,11 @@ class SimpleTickDataUnit(val tickValue: Long) :
   override fun minus(other: SimpleTickDataUnit): SimpleTickDataDifference =
       SimpleTickDataDifference(tickValue - other.tickValue)
 
-  override fun plus(other: SimpleTickDataDifference): SimpleTickDataUnit =
-      SimpleTickDataUnit(tickValue + other.tickDifference)
+  override fun compareTo(other: SimpleTickDataUnit): Int = tickValue.compareTo(other.tickValue)
+
+  override fun serialize(): String = tickValue.toString()
+
+  override fun deserialize(str: String): SimpleTickDataUnit = SimpleTickDataUnit(str.toLong())
 }
 
 /**
@@ -76,15 +80,15 @@ class SimpleTickDataUnit(val tickValue: Long) :
  * @property tickDifference The tick difference in milliseconds.
  */
 class SimpleTickDataDifference(val tickDifference: Long) :
-    TickDifference<SimpleTickDataDifference> {
-  override fun compareTo(other: SimpleTickDataDifference): Int =
-      tickDifference.compareTo(other.tickDifference)
-
+    TickDifference<SimpleTickDataDifference>() {
   override fun plus(other: SimpleTickDataDifference): SimpleTickDataDifference =
       SimpleTickDataDifference(tickDifference + other.tickDifference)
 
   override fun minus(other: SimpleTickDataDifference): SimpleTickDataDifference =
       SimpleTickDataDifference(tickDifference - other.tickDifference)
+
+  override fun compareTo(other: SimpleTickDataDifference): Int =
+      tickDifference.compareTo(other.tickDifference)
 
   override fun serialize(): String = tickDifference.toString()
 

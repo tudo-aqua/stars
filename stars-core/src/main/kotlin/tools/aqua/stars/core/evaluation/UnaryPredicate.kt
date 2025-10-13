@@ -70,7 +70,7 @@ class UnaryPredicate<
   fun holds(tick: T, entity: E1 = tick.ego as E1): Boolean =
       this.kClass.isInstance(entity) && this.eval(tick, this.kClass.cast(entity))
 
-  /** Creates a unary tick predicate. * */
+  /** Companion object containing utility methods for working with [UnaryPredicate]. */
   companion object {
     /**
      * Creates a unary tick predicate.

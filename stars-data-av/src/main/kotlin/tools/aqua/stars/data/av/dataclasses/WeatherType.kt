@@ -17,13 +17,24 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Enum for weather types. */
+/**
+ * Weather presets for the simulator.
+ *
+ * Values mirror the CARLA Python API.
+ */
 enum class WeatherType {
+  /** Clear sky / no precipitation. */
   Clear,
+  /** Overcast / cloudy. */
   Cloudy,
+  /** Wet ground / aftermath of rain. */
   Wet,
+  /** Wet ground with cloud cover. */
   WetCloudy,
+  /** Light/soft rain. */
   SoftRainy,
+  /** Moderate rain. */
   MidRainy,
+  /** Heavy rain. */
   HardRainy,
 }

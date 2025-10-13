@@ -62,7 +62,8 @@ sealed class TSCNode<
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
 
   /** Evaluates this TSC in the given context. */
-  fun evaluate(tick: T, depth: Int = 0): TSCInstanceNode<E, T, U, D> =
+  fun evaluate(tick: T, depth: Int = 0,
+  ): TSCInstanceNode<E, T, U, D> =
       TSCInstanceNode(
               this,
               this.label,

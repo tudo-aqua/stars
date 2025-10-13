@@ -124,8 +124,8 @@ fun <T1 : Number, T2 : Number> getCSVString(
     // Only take every "sliceValue"th entry for each key in the nameToValuesMap
     nameToValuesMap.forEach { (key, values) ->
       valueMap[key] =
-          values.first.slice(0..values.first.size step (sliceValue)) to
-              values.second.slice(0..values.second.size step (sliceValue))
+          values.first.slice(0 until values.first.size step (sliceValue)) to
+              values.second.slice(0 until values.second.size step (sliceValue))
     }
   } else {
     // Take original map

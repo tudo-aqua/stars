@@ -101,7 +101,7 @@ object ApplicationConstantsHolder {
       if (isTestRun) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
 
   /** Holds the [Json] configuration that is used throughout the project. */
-  val jsonConfiguration = Json {
+  val jsonConfiguration: Json = Json {
     prettyPrint = true
     isLenient = true
   }

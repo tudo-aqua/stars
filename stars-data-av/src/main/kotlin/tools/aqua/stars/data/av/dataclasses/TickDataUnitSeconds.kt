@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.TickUnit
  * @property tickSeconds Current tick value in seconds.
  */
 class TickDataUnitSeconds(val tickSeconds: Double) :
-    TickUnit<TickDataUnitSeconds, TickDataDifferenceSeconds> {
+    TickUnit<TickDataUnitSeconds, TickDataDifferenceSeconds>() {
   override fun plus(other: TickDataDifferenceSeconds): TickDataUnitSeconds =
       TickDataUnitSeconds(this.tickSeconds + other.differenceSeconds)
 
@@ -37,6 +37,10 @@ class TickDataUnitSeconds(val tickSeconds: Double) :
 
   override fun compareTo(other: TickDataUnitSeconds): Int =
       this.tickSeconds.compareTo(other.tickSeconds)
+
+  override fun serialize(): String = this.tickSeconds.toString()
+
+  override fun deserialize(str: String): TickDataUnitSeconds = TickDataUnitSeconds(str.toDouble())
 
   override fun toString(): String = "${this.tickSeconds}s"
 

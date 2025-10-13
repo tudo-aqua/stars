@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.TickDifference
  * @property differenceMillis Difference in milliseconds.
  */
 data class TickDataDifferenceMilliseconds(val differenceMillis: Long) :
-    TickDifference<TickDataDifferenceMilliseconds> {
+    TickDifference<TickDataDifferenceMilliseconds>() {
   override fun compareTo(other: TickDataDifferenceMilliseconds): Int =
       this.differenceMillis.compareTo(other.differenceMillis)
 

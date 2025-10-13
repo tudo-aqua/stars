@@ -21,27 +21,59 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for weather types. [Default] is equal to [ClearSunset].
+ * JSON enum for CARLA weather presets. [Default] is equal to [ClearSunset].
  *
- * @property value Json value.
+ * The numeric codes and names mirror the CARLA Python API.
+ *
+ * @property value Numeric code as it appears in CARLA JSON. Also duplicated in [SerialName] for
+ *   stable I/O.
  */
 @Serializable
 enum class JsonDataWeatherParametersType(
     val value: Int
 ) { // TODO: Check whether to include dust storm
+  /** Default preset (equivalent to [ClearSunset]). */
   @SerialName("0") Default(0),
+
+  /** Clear sky at noon. */
   @SerialName("1") ClearNoon(1),
+
+  /** Overcast/cloudy at noon. */
   @SerialName("2") CloudyNoon(2),
+
+  /** Wet ground (no rainfall) at noon. */
   @SerialName("3") WetNoon(3),
+
+  /** Wet ground with cloud cover at noon. */
   @SerialName("4") WetCloudyNoon(4),
+
+  /** Light/soft rain at noon. */
   @SerialName("5") SoftRainNoon(5),
+
+  /** Moderate rain at noon. */
   @SerialName("6") MidRainNoon(6),
+
+  /** Heavy rain at noon. */
   @SerialName("7") HardRainNoon(7),
+
+  /** Clear sky at sunset. */
   @SerialName("8") ClearSunset(8),
+
+  /** Overcast/cloudy at sunset. */
   @SerialName("9") CloudySunset(9),
+
+  /** Wet ground (no rainfall) at sunset. */
   @SerialName("10") WetSunset(10),
+
+  /** Wet ground with cloud cover at sunset. */
   @SerialName("11") WetCloudySunset(11),
+
+  /** Light/soft rain at sunset. */
   @SerialName("12") SoftRainSunset(12),
+
+  /** Moderate rain at sunset. */
   @SerialName("13") MidRainSunset(13),
+
+  /** Heavy rain at sunset. */
   @SerialName("14") HardRainSunset(14),
 }

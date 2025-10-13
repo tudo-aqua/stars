@@ -86,7 +86,7 @@ class BinaryPredicate<
           this.kClasses.second.isInstance(entity2) &&
           this.eval(tick, this.kClasses.first.cast(entity1), this.kClasses.second.cast(entity2))
 
-  /** Creates a binary tick predicate in this context. */
+  /** Companion object containing utility methods for working with [BinaryPredicate]. */
   companion object {
     /**
      * Creates a binary tick predicate in this context.
