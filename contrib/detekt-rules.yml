@@ -154,7 +154,7 @@ naming:
   # Mostly enabled. Rationale: principle of the least surprise
   active: true
   BooleanPropertyNaming:
-    active: true
+    active: false
   ClassNaming:
     active: true
   ConstructorParameterNaming:
