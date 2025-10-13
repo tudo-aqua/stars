@@ -32,6 +32,7 @@ import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.Plottable
 import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.metrics.providers.Stateful
 import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndSegmentMetricProvider
