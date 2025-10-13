@@ -394,7 +394,7 @@ style:
     # Rationale: improves legibility
     active: true
   UnnecessaryAbstractClass:
-    active: true
+    active: false
   UnnecessaryAnnotationUseSiteTarget:
     active: true
   UnnecessaryApply:
