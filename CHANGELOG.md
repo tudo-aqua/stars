@@ -29,13 +29,20 @@ All notable changes to this project will be documented in this file.
 - Add CMFTBL operators `pastMinPrevalence`, `pastMaxPrevalence`, `bind`, `exists`, `forall`, `release` and `back-to`.
 - Add `Serializable` interface.
     - Make `TickUnit` and `TickDifference` implement `Serializable`.`
+- Add default parameters for various classes in `DataAV`.
 
 ### Changed
 
-- Chang parameter type of `SegmentMetricProvider.evaluate()` from `SegmentType` to `S`.
+- Remove nullability for `condition` in `TSCBuilder`.
+- Change parameter type of `SegmentMetricProvider.evaluate()` from `SegmentType` to `S`.
 - Rename `Serializable` class to `SerializableMetric` and `SerializableExtension` to `SerializableMetricExtension`.
 - Change classes from interface to abstract class for `EntityType`, `SegmentType`, `TickDataType`, `TickUnit`, and
   `TickDifference`.
+- Remove nullability for `egoVehicle` in `DataAV`.
+
+### Fixed
+
+- Fix range bug in `PlotDataSaver.getCSVString()`
 
 ## [0.5] - 06.11.2024
 
