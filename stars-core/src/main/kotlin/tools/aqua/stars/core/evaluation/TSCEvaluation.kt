@@ -27,7 +27,19 @@ import tools.aqua.stars.core.hooks.*
 import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
-import tools.aqua.stars.core.metric.providers.*
+import tools.aqua.stars.core.metric.metrics.providers.Loggable
+import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.Plottable
+import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metric.metrics.providers.Stateful
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndSegmentMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceAndSegmentMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndSegmentMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
 import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
 import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
@@ -43,7 +55,8 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
- * the [TSC]s based on the given [Sequence] of [SegmentType]s. This class implements [Loggable].
+ * the [TSC]s based on the given [Sequence] of [SegmentType]s. This class implements
+ * [tools.aqua.stars.core.metric.metrics.providers.Loggable].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -94,7 +107,10 @@ class TSCEvaluation<
       }
     }
 
-  /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
+  /**
+   * Holds a [List] of all [tools.aqua.stars.core.metric.metrics.providers.MetricProvider]s
+   * registered by [registerMetricProviders].
+   */
   private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 
   /** Holds the results of the [PreTSCEvaluationHook]s after calling [runEvaluation]. */
@@ -220,6 +236,15 @@ class TSCEvaluation<
             passingTSCs ?: return
           }
 
+      val tscEvaluationTime = measureTime {
+        tscListToEvaluate.forEach { tsc ->
+          metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
+            it.evaluate(tsc)
+          }
+        }
+      }
+      logInfo("The evaluation of all TSCs took: $tscEvaluationTime")
+
       // Evaluate all segments
       val segmentsEvaluationTime = measureTime {
         if (tscListToEvaluate.isNotEmpty())
@@ -255,35 +280,38 @@ class TSCEvaluation<
 
     // Evaluate segment
     val segmentEvaluationTime = measureTime {
-      // Run the "evaluate" function for all SegmentMetricProviders on the current segment
       metricProviders.filterIsInstance<SegmentMetricProvider<E, T, S, U, D>>().forEach {
         it.evaluate(segment)
       }
+      // Evaluate tsc
       val allTSCEvaluationTime = measureTime {
         tscList.forEach { tsc ->
           val tscEvaluationTime = measureTime {
-            // Run the "evaluate" function for all TSCMetricProviders on the current segment
-            metricProviders.filterIsInstance<TSCMetricProvider<E, T, S, U, D>>().forEach {
-              it.evaluate(tsc)
+            metricProviders.filterIsInstance<TSCAndSegmentMetricProvider<E, T, S, U, D>>().forEach {
+              it.evaluate(tsc, segment)
             }
-            // Holds the PredicateContext for the current segment
+
+            /** Holds the PredicateContext for the current segment. */
             val context = PredicateContext(segment)
 
-            // Holds the [TSCInstanceNode] of the current [tsc] using the
-            // [PredicateContext], representing a whole TSC.
+            /**
+             * Holds the [TSCInstanceNode] of the current [tsc] using the [PredicateContext],
+             * representing a whole TSC.
+             */
             val segmentTSCInstance = tsc.evaluate(context)
 
-            // Run the "evaluate" function for all TSCInstanceMetricProviders on the
-            // current segment
             metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, S, U, D>>().forEach {
               it.evaluate(segmentTSCInstance)
             }
-
-            // Run the "evaluate" function for all TSCAndTSCInstanceNodeMetricProviders on the
-            // current tsc and instance
             metricProviders
                 .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
                 .forEach { it.evaluate(tsc, segmentTSCInstance) }
+            metricProviders
+                .filterIsInstance<TSCInstanceAndSegmentMetricProvider<E, T, S, U, D>>()
+                .forEach { it.evaluate(segmentTSCInstance, segment) }
+            metricProviders
+                .filterIsInstance<TSCAndTSCInstanceAndSegmentMetricProvider<E, T, S, U, D>>()
+                .forEach { it.evaluate(tsc, segmentTSCInstance, segment) }
           }
           logFine(
               "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime"

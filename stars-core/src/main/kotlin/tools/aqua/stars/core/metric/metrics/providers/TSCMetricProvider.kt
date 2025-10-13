@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * The [SegmentMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
- * function which gets a [SegmentType] which is called during the evaluation phase.
+ * The [TSCMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
+ * function which gets a [TSC] which is called during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -31,7 +32,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface SegmentMetricProvider<
+interface TSCMetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
@@ -42,8 +43,8 @@ interface SegmentMetricProvider<
   /**
    * Evaluate the metric based on the given parameter.
    *
-   * @param segment The current [SegmentType].
+   * @param tsc The current [TSC].
    * @return The evaluation result.
    */
-  fun evaluate(segment: S): Any?
+  fun evaluate(tsc: TSC<E, T, S, U, D>): Any?
 }

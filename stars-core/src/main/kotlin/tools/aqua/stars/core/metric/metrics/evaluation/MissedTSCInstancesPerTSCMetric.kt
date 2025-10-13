@@ -20,10 +20,10 @@ package tools.aqua.stars.core.metric.metrics.evaluation
 import java.util.logging.Logger
 import kotlin.collections.component1
 import kotlin.collections.component2
-import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.SerializableMetric
-import tools.aqua.stars.core.metric.providers.Stateful
-import tools.aqua.stars.core.metric.providers.TSCAndTSCInstanceNodeMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.Loggable
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metric.metrics.providers.Stateful
+import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
 import tools.aqua.stars.core.metric.serialization.SerializableTSCResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT

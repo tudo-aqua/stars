@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
+import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.*
 
 /**
- * The [PostEvaluationMetricProvider] implements the [MetricProvider] and provides an [postEvaluate]
- * function which is called after the evaluation phase. It also may depend on the results of metrics
- * that evaluated during the evaluation phase.
+ * The [TSCAndTSCInstanceNodeMetricProvider] implements the [EvaluationMetricProvider] and provides
+ * an [evaluate] function which gets a [TSC] and a [TSCInstance] which is called during the
+ * evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -32,34 +34,19 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @see TSCEvaluation.runEvaluation
  */
-interface PostEvaluationMetricProvider<
+interface TSCAndTSCInstanceNodeMetricProvider<
     E : EntityType<E, T, S, U, D>,
     T : TickDataType<E, T, S, U, D>,
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> : MetricProvider<E, T, S, U, D> {
+> : EvaluationMetricProvider<E, T, S, U, D> {
 
   /**
-   * Holds a reference to another metric that is evaluated during the evaluation phase.
+   * Evaluate the metric based on the given parameters.
    *
-   * @see TSCEvaluation.runEvaluation
+   * @param tsc The current [TSC].
+   * @param tscInstance The current [TSCInstance].
    */
-  val dependsOn: Any?
-
-  /**
-   * Evaluate the metric after the evaluation phase.
-   *
-   * @return The post evaluation result.
-   * @see TSCEvaluation.runEvaluation
-   */
-  fun postEvaluate(): Any?
-
-  /**
-   * Print the results of the [postEvaluate] function. This function is called after the evaluation
-   * phase.
-   *
-   * @see TSCEvaluation.runEvaluation
-   */
-  fun printPostEvaluationResult()
+  fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>)
 }

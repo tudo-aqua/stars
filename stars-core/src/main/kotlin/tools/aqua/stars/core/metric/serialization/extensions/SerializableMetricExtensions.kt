@@ -18,7 +18,7 @@
 package tools.aqua.stars.core.metric.serialization.extensions
 
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.providers.SerializableMetric
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
 import tools.aqua.stars.core.metric.utils.previousResults

@@ -15,28 +15,26 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.providers
+package tools.aqua.stars.core.metric.metrics.providers
 
 import tools.aqua.stars.core.evaluation.TSCEvaluation
+import tools.aqua.stars.core.types.*
 
 /**
- * Implementing the [Plottable] interface allows the results of a [MetricProvider] to be plotted as
- * a graph.
+ * The [EvaluationMetricProvider] implements the [MetricProvider] and provides an interface to all
+ * metrics that should be called during the evaluation phase.
+ *
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param S [SegmentType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @see TSCEvaluation.runEvaluation
  */
-interface Plottable {
-  /**
-   * This function is called after the evaluation phase and should plot the data collected during
-   * the evaluation.
-   *
-   * @see TSCEvaluation.runEvaluation
-   */
-  fun writePlots()
-
-  /**
-   * This function is called after the evaluation phase and writes the plot data collected during
-   * the evaluation into CSV files.
-   *
-   * @see TSCEvaluation.runEvaluation
-   */
-  fun writePlotDataCSV()
-}
+interface EvaluationMetricProvider<
+    E : EntityType<E, T, S, U, D>,
+    T : TickDataType<E, T, S, U, D>,
+    S : SegmentType<E, T, S, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>,
+> : MetricProvider<E, T, S, U, D>

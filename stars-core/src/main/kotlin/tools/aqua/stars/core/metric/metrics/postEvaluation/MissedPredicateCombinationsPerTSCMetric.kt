@@ -20,9 +20,9 @@ package tools.aqua.stars.core.metric.metrics.postEvaluation
 import java.util.logging.Logger
 import tools.aqua.stars.core.evaluation.PredicateCombination
 import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.providers.Loggable
-import tools.aqua.stars.core.metric.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.providers.SerializableMetric
+import tools.aqua.stars.core.metric.metrics.providers.Loggable
+import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metric.serialization.SerializablePredicateCombinationResult
 import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT

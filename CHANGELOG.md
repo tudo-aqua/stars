@@ -22,7 +22,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 0.6 - To be released
+## 1.0 - To be released
 
 ### Added
 
@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Add `Serializable` interface.
     - Make `TickUnit` and `TickDifference` implement `Serializable`.`
 - Add default parameters for various classes in `DataAV`.
+- Add missing `MetricProviders`: `TSCAndSegmentMetricProvider` and `TSCAndTSCInstanceAndSegmentMetricProvider`.
 
 ### Changed
 
