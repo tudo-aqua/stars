@@ -53,5 +53,5 @@ data class JsonLane(
     @SerialName("speed_limits") val speedLimits: List<JsonSpeedLimit>,
     @SerialName("landmarks") var landmarks: List<JsonLandmark>,
     @SerialName("contact_areas") val contactAreas: List<JsonContactArea>,
-    @SerialName("traffic_lights") var trafficLights: List<JsonStaticTrafficLight>
+    @SerialName("traffic_lights") var trafficLights: List<JsonStaticTrafficLight>,
 )

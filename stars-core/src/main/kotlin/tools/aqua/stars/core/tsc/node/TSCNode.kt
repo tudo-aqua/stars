@@ -41,12 +41,13 @@ sealed class TSCNode<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
     private val monitorsMap: Map<String, (T) -> Boolean>?,
     private val projectionsMap: Map<String, Boolean>?,
-    val valueFunction: (T) -> Any
+    val valueFunction: (T) -> Any,
 ) {
 
   /** Map of projection labels to their recursive state. */
@@ -66,7 +67,8 @@ sealed class TSCNode<
               this,
               this.label,
               this.monitors.mapValues { (_, monitor) -> monitor(tick) },
-              this.valueFunction(tick))
+              this.valueFunction(tick),
+          )
           .also {
             it.edges +=
                 this.edges
@@ -112,7 +114,8 @@ sealed class TSCNode<
                   label = label,
                   monitorsMap = monitorsMap,
                   projectionsMap = projectionsMap,
-                  valueFunction = valueFunction)
+                  valueFunction = valueFunction,
+              )
           is TSCBoundedNode -> {
             val outgoingEdges =
                 edges
@@ -133,7 +136,8 @@ sealed class TSCNode<
                 projectionsMap = this.projectionsMap,
                 valueFunction = this.valueFunction,
                 bounds =
-                    this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff)
+                    this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
+            )
           }
         }
   }
@@ -152,7 +156,8 @@ sealed class TSCNode<
               label = this.label,
               monitorsMap = this.monitorsMap,
               projectionsMap = this.projectionsMap,
-              valueFunction = this.valueFunction)
+              valueFunction = this.valueFunction,
+          )
       is TSCBoundedNode ->
           TSCBoundedNode(
               label = this.label,

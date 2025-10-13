@@ -33,7 +33,8 @@ abstract class TickDataType<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val currentTickUnit: U, val entities: Set<E> = LinkedHashSet()) {
+    D : TickDifference<D>,
+>(val currentTickUnit: U, val entities: Set<E> = LinkedHashSet()) {
   /** The next [TickDataType] in the sequence. */
   var nextTick: T? = null
 

@@ -34,4 +34,5 @@ interface EvaluationMetricProvider<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : MetricProvider<E, T, U, D>
+    D : TickDifference<D>,
+> : MetricProvider<E, T, U, D>

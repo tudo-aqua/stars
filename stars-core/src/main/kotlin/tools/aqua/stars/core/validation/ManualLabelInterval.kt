@@ -31,5 +31,5 @@ import tools.aqua.stars.core.types.TickUnit
  */
 data class ManualLabelInterval<U : TickUnit<U, D>, D : TickDifference<D>>(
     val fromTickUnit: U,
-    val toTickUnit: U
+    val toTickUnit: U,
 )

@@ -51,7 +51,8 @@ class JSONTrafficLightTest {
             location = JsonLocation(10.0, 10.0, 0.0),
             rotation = JsonRotation(10.0, 10.0, 0.0),
             stopLocations = listOf(JsonLocation(10.0, 10.0, 0.0)),
-            positionDistance = 0F)
+            positionDistance = 0F,
+        )
 
     val staticTrafficLight = staticJsonTrafficLight.toStaticTrafficLight()
     assertEquals(staticJsonTrafficLight.id, staticTrafficLight.id)
@@ -67,7 +68,8 @@ class JSONTrafficLightTest {
             jsonLocation.x == location.x &&
                 jsonLocation.y == location.y &&
                 jsonLocation.z == location.z
-          })
+          }
+      )
     }
   }
 
@@ -84,25 +86,33 @@ class JSONTrafficLightTest {
 
     val trafficLight =
         TrafficLight(
-            id = 0, relatedOpenDriveId = openDriveTrafficLightId, state = TrafficLightState.Red)
+            id = 0,
+            relatedOpenDriveId = openDriveTrafficLightId,
+            state = TrafficLightState.Red,
+        )
     val tickData1 =
         TickData(entities = vehicles, trafficLights = listOf(trafficLight), world = world)
 
     val trafficLight2 =
         TrafficLight(
-            id = 1, relatedOpenDriveId = openDriveTrafficLightId, state = TrafficLightState.Green)
+            id = 1,
+            relatedOpenDriveId = openDriveTrafficLightId,
+            state = TrafficLightState.Green,
+        )
     val tickData2 =
         TickData(entities = vehicles, trafficLights = listOf(trafficLight2), world = world)
 
     assertNotNull(tickData1.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData1))
     assertEquals(
         trafficLight.state,
-        tickData1.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData1))
+        tickData1.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData1),
+    )
 
     assertNotNull(tickData2.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData2))
     assertEquals(
         trafficLight2.state,
-        tickData2.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData2))
+        tickData2.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData2),
+    )
   }
 
   /** Tests the conversion of Lanes to StaticTrafficLights. */
@@ -114,7 +124,8 @@ class JSONTrafficLightTest {
             positionDistance = 0F,
             location = JsonLocation(10.0, 10.0, 0.0),
             rotation = JsonRotation(10.0, 10.0, 0.0),
-            stopLocations = listOf(JsonLocation(10.0, 10.0, 0.0)))
+            stopLocations = listOf(JsonLocation(10.0, 10.0, 0.0)),
+        )
 
     val jsonLane =
         JsonLane(
@@ -131,7 +142,8 @@ class JSONTrafficLightTest {
             speedLimits = emptyList(),
             landmarks = emptyList(),
             contactAreas = emptyList(),
-            trafficLights = listOf(staticJsonTrafficLight))
+            trafficLights = listOf(staticJsonTrafficLight),
+        )
 
     val lane = jsonLane.toLane(isJunction = false)
 
@@ -151,7 +163,8 @@ class JSONTrafficLightTest {
             jsonLocation.x == location.x &&
                 jsonLocation.y == location.y &&
                 jsonLocation.z == location.z
-          })
+          }
+      )
     }
   }
 
@@ -176,8 +189,10 @@ class JSONTrafficLightTest {
                     extent = JsonVector3D(0.0, 0.0, 0.0),
                     location = JsonLocation(0.0, 0.0, 0.0),
                     rotation = JsonRotation(0.0, 0.0, 0.0),
-                    vertices = emptyList()),
-            collisions = emptyList())
+                    vertices = emptyList(),
+                ),
+            collisions = emptyList(),
+        )
 
     val jsonActorPosition =
         JsonActorPosition(actor = jsonTrafficLight, laneId = 1, roadId = 1, positionOnLane = 0.0)
@@ -210,8 +225,10 @@ class JSONTrafficLightTest {
                     extent = JsonVector3D(0.0, 0.0, 0.0),
                     location = JsonLocation(0.0, 0.0, 0.0),
                     rotation = JsonRotation(0.0, 0.0, 0.0),
-                    vertices = emptyList()),
-            collisions = emptyList())
+                    vertices = emptyList(),
+                ),
+            collisions = emptyList(),
+        )
 
     var trafficLight = jsonTrafficLight.toTrafficLight()
     assertEquals(jsonTrafficLight.id, trafficLight.id)

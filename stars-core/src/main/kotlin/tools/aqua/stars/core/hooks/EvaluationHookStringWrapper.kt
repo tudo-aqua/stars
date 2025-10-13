@@ -50,13 +50,13 @@ object EvaluationHookStringWrapper {
   private fun createMsg(
       hookResult: EvaluationHookResult,
       obj: Any,
-      hooks: Collection<EvaluationHook<*>>
+      hooks: Collection<EvaluationHook<*>>,
   ) =
       "$hookResult evaluation since ${
       hooks.joinToString(
         separator = ", ",
         prefix = "[",
-        postfix = "]"
+        postfix = "]",
       ) { "${it.javaClass.name} ${it.identifier}" }
     } returned $hookResult for ${obj.javaClass.name} \n ${obj}."
 }

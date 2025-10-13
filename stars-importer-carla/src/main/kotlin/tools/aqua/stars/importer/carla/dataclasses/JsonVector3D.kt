@@ -32,5 +32,5 @@ import kotlinx.serialization.Serializable
 data class JsonVector3D(
     @SerialName("x") val x: Double,
     @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
+    @SerialName("z") val z: Double,
 )

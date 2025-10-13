@@ -30,14 +30,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(0.0, 2.0),
             rightFront = Location2D(2.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 0.0))
+            leftBack = Location2D(0.0, 0.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(3.0, 2.0),
             rightFront = Location2D(5.0, 2.0),
             rightBack = Location2D(5.0, 0.0),
-            leftBack = Location2D(3.0, 0.0))
+            leftBack = Location2D(3.0, 0.0),
+        )
 
     assertFalse(bb1.collidesWith(bb2))
     assertFalse(bb2.collidesWith(bb1))
@@ -50,14 +52,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(0.0, 2.0),
             rightFront = Location2D(2.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 0.0))
+            leftBack = Location2D(0.0, 0.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(2.0, 2.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(4.0, 0.0),
-            leftBack = Location2D(2.0, 0.0))
+            leftBack = Location2D(2.0, 0.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -70,14 +74,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(0.0, 2.0),
             rightFront = Location2D(2.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 0.0))
+            leftBack = Location2D(0.0, 0.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 4.0),
             rightBack = Location2D(4.0, 2.0),
-            leftBack = Location2D(2.0, 2.0))
+            leftBack = Location2D(2.0, 2.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -90,14 +96,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(0.0, 2.0),
             rightFront = Location2D(2.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 0.0))
+            leftBack = Location2D(0.0, 0.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(0.5, 1.5),
             rightFront = Location2D(1.5, 1.5),
             rightBack = Location2D(1.5, 0.5),
-            leftBack = Location2D(0.5, 0.5))
+            leftBack = Location2D(0.5, 0.5),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -110,14 +118,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(1.0, 4.0),
             rightFront = Location2D(3.0, 4.0),
             rightBack = Location2D(3.0, 0.0),
-            leftBack = Location2D(1.0, 0.0))
+            leftBack = Location2D(1.0, 0.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(0.0, 3.0),
             rightFront = Location2D(4.0, 3.0),
             rightBack = Location2D(4.0, 1.0),
-            leftBack = Location2D(0.0, 1.0))
+            leftBack = Location2D(0.0, 1.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -130,14 +140,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(1.5, 2.5),
             rightFront = Location2D(2.5, 2.5),
             rightBack = Location2D(2.5, 1.5),
-            leftBack = Location2D(1.5, 1.5))
+            leftBack = Location2D(1.5, 1.5),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -150,14 +162,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(1.0, 3.0),
             rightFront = Location2D(3.0, 3.0),
             rightBack = Location2D(3.0, 1.0),
-            leftBack = Location2D(1.0, 1.0))
+            leftBack = Location2D(1.0, 1.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -170,14 +184,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(2.0, 3.0),
             rightFront = Location2D(3.0, 2.0),
             rightBack = Location2D(2.0, 1.0),
-            leftBack = Location2D(1.0, 2.0))
+            leftBack = Location2D(1.0, 2.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -190,14 +206,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(7.0, 4.0),
             rightFront = Location2D(9.0, 2.0),
             rightBack = Location2D(7.0, 0.0),
-            leftBack = Location2D(5.0, 2.0))
+            leftBack = Location2D(5.0, 2.0),
+        )
 
     assertFalse(bb1.collidesWith(bb2))
     assertFalse(bb2.collidesWith(bb1))
@@ -210,14 +228,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(6.0, 4.0),
             rightFront = Location2D(8.0, 2.0),
             rightBack = Location2D(6.0, 0.0),
-            leftBack = Location2D(4.0, 2.0))
+            leftBack = Location2D(4.0, 2.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))
@@ -230,14 +250,16 @@ class BoundingBoxCollisionTest {
             leftFront = Location2D(2.0, 4.0),
             rightFront = Location2D(4.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
     val bb2 =
         BoundingBox2D(
             leftFront = Location2D(4.0, 6.0),
             rightFront = Location2D(6.0, 4.0),
             rightBack = Location2D(4.0, 0.0),
-            leftBack = Location2D(2.0, 4.0))
+            leftBack = Location2D(2.0, 4.0),
+        )
 
     assertTrue(bb1.collidesWith(bb2))
     assertTrue(bb2.collidesWith(bb1))

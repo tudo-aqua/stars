@@ -38,7 +38,8 @@ class UnaryPredicate<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     name: String,
     val kClass: KClass<E1>,
     val eval: (T, E1) -> Boolean,
@@ -90,7 +91,8 @@ class UnaryPredicate<
         E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> predicate(
+        D : TickDifference<D>,
+    > predicate(
         name: String,
         kClass: KClass<E1>,
         eval: (T, E1) -> Boolean,

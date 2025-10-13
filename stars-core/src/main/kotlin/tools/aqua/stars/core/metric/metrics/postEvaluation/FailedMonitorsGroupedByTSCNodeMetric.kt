@@ -53,11 +53,12 @@ class FailedMonitorsGroupedByTSCNodeMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors-grouped-by-node",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-    private val onlyLeafNodes: Boolean = false
+    private val onlyLeafNodes: Boolean = false,
 ) : PostEvaluationMetricProvider<E, T, U, D>, Loggable {
 
   /**
@@ -102,13 +103,15 @@ class FailedMonitorsGroupedByTSCNodeMetric<
                     .sortedByDescending { it.second.size }
                     .toMap()
               }
-        })
+        }
+    )
   }
 
   /** Prints the count of failed monitors for each [TSC]. */
   override fun printPostEvaluationResult() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Failed Monitors Grouped By TSC Node \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Failed Monitors Grouped By TSC Node \n$CONSOLE_SEPARATOR"
+    )
     failedMonitors.forEach { (tsc, failedMonitors) ->
       if (failedMonitors.isEmpty()) return@forEach
 
@@ -117,13 +120,16 @@ class FailedMonitorsGroupedByTSCNodeMetric<
       failedMonitors.forEach { monitor ->
         logInfo(
             "Monitor '${monitor.key}' failed ${monitor.value.values.sumOf { it.size }} times " +
-                "in ${monitor.value.size} unique TSC nodes.")
+                "in ${monitor.value.size} unique TSC nodes."
+        )
         logFiner(
-            "Count of grouped TSC nodes: ${monitor.value.values.map { it.size }.sortedDescending()}")
+            "Count of grouped TSC nodes: ${monitor.value.values.map { it.size }.sortedDescending()}"
+        )
 
         monitor.value.forEach { (nodeLabel, tscInstances) ->
           logFine(
-              "Failed ${"%04d".format(tscInstances.size)} times for the following TSC node: '$nodeLabel'")
+              "Failed ${"%04d".format(tscInstances.size)} times for the following TSC node: '$nodeLabel'"
+          )
           logFiner("Failed in:")
           tscInstances.forEach {
             logFiner()

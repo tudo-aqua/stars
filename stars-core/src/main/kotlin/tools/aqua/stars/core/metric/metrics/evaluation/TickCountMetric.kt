@@ -46,9 +46,10 @@ class TickCountMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "tick-count",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TickMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
   /** Holds the count of [TickDataType]s that are analyzed. */
   private var tickCount: Int = 0
@@ -77,5 +78,9 @@ class TickCountMetric<
   override fun getSerializableResults(): List<SerializableIntResult> =
       listOf(
           SerializableIntResult(
-              identifier = loggerIdentifier, source = loggerIdentifier, value = tickCount))
+              identifier = loggerIdentifier,
+              source = loggerIdentifier,
+              value = tickCount,
+          )
+      )
 }

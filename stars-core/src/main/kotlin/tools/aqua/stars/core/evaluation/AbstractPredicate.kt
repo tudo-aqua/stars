@@ -35,4 +35,5 @@ abstract class AbstractPredicate<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val name: String)
+    D : TickDifference<D>,
+>(val name: String)

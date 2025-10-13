@@ -35,12 +35,12 @@ open class PreTSCEvaluationHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
-    identifier: String,
-    evaluationFunction: (TSC<E, T, U, D>) -> EvaluationHookResult
-) :
+    D : TickDifference<D>,
+>(identifier: String, evaluationFunction: (TSC<E, T, U, D>) -> EvaluationHookResult) :
     EvaluationHook<TSC<E, T, U, D>>(
-        identifier = identifier, evaluationFunction = evaluationFunction) {
+        identifier = identifier,
+        evaluationFunction = evaluationFunction,
+    ) {
   companion object {
     /**
      * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs.
@@ -55,11 +55,13 @@ open class PreTSCEvaluationHook<
         E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> List<PreTSCEvaluationHook<E, T, U, D>>.evaluate(
+        D : TickDifference<D>,
+    > List<PreTSCEvaluationHook<E, T, U, D>>.evaluate(
         tscList: List<TSC<E, T, U, D>>
     ): Pair<
         List<TSC<E, T, U, D>>?,
-        Map<TSC<E, T, U, D>, Map<PreTSCEvaluationHook<E, T, U, D>, EvaluationHookResult>>> {
+        Map<TSC<E, T, U, D>, Map<PreTSCEvaluationHook<E, T, U, D>, EvaluationHookResult>>,
+    > {
       // Evaluate PreEvaluationHooks
       val hookResults =
           tscList.associateWith { tsc -> this.associateWith { it.evaluationFunction.invoke(tsc) } }

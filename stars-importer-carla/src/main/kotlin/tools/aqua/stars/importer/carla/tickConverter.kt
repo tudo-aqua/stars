@@ -123,7 +123,7 @@ private fun FIXEGOS(jsonVehicles: List<List<JsonVehicle>>) {
 private fun getLaneProgressionForVehicle(
     world: World,
     jsonSimulationRun: List<JsonTickData>,
-    vehicle: JsonVehicle
+    vehicle: JsonVehicle,
 ): MutableList<Pair<Lane?, Boolean>> {
   val roads = world.getAllRoads()
   val lanes = world.getAllLanes()
@@ -160,7 +160,8 @@ private fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
           vehicle = currentActor,
           previousActor = previousTick.vehicles.firstOrNull { it.id == currentActor.id },
           timeDelta =
-              (currentTick.currentTickUnit - previousTick.currentTickUnit).differenceSeconds)
+              (currentTick.currentTickUnit - previousTick.currentTickUnit).differenceSeconds,
+      )
     }
   }
 }
@@ -176,7 +177,7 @@ private fun updateActorVelocityForSimulationRun(simulationRun: List<TickData>) {
 internal fun updateActorVelocityAndAcceleration(
     vehicle: Vehicle,
     previousActor: Actor?,
-    timeDelta: Double
+    timeDelta: Double,
 ) {
   check(timeDelta >= 0.0) {
     "The time difference between the current tick and the previous tick is negative ($timeDelta)."
@@ -235,7 +236,12 @@ fun cleanJsonData(world: World, jsonSimulationRun: List<JsonTickData>) {
         if (currentJunction.isNotEmpty()) {
           nextMultilane = lane
           cleanJunctionData(
-              jsonSimulationRun, currentJunction, previousMultilane, nextMultilane, vehicle)
+              jsonSimulationRun,
+              currentJunction,
+              previousMultilane,
+              nextMultilane,
+              vehicle,
+          )
           currentJunction.clear()
           previousMultilane = lane
         } else {
@@ -267,7 +273,7 @@ private fun cleanJunctionData(
     junctionIndices: List<Pair<Int, Lane>>,
     laneFrom: Lane?,
     laneTo: Lane?,
-    vehicle: JsonVehicle
+    vehicle: JsonVehicle,
 ) {
   // Check if the lanes are already all the same
   val junctionLaneGroups = junctionIndices.groupBy { it.second.toString() }

@@ -39,7 +39,8 @@ class MinNodesInTSCHookTest {
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
-          MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.OK))
+          MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.OK)
+      )
 
       runEvaluation(ticks = generateTicks())
 
@@ -57,7 +58,8 @@ class MinNodesInTSCHookTest {
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
-          MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.SKIP))
+          MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.SKIP)
+      )
 
       runEvaluation(ticks = generateTicks())
 
@@ -75,7 +77,8 @@ class MinNodesInTSCHookTest {
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       setup()
       registerPreTSCEvaluationHooks(
-          MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT))
+          MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT)
+      )
 
       assertThrows<EvaluationHookAbort> { runEvaluation(ticks = generateTicks()) }
     }
@@ -91,7 +94,8 @@ class MinNodesInTSCHookTest {
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
-          MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
+          MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT)
+      )
 
       runEvaluation(ticks = generateTicks())
 
@@ -109,7 +113,8 @@ class MinNodesInTSCHookTest {
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
-          MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT))
+          MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT)
+      )
 
       runEvaluation(ticks = generateTicks())
 
@@ -122,12 +127,17 @@ class MinNodesInTSCHookTest {
   fun `Test MinNodesInTSCHook with #nodes negative`() {
     assertFailsWith<IllegalArgumentException> {
       MinNodesInTSCHook<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
-          minNodes = -1)
+          minNodes = -1
+      )
     }
   }
 
   private fun TSCEvaluation<
-      SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>
+      SimpleEntity,
+      SimpleTickData,
+      SimpleTickDataUnit,
+      SimpleTickDataDifference,
+  >
       .setup():
       TickCountMetric<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> =
       TickCountMetric<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()

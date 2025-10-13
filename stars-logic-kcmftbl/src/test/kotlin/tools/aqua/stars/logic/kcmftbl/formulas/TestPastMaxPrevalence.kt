@@ -139,7 +139,11 @@ class TestPastMaxPrevalence {
 
     assertTrue {
       pastMaxPrevalence(
-          createTicks(phi)[9], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[9],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -158,7 +162,11 @@ class TestPastMaxPrevalence {
 
     assertFalse {
       pastMaxPrevalence(
-          createTicks(phi)[9], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[9],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -242,7 +250,11 @@ class TestPastMaxPrevalence {
 
     assertFailsWith<IllegalArgumentException> {
       pastMaxPrevalence(
-          createTicks(phi)[2], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[2],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -261,7 +273,11 @@ class TestPastMaxPrevalence {
 
     assertFailsWith<IllegalArgumentException> {
       pastMaxPrevalence(
-          createTicks(phi)[2], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[2],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 
@@ -280,7 +296,11 @@ class TestPastMaxPrevalence {
 
     assertFailsWith<IllegalArgumentException> {
       pastMaxPrevalence(
-          createTicks(phi)[2], percentage, createInterval(interval), phi = { it.phi1 })
+          createTicks(phi)[2],
+          percentage,
+          createInterval(interval),
+          phi = { it.phi1 },
+      )
     }
   }
 }

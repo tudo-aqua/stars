@@ -31,5 +31,5 @@ import kotlinx.serialization.Serializable
 data class JsonRotation(
     @SerialName("pitch") val pitch: Double,
     @SerialName("yaw") val yaw: Double,
-    @SerialName("roll") val roll: Double
+    @SerialName("roll") val roll: Double,
 )

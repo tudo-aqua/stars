@@ -35,5 +35,5 @@ data class JsonLaneMidpoint(
     @SerialName("road_id") val roadId: Int,
     @SerialName("distance_to_start") val distanceToStart: Double,
     @SerialName("location") val location: JsonLocation,
-    @SerialName("rotation") val rotation: JsonRotation
+    @SerialName("rotation") val rotation: JsonRotation,
 )

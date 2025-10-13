@@ -122,7 +122,8 @@ fun JsonWorld.toWorld(): World =
     World(
         straights = straights.map { it.toRoad() },
         junctions = junctions.map { it.toJunction() },
-        crosswalks = crosswalks.map { it.toCrosswalk() })
+        crosswalks = crosswalks.map { it.toCrosswalk() },
+    )
 
 /** Converts [JsonRoad] to [Road]. */
 fun JsonRoad.toRoad(isJunction: Boolean = false): Road =
@@ -200,7 +201,8 @@ fun JsonLandmark.toLandmark(): Landmark =
         unit = this.unit,
         text = this.text,
         location = this.location.toLocation(),
-        rotation = this.rotation.toRotation())
+        rotation = this.rotation.toRotation(),
+    )
 
 /**
  * Converts [JsonContactArea] to [ContactArea].
@@ -217,7 +219,8 @@ fun JsonContactArea.toContactArea(lane1: Lane, lane2: Lane): ContactArea =
         lane2EndPos = lane2EndPos,
         lane2StartPos = lane2StartPos,
         lane1 = lane1,
-        lane2 = lane2)
+        lane2 = lane2,
+    )
 
 /** Converts [JsonVector3D] to [Vector3D]. */
 fun JsonVector3D.toVector3D(): Vector3D = Vector3D(x, y, z)
@@ -238,7 +241,8 @@ fun JsonBoundingBox.toBoundingBox(): BoundingBox =
         bottomLeftFront = vertices[4].toLocation(),
         topLeftFront = vertices[5].toLocation(),
         bottomRightFront = vertices[6].toLocation(),
-        topRightFront = vertices[7].toLocation())
+        topRightFront = vertices[7].toLocation(),
+    )
 
 /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */
 fun JsonStaticTrafficLight.toStaticTrafficLight(): StaticTrafficLight =
@@ -246,21 +250,24 @@ fun JsonStaticTrafficLight.toStaticTrafficLight(): StaticTrafficLight =
         id = this.id,
         location = this.location.toLocation(),
         rotation = this.rotation.toRotation(),
-        stopLocations = this.stopLocations.map { it.toLocation() })
+        stopLocations = this.stopLocations.map { it.toLocation() },
+    )
 
 /** Converts [JsonTrafficLight] to [TrafficLight]. */
 fun JsonTrafficLight.toTrafficLight(): TrafficLight =
     TrafficLight(
         id = this.id,
         state = TrafficLightState.getByValue(this.state),
-        relatedOpenDriveId = this.relatedOpenDriveId)
+        relatedOpenDriveId = this.relatedOpenDriveId,
+    )
 
 /** Converts [JsonLaneMidpoint] to [LaneMidpoint]. */
 fun JsonLaneMidpoint.toLaneMidpoint(): LaneMidpoint =
     LaneMidpoint(
         distanceToStart = this.distanceToStart,
         location = this.location.toLocation(),
-        rotation = this.rotation.toRotation())
+        rotation = this.rotation.toRotation(),
+    )
 
 /** Converts [JsonDataWeatherParameters] to [WeatherParameters]. */
 fun JsonDataWeatherParameters.toWeatherParameters(): WeatherParameters =
@@ -278,7 +285,8 @@ fun JsonDataWeatherParameters.toWeatherParameters(): WeatherParameters =
         fogFalloff = fogFalloff,
         scatteringIntensity = scatteringIntensity,
         mieScatteringScale = mieScatteringScale,
-        rayleighScatteringScale = rayleighScatteringScale)
+        rayleighScatteringScale = rayleighScatteringScale,
+    )
 
 /** Extracts [WeatherType] from [JsonDataWeatherParametersType]. */
 fun JsonDataWeatherParametersType.toWeatherType(): WeatherType =

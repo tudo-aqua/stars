@@ -68,7 +68,8 @@ class VelocityAndAccelerationTest {
     updateActorVelocityAndAcceleration(
         vehicle = vehicle2,
         previousActor = vehicle1,
-        timeDelta = (tickData2.currentTickUnit - tickData1.currentTickUnit).differenceSeconds)
+        timeDelta = (tickData2.currentTickUnit - tickData1.currentTickUnit).differenceSeconds,
+    )
 
     // Velocity = ((3, 4, 5) - (0, 0, 0)) / 1 = (3, 4, 5)
     assertEquals(3.0, vehicle2.velocity.x)
@@ -84,7 +85,8 @@ class VelocityAndAccelerationTest {
     updateActorVelocityAndAcceleration(
         vehicle = vehicle3,
         previousActor = vehicle2,
-        timeDelta = (tickData3.currentTickUnit - tickData2.currentTickUnit).differenceSeconds)
+        timeDelta = (tickData3.currentTickUnit - tickData2.currentTickUnit).differenceSeconds,
+    )
 
     // Velocity = ((8, 2, 10) - (3, 4, 5)) / 1 = (5, -2, 5)
     assertEquals(5.0, vehicle3.velocity.x)
@@ -118,7 +120,10 @@ class VelocityAndAccelerationTest {
 
     // The time difference between Vehicle0 and Vehicle1 is 0.0. Expect values of 0.0
     updateActorVelocityAndAcceleration(
-        vehicle = vehicle2, previousActor = vehicle1, timeDelta = 0.0)
+        vehicle = vehicle2,
+        previousActor = vehicle1,
+        timeDelta = 0.0,
+    )
     assertEquals(0.0, vehicle2.velocity.x)
     assertEquals(0.0, vehicle2.velocity.y)
     assertEquals(0.0, vehicle2.velocity.z)
@@ -128,7 +133,10 @@ class VelocityAndAccelerationTest {
 
     // The time difference between Vehicle1 and Vehicle2 is 0.0. Expect values of 0.0
     updateActorVelocityAndAcceleration(
-        vehicle = vehicle3, previousActor = vehicle2, timeDelta = 0.0)
+        vehicle = vehicle3,
+        previousActor = vehicle2,
+        timeDelta = 0.0,
+    )
     assertEquals(0.0, vehicle3.velocity.x)
     assertEquals(0.0, vehicle3.velocity.y)
     assertEquals(0.0, vehicle3.velocity.z)
@@ -158,7 +166,8 @@ class VelocityAndAccelerationTest {
       updateActorVelocityAndAcceleration(
           vehicle = vehicle2,
           previousActor = vehicle1,
-          timeDelta = (tickData2.currentTickUnit - tickData1.currentTickUnit).differenceSeconds)
+          timeDelta = (tickData2.currentTickUnit - tickData1.currentTickUnit).differenceSeconds,
+      )
     }
   }
 
@@ -194,7 +203,10 @@ class VelocityAndAccelerationTest {
     // IllegalStateException is expected.
     assertFailsWith<IllegalStateException> {
       updateActorVelocityAndAcceleration(
-          vehicle = vehicle1, previousActor = actor0, timeDelta = 0.0)
+          vehicle = vehicle1,
+          previousActor = actor0,
+          timeDelta = 0.0,
+      )
     }
   }
 }

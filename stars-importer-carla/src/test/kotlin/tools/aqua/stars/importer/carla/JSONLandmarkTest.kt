@@ -60,7 +60,8 @@ class JSONLandmarkTest {
             s = 10.0,
             subType = "Subtype",
             width = 1.0,
-            zOffset = 0.0)
+            zOffset = 0.0,
+        )
     completeLandmark = completeJsonLandmark.toLandmark()
   }
 

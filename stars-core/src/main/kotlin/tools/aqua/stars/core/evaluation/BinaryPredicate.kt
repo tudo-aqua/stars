@@ -40,7 +40,8 @@ class BinaryPredicate<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     name: String,
     val kClasses: Pair<KClass<E1>, KClass<E2>>,
     val eval: (T, E1, E2) -> Boolean,
@@ -108,7 +109,8 @@ class BinaryPredicate<
         E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> predicate(
+        D : TickDifference<D>,
+    > predicate(
         name: String,
         kClasses: Pair<KClass<E1>, KClass<E2>>,
         eval: (T, E1, E2) -> Boolean,

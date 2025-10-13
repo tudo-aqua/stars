@@ -78,7 +78,8 @@ class TSCEvaluation<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val tscList: List<TSC<E, T, U, D>>,
     val writePlots: Boolean = true,
     val writePlotDataCSV: Boolean = false,
@@ -327,7 +328,8 @@ class TSCEvaluation<
           }
         }
         logFiner(
-            "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime")
+            "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime"
+        )
       }
     }
     logFine("The evaluation of tick '$tick' took: $tickEvaluationTime")
@@ -368,7 +370,8 @@ class TSCEvaluation<
       if (writeSerializedResults) {
         println("Writing serialized results")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$serializedResultsFolder/$applicationStartTimeString/")
+            "$serializedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.forEach { t -> t.writeSerializedResults() }
       }
 
@@ -376,7 +379,8 @@ class TSCEvaluation<
       if (compareToBaselineResults) {
         println("Comparing to baseline")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/")
+            "$comparedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.compareToBaselineResults().let {
           resultsReproducedFromBaseline = it.noMismatch()
 
@@ -388,7 +392,8 @@ class TSCEvaluation<
       if (compareToPreviousRun) {
         println("Comparing to previous run")
         ApplicationConstantsHolder.writeMetaInfo(
-            "$comparedResultsFolder/$applicationStartTimeString/")
+            "$comparedResultsFolder/$applicationStartTimeString/"
+        )
         serializableMetrics.compareToPreviousResults().let {
           resultsReproducedFromPreviousRun = it.noMismatch()
 

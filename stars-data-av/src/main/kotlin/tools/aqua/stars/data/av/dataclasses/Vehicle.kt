@@ -113,7 +113,8 @@ class Vehicle(
           angularVelocity = angularVelocity,
           lane = lane,
           positionOnLane = positionOnLane,
-          vehicleType = vehicleType)
+          vehicleType = vehicleType,
+      )
 
   override fun toString(): String =
       "Vehicle(positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"

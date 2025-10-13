@@ -49,7 +49,8 @@ data class BoundingBox2D(
           leftFront = leftFront + vectorLeft * amount,
           rightFront = rightFront,
           rightBack = rightBack,
-          leftBack = leftBack + vectorLeft * amount)
+          leftBack = leftBack + vectorLeft * amount,
+      )
 
   /** Extends this [BoundingBox2D] to the right by the given amount. */
   fun extendRight(amount: Double) =
@@ -57,7 +58,8 @@ data class BoundingBox2D(
           leftFront = leftFront,
           rightFront = rightFront + vectorRight * amount,
           rightBack = rightBack + vectorRight * amount,
-          leftBack = leftBack)
+          leftBack = leftBack,
+      )
 
   /** Extends this [BoundingBox2D] to the front by the given amount. */
   fun extendFront(amount: Double) =
@@ -65,7 +67,8 @@ data class BoundingBox2D(
           leftFront = leftFront + vectorLeft * amount,
           rightFront = rightFront + vectorRight * amount,
           rightBack = rightBack,
-          leftBack = leftBack)
+          leftBack = leftBack,
+      )
 
   /** Extends this [BoundingBox2D] to the back by the given amount. */
   fun extendBack(amount: Double) =
@@ -73,7 +76,8 @@ data class BoundingBox2D(
           leftFront = leftFront,
           rightFront = rightFront,
           rightBack = rightBack + vectorBack * amount,
-          leftBack = leftBack + vectorLeft * amount)
+          leftBack = leftBack + vectorLeft * amount,
+      )
 
   /** Extends this [BoundingBox2D] in all directions by the given amount. */
   fun extend(amount: Double) =
@@ -81,7 +85,8 @@ data class BoundingBox2D(
           leftFront = leftFront + vectorLeft * amount + vectorFront * amount,
           rightFront = rightFront + vectorRight * amount + vectorFront * amount,
           rightBack = rightBack + vectorRight * amount + vectorBack * amount,
-          leftBack = leftBack + vectorLeft * amount + vectorBack * amount)
+          leftBack = leftBack + vectorLeft * amount + vectorBack * amount,
+      )
 
   /**
    * Checks if this [BoundingBox2D] contains a given [Location2D]. Points on the edge or on a vertex

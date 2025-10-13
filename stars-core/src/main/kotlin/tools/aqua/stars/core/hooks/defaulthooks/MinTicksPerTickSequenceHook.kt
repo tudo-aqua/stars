@@ -36,7 +36,8 @@ open class MinTicksPerTickSequenceHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     minTicks: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
@@ -44,7 +45,8 @@ open class MinTicksPerTickSequenceHook<
         identifier = "MinTicksPerTickSequenceHook",
         evaluationFunction = { tick ->
           if (tick.sequenceLength >= minTicks) EvaluationHookResult.OK else failPolicy
-        }) {
+        },
+    ) {
   init {
     require(minTicks >= 0) { "minTicks must be >= 0" }
   }

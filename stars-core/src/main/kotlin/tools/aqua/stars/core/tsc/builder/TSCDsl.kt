@@ -44,9 +44,10 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> tsc(
+    D : TickDifference<D>,
+> tsc(
     identifier: String = "TSC",
-    init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+    init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {},
 ): TSC<E, T, U, D> {
   val rootEdge =
       TSCBoundedBuilder<E, T, U, D>(ROOT_NODE_LABEL)

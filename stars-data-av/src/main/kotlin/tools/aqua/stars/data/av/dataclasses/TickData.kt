@@ -35,10 +35,12 @@ class TickData(
     val trafficLights: List<TrafficLight> = emptyList(),
     val weather: WeatherParameters = WeatherParameters(),
     val daytime: Daytime = Daytime.Noon,
-    val world: World = World(straights = listOf(Road(id = 0, lanes = listOf(Lane(laneId = 0)))))
+    val world: World = World(straights = listOf(Road(id = 0, lanes = listOf(Lane(laneId = 0))))),
 ) :
     TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(
-        currentTickUnit, entities) {
+        currentTickUnit,
+        entities,
+    ) {
 
   /** All pedestrians. */
   val pedestrians: List<Pedestrian>

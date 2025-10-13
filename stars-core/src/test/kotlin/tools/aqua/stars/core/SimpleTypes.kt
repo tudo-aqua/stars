@@ -39,10 +39,12 @@ class SimpleEntity(
 /** Simple tick data. */
 class SimpleTickData(
     currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
-    entities: Set<SimpleEntity> = LinkedHashSet()
+    entities: Set<SimpleEntity> = LinkedHashSet(),
 ) :
     TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
-        currentTickUnit, entities) {
+        currentTickUnit,
+        entities,
+    ) {
   override val ego: SimpleEntity
     get() = throw UnsupportedOperationException("Ego not defined for SimpleTickData")
 
@@ -97,5 +99,7 @@ fun generateTicks(): Sequence<TickSequence<SimpleTickData>> =
                 SimpleTickData(
                     SimpleTickDataUnit(0),
                     setOf(SimpleEntity(0)),
-                ))
-            .asTickSequence())
+                )
+            )
+            .asTickSequence()
+    )

@@ -114,7 +114,7 @@ fun loadWorld(staticDataFile: Path): World =
 fun loadTicks(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<TickSequence<TickData>> {
   // Check that the simulationRunsWrappers are not empty
   check(simulationRunsWrappers.isNotEmpty()) {
@@ -147,7 +147,9 @@ fun loadTicks(
       // Calculate TickData objects from JSON
       val ticks =
           convertTickData(
-              world = currentSimulationRunsWrapper.world, jsonSimulationRun = simulationRun)
+              world = currentSimulationRunsWrapper.world,
+              jsonSimulationRun = simulationRun,
+          )
 
       val iterator = ticks.iterator()
       return@generateSequence TickSequence(bufferSize) {
@@ -177,13 +179,14 @@ fun loadTicks(
     mapDataFile: Path,
     dynamicDataFile: Path,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =
             listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
         bufferSize = bufferSize,
-        orderFilesBySeed = orderFilesBySeed)
+        orderFilesBySeed = orderFilesBySeed,
+    )
 
 /**
  * Returns a [Sequence] of [TickSequence]s given a path to a [mapDataFile] in combination with a
@@ -202,12 +205,13 @@ fun loadTicks(
     mapDataFile: Path,
     dynamicDataFiles: List<Path>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers = listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
         bufferSize = bufferSize,
-        orderFilesBySeed = orderFilesBySeed)
+        orderFilesBySeed = orderFilesBySeed,
+    )
 
 /**
  * Returns a [Sequence] of [TickSequence]s given a map of static data to dynamic data files.
@@ -223,10 +227,11 @@ fun loadTicks(
 fun loadTicks(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false
+    orderFilesBySeed: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =
             mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
         bufferSize = bufferSize,
-        orderFilesBySeed = orderFilesBySeed)
+        orderFilesBySeed = orderFilesBySeed,
+    )

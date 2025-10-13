@@ -43,5 +43,5 @@ enum class JsonDataWeatherParametersType(
   @SerialName("11") WetCloudySunset(11),
   @SerialName("12") SoftRainSunset(12),
   @SerialName("13") MidRainSunset(13),
-  @SerialName("14") HardRainSunset(14)
+  @SerialName("14") HardRainSunset(14),
 }

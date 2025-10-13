@@ -36,17 +36,19 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> release(
+    D : TickDifference<D>,
+> release(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
-    phi2: (T) -> Boolean
+    phi2: (T) -> Boolean,
 ): Boolean =
     !until(
         tickData = tickData,
         interval = interval,
         phi1 = { td -> !phi1(td) },
-        phi2 = { td -> !phi2(td) })
+        phi2 = { td -> !phi2(td) },
+    )
 
 /// **
 // * CMFTBL implementation of the 'release' operator for one entity i.e. "In all future ticks in the

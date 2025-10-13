@@ -119,7 +119,8 @@ object ApplicationConstantsHolder {
               File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
               File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
               File("test-$baselineDirectory").deleteRecursively()
-            })
+            }
+        )
   }
 
   /**
@@ -154,6 +155,7 @@ object ApplicationConstantsHolder {
         Java version               : ${System.getProperty("java.version")}
         Java vendor                : ${System.getProperty("java.vendor")}
       """
-                .trimIndent())
+                .trimIndent()
+        )
       }
 }

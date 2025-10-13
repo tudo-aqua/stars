@@ -59,7 +59,9 @@ class IncompleteJSONLaneTest {
                         lane2StartPos = 5.0,
                         lane2EndPos = 5.0,
                         contactLocation = JsonLocation(x = 0.0, y = 0.0, z = 0.0),
-                        id = "")),
+                        id = "",
+                    )
+                ),
             successorLanes = listOf(JsonContactLaneInfo(laneId = 1, roadId = 3)),
             speedLimits = emptyList(),
             trafficLights = emptyList(),
@@ -86,7 +88,10 @@ class IncompleteJSONLaneTest {
                         s = 0.0,
                         subType = "",
                         width = 1.0,
-                        zOffset = 0.0)))
+                        zOffset = 0.0,
+                    )
+                ),
+        )
     incompleteLane = incompleteJsonLane.toLane(isJunction = false)
     // The jsonLanes are not sufficiently filled out, as the connecting lanes are missing
     jsonLanes = listOf(incompleteJsonLane)
@@ -129,7 +134,8 @@ class IncompleteJSONLaneTest {
           incompleteLane.intersectingLanes.firstOrNull { contactInfo ->
             jsonContactInfo.laneId == contactInfo.lane.laneId &&
                 jsonContactInfo.roadId == contactInfo.lane.road.id
-          })
+          }
+      )
     }
   }
 
@@ -151,7 +157,8 @@ class IncompleteJSONLaneTest {
                 jsonContactArea.contactLocation.x == contactArea.contactLocation.x &&
                 jsonContactArea.contactLocation.y == contactArea.contactLocation.y &&
                 jsonContactArea.contactLocation.z == contactArea.contactLocation.z
-          })
+          }
+      )
     }
   }
 }

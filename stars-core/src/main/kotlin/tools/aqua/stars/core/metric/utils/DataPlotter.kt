@@ -64,7 +64,7 @@ fun plotDataAsLineChart(
     xAxisScaleMaxValue: Number? = null,
     yAxisScaleMaxValue: Number? = null,
     logScaleX: Boolean = false,
-    logScaleY: Boolean = false
+    logScaleY: Boolean = false,
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
@@ -77,9 +77,11 @@ fun plotDataAsLineChart(
               geomLine(
                   stat = Stat.identity,
                   position = positionDodge(POSITION_DODGE),
-                  sampling = samplingNone),
+                  sampling = samplingNone,
+              ),
       filename = "$fileName.png",
-      path = getAndCreatePlotFolder(folder, subFolder))
+      path = getAndCreatePlotFolder(folder, subFolder),
+  )
 }
 
 /**
@@ -107,7 +109,7 @@ fun plotDataAsBarChart(
     xAxisScaleMaxValue: Number? = null,
     yAxisScaleMaxValue: Number? = null,
     logScaleX: Boolean = false,
-    logScaleY: Boolean = false
+    logScaleY: Boolean = false,
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
@@ -119,7 +121,8 @@ fun plotDataAsBarChart(
           applyStyle(plot, size, xAxisScaleMaxValue, yAxisScaleMaxValue, logScaleX, logScaleY) +
               geomBar(stat = Stat.identity, position = positionDodge(), sampling = samplingNone),
       filename = "$fileName.png",
-      path = getAndCreatePlotFolder(folder, subFolder))
+      path = getAndCreatePlotFolder(folder, subFolder),
+  )
 }
 
 /**
@@ -147,7 +150,7 @@ fun plotDataAsHistogram(
     xAxisScaleMaxValue: Number? = null,
     yAxisScaleMaxValue: Number? = null,
     logScaleX: Boolean = false,
-    logScaleY: Boolean = false
+    logScaleY: Boolean = false,
 ) {
   if (plot == null) {
     println("Skip plotting, as there was no data provided.")
@@ -159,7 +162,8 @@ fun plotDataAsHistogram(
           applyStyle(plot, size, xAxisScaleMaxValue, yAxisScaleMaxValue, logScaleX, logScaleY) +
               geomHistogram(stat = Stat.bin(), position = positionDodge(), sampling = samplingNone),
       filename = "$fileName.png",
-      path = getAndCreatePlotFolder(folder, subFolder))
+      path = getAndCreatePlotFolder(folder, subFolder),
+  )
 }
 
 /**
@@ -181,7 +185,7 @@ private fun applyStyle(
     xAxisScaleMaxValue: Number?,
     yAxisScaleMaxValue: Number?,
     logScaleX: Boolean,
-    logScaleY: Boolean
+    logScaleY: Boolean,
 ): Plot {
   var innerPlot = plot
 
@@ -235,7 +239,7 @@ fun <T1 : Number, T2 : Number> getPlot(
     yValues: List<T2>,
     xAxisName: String = "x",
     yAxisName: String = "y",
-    legendHeader: String = "Legend"
+    legendHeader: String = "Legend",
 ): Plot? = getPlot(mapOf(legendEntry to (xValues to yValues)), xAxisName, yAxisName, legendHeader)
 
 /**
@@ -257,13 +261,14 @@ fun <T : Number> getPlot(
     yValues: List<T>,
     xAxisName: String = "x",
     yAxisName: String = "y",
-    legendHeader: String = "Legend"
+    legendHeader: String = "Legend",
 ): Plot? =
     getPlot(
         mapOf(legendEntry to (List(yValues.size) { it } to yValues)),
         xAxisName,
         yAxisName,
-        legendHeader)
+        legendHeader,
+    )
 
 /**
  * Creates a [Plot] object with the given values, so that it can be given to the lets-plot library
@@ -284,7 +289,7 @@ fun <T1 : Number, T2 : Number> getPlot(
     xAndYValues: List<Pair<List<T1>, List<T2>>>,
     xAxisName: String = "x",
     yAxisName: String = "y",
-    legendHeader: String = "Legend"
+    legendHeader: String = "Legend",
 ): Plot? {
   require(legendEntries.size == xAndYValues.size) {
     "The amount of given legend entries should equal the size of the given value pairs."
@@ -313,7 +318,7 @@ fun <T1 : Number, T2 : Number> getPlot(
     nameToValuesMap: Map<String, Pair<List<T1>, List<T2>>>,
     xAxisName: String,
     yAxisName: String,
-    legendHeader: String
+    legendHeader: String,
 ): Plot? {
   if (nameToValuesMap.isEmpty()) {
     return null

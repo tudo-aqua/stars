@@ -31,7 +31,8 @@ open class TSCMonitorsBuilder<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> : TSCBuilder<E, T, U, D>() {
+    D : TickDifference<D>,
+> : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
   fun build(): Map<String, (T) -> Boolean> = monitorMap
@@ -50,10 +51,8 @@ open class TSCMonitorsBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCMonitorsBuilder<E, T, U, D>.monitor(
-      label: String,
-      condition: (T) -> Boolean
-  ) {
+      D : TickDifference<D>,
+  > TSCMonitorsBuilder<E, T, U, D>.monitor(label: String, condition: (T) -> Boolean) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
     monitorMap[label] = condition
   }

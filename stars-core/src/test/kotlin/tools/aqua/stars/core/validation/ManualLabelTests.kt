@@ -45,7 +45,8 @@ abstract class ManualLabelTests<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> {
+    D : TickDifference<D>,
+> {
   protected abstract val manualLabelTestFiles: List<ManualLabelFile<E, T, U, D>>
 
   /**
@@ -70,13 +71,15 @@ abstract class ManualLabelTests<
                 manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
                   createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, true)
                 }
-              })
+              }
+          )
           dynamicTests.addAll(
               manualLabelTestFile.predicatesToNotHold.flatMap { manualLabelPredicate ->
                 manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
                   createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, false)
                 }
-              })
+              }
+          )
           return dynamicTests
         }
       }
@@ -98,18 +101,19 @@ abstract class ManualLabelTests<
       from: U,
       to: U,
       allTicks: List<T>,
-      shouldHold: Boolean
+      shouldHold: Boolean,
   ): DynamicTest {
     val matchingTicks = allTicks.getTicksInInterval(from, to)
     return DynamicTest.dynamicTest(
-        "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[$from,$to]s'") {
-          val predicate = predicate
-          if (shouldHold) {
-            matchingTicks.forEach { tick -> assertTrue(evaluatePredicateAtTick(predicate, tick)) }
-          } else {
-            matchingTicks.forEach { tick -> assertFalse(evaluatePredicateAtTick(predicate, tick)) }
-          }
-        }
+        "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[$from,$to]s'"
+    ) {
+      val predicate = predicate
+      if (shouldHold) {
+        matchingTicks.forEach { tick -> assertTrue(evaluatePredicateAtTick(predicate, tick)) }
+      } else {
+        matchingTicks.forEach { tick -> assertFalse(evaluatePredicateAtTick(predicate, tick)) }
+      }
+    }
   }
 
   /**

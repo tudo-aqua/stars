@@ -62,5 +62,5 @@ enum class JsonLandmarkType(val value: Int) {
   @SerialName("357") DeadEnd(357),
   @SerialName("380") RecommendedSpeed(380),
   @SerialName("381") RecommendedSpeedEnd(381),
-  @SerialName("1000001") LightPost(1_000_001)
+  @SerialName("1000001") LightPost(1_000_001),
 }

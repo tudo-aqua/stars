@@ -35,11 +35,8 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> previous(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean {
+    D : TickDifference<D>,
+> previous(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean {
   checkInterval(interval)
 
   // There needs to be a previous tick
@@ -47,9 +44,11 @@ fun <
 
   // The previous tick has to be in the interval
   val now = tickData.currentTickUnit
-  if (interval != null &&
-      (previousTick.currentTickUnit <= now - interval.second ||
-          previousTick.currentTickUnit > now - interval.first))
+  if (
+      interval != null &&
+          (previousTick.currentTickUnit <= now - interval.second ||
+              previousTick.currentTickUnit > now - interval.first)
+  )
       return false
 
   return phi(previousTick)

@@ -34,7 +34,8 @@ open class PreTickEvaluationHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(identifier: String, evaluationFunction: (T) -> EvaluationHookResult) :
+    D : TickDifference<D>,
+>(identifier: String, evaluationFunction: (T) -> EvaluationHookResult) :
     EvaluationHook<T>(identifier = identifier, evaluationFunction = evaluationFunction) {
   companion object {
     /**
@@ -51,7 +52,8 @@ open class PreTickEvaluationHook<
         E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> MutableList<PreTickEvaluationHook<E, T, U, D>>.evaluate(
+        D : TickDifference<D>,
+    > MutableList<PreTickEvaluationHook<E, T, U, D>>.evaluate(
         tick: T
     ): Pair<Boolean?, Map<PreTickEvaluationHook<E, T, U, D>, EvaluationHookResult>> {
       val hookResults = this.associateWith { it.evaluationFunction.invoke(tick) }

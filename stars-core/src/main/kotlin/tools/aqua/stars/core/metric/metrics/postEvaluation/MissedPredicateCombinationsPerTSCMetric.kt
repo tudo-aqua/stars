@@ -54,10 +54,11 @@ class MissedPredicateCombinationsPerTSCMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "missed-predicate-combinations",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : PostEvaluationMetricProvider<E, T, U, D>, Serializable, Loggable {
 
   /** Holds the evaluation result after calling [postEvaluate]. */
@@ -85,10 +86,12 @@ class MissedPredicateCombinationsPerTSCMetric<
   override fun printPostEvaluationResult() {
     val evaluationResult = postEvaluate()
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missing Predicate Combinations Per TSC \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missing Predicate Combinations Per TSC \n$CONSOLE_SEPARATOR"
+    )
     evaluationResult.forEach { (tsc, missedPredicates) ->
       logInfo(
-          "Count of missing predicate combinations for tsc '${tsc.identifier}': ${missedPredicates.size}.")
+          "Count of missing predicate combinations for tsc '${tsc.identifier}': ${missedPredicates.size}."
+      )
       missedPredicates
           .sortedWith(compareBy<PredicateCombination> { it.predicate1 }.thenBy { it.predicate2 })
           .forEach { logFine(it) }
@@ -106,7 +109,7 @@ class MissedPredicateCombinationsPerTSCMetric<
    */
   private fun getAllMissingPredicateCombinationsForTSC(
       tsc: TSC<E, T, U, D>,
-      tscInstances: List<TSCInstanceNode<E, T, U, D>>
+      tscInstances: List<TSCInstanceNode<E, T, U, D>>,
   ): Set<PredicateCombination> {
     // Get all possible predicate combinations
     val possiblePredicateCombinations = getAllPredicateCombinations(tsc.possibleTSCInstances)
@@ -155,6 +158,7 @@ class MissedPredicateCombinationsPerTSCMetric<
             source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
             count = resultList.size,
-            value = resultList)
+            value = resultList,
+        )
       } ?: emptyList()
 }

@@ -30,5 +30,5 @@ import kotlinx.serialization.Serializable
 enum class JsonLandmarkOrientation(val value: Int) {
   @SerialName("0") Positive(0),
   @SerialName("1") Negative(1),
-  @SerialName("2") Both(2)
+  @SerialName("2") Both(2),
 }

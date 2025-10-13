@@ -180,7 +180,8 @@ class TSCProjectionTest {
             "leaf_all_2",
             "exclusive",
             "leaf_exclusive_1",
-            "leaf_exclusive_2")
+            "leaf_exclusive_2",
+        )
     assert(projectionAllTSC.map { it.label } == expectedLabelsAll)
 
     val expectedLabelsSub1 = listOf("root", "all", "leaf_all_1", "leaf_all_2")

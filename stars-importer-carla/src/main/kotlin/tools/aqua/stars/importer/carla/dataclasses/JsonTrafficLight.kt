@@ -53,5 +53,5 @@ data class JsonTrafficLight(
     @SerialName("rotation") override val rotation: JsonRotation,
     @SerialName("collisions") override val collisions: List<Int>,
     @SerialName("state") var state: Int,
-    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int
+    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
 ) : JsonActor()

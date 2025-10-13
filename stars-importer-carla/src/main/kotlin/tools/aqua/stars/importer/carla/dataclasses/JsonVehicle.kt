@@ -63,7 +63,7 @@ data class JsonVehicle(
     @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
     @SerialName("lane") val lane: JsonLane,
     @SerialName("position_on_lane") val positionOnLane: Double,
-    @SerialName("collisions") override val collisions: List<Int>
+    @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor() {
 
   /** The effective velocity. */

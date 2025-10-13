@@ -45,5 +45,5 @@ data class JsonContactArea(
     @SerialName("lane_2_road_id") val lane2RoadId: Int,
     @SerialName("lane_2_id") val lane2Id: Int,
     @SerialName("lane_2_start_pos") val lane2StartPos: Double,
-    @SerialName("lane_2_end_pos") val lane2EndPos: Double
+    @SerialName("lane_2_end_pos") val lane2EndPos: Double,
 )

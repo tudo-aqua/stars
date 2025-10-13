@@ -25,5 +25,5 @@ enum class WeatherType {
   WetCloudy,
   SoftRainy,
   MidRainy,
-  HardRainy
+  HardRainy,
 }

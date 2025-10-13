@@ -36,11 +36,12 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> minPrevalence(
+    D : TickDifference<D>,
+> minPrevalence(
     tickData: T,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
+    phi: (T) -> Boolean,
 ): Boolean {
   checkInterval(interval)
   checkPercentage(percentage)

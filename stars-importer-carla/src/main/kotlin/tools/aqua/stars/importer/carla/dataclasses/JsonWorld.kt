@@ -31,7 +31,7 @@ import kotlinx.serialization.Serializable
 data class JsonWorld(
     @SerialName("straights") val straights: List<JsonRoad>,
     @SerialName("junctions") val junctions: List<JsonJunction>,
-    @SerialName("crosswalks") val crosswalks: List<JsonCrosswalk>
+    @SerialName("crosswalks") val crosswalks: List<JsonCrosswalk>,
 ) {
   /**
    * Returns a list of all lanes in the map.

@@ -36,17 +36,19 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> pastMaxPrevalence(
+    D : TickDifference<D>,
+> pastMaxPrevalence(
     tickData: T,
     percentage: Double,
     interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
+    phi: (T) -> Boolean,
 ): Boolean =
     pastMinPrevalence(
         tickData = tickData,
         percentage = 1 - percentage,
         interval = interval,
-        phi = { td -> !phi(td) })
+        phi = { td -> !phi(td) },
+    )
 
 /// **
 // * CMFTBL implementation of the 'maxPrevalence' operator for one entity i.e. "In all past ticks in

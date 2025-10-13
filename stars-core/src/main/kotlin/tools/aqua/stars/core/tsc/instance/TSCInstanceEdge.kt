@@ -34,7 +34,8 @@ data class TSCInstanceEdge<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val destination: TSCInstanceNode<E, T, U, D>,
     val tscEdge: TSCEdge<E, T, U, D>,
 ) {

@@ -65,6 +65,7 @@ sealed class SerializableResult {
         identifier = identifier,
         source = source,
         oldValue = otherResult.value.toString(),
-        newValue = value.toString())
+        newValue = value.toString(),
+    )
   }
 }

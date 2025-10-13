@@ -56,15 +56,17 @@ class InvalidTSCInstancesPerTSCMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<
           TSC<E, T, U, D>,
-          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>> =
+          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>,
+      > =
       mutableMapOf()
 
   /**
@@ -93,8 +95,8 @@ class InvalidTSCInstancesPerTSCMetric<
   override fun getState():
       MutableMap<
           TSC<E, T, U, D>,
-          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>> =
-      invalidInstancesMap
+          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>,
+      > = invalidInstancesMap
 
   /**
    * Logs and prints the number of invalid [TSCInstance] for each [TSC]. Also logs count of invalid
@@ -102,14 +104,17 @@ class InvalidTSCInstancesPerTSCMetric<
    */
   override fun printState() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
+    )
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
-          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size}")
+          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size}"
+      )
 
       logFine(
           "Count of unique invalid instances for tsc '${tsc.identifier}' per instance: " +
-              invalidInstancesMap.map { it.value.size })
+              invalidInstancesMap.map { it.value.size }
+      )
 
       invalidInstancesMap.forEach { (referenceInstance, invalidInstances) ->
         logFiner(
@@ -118,7 +123,8 @@ class InvalidTSCInstancesPerTSCMetric<
               1 -> "1 time."
               else -> "${invalidInstances.size} times."
             }
-          }")
+          }"
+        )
         logFiner(referenceInstance)
         logFiner("Reasons for invalidity:")
         referenceInstance.validate().forEach { validation -> logFiner("- ${validation.second}") }
@@ -137,12 +143,14 @@ class InvalidTSCInstancesPerTSCMetric<
             invalidInstances.map { (tscInstanceNode, tscInstances) ->
               SerializableTSCOccurrence(
                   tscInstance = SerializableTSCNode(tscInstanceNode),
-                  identifiers = tscInstances.map { it.sourceIdentifier })
+                  identifiers = tscInstances.map { it.sourceIdentifier },
+              )
             }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
             count = resultList.size,
-            value = resultList)
+            value = resultList,
+        )
       }
 }

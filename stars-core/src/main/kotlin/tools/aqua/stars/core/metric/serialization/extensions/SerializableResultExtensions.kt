@@ -73,10 +73,12 @@ fun Map<String, List<SerializableResult>>.compareTo(
                   source = result.source,
                   identifier = result.identifier,
                   newValue = result.value.toString(),
-                  oldValue = "None")
+                  oldValue = "None",
+              )
             }
           }
-          .flatten())
+          .flatten()
+  )
 
   // Add removed keys to results
   serializableResultComparisons.addAll(
@@ -88,10 +90,12 @@ fun Map<String, List<SerializableResult>>.compareTo(
                   source = result.source,
                   identifier = result.identifier,
                   newValue = "None",
-                  oldValue = result.value.toString())
+                  oldValue = result.value.toString(),
+              )
             }
           }
-          .flatten())
+          .flatten()
+  )
 
   // Compare common keys and their identifiers
   serializableResultComparisons.addAll(
@@ -127,9 +131,11 @@ fun Map<String, List<SerializableResult>>.compareTo(
                             source = result.source,
                             identifier = result.identifier,
                             newValue = result.value.toString(),
-                            oldValue = "None")
+                            oldValue = "None",
+                        )
                       }
-                })
+                }
+            )
 
             // Add removed identifiers to results
             identifierComparisons.addAll(
@@ -142,9 +148,11 @@ fun Map<String, List<SerializableResult>>.compareTo(
                             source = result.source,
                             identifier = result.identifier,
                             newValue = "None",
-                            oldValue = result.value.toString())
+                            oldValue = result.value.toString(),
+                        )
                       }
-                })
+                }
+            )
 
             // Compare common identifiers
             identifierComparisons.addAll(
@@ -152,11 +160,13 @@ fun Map<String, List<SerializableResult>>.compareTo(
                   val thisResult = theseResults.first { it.identifier == identifier }
                   val otherResult = otherResults.first { it.identifier == identifier }
                   thisResult.compareTo(otherResult)
-                })
+                }
+            )
 
             return@map identifierComparisons
           }
-          .flatten())
+          .flatten()
+  )
 
   return serializableResultComparisons
 }

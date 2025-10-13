@@ -29,5 +29,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class JsonContactLaneInfo(
     @SerialName("road_id") val roadId: Int,
-    @SerialName("lane_id") val laneId: Int
+    @SerialName("lane_id") val laneId: Int,
 )

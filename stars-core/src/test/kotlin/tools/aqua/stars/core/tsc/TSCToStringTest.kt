@@ -204,7 +204,9 @@ class TSCToStringTest {
           }
         }
     assertEquals(
-        "all(1..1)\n-T-> any(1..3)\n  -T-> leaf_1\n  -T-> leaf_2\n  -T-> leaf_3", tsc.toString())
+        "all(1..1)\n-T-> any(1..3)\n  -T-> leaf_1\n  -T-> leaf_2\n  -T-> leaf_3",
+        tsc.toString(),
+    )
   }
   // endregion
 }

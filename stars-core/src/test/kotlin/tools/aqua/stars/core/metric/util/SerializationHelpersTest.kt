@@ -101,7 +101,8 @@ class SerializationHelpersTest {
     // Check that the returned path is equal to the expected path
     val actualFile =
         File(
-            "$serializedResultsFolder/$applicationStartTimeString/${actualSource}/${actualIdentifier}.json")
+            "$serializedResultsFolder/$applicationStartTimeString/${actualSource}/${actualIdentifier}.json"
+        )
     assertEquals(actualFile, resultPath)
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
@@ -123,7 +124,12 @@ class SerializationHelpersTest {
     val actualSource = "actualSource"
     val actualSerializableResultComparison =
         SerializableResultComparison(
-            EQUAL_RESULTS, actualSource, actualIdentifier, "oldValue", "newValue")
+            EQUAL_RESULTS,
+            actualSource,
+            actualIdentifier,
+            "oldValue",
+            "newValue",
+        )
     val resultPath = actualSerializableResultComparison.saveAsJsonFile(false)
 
     // Check that the returned path really exists and contains the necessary keywords
@@ -139,7 +145,8 @@ class SerializationHelpersTest {
                 "$applicationStartTimeString/" +
                 "$PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER/" +
                 "$actualSource/" +
-                "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json")
+                "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json"
+        )
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
 
@@ -158,7 +165,12 @@ class SerializationHelpersTest {
     val actualSource = "actualSource"
     val actualSerializableResultComparison =
         SerializableResultComparison(
-            EQUAL_RESULTS, actualSource, actualIdentifier, "oldValue", "newValue")
+            EQUAL_RESULTS,
+            actualSource,
+            actualIdentifier,
+            "oldValue",
+            "newValue",
+        )
     val resultPath = actualSerializableResultComparison.saveAsJsonFile(true)
 
     // Check that the returned path really exists and contains the necessary keywords
@@ -174,7 +186,8 @@ class SerializationHelpersTest {
                 "$applicationStartTimeString/" +
                 "$baselineDirectory/" +
                 "$actualSource/" +
-                "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json")
+                "[${EQUAL_RESULTS.shortString}]_comparison_$actualIdentifier.json"
+        )
     assertTrue(actualFile.exists())
     assertTrue(actualFile.isFile())
 

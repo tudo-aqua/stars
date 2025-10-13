@@ -68,7 +68,8 @@ class JSONSpeedLimitTest {
             pitch = 0.0,
             roll = 0.0,
             location = JsonLocation(0.0, 0.0, 0.0),
-            rotation = JsonRotation(0.0, 0.0, 0.0))
+            rotation = JsonRotation(0.0, 0.0, 0.0),
+        )
 
     jsonSpeedLimit2 =
         JsonLandmark(
@@ -92,7 +93,8 @@ class JSONSpeedLimitTest {
             pitch = 0.0,
             roll = 0.0,
             location = JsonLocation(0.0, 0.0, 0.0),
-            rotation = JsonRotation(0.0, 0.0, 0.0))
+            rotation = JsonRotation(0.0, 0.0, 0.0),
+        )
 
     speedLimitLane = Lane(laneLength = 40.0)
     jsonLandmarks = listOf(jsonSpeedLimit1, jsonSpeedLimit2)
@@ -291,7 +293,8 @@ class JSONSpeedLimitTest {
             speedLimits = listOf(JsonSpeedLimit(30.0, 0.0, 10.0), JsonSpeedLimit(50.0, 10.0, 50.0)),
             landmarks = listOf(jsonSpeedLimit1, jsonSpeedLimit2),
             contactAreas = emptyList(),
-            trafficLights = emptyList())
+            trafficLights = emptyList(),
+        )
 
     val lane = jsonLane.toLane(isJunction = false)
 

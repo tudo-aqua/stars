@@ -29,7 +29,8 @@ class BoundingBoxContainmentTest {
             leftFront = Location2D(0.0, 2.0),
             rightFront = Location2D(2.0, 2.0),
             rightBack = Location2D(2.0, 0.0),
-            leftBack = Location2D(0.0, 0.0))
+            leftBack = Location2D(0.0, 0.0),
+        )
 
   val orientedBoundingBox: BoundingBox2D
     get() =
@@ -37,7 +38,8 @@ class BoundingBoxContainmentTest {
             leftFront = Location2D(2.0, 5.0),
             rightFront = Location2D(5.0, 3.0),
             rightBack = Location2D(3.0, 0.0),
-            leftBack = Location2D(0.0, 2.0))
+            leftBack = Location2D(0.0, 2.0),
+        )
 
   // region AABB
   @Test

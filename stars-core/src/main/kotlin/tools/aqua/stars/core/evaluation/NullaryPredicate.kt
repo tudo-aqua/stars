@@ -33,7 +33,8 @@ class NullaryPredicate<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     name: String,
     val eval: (T) -> Boolean,
 ) : AbstractPredicate<E, T, U, D>(name = name) {
@@ -77,9 +78,8 @@ class NullaryPredicate<
         E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
-        D : TickDifference<D>> predicate(
-        name: String,
-        eval: (T) -> Boolean
-    ): NullaryPredicate<E, T, U, D> = NullaryPredicate(name, eval)
+        D : TickDifference<D>,
+    > predicate(name: String, eval: (T) -> Boolean): NullaryPredicate<E, T, U, D> =
+        NullaryPredicate(name, eval)
   }
 }

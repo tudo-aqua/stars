@@ -36,7 +36,7 @@ import tools.aqua.stars.core.types.TickDataType
  */
 class TickSequence<T : TickDataType<*, T, *, *>>(
     val bufferSize: Int = 100,
-    private val getNextValue: () -> T?
+    private val getNextValue: () -> T?,
 ) : Sequence<T> {
   /** Constrains the sequence to be consumed only once. */
   private val onceConstraint = java.util.concurrent.atomic.AtomicBoolean(true)

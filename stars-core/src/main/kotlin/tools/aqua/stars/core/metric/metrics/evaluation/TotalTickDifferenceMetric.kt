@@ -45,9 +45,10 @@ class TotalTickDifferenceMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "total-tick-difference",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TickMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
   /** Holds the current [TickDifference] for all already analyzed ticks. */
   private var totalTickDifference: D? = null
@@ -99,6 +100,10 @@ class TotalTickDifferenceMetric<
       totalTickDifference?.let {
         listOf(
             SerializableTickDifferenceResult(
-                identifier = loggerIdentifier, source = loggerIdentifier, value = it.serialize()))
+                identifier = loggerIdentifier,
+                source = loggerIdentifier,
+                value = it.serialize(),
+            )
+        )
       } ?: emptyList()
 }

@@ -31,5 +31,5 @@ import kotlinx.serialization.Serializable
 data class JsonLocation(
     @SerialName("x") val x: Double,
     @SerialName("y") val y: Double,
-    @SerialName("z") val z: Double
+    @SerialName("z") val z: Double,
 )

@@ -43,7 +43,8 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> manuallyLabelledFile(
+    D : TickDifference<D>,
+> manuallyLabelledFile(
     ticksToTest: Sequence<TickSequence<T>>,
-    manualLabelFile: ManualLabelFile<E, T, U, D>.() -> Unit
+    manualLabelFile: ManualLabelFile<E, T, U, D>.() -> Unit,
 ): ManualLabelFile<E, T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)

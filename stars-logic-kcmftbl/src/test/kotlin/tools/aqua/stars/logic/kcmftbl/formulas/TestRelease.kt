@@ -226,7 +226,8 @@ class TestRelease {
           createTicks(phi1, phi2)[0],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -248,7 +249,8 @@ class TestRelease {
           createTicks(phi1, phi2)[0],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -270,7 +272,8 @@ class TestRelease {
           createTicks(phi1, phi2)[0],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -292,7 +295,8 @@ class TestRelease {
           createTicks(phi1, phi2)[0],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -314,7 +318,8 @@ class TestRelease {
           createTicks(phi1, phi2)[0],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 
@@ -336,7 +341,8 @@ class TestRelease {
           createTicks(phi1, phi2)[0],
           createInterval(interval),
           phi1 = { it.phi1 },
-          phi2 = { it.phi2 })
+          phi2 = { it.phi2 },
+      )
     }
   }
 }

@@ -24,5 +24,5 @@ enum class VehicleType {
   VAN,
   BUS,
   MOTORCYCLE,
-  BICYCLE
+  BICYCLE,
 }

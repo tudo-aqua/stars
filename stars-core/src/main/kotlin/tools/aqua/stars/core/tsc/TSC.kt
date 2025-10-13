@@ -36,7 +36,8 @@ class TSC<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val rootNode: TSCNode<E, T, U, D>, val identifier: String = "TSC") :
+    D : TickDifference<D>,
+>(val rootNode: TSCNode<E, T, U, D>, val identifier: String = "TSC") :
     Iterable<TSCNode<E, T, U, D>> {
 
   init {

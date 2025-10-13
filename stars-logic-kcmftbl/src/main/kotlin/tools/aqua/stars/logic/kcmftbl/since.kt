@@ -36,11 +36,12 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> since(
+    D : TickDifference<D>,
+> since(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
-    phi2: (T) -> Boolean
+    phi2: (T) -> Boolean,
 ): Boolean {
   checkInterval(interval)
 

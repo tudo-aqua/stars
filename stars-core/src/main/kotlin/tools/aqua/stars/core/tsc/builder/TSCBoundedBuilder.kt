@@ -38,7 +38,8 @@ open class TSCBoundedBuilder<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     val label: String,
     var bounds: Pair<Int, Int> = Pair(0, 0),
 ) : TSCBuilder<E, T, U, D>() {
@@ -57,7 +58,9 @@ open class TSCBoundedBuilder<
                   edges = edges.toList(),
                   monitorsMap = monitors,
                   projectionsMap = projections,
-                  bounds = bounds))
+                  bounds = bounds,
+              ),
+      )
 
   /**
    * DSL function for edge conditions.
@@ -72,7 +75,8 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
     this.condition = condition
   }
 
@@ -89,9 +93,8 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.valueFunction(
-      valueFunction: (T) -> Any
-  ) {
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.valueFunction(valueFunction: (T) -> Any) {
     this.valueFunction = valueFunction
   }
 
@@ -109,7 +112,8 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.projections(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.projections(
       init: TSCProjectionsBuilder<E, T, U, D>.() -> Unit = {}
   ) = TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
@@ -127,9 +131,9 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.monitors(
-      init: TSCMonitorsBuilder<E, T, U, D>.() -> Unit = {}
-  ) = TSCMonitorsBuilder<E, T, U, D>().apply { init() }.also { this.monitors = it.build() }
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.monitors(init: TSCMonitorsBuilder<E, T, U, D>.() -> Unit = {}) =
+      TSCMonitorsBuilder<E, T, U, D>().apply { init() }.also { this.monitors = it.build() }
 
   /**
    * DSL function for an edge with BoundedNode.
@@ -147,10 +151,11 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.bounded(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.bounded(
       label: String,
       bounds: Pair<Int, Int>,
-      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {},
   ): TSCEdge<E, T, U, D> =
       TSCBoundedBuilder<E, T, U, D>(label)
           .apply { init() }
@@ -173,9 +178,10 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.exclusive(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.exclusive(
       label: String,
-      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {},
   ): TSCEdge<E, T, U, D> =
       TSCBoundedBuilder<E, T, U, D>(label)
           .apply { init() }
@@ -198,9 +204,10 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.optional(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.optional(
       label: String,
-      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {},
   ): TSCEdge<E, T, U, D> =
       TSCBoundedBuilder<E, T, U, D>(label)
           .apply { init() }
@@ -223,9 +230,10 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.any(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.any(
       label: String,
-      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {},
   ): TSCEdge<E, T, U, D> =
       TSCBoundedBuilder<E, T, U, D>(label)
           .apply { init() }
@@ -248,9 +256,10 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.all(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.all(
       label: String,
-      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {}
+      init: TSCBoundedBuilder<E, T, U, D>.() -> Unit = {},
   ): TSCEdge<E, T, U, D> =
       TSCBoundedBuilder<E, T, U, D>(label)
           .apply { init() }
@@ -273,9 +282,10 @@ open class TSCBoundedBuilder<
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
-      D : TickDifference<D>> TSCBoundedBuilder<E, T, U, D>.leaf(
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.leaf(
       label: String,
-      init: TSCLeafBuilder<E, T, U, D>.() -> Unit = {}
+      init: TSCLeafBuilder<E, T, U, D>.() -> Unit = {},
   ): TSCEdge<E, T, U, D> =
       TSCLeafBuilder<E, T, U, D>(label).apply { init() }.build().also { this.addEdge(it) }
 }

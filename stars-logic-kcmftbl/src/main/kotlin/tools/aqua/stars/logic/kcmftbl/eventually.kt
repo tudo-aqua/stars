@@ -35,11 +35,9 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> eventually(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean = until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
+    D : TickDifference<D>,
+> eventually(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean =
+    until(tickData, interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /// **
 // * CMFTBL implementation of the 'eventually' operator for one entity i.e. "In a future tick in the

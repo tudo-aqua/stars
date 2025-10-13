@@ -31,5 +31,5 @@ import kotlinx.serialization.Serializable
 data class JsonSpeedLimit(
     @SerialName("speed_limit") val speedLimit: Double,
     @SerialName("from_distance") val fromDistanceFromStart: Double,
-    @SerialName("to_distance") val toDistanceFromStart: Double
+    @SerialName("to_distance") val toDistanceFromStart: Double,
 )

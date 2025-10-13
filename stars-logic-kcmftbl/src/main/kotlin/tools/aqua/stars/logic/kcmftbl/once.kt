@@ -35,11 +35,8 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> once(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean =
+    D : TickDifference<D>,
+> once(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean =
     since(tickData = tickData, interval = interval, phi1 = { _ -> true }, phi2 = { td -> phi(td) })
 
 /// **

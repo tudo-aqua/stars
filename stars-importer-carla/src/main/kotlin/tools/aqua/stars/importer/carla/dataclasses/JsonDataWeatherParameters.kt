@@ -55,5 +55,5 @@ data class JsonDataWeatherParameters(
     @SerialName("fog_falloff") val fogFalloff: Double,
     @SerialName("scattering_intensity") val scatteringIntensity: Double,
     @SerialName("mie_scattering_scale") val mieScatteringScale: Double,
-    @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double
+    @SerialName("rayleigh_scattering_scale") val rayleighScatteringScale: Double,
 )

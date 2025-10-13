@@ -50,14 +50,16 @@ data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.
       Vector3D(
           x = this.x * scalar.toDouble(),
           y = this.y * scalar.toDouble(),
-          z = this.z * scalar.toDouble())
+          z = this.z * scalar.toDouble(),
+      )
 
   /** Division with scalar operator. */
   operator fun div(scalar: Number): Vector3D =
       Vector3D(
           x = this.x / scalar.toDouble(),
           y = this.y / scalar.toDouble(),
-          z = this.z / scalar.toDouble())
+          z = this.z / scalar.toDouble(),
+      )
 
   /** Dot product with another vector. */
   fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
@@ -67,7 +69,8 @@ data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.
       Vector3D(
           x = y * other.z - z * other.y,
           y = z * other.x - x * other.z,
-          z = x * other.y - y * other.x)
+          z = x * other.y - y * other.x,
+      )
 
   /** Length of the vector. */
   fun magnitude(): Double = sqrt(x * x + y * y + z * z)

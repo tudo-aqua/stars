@@ -49,5 +49,5 @@ enum class JsonLaneType(val value: Int) {
   @SerialName("4096") Special2(4096),
   @SerialName("8192") Special3(8192),
   @SerialName("4") Stop(4),
-  @SerialName("32768") Tram(32_768)
+  @SerialName("32768") Tram(32_768),
 }

@@ -27,7 +27,7 @@ package tools.aqua.stars.data.av.dataclasses
 data class World(
     val straights: List<Road> = emptyList(),
     val junctions: List<Junction> = emptyList(),
-    val crosswalks: List<Crosswalk> = emptyList()
+    val crosswalks: List<Crosswalk> = emptyList(),
 ) {
 
   init {

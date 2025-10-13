@@ -35,11 +35,9 @@ fun <
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> historically(
-    tickData: T,
-    interval: Pair<D, D>? = null,
-    phi: (T) -> Boolean
-): Boolean = !once(tickData = tickData, interval = interval, phi = { td -> !phi(td) })
+    D : TickDifference<D>,
+> historically(tickData: T, interval: Pair<D, D>? = null, phi: (T) -> Boolean): Boolean =
+    !once(tickData = tickData, interval = interval, phi = { td -> !phi(td) })
 
 /// **
 // * CMFTBL implementation of the 'historically' operator for one entity i.e. "In all past ticks in

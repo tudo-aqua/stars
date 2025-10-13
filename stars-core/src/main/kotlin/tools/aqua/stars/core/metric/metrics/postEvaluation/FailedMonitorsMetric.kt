@@ -55,10 +55,11 @@ class FailedMonitorsMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : PostEvaluationMetricProvider<E, T, U, D>, Serializable, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
@@ -78,13 +79,15 @@ class FailedMonitorsMetric<
               validInstance.rootNode.validateMonitors(validInstance.sourceIdentifier)
             }
           }
-        })
+        }
+    )
   }
 
   /** Prints the count of failed monitors for each [TSC]. */
   override fun printPostEvaluationResult() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Count Of Failed Monitors Per TSC \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Count Of Failed Monitors Per TSC \n$CONSOLE_SEPARATOR"
+    )
     failedMonitors.forEach { (tsc, failedMonitors) ->
       logInfo("Count of failed monitors for tsc '${tsc.identifier}': ${failedMonitors.size}")
 
@@ -108,13 +111,15 @@ class FailedMonitorsMetric<
                   identifier = it.identifier,
                   tscInstance = SerializableTSCNode(it.tscInstance),
                   monitorLabel = it.monitorLabel,
-                  nodeLabel = it.nodeLabel)
+                  nodeLabel = it.nodeLabel,
+              )
             }
         SerializableFailedMonitorsResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,
             tsc = SerializableTSCNode(tsc.rootNode),
             count = resultList.size,
-            value = resultList)
+            value = resultList,
+        )
       }
 }

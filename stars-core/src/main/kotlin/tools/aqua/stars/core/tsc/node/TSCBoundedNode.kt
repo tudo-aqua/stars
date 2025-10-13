@@ -42,20 +42,22 @@ open class TSCBoundedNode<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
     monitorsMap: Map<String, (T) -> Boolean>?,
     projectionsMap: Map<String, Boolean>?,
     valueFunction: (T) -> Any = {},
-    val bounds: Pair<Int, Int>
+    val bounds: Pair<Int, Int>,
 ) :
     TSCNode<E, T, U, D>(
         label = label,
         edges = edges,
         monitorsMap = monitorsMap,
         projectionsMap = projectionsMap,
-        valueFunction = valueFunction) {
+        valueFunction = valueFunction,
+    ) {
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, U, D>>>>()

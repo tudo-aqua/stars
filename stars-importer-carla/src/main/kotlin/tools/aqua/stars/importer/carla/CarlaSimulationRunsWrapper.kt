@@ -35,7 +35,7 @@ import tools.aqua.stars.data.av.dataclasses.World
 class CarlaSimulationRunsWrapper(
     val staticDataFile: Path,
     dynamicDataFiles: List<Path>,
-    sortFilesBySeed: Boolean = true
+    sortFilesBySeed: Boolean = true,
 ) {
   /** Holds the [World] object. */
   val world: World = loadWorld(staticDataFile)
@@ -44,5 +44,6 @@ class CarlaSimulationRunsWrapper(
   val dynamicDataFiles: ArrayDeque<Path> =
       ArrayDeque(
           if (sortFilesBySeed) dynamicDataFiles.sortedBy { getSeed(it.fileName.toString()) }
-          else dynamicDataFiles)
+          else dynamicDataFiles
+      )
 }

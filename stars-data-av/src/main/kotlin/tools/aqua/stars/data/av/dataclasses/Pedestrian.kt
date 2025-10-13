@@ -33,7 +33,7 @@ class Pedestrian(
     override val boundingBox: BoundingBox = BoundingBox(),
     override val location: Location = Location(),
     override val rotation: Rotation = Rotation(),
-    override val collisions: List<Int> = emptyList()
+    override val collisions: List<Int> = emptyList(),
 ) : Actor(id) {
 
   override fun clone(newTickData: TickData): Actor =
@@ -48,5 +48,6 @@ class Pedestrian(
           boundingBox = boundingBox,
           location = location,
           rotation = rotation,
-          collisions = collisions)
+          collisions = collisions,
+      )
 }

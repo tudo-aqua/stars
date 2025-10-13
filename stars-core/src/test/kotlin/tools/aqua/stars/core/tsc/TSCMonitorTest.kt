@@ -46,7 +46,11 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
 
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
@@ -81,7 +85,11 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
 
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
@@ -121,7 +129,11 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
 
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
@@ -134,9 +146,11 @@ class TSCMonitorTest {
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(2, failedMonitors.size)
     assertTrue(
-        failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "RootMonitorFalse" })
+        failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "RootMonitorFalse" }
+    )
     assertTrue(
-        failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "LeafMonitorFalse" })
+        failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "LeafMonitorFalse" }
+    )
   }
 
   /**
@@ -166,7 +180,11 @@ class TSCMonitorTest {
 
     val validInstancesMetric =
         ValidTSCInstancesPerTSCMetric<
-            SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
 
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 

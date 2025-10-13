@@ -49,5 +49,5 @@ data class JsonPedestrian(
     @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
-    @SerialName("collisions") override val collisions: List<Int>
+    @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor()

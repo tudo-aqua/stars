@@ -67,5 +67,5 @@ data class JsonLandmark( // TODO: Add bounding box
     @SerialName("pitch") val pitch: Double,
     @SerialName("roll") val roll: Double,
     @SerialName("location") val location: JsonLocation,
-    @SerialName("rotation") val rotation: JsonRotation
+    @SerialName("rotation") val rotation: JsonRotation,
 )

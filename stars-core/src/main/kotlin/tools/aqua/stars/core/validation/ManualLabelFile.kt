@@ -39,7 +39,8 @@ class ManualLabelFile<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(val ticksToTest: Sequence<TickSequence<T>>) {
+    D : TickDifference<D>,
+>(val ticksToTest: Sequence<TickSequence<T>>) {
   internal val predicatesToHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
   internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
 
@@ -53,7 +54,7 @@ class ManualLabelFile<
    */
   fun predicateHolds(
       predicate: AbstractPredicate<E, T, U, D>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit
+      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit,
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)
@@ -70,7 +71,7 @@ class ManualLabelFile<
    */
   fun predicateDoesNotHold(
       predicate: AbstractPredicate<E, T, U, D>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit
+      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit,
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)

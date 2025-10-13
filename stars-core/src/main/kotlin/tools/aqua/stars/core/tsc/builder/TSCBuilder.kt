@@ -33,7 +33,8 @@ sealed class TSCBuilder<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>> {
+    D : TickDifference<D>,
+> {
 
   /** Holds all edges of the node. */
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()

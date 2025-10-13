@@ -57,9 +57,10 @@ class MissedTSCInstancesPerTSCMetric<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
-    D : TickDifference<D>>(
+    D : TickDifference<D>,
+>(
     override val loggerIdentifier: String = "missed-tsc-instances-per-tsc",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TSCAndTSCInstanceNodeMetricProvider<E, T, U, D>, Stateful, Serializable, Loggable {
   /**
    * Map a [TSC] to a map in which the missed valid [TSCInstanceNode]s are stored:
@@ -110,11 +111,13 @@ class MissedTSCInstancesPerTSCMetric<
   /** Prints the count of missed [TSCInstance]s for each [TSC] using [println]. */
   override fun printState() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missed TSC Instances Per TSC \n$CONSOLE_SEPARATOR")
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missed TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
+    )
     getState().forEach { (tsc, missedInstances) ->
       logInfo(
           "Count of unique missed instances for tsc '${tsc.identifier}': ${missedInstances.size} (of ${tsc
-          .possibleTSCInstances.size} possible instances).")
+          .possibleTSCInstances.size} possible instances)."
+      )
       missedInstances.forEach { logFine(it) }
     }
   }
@@ -129,6 +132,7 @@ class MissedTSCInstancesPerTSCMetric<
             identifier = tsc.identifier,
             source = loggerIdentifier,
             count = resultList.size,
-            value = resultList)
+            value = resultList,
+        )
       }
 }
