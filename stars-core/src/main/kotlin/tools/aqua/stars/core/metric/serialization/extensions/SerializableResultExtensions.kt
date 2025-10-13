@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.metric.serialization.extensions
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tools.aqua.stars.core.metric.serialization.SerializableResult
 import tools.aqua.stars.core.metric.serialization.SerializableResultComparison

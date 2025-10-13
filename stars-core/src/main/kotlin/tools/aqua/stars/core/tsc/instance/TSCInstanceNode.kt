@@ -62,7 +62,7 @@ class TSCInstanceNode<
       currentNodeEdge: TSCInstanceEdge<E, T, S, U, D>? = null,
   ): List<TSCInstanceEdge<E, T, S, U, D>> =
       if (currentNodeEdge == null && currentNode.edges.isEmpty()) {
-        listOf()
+        emptyList()
       } else if (currentNodeEdge != null && currentNode.edges.isEmpty()) {
         listOf(currentNodeEdge)
       } else {

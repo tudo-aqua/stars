@@ -47,34 +47,34 @@ object ApplicationConstantsHolder {
       applicationStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
 
   /** Separator for console output. */
-  const val CONSOLE_SEPARATOR =
+  const val CONSOLE_SEPARATOR: String =
       "===================================================================================================="
   /** Indent for console output. */
-  const val CONSOLE_INDENT = "                         "
+  const val CONSOLE_INDENT: String = "                         "
 
   /** Log folder directory for analysis result logs. */
-  private const val ANALYSIS_LOG_FOLDER = "analysis-result-logs"
+  private const val ANALYSIS_LOG_FOLDER: String = "analysis-result-logs"
 
   /** Log folder directory for result logs produced in test runs. */
-  private const val TEST_LOG_FOLDER = "test-result-logs"
+  private const val TEST_LOG_FOLDER: String = "test-result-logs"
 
   /** Folder directory for serialized metric results produced in evaluation. */
-  private const val SERIALIZED_RESULTS_FOLDER = "serialized-results"
+  private const val SERIALIZED_RESULTS_FOLDER: String = "serialized-results"
 
   /** Folder directory for serialized compared results produced in evaluation. */
-  private const val COMPARED_RESULTS_FOLDER = "compared-results"
+  private const val COMPARED_RESULTS_FOLDER: String = "compared-results"
 
   /** File name for the metadata file. */
-  private const val METADATA_FILE_NAME = "experiment_run_metadata"
+  private const val METADATA_FILE_NAME: String = "experiment_run_metadata"
 
   /** Folder directory for serialized baseline result data set. */
-  var baselineDirectory = "baseline"
+  var baselineDirectory: String = "baseline"
 
   /** May hold the command that was used to execute the application. */
   var executionCommand: String = ""
 
   /** Folder directory for serialized previous evaluation result. */
-  const val PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER = "previous-evaluation"
+  const val PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER: String = "previous-evaluation"
 
   /** Indicates whether the application is running in test mode. */
   val isTestRun: Boolean
@@ -101,7 +101,7 @@ object ApplicationConstantsHolder {
       if (isTestRun) "test-$COMPARED_RESULTS_FOLDER" else COMPARED_RESULTS_FOLDER
 
   /** Holds the [Json] configuration that is used throughout the project. */
-  val jsonConfiguration = Json {
+  val jsonConfiguration: Json = Json {
     prettyPrint = true
     isLenient = true
   }

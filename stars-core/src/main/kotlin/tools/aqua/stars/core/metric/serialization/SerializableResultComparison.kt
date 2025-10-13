@@ -34,6 +34,10 @@ data class SerializableResultComparison(
     /** The value of the [SerializableResult] that was produced during this evaluation. */
     val newValue: String,
 ) {
+
+  /**
+   * Companion object containing utility methods for working with [SerializableResultComparison].
+   */
   companion object {
     /**
      * Returns whether all [SerializableResultComparison]s in this list have a verdict of

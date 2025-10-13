@@ -17,10 +17,18 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Enum for [Lane] directions. */
+/**
+ * Turn/intended travel direction of a [Lane].
+ *
+ * Values mirror the CARLA Python API.
+ */
 enum class LaneDirection {
+  /** Lane intended for straight-ahead travel. */
   STRAIGHT,
+  /** Lane intended for left turns. */
   LEFT_TURN,
+  /** Lane intended for right turns. */
   RIGHT_TURN,
+  /** Direction is not specified or unknown. */
   UNKNOWN,
 }

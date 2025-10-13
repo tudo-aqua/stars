@@ -146,7 +146,7 @@ fun convertTickData(
                     .first()
             )
           } else {
-            listOf()
+            emptyList()
           }
         }
 
@@ -168,10 +168,11 @@ fun convertTickData(
     jsonSimulationRun
         .mapNotNull {
           // Set ego flag for each vehicle
-          val vehiclesInRun = it.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
-          vehiclesInRun.forEach { it.egoVehicle = (it.id == t) }
+          val vehiclesInRun =
+              it.actorPositions.map { position -> position.actor }.filterIsInstance<JsonVehicle>()
+          vehiclesInRun.forEach { vehicle -> vehicle.egoVehicle = (vehicle.id == t) }
 
-          if (vehiclesInRun.none { it.egoVehicle }) {
+          if (vehiclesInRun.none { vehicle -> vehicle.egoVehicle }) {
             println(
                 "Vehicle with id $t not found in tick data at tick ${it.currentTick}, skipping."
             )
@@ -278,24 +279,24 @@ fun sliceRunIntoSegments(
 
   val segments = mutableListOf<Segment>()
 
-  tickData.forEach { tickData ->
+  tickData.forEach { tickDataList ->
     val blockRanges = mutableListOf<Pair<TickDataUnitSeconds, TickDataUnitSeconds>>()
-    var prevBlockID = tickData.first().ego.lane.road.block.id
-    var firstTickInBlock = tickData.first().currentTick
+    var prevBlockID = tickDataList.first().ego.lane.road.block.id
+    var firstTickInBlock = tickDataList.first().currentTick
 
-    tickData.forEachIndexed { index, tick ->
+    tickDataList.forEachIndexed { index, tick ->
       val currentBlockID = tick.ego.lane.road.block.id
       if (currentBlockID != prevBlockID) {
-        blockRanges += (firstTickInBlock to tickData[index - 1].currentTick)
+        blockRanges += (firstTickInBlock to tickDataList[index - 1].currentTick)
         prevBlockID = currentBlockID
         firstTickInBlock = tick.currentTick
       }
     }
-    blockRanges += (firstTickInBlock to tickData.last().currentTick)
+    blockRanges += (firstTickInBlock to tickDataList.last().currentTick)
 
     blockRanges.forEachIndexed { _, blockRange ->
       val mainSegment =
-          tickData
+          tickDataList
               .filter { it.currentTick in blockRange.first..blockRange.second }
               .map { it.clone() }
       if (mainSegment.size >= minSegmentTickCount) {
