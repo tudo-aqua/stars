@@ -45,20 +45,19 @@ import tools.aqua.stars.core.utils.saveAsCSVFile
  * This class implements the [TSCAndTSCInstanceMetricProvider] and tracks the occurred valid
  * [TSCInstance] for each [TSC].
  *
- * This class implements the
- * [tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider] which evaluates the
- * combined results of valid [TSCInstance]s for all [TSC]s.
+ * This class implements the [tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider]
+ * which evaluates the combined results of valid [TSCInstance]s for all [TSC]s.
  *
- * This class implements the [tools.aqua.stars.core.metric.metrics.providers.Stateful] interface.
- * Its state contains the [Map] of [TSC]s to a [List] of valid [TSCInstance]s.
+ * This class implements the [tools.aqua.stars.core.metrics.providers.Stateful] interface. Its state
+ * contains the [Map] of [TSC]s to a [List] of valid [TSCInstance]s.
  *
  * This class implements the [SerializableMetric] interface. It serializes all valid [TSCInstance]
  * for their respective [TSC].
  *
- * This class implements [tools.aqua.stars.core.metric.metrics.providers.Loggable] and logs the
- * final [Map] of invalid [TSCInstance]s for [TSC]s.
+ * This class implements [tools.aqua.stars.core.metrics.providers.Loggable] and logs the final [Map]
+ * of invalid [TSCInstance]s for [TSC]s.
  *
- * This class implements [tools.aqua.stars.core.metric.metrics.providers.Plottable] and plots the
+ * This class implements [tools.aqua.stars.core.metrics.providers.Plottable] and plots the
  * distribution and temporal change of valid [TSCInstance]s.
  *
  * @param E [EntityType].

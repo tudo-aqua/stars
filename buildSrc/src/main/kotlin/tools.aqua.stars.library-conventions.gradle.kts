@@ -72,7 +72,6 @@ val kdoc: Configuration by
       isCanBeResolved = false
     }
 
-
 val tests by configurations.creating
 
 val testJar by

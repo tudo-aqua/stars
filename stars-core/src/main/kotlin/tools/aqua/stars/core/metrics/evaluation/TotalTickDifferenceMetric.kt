@@ -20,9 +20,9 @@ package tools.aqua.stars.core.metrics.evaluation
 import java.util.Optional
 import java.util.logging.Logger
 import tools.aqua.stars.core.metrics.providers.Loggable
-import tools.aqua.stars.core.metrics.providers.SegmentMetricProvider
 import tools.aqua.stars.core.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 

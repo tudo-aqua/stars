@@ -20,7 +20,7 @@ package tools.aqua.stars.core.metrics
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.metric.metrics.evaluation.TickCountMetric
+import tools.aqua.stars.core.metrics.evaluation.TickCountMetric
 
 /** Test for [TickCountMetric]. */
 class TickCountMetricTest {

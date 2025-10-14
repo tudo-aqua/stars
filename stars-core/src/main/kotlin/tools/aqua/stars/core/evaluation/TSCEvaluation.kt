@@ -30,27 +30,21 @@ import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerTickHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickSequenceHook
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.Plottable
-import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceAndTickMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndTickMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TickMetricProvider
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
-import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
-import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.logFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
-import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.MetricProvider
+import tools.aqua.stars.core.metrics.providers.Plottable
+import tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceAndTickMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCInstanceAndTickMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCMetricProvider
+import tools.aqua.stars.core.metrics.providers.TickMetricProvider
+import tools.aqua.stars.core.serialization.SerializableResultComparison.Companion.noMismatch
+import tools.aqua.stars.core.serialization.extensions.compareToPreviousResults
+import tools.aqua.stars.core.serialization.extensions.writeSerializedResults
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder
@@ -228,7 +222,7 @@ class TSCEvaluation<
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
-      // Filter TSCs to be evaluated
+      // Filter TSCs to be evaluated^
       val tscListToEvaluate = filterTSCs() ?: return
       if (tscListToEvaluate.isNotEmpty()) {
 
@@ -310,34 +304,24 @@ class TSCEvaluation<
           val tscInstance = tsc.evaluate(tick)
 
           metricProviders.forEachInstance<TSCInstanceMetricProvider<E, T, U, D>> {
-            it.evaluate(tscInstance)
+            it.evaluate(tscInstance = tscInstance)
           }
 
           metricProviders.forEachInstance<TSCInstanceAndTickMetricProvider<E, T, U, D>> {
-            it.evaluate(tscInstance, tick)
+            it.evaluate(tscInstance = tscInstance, tick = tick)
           }
 
           metricProviders.forEachInstance<TSCAndTSCInstanceMetricProvider<E, T, U, D>> {
-            it.evaluate(tsc, tscInstance)
+            it.evaluate(tsc = tsc, tscInstance = tscInstance)
           }
 
-            metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, U, D>>().forEach {
-              it.evaluate(segmentTSCInstance)
-            }
-            metricProviders
-                .filterIsInstance<TSCAndTSCInstanceMetricProvider<E, T, S, U, D>>()
-                .forEach { it.evaluate(tsc, segmentTSCInstance) }
-            metricProviders
-                .filterIsInstance<TSCInstanceAndTickMetricProvider<E, T, S, U, D>>()
-                .forEach { it.evaluate(segmentTSCInstance, segment) }
-            metricProviders
-                .filterIsInstance<TSCAndTSCInstanceAndTickMetricProvider<E, T, S, U, D>>()
-                .forEach { it.evaluate(tsc, segmentTSCInstance, segment) }
+          metricProviders.forEachInstance<TSCAndTSCInstanceAndTickMetricProvider<E, T, U, D>> {
+            it.evaluate(tsc = tsc, tscInstance = tscInstance, tick = tick)
           }
-          logFine(
-              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime"
-          )
         }
+        logFine(
+            "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime"
+        )
       }
     }
     logFine("The evaluation of tick '$tick' took: $tickEvaluationTime")
