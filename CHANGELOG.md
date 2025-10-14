@@ -76,7 +76,7 @@ All notable changes to this project will be documented in this file.
 - Move `label` from `TSCEdge` to `TSCNode`.
 - All default metrics now implement the new `Serializable` interface.
 - Rename `ProjectionMetricProvider` to `TSCMetricProvider`.
-- Rename `ProjectionAndTSCInstanceNodeMetricProvider` to `TSCAndTSCInstanceNodeMetricProvider`.
+- Rename `ProjectionAndTSCInstanceNodeMetricProvider` to `TSCAndTSCInstanceMetricProvider`.
 - Rename `InvalidTSCInstancesPerProjectionMetric` to `InvalidTSCInstancesPerTSCMetric`.
 - Rename `ValidTSCInstancesPerProjectionMetric` to `ValidTSCInstancesPerTSCMetric`.
 - Rename `MissedTSCInstancesPerProjectionMetric` to `MissedTSCInstancesPerTSCMetric`.
