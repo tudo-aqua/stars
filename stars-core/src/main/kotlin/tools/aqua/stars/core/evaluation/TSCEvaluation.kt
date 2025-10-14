@@ -53,11 +53,17 @@ import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedR
 import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.logFolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.utils.saveAsJsonFiles
 
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
  * the [TSC]s based on the given [Sequence] of [TickDataType]s. This class implements
- * [tools.aqua.stars.core.metric.metrics.providers.Loggable].
+ * [tools.aqua.stars.core.metrics.providers.Loggable].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -107,8 +113,8 @@ class TSCEvaluation<
     }
 
   /**
-   * Holds a [List] of all [tools.aqua.stars.core.metric.metrics.providers.MetricProvider]s
-   * registered by [registerMetricProviders].
+   * Holds a [List] of all [tools.aqua.stars.core.metrics.providers.MetricProvider]s registered by
+   * [registerMetricProviders].
    */
   private val metricProviders: MutableList<MetricProvider<E, T, U, D>> = mutableListOf()
 
@@ -315,13 +321,23 @@ class TSCEvaluation<
             it.evaluate(tsc, tscInstance)
           }
 
-          metricProviders.forEachInstance<TSCAndTSCInstanceAndTickMetricProvider<E, T, U, D>> {
-            it.evaluate(tsc, tscInstance, tick)
+            metricProviders.filterIsInstance<TSCInstanceMetricProvider<E, T, U, D>>().forEach {
+              it.evaluate(segmentTSCInstance)
+            }
+            metricProviders
+                .filterIsInstance<TSCAndTSCInstanceMetricProvider<E, T, S, U, D>>()
+                .forEach { it.evaluate(tsc, segmentTSCInstance) }
+            metricProviders
+                .filterIsInstance<TSCInstanceAndTickMetricProvider<E, T, S, U, D>>()
+                .forEach { it.evaluate(segmentTSCInstance, segment) }
+            metricProviders
+                .filterIsInstance<TSCAndTSCInstanceAndTickMetricProvider<E, T, S, U, D>>()
+                .forEach { it.evaluate(tsc, segmentTSCInstance, segment) }
           }
+          logFine(
+              "The evaluation of tsc with root node '${tsc.rootNode.label}' for segment '$segment' took: $tscEvaluationTime"
+          )
         }
-        logFiner(
-            "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime"
-        )
       }
     }
     logFine("The evaluation of tick '$tick' took: $tickEvaluationTime")

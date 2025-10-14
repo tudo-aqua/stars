@@ -31,9 +31,9 @@ plugins {
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
+  id("com.vanniktech.maven.publish")
 
   `java-library`
-  `maven-publish`
   signing
 
   kotlin("jvm")
@@ -72,6 +72,7 @@ val kdoc: Configuration by
       isCanBeResolved = false
     }
 
+
 val tests by configurations.creating
 
 val testJar by
@@ -109,25 +110,22 @@ kotlin { jvmToolchain(21) }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["java"])
+mavenPublishing {
+  publishToMavenCentral()
+  signAllPublications()
 
-      pom {
-        name.set(mavenMetadata.name)
-        description.set(mavenMetadata.description)
+  pom {
+    name.set(mavenMetadata.name)
+    description.set(mavenMetadata.description)
 
-        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+    val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
 
-        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+    developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
 
-        globalMetadata.githubProject.get().let {
-          github(it.organization, it.project, it.mainBranch)
-        }
+    globalMetadata.githubProject.get().let { github(it.organization, it.project, it.mainBranch) }
 
-        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
-      }
-    }
+    licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
   }
 }
+
+signing { useGpgCmd() }

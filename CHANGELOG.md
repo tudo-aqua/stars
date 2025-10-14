@@ -1,3 +1,5 @@
+[1.0]: https://github.com/tudo-aqua/stars/releases/tag/v1.0
+
 [0.5]: https://github.com/tudo-aqua/stars/releases/tag/v0.5
 
 [0.4]: https://github.com/tudo-aqua/stars/releases/tag/v0.4
@@ -22,24 +24,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.0 - To be released
+## [1.0] - 14.10.2025
 
 ### Added
 
-- Add CMFTBL operators `pastMinPrevalence`, `pastMaxPrevalence`, `bind`, `exists`, `forall`, `release` and `back-to`.
+- Add CMFTBL operators `pastMinPrevalence`, `pastMaxPrevalence`, `bind`, `exists`, `forAll`, `release` and `backTo`.
 - Add `Serializable` interface.
     - Make `TickUnit` and `TickDifference` implement `Serializable`.`
 - Add default parameters for various classes in `DataAV`.
-- Add missing `MetricProviders`: `TSCAndSegmentMetricProvider` and `TSCAndTSCInstanceAndSegmentMetricProvider`.
+- Add missing `MetricProviders`: `TSCAndSegmentMetricProvider`, `TSCInstanceAndSegmentMetricProvider` and `TSCAndTSCInstanceAndSegmentMetricProvider`.
 
 ### Changed
 
 - Remove nullability for `condition` in `TSCBuilder`.
+- Remove nullability for `egoVehicle` in `DataAV`.
 - Change parameter type of `SegmentMetricProvider.evaluate()` from `SegmentType` to `S`.
-- Rename `Serializable` class to `SerializableMetric` and `SerializableExtension` to `SerializableMetricExtension`.
 - Change classes from interface to abstract class for `EntityType`, `SegmentType`, `TickDataType`, `TickUnit`, and
   `TickDifference`.
-- Remove nullability for `egoVehicle` in `DataAV`.
+- Rename `Serializable` class to `SerializableMetric` and `SerializableExtension` to `SerializableMetricExtension`.
+- Reorder package structure.
 
 ### Fixed
 
@@ -47,7 +50,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
-- Removed comparison to baseline functionality.
+- Remove comparison to baseline functionality.
 
 ## [0.5] - 06.11.2024
 
@@ -73,7 +76,7 @@ All notable changes to this project will be documented in this file.
 - Move `label` from `TSCEdge` to `TSCNode`.
 - All default metrics now implement the new `Serializable` interface.
 - Rename `ProjectionMetricProvider` to `TSCMetricProvider`.
-- Rename `ProjectionAndTSCInstanceNodeMetricProvider` to `TSCAndTSCInstanceNodeMetricProvider`.
+- Rename `ProjectionAndTSCInstanceNodeMetricProvider` to `TSCAndTSCInstanceMetricProvider`.
 - Rename `InvalidTSCInstancesPerProjectionMetric` to `InvalidTSCInstancesPerTSCMetric`.
 - Rename `ValidTSCInstancesPerProjectionMetric` to `ValidTSCInstancesPerTSCMetric`.
 - Rename `MissedTSCInstancesPerProjectionMetric` to `MissedTSCInstancesPerTSCMetric`.
