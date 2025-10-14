@@ -27,28 +27,28 @@ import tools.aqua.stars.core.hooks.*
 import tools.aqua.stars.core.hooks.PreSegmentEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.MetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.Plottable
-import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndSegmentMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceAndSegmentMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceAndSegmentMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCInstanceMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.TSCMetricProvider
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison.Companion.noMismatch
-import tools.aqua.stars.core.metric.serialization.extensions.compareToPreviousResults
-import tools.aqua.stars.core.metric.serialization.extensions.writeSerializedResults
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.logFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
-import tools.aqua.stars.core.metric.utils.saveAsJsonFiles
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.MetricProvider
+import tools.aqua.stars.core.metrics.providers.Plottable
+import tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metrics.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TSCAndSegmentMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceAndSegmentMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCInstanceAndSegmentMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCInstanceMetricProvider
+import tools.aqua.stars.core.metrics.providers.TSCMetricProvider
+import tools.aqua.stars.core.serialization.SerializableResultComparison.Companion.noMismatch
+import tools.aqua.stars.core.serialization.extensions.compareToPreviousResults
+import tools.aqua.stars.core.serialization.extensions.writeSerializedResults
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.logFolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.utils.saveAsJsonFiles
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -56,7 +56,7 @@ import tools.aqua.stars.core.types.*
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
  * the [TSC]s based on the given [Sequence] of [SegmentType]s. This class implements
- * [tools.aqua.stars.core.metric.metrics.providers.Loggable].
+ * [tools.aqua.stars.core.metrics.providers.Loggable].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -304,7 +304,7 @@ class TSCEvaluation<
               it.evaluate(segmentTSCInstance)
             }
             metricProviders
-                .filterIsInstance<TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>>()
+                .filterIsInstance<TSCAndTSCInstanceMetricProvider<E, T, S, U, D>>()
                 .forEach { it.evaluate(tsc, segmentTSCInstance) }
             metricProviders
                 .filterIsInstance<TSCInstanceAndSegmentMetricProvider<E, T, S, U, D>>()
