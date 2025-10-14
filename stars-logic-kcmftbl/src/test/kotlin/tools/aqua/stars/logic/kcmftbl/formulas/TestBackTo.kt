@@ -21,12 +21,12 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import tools.aqua.stars.logic.kcmftbl.backto
+import tools.aqua.stars.logic.kcmftbl.backTo
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
 
-/** This class tests the CMFTBL operator [backto]. */
-class TestBackto {
+/** This class tests the CMFTBL operator [backTo]. */
+class TestBackTo {
 
   /**
    * Test when phi1 is true at current time but phi2 is not, while no interval is given.
@@ -39,7 +39,7 @@ class TestBackto {
     val phi1 = listOf(0, 0, 1)
     val phi2 = listOf(0, 0, 0)
 
-    assertFalse { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertFalse { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -53,7 +53,7 @@ class TestBackto {
     val phi1 = listOf(0, 0, 0)
     val phi2 = listOf(0, 0, 1)
 
-    assertFalse { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertFalse { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -68,7 +68,7 @@ class TestBackto {
     val phi1 = listOf(0, 1, 1)
     val phi2 = listOf(0, 0, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -83,7 +83,7 @@ class TestBackto {
     val phi1 = listOf(0, 0, 1)
     val phi2 = listOf(0, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -97,7 +97,7 @@ class TestBackto {
     val phi1 = listOf(0, 0, 0)
     val phi2 = listOf(0, 0, 0)
 
-    assertFalse { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertFalse { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -111,7 +111,7 @@ class TestBackto {
     val phi1 = listOf(1, 1, 1)
     val phi2 = listOf(1, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -125,7 +125,7 @@ class TestBackto {
     val phi1 = listOf(1, 1, 1)
     val phi2 = listOf(0, 0, 0)
 
-    assertFalse { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertFalse { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -139,7 +139,7 @@ class TestBackto {
     val phi1 = listOf(0, 0, 0)
     val phi2 = listOf(1, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -153,7 +153,7 @@ class TestBackto {
     val phi1 = listOf(1, 1, 1)
     val phi2 = listOf(0, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -167,7 +167,7 @@ class TestBackto {
     val phi1 = listOf(0, 1, 1)
     val phi2 = listOf(1, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -182,7 +182,7 @@ class TestBackto {
     val phi1 = listOf(1, 1, 0)
     val phi2 = listOf(0, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -197,7 +197,7 @@ class TestBackto {
     val phi1 = listOf(0, 1, 0)
     val phi2 = listOf(0, 1, 1)
 
-    assertTrue { backto(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
+    assertTrue { backTo(createTicks(phi1, phi2)[2], null, phi1 = { it.phi1 }, phi2 = { it.phi2 }) }
   }
 
   /**
@@ -214,7 +214,7 @@ class TestBackto {
     val interval = 0 to 0
 
     assertFailsWith<IllegalArgumentException> {
-      backto(
+      backTo(
           createTicks(phi1, phi2)[2],
           createInterval(interval),
           phi1 = { it.phi1 },
@@ -237,7 +237,7 @@ class TestBackto {
     val interval = 1 to 0
 
     assertFailsWith<IllegalArgumentException> {
-      backto(
+      backTo(
           createTicks(phi1, phi2)[2],
           createInterval(interval),
           phi1 = { it.phi1 },
@@ -260,7 +260,7 @@ class TestBackto {
     val interval = -1 to 1
 
     assertFailsWith<IllegalArgumentException> {
-      backto(
+      backTo(
           createTicks(phi1, phi2)[2],
           createInterval(interval),
           phi1 = { it.phi1 },
@@ -283,7 +283,7 @@ class TestBackto {
     val interval = 0 to 2
 
     assertTrue {
-      backto(
+      backTo(
           createTicks(phi1, phi2)[3],
           createInterval(interval),
           phi1 = { it.phi1 },
@@ -306,7 +306,7 @@ class TestBackto {
     val interval = 1 to 3
 
     assertTrue {
-      backto(
+      backTo(
           createTicks(phi1, phi2)[3],
           createInterval(interval),
           phi1 = { it.phi1 },
@@ -329,7 +329,7 @@ class TestBackto {
     val interval = 1 to 3
 
     assertTrue {
-      backto(
+      backTo(
           createTicks(phi1, phi2)[4],
           createInterval(interval),
           phi1 = { it.phi1 },

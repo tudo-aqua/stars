@@ -39,7 +39,7 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> backto(
+> backTo(
     tickData: T,
     interval: Pair<D, D>? = null,
     phi1: (T) -> Boolean,
@@ -75,7 +75,7 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> backto(
+> backTo(
     entity: E1,
     interval: Pair<D, D>? = null,
     phi1: (E1) -> Boolean,
@@ -114,7 +114,7 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> backto(
+> backTo(
     entity1: E1,
     entity2: E2,
     interval: Pair<D, D>? = null,
