@@ -24,6 +24,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0] - To be released
+
+### Changed
+
+- Unify `NullaryPredicate`, `UninaryPredicate`, and `BinaryPredicate` to `Predicate`.
+
 ## [1.0] - 14.10.2025
 
 ### Added

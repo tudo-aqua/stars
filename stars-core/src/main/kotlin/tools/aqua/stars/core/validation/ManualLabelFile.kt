@@ -18,7 +18,7 @@
 package tools.aqua.stars.core.validation
 
 import kotlin.collections.plusAssign
-import tools.aqua.stars.core.evaluation.AbstractPredicate
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
@@ -53,7 +53,7 @@ class ManualLabelFile<
    *   including defining the intervals where the predicate is expected to hold true.
    */
   fun predicateHolds(
-      predicate: AbstractPredicate<E, T, U, D>,
+      predicate: Predicate<E, T, U, D>,
       manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit,
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
@@ -70,7 +70,7 @@ class ManualLabelFile<
    *   including defining the intervals where the predicate is expected not to hold true.
    */
   fun predicateDoesNotHold(
-      predicate: AbstractPredicate<E, T, U, D>,
+      predicate: Predicate<E, T, U, D>,
       manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit,
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)

@@ -20,24 +20,24 @@ package tools.aqua.stars.core.evaluation
 import tools.aqua.stars.core.types.*
 
 /**
- * Nullary predicate.
+ * Predicate.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param name The name of the predicate.
+ * @property name The name of the predicate.
  * @property eval The evaluation function on the context.
  */
-class NullaryPredicate<
+data class Predicate<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    name: String,
+    val name: String,
     val eval: (T) -> Boolean,
-) : AbstractPredicate<E, T, U, D>(name = name) {
+) {
 
   /**
    * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
@@ -61,10 +61,10 @@ class NullaryPredicate<
    */
   fun holds(tick: T): Boolean = this.eval(tick)
 
-  /** Companion object containing utility methods for working with [NullaryPredicate]. */
+  /** Companion object containing utility methods for working with [Predicate]. */
   companion object {
     /**
-     * Creates a nullary tick predicate.
+     * Creates a Predicate.
      *
      * @param E [EntityType].
      * @param T [TickDataType].
@@ -72,14 +72,13 @@ class NullaryPredicate<
      * @param D [TickDifference].
      * @param name The name of the predicate.
      * @param eval The evaluation function on the [List] of [TickDataType]s.
-     * @return The created [NullaryPredicate] with the given [eval] function.
+     * @return The created [Predicate] with the given [eval] function.
      */
     fun <
         E : EntityType<E, T, U, D>,
         T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>,
-    > predicate(name: String, eval: (T) -> Boolean): NullaryPredicate<E, T, U, D> =
-        NullaryPredicate(name, eval)
+    > predicate(name: String, eval: (T) -> Boolean): Predicate<E, T, U, D> = Predicate(name, eval)
   }
 }

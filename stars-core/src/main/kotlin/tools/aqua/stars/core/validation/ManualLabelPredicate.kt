@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.validation
 
-import tools.aqua.stars.core.evaluation.AbstractPredicate
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
@@ -37,7 +37,7 @@ class ManualLabelPredicate<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val predicate: AbstractPredicate<E, T, U, D>) {
+>(val predicate: Predicate<E, T, U, D>) {
   internal val manualLabelIntervals = mutableListOf<ManualLabelInterval<U, D>>()
 
   /** The name of the current predicate, derived from the associated abstract predicate. */

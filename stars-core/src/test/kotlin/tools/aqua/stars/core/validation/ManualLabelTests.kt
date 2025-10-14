@@ -21,10 +21,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import tools.aqua.stars.core.evaluation.AbstractPredicate
-import tools.aqua.stars.core.evaluation.BinaryPredicate
-import tools.aqua.stars.core.evaluation.NullaryPredicate
-import tools.aqua.stars.core.evaluation.UnaryPredicate
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.getTicksInInterval
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
@@ -97,7 +94,7 @@ abstract class ManualLabelTests<
    * @return A dynamically generated test case for the specified predicate and interval.
    */
   private fun createDynamicTest(
-      predicate: AbstractPredicate<E, T, U, D>,
+      predicate: Predicate<E, T, U, D>,
       from: U,
       to: U,
       allTicks: List<T>,
@@ -109,31 +106,10 @@ abstract class ManualLabelTests<
     ) {
       val predicate = predicate
       if (shouldHold) {
-        matchingTicks.forEach { tick -> assertTrue(evaluatePredicateAtTick(predicate, tick)) }
+        matchingTicks.forEach { tick -> assertTrue(predicate.holds(tick)) }
       } else {
-        matchingTicks.forEach { tick -> assertFalse(evaluatePredicateAtTick(predicate, tick)) }
+        matchingTicks.forEach { tick -> assertFalse(predicate.holds(tick)) }
       }
     }
   }
-
-  /**
-   * Evaluates whether the specified predicate holds at a given tick.
-   *
-   * The behavior of this method is determined by the type of predicate:
-   * - For [NullaryPredicate], it invokes the `holds` method to determine the evaluation result.
-   * - For [UnaryPredicate], it evaluates its `holds` method.
-   * - For [BinaryPredicate], it executes its `holds` method as well. If the predicate type is
-   *   unsupported, an error is thrown.
-   *
-   * @param predicate The predicate to be evaluated. It determines the logic for evaluation.
-   * @param tick The specific tick at which the predicate is evaluated.
-   * @return The boolean result of evaluating the predicate at the given tick.
-   */
-  private fun evaluatePredicateAtTick(predicate: AbstractPredicate<E, T, U, D>, tick: T) =
-      when (predicate) {
-        is NullaryPredicate<E, T, U, D> -> predicate.holds(tick)
-        is UnaryPredicate<*, E, T, U, D> -> predicate.holds(tick)
-        is BinaryPredicate<*, *, E, T, U, D> -> predicate.holds(tick)
-        else -> error("Unsupported predicate type: ${predicate::class}")
-      }
 }
