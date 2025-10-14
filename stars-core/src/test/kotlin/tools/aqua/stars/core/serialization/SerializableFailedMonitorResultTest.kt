@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.serialization
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,8 +24,8 @@ import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
+import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metrics.postEvaluation.FailedMonitorsMetric
 
 /** Tests the [Serializable] interface implementation for the [FailedMonitorsMetric]. */
 class SerializableFailedMonitorResultTest {

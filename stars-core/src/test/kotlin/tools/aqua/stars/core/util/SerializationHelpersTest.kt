@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.util
+package tools.aqua.stars.core.util
 
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.test.*
-import tools.aqua.stars.core.metric.serialization.SerializableIntResult
-import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.EQUAL_RESULTS
-import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.baselineDirectory
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
-import tools.aqua.stars.core.metric.utils.getBaselineSerializationResultDirectory
-import tools.aqua.stars.core.metric.utils.getPreviousSerializationResultDirectory
-import tools.aqua.stars.core.metric.utils.saveAsJsonFile
+import tools.aqua.stars.core.serialization.SerializableIntResult
+import tools.aqua.stars.core.serialization.SerializableResult
+import tools.aqua.stars.core.serialization.SerializableResultComparison
+import tools.aqua.stars.core.serialization.SerializableResultComparisonVerdict.EQUAL_RESULTS
+import tools.aqua.stars.core.serialization.extensions.getJsonString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.baselineDirectory
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.utils.getBaselineSerializationResultDirectory
+import tools.aqua.stars.core.utils.getPreviousSerializationResultDirectory
+import tools.aqua.stars.core.utils.saveAsJsonFile
 
 /** Contains test functions for the SerializationHelpers.kt file. */
 class SerializationHelpersTest {

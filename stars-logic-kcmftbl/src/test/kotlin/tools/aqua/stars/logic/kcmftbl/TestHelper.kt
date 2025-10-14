@@ -29,8 +29,8 @@ fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> {
         TestUnit(it) to
             BooleanTick(
                 TestUnit(it),
-                listOf(),
-                TestSegment(listOf(), mapOf(), "", -1),
+                emptyList(),
+                TestSegment(emptyList(), emptyMap(), "", -1),
                 phi1[it] == 1,
                 phi2[it] == 1,
             )

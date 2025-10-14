@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.util
+package tools.aqua.stars.core.util
 
 import kotlin.test.*
-import tools.aqua.stars.core.metric.serialization.SerializableIntResult
-import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
-import tools.aqua.stars.core.metric.serialization.extensions.compareTo
+import tools.aqua.stars.core.serialization.SerializableIntResult
+import tools.aqua.stars.core.serialization.SerializableResult
+import tools.aqua.stars.core.serialization.SerializableResultComparisonVerdict.*
+import tools.aqua.stars.core.serialization.extensions.compareTo
 
 /** Tests the functionality of the function [compareTo] of [List] of [SerializableResult]s. */
 class SerializationResultExtensionsTest {

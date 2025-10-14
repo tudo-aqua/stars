@@ -23,7 +23,7 @@ import kotlin.test.assertFailsWith
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerSegmentHook
-import tools.aqua.stars.core.metric.metrics.evaluation.SegmentCountMetric
+import tools.aqua.stars.core.metrics.evaluation.SegmentCountMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Class that contains tests for the [MinTicksPerSegmentHook]. */

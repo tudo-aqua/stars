@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.serialization
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

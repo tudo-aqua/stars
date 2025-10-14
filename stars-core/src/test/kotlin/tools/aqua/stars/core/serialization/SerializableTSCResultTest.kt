@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.serialization
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.*
-import tools.aqua.stars.core.metric.metrics.evaluation.MissedTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metrics.evaluation.MissedTSCInstancesPerTSCMetric
 
 /**
  * Tests the [SerializableResult] sealed class implementation for the [SerializableTSCResultTest].

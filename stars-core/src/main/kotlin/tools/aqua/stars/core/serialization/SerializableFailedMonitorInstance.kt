@@ -18,7 +18,7 @@
 package tools.aqua.stars.core.serialization
 
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.SegmentType

@@ -18,20 +18,20 @@
 package tools.aqua.stars.core.metrics.postEvaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorInstance
-import tools.aqua.stars.core.metric.serialization.SerializableFailedMonitorsResult
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.serialization.SerializableFailedMonitorInstance
+import tools.aqua.stars.core.serialization.SerializableFailedMonitorsResult
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.instance.*
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 
 /**
  * This metric implements the [PostEvaluationMetricProvider] and tracks the formulas specified as

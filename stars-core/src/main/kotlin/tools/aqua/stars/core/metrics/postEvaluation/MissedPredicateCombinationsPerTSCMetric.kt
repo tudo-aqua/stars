@@ -19,18 +19,18 @@ package tools.aqua.stars.core.metrics.postEvaluation
 
 import java.util.logging.Logger
 import tools.aqua.stars.core.evaluation.PredicateCombination
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.serialization.SerializablePredicateCombinationResult
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.serialization.SerializablePredicateCombinationResult
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 
 /**
  * This class implements the [PostEvaluationMetricProvider] and calculates all missing

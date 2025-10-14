@@ -20,29 +20,29 @@
 package tools.aqua.stars.core.metrics.evaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.Plottable
-import tools.aqua.stars.core.metric.metrics.providers.PostEvaluationMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
-import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
-import tools.aqua.stars.core.metric.utils.getCSVString
-import tools.aqua.stars.core.metric.utils.getPlot
-import tools.aqua.stars.core.metric.utils.plotDataAsBarChart
-import tools.aqua.stars.core.metric.utils.plotDataAsLineChart
-import tools.aqua.stars.core.metric.utils.saveAsCSVFile
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.Plottable
+import tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceMetricProvider
+import tools.aqua.stars.core.serialization.SerializableTSCOccurrenceResult
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.utils.getCSVString
+import tools.aqua.stars.core.utils.getPlot
+import tools.aqua.stars.core.utils.plotDataAsBarChart
+import tools.aqua.stars.core.utils.plotDataAsLineChart
+import tools.aqua.stars.core.utils.saveAsCSVFile
 
 /**
- * This class implements the [TSCAndTSCInstanceNodeMetricProvider] and tracks the occurred valid
+ * This class implements the [TSCAndTSCInstanceMetricProvider] and tracks the occurred valid
  * [TSCInstance] for each [TSC].
  *
  * This class implements the [PostEvaluationMetricProvider] which evaluates the combined results of
@@ -77,7 +77,7 @@ class ValidTSCInstancesPerTSCMetric<
     override val loggerIdentifier: String = "valid-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) :
-    TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>,
+    TSCAndTSCInstanceMetricProvider<E, T, S, U, D>,
     PostEvaluationMetricProvider<E, T, S, U, D>,
     Stateful,
     SerializableMetric,

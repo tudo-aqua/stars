@@ -18,14 +18,14 @@
 package tools.aqua.stars.core.utils
 
 import java.io.File
-import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.baselineDirectory
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.comparedResultsFolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.serialization.SerializableResult
+import tools.aqua.stars.core.serialization.SerializableResultComparison
+import tools.aqua.stars.core.serialization.extensions.getJsonString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.PREVIOUS_EVALUATION_SERIALIZED_RESULT_IDENTIFIER
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.baselineDirectory
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.comparedResultsFolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
 
 /**
  * Extension function for [String] to save it as a Json file at the [filePathWithExtension].

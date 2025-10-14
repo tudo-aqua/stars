@@ -18,8 +18,8 @@
 package tools.aqua.stars.core.serialization.extensions
 
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.jsonConfiguration
+import tools.aqua.stars.core.serialization.SerializableResultComparison
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.jsonConfiguration
 
 /**
  * Returns a [Json] [String] of a [SerializableResultComparison] using the project

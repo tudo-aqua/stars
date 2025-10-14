@@ -18,22 +18,22 @@
 package tools.aqua.stars.core.metrics.evaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.metrics.providers.TSCAndTSCInstanceNodeMetricProvider
-import tools.aqua.stars.core.metric.serialization.SerializableTSCOccurrenceResult
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCNode
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_INDENT
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceMetricProvider
+import tools.aqua.stars.core.serialization.SerializableTSCOccurrenceResult
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCOccurrence
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 
 /**
- * This class implements the [TSCAndTSCInstanceNodeMetricProvider] interface and tracks the invalid
+ * This class implements the [TSCAndTSCInstanceMetricProvider] interface and tracks the invalid
  * [TSCInstance]s for each [TSC].
  *
  * This class implements the [Stateful] interface. Its state contains the [Map] of [TSC]s to a
@@ -62,7 +62,7 @@ class InvalidTSCInstancesPerTSCMetric<
 >(
     override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TSCAndTSCInstanceNodeMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
+) : TSCAndTSCInstanceMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<

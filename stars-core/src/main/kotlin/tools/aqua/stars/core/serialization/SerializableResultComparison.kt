@@ -18,7 +18,7 @@
 package tools.aqua.stars.core.serialization
 
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparisonVerdict.*
+import tools.aqua.stars.core.serialization.SerializableResultComparisonVerdict.*
 
 /** This class defines the structure for all comparisons between two [SerializableResult]s. */
 @Serializable

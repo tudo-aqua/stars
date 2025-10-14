@@ -43,15 +43,15 @@ import tools.aqua.stars.core.metrics.providers.TSCMetricProvider
 import tools.aqua.stars.core.serialization.SerializableResultComparison.Companion.noMismatch
 import tools.aqua.stars.core.serialization.extensions.compareToPreviousResults
 import tools.aqua.stars.core.serialization.extensions.writeSerializedResults
+import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTimeString
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.logFolder
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
 import tools.aqua.stars.core.utils.saveAsJsonFiles
-import tools.aqua.stars.core.tsc.TSC
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
-import tools.aqua.stars.core.types.*
 
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
@@ -108,8 +108,8 @@ class TSCEvaluation<
     }
 
   /**
-   * Holds a [List] of all [tools.aqua.stars.core.metric.metrics.providers.MetricProvider]s
-   * registered by [registerMetricProviders].
+   * Holds a [List] of all [tools.aqua.stars.core.metrics.providers.MetricProvider]s registered by
+   * [registerMetricProviders].
    */
   private val metricProviders: MutableList<MetricProvider<E, T, S, U, D>> = mutableListOf()
 

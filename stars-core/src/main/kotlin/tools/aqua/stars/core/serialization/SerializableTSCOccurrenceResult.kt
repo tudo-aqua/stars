@@ -18,7 +18,7 @@
 package tools.aqua.stars.core.serialization
 
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.core.metric.serialization.tsc.SerializableTSCOccurrence
+import tools.aqua.stars.core.serialization.tsc.SerializableTSCOccurrence
 
 /**
  * This class implements the [SerializableResult] interface and stores a [List] of

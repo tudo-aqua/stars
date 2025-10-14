@@ -19,8 +19,8 @@ package tools.aqua.stars.core.metrics.providers
 
 import java.io.File
 import java.util.logging.*
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.activeLoggers
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.activeLoggers
 
 /** This interface can be implemented to be able to log data into the stdout and log files. */
 @Suppress("unused")

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.serialization
 
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -25,8 +25,8 @@ import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.metrics.postEvaluation.MissedPredicateCombinationsPerTSCMetric
+import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metrics.postEvaluation.MissedPredicateCombinationsPerTSCMetric
 
 /**
  * Tests the [SerializableResult] sealed class implementation for the

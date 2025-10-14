@@ -18,11 +18,11 @@
 package tools.aqua.stars.core.serialization.extensions
 
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.serialization.SerializableResultComparison
-import tools.aqua.stars.core.metric.utils.previousResults
-import tools.aqua.stars.core.metric.utils.saveAsJsonFile
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.serialization.SerializableResult
+import tools.aqua.stars.core.serialization.SerializableResultComparison
+import tools.aqua.stars.core.utils.previousResults
+import tools.aqua.stars.core.utils.saveAsJsonFile
 
 /**
  * Extension function of [List] of [SerializableMetric] that compares it to the previous evaluation

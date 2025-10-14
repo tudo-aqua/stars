@@ -23,9 +23,9 @@ import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.types.*
 
 /**
- * The [TSCAndTSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides
- * an [evaluate] function which gets a [TSC] and a [TSCInstance] which is called during the
- * evaluation phase.
+ * The [TSCAndTSCInstanceMetricProvider] implements the [EvaluationMetricProvider] and provides an
+ * [evaluate] function which gets a [TSC] and a [TSCInstance] which is called during the evaluation
+ * phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].

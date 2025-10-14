@@ -18,11 +18,11 @@
 package tools.aqua.stars.core.metrics.evaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.metrics.providers.Stateful
-import tools.aqua.stars.core.metric.serialization.SerializableIntResult
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.serialization.SerializableIntResult
 import tools.aqua.stars.core.types.*
 
 /**

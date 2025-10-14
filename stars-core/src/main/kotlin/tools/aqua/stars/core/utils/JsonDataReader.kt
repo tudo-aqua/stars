@@ -19,10 +19,10 @@ package tools.aqua.stars.core.utils
 
 import java.io.File
 import kotlinx.serialization.json.Json
-import tools.aqua.stars.core.metric.serialization.SerializableResult
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.applicationStartTimeString
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.baselineDirectory
-import tools.aqua.stars.core.metric.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.serialization.SerializableResult
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTimeString
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.baselineDirectory
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
 
 /**
  * Holds the [Map] of all baseline sources with their deserialized [SerializableResult]s, or null

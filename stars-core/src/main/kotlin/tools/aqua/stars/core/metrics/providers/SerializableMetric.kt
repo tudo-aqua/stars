@@ -17,7 +17,7 @@
 
 package tools.aqua.stars.core.metrics.providers
 
-import tools.aqua.stars.core.metric.serialization.SerializableResult
+import tools.aqua.stars.core.serialization.SerializableResult
 
 /**
  * This interface should be implemented when a metric has a results that should be compared in

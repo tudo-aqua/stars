@@ -22,8 +22,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.metric.metrics.evaluation.ValidTSCInstancesPerTSCMetric
-import tools.aqua.stars.core.metric.metrics.postEvaluation.FailedMonitorsMetric
+import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
+import tools.aqua.stars.core.metrics.postEvaluation.FailedMonitorsMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Tests for monitors. */

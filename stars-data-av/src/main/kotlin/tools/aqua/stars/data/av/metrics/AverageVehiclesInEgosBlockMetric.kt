@@ -18,8 +18,8 @@
 package tools.aqua.stars.data.av.metrics
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.metric.metrics.providers.Loggable
-import tools.aqua.stars.core.metric.metrics.providers.SegmentMetricProvider
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.SegmentMetricProvider
 import tools.aqua.stars.data.av.dataclasses.*
 
 /**

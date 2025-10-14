@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.serialization
 
-import tools.aqua.stars.core.metric.metrics.providers.SerializableMetric
-import tools.aqua.stars.core.metric.serialization.extensions.getJsonString
-import tools.aqua.stars.core.metric.utils.getJsonContentFromString
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.serialization.extensions.getJsonString
+import tools.aqua.stars.core.utils.getJsonContentFromString
 
 /**
  * Serializes all[SerializableResult]s of the given [serializableMetric] and deserializes them

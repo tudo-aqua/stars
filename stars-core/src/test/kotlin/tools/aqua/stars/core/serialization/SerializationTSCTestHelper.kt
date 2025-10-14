@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metric.serialization
+package tools.aqua.stars.core.serialization
 
 import tools.aqua.stars.core.SimpleEntity
 import tools.aqua.stars.core.SimpleSegment
