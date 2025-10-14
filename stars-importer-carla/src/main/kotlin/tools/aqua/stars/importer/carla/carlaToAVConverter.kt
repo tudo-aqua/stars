@@ -273,6 +273,7 @@ fun JsonLaneMidpoint.toLaneMidpoint(): LaneMidpoint =
 fun JsonDataWeatherParameters.toWeatherParameters(): WeatherParameters =
     WeatherParameters(
         type = type.toWeatherType(),
+        dustStorm = dustStorm,
         cloudiness = cloudiness,
         precipitation = precipitation,
         precipitationDeposits = precipitationDeposits,
