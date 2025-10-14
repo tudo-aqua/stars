@@ -22,8 +22,6 @@ package tools.aqua.stars.core.evaluation
 import java.time.LocalDateTime
 import java.util.logging.Logger
 import kotlin.time.measureTime
-import tools.aqua.stars.core.computeWhile
-import tools.aqua.stars.core.forEachInstance
 import tools.aqua.stars.core.hooks.*
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook.Companion.evaluate
 import tools.aqua.stars.core.hooks.PreTickEvaluationHook.Companion.evaluate
@@ -52,6 +50,8 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.applicationStartTi
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.comparedResultsFolder
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.logFolder
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.serializedResultsFolder
+import tools.aqua.stars.core.utils.computeWhile
+import tools.aqua.stars.core.utils.forEachInstance
 import tools.aqua.stars.core.utils.saveAsJsonFiles
 
 /**

@@ -17,7 +17,7 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.stars.core
+package tools.aqua.stars.core.utils
 
 import kotlin.sequences.forEach
 import tools.aqua.stars.core.types.TickDataType

@@ -22,11 +22,11 @@ import kotlin.test.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.getTicksInInterval
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
+import tools.aqua.stars.core.utils.getTicksInInterval
 
 /**
  * Abstract base class for testing predicates within manually labeled test files, which are

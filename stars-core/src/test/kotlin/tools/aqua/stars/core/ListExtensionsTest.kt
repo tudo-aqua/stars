@@ -18,6 +18,8 @@
 package tools.aqua.stars.core
 
 import kotlin.test.Test
+import tools.aqua.stars.core.utils.crossProduct
+import tools.aqua.stars.core.utils.powerlist
 
 /** Tests for list extension functions. */
 class ListExtensionsTest {

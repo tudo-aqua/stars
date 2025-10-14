@@ -17,12 +17,12 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.crossProduct
-import tools.aqua.stars.core.powerlist
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.utils.crossProduct
+import tools.aqua.stars.core.utils.powerlist
 
 /**
  * Bounded TSC node.
