@@ -17,8 +17,8 @@
 
 package tools.aqua.stars.core.evaluation
 
-import tools.aqua.stars.core.nextOrNull
 import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.utils.nextOrNull
 
 /**
  * A sequence that returns ticks of type [T] in a doubly linked list structure. The [getNextValue]
@@ -114,6 +114,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
     }
   }
 
+  /** Companion object for [TickSequence]. */
   companion object {
     /**
      * Creates a [TickSequence] from an [Iterable] of [TickDataType]s.
