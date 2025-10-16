@@ -26,20 +26,22 @@ import kotlinx.serialization.Serializable
  * JSON object for vehicles.
  *
  * @property id The identifier of the vehicle.
- * @property location The [JsonLocation] of the vehicle.
- * @property rotation The [JsonRotation] of the vehicle.
  * @property typeId The type identifier, i.e. "vehicle.ford.mustang".
- * @property egoVehicle Whether this is the own vehicle.
- * @property forwardVector The current forward vector.
- * @property velocity The current velocity.
- * @property acceleration The current acceleration.
- * @property angularVelocity The current angular velocity.
  * @property attributes The additional attributes for the [JsonVehicle] from the CARLA simulation.
  * @property isAlive Whether the [JsonVehicle] is alive in the simulation.
  * @property isActive Whether the [JsonVehicle] is active in the simulation.
  * @property isDormant Whether the [JsonVehicle] is dormant in the simulation.
  * @property semanticTags The semantic tags of the [JsonVehicle] from the CARLA simulation.
  * @property boundingBox The bounding box of the [JsonVehicle].
+ * @property location The [JsonLocation] of the vehicle.
+ * @property rotation The [JsonRotation] of the vehicle.
+ * @property egoVehicle Whether this is the own vehicle.
+ * @property forwardVector The current forward vector.
+ * @property velocity The current velocity.
+ * @property acceleration The current acceleration.
+ * @property angularVelocity The current angular velocity.
+ * @property lane The [JsonLane] the vehicle is currently on.
+ * @property positionOnLane The position from the start of the [JsonLane] in meters.
  * @property collisions The list of actor IDs, this [JsonVehicle] is colliding with.
  */
 @Serializable

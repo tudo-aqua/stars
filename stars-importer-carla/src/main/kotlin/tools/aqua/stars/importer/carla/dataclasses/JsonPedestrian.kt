@@ -25,8 +25,6 @@ import kotlinx.serialization.Serializable
  *
  * @property id The identifier of the pedestrian.
  * @property typeId The type identifier.
- * @property location The [JsonLocation] of the traffic light
- * @property rotation The [JsonRotation] of the traffic light
  * @property attributes The additional attributes for the [JsonPedestrian] from the CARLA
  *   simulation.
  * @property isAlive Whether the [JsonPedestrian] is alive in the simulation.
@@ -34,6 +32,8 @@ import kotlinx.serialization.Serializable
  * @property isDormant Whether the [JsonPedestrian] is dormant in the simulation.
  * @property semanticTags The semantic tags of the [JsonPedestrian] from the CARLA simulation.
  * @property boundingBox The bounding box of the [JsonPedestrian].
+ * @property location The [JsonLocation] of the traffic light
+ * @property rotation The [JsonRotation] of the traffic light
  * @property collisions The list of actor IDs, this [JsonPedestrian] is colliding with.
  */
 @Serializable
