@@ -29,7 +29,8 @@ import kotlin.math.sqrt
  * @see Vector3D
  */
 data class Location(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
-  fun toVector3D() = Vector3D(x, y, z)
+  /** Converts this [Location] to a [Vector3D]. */
+  fun toVector3D(): Vector3D = Vector3D(x, y, z)
 
   /** Addition operator. */
   operator fun plus(other: Location): Vector3D =

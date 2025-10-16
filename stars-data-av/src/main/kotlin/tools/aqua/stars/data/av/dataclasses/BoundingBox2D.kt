@@ -24,6 +24,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property rightFront The right front vertex of the [BoundingBox2D].
  * @property rightBack The right back vertex of the [BoundingBox2D].
  * @property leftBack The left back vertex of the [BoundingBox2D].
+ * @see Vector2D
  */
 data class BoundingBox2D(
     val leftFront: Location2D,
@@ -32,19 +33,31 @@ data class BoundingBox2D(
     val leftBack: Location2D,
 ) {
 
-  val vectorLeft = (leftFront.toVector2D() - rightFront.toVector2D()).normalize()
-  val vectorRight = (rightFront.toVector2D() - leftFront.toVector2D()).normalize()
-  val vectorFront = (leftFront.toVector2D() - leftBack.toVector2D()).normalize()
-  val vectorBack = (leftBack.toVector2D() - leftFront.toVector2D()).normalize()
+  /** Normalized [Vector2D] to the left of the [BoundingBox2D]. */
+  val vectorLeft: Vector2D = (leftFront.toVector2D() - rightFront.toVector2D()).normalize()
+
+  /** Normalized [Vector2D] to the right of the [BoundingBox2D]. */
+  val vectorRight: Vector2D = (rightFront.toVector2D() - leftFront.toVector2D()).normalize()
+
+  /** Normalized [Vector2D] to the front of the [BoundingBox2D]. */
+  val vectorFront: Vector2D = (leftFront.toVector2D() - leftBack.toVector2D()).normalize()
+
+  /** Normalized [Vector2D] to the back of the [BoundingBox2D]. */
+  val vectorBack: Vector2D = (leftBack.toVector2D() - leftFront.toVector2D()).normalize()
 
   /**
    * Returns the vertices of this [BoundingBox2D] in the order leftFront, rightFront, rightBack,
    * leftBack.
    */
-  fun getVertices() = listOf(leftFront, rightFront, rightBack, leftBack)
+  fun getVertices(): List<Location2D> = listOf(leftFront, rightFront, rightBack, leftBack)
 
-  /** Extends this [BoundingBox2D] to the left by the given amount. */
-  fun extendLeft(amount: Double) =
+  /**
+   * Extends this [BoundingBox2D] to the left by the given [amount].
+   *
+   * @param amount The amount to extend the bounding box to the left.
+   * @return A new [BoundingBox2D] that is extended to the left by the given [amount].
+   */
+  fun extendLeft(amount: Double): BoundingBox2D =
       BoundingBox2D(
           leftFront = leftFront + vectorLeft * amount,
           rightFront = rightFront,
@@ -52,8 +65,13 @@ data class BoundingBox2D(
           leftBack = leftBack + vectorLeft * amount,
       )
 
-  /** Extends this [BoundingBox2D] to the right by the given amount. */
-  fun extendRight(amount: Double) =
+  /**
+   * Extends this [BoundingBox2D] to the right by the given [amount].
+   *
+   * @param amount The amount to extend the bounding box to the right.
+   * @return A new [BoundingBox2D] that is extended to the right by the given [amount].
+   */
+  fun extendRight(amount: Double): BoundingBox2D =
       BoundingBox2D(
           leftFront = leftFront,
           rightFront = rightFront + vectorRight * amount,
@@ -61,8 +79,13 @@ data class BoundingBox2D(
           leftBack = leftBack,
       )
 
-  /** Extends this [BoundingBox2D] to the front by the given amount. */
-  fun extendFront(amount: Double) =
+  /**
+   * Extends this [BoundingBox2D] to the front by the given [amount].
+   *
+   * @param amount The amount to extend the bounding box to the front.
+   * @return A new [BoundingBox2D] that is extended to the front by the given [amount].
+   */
+  fun extendFront(amount: Double): BoundingBox2D =
       BoundingBox2D(
           leftFront = leftFront + vectorLeft * amount,
           rightFront = rightFront + vectorRight * amount,
@@ -70,8 +93,13 @@ data class BoundingBox2D(
           leftBack = leftBack,
       )
 
-  /** Extends this [BoundingBox2D] to the back by the given amount. */
-  fun extendBack(amount: Double) =
+  /**
+   * Extends this [BoundingBox2D] to the back by the given [amount].
+   *
+   * @param amount The amount to extend the bounding box to the back.
+   * @return A new [BoundingBox2D] that is extended to the back by the given [amount].
+   */
+  fun extendBack(amount: Double): BoundingBox2D =
       BoundingBox2D(
           leftFront = leftFront,
           rightFront = rightFront,
@@ -79,8 +107,13 @@ data class BoundingBox2D(
           leftBack = leftBack + vectorLeft * amount,
       )
 
-  /** Extends this [BoundingBox2D] in all directions by the given amount. */
-  fun extend(amount: Double) =
+  /**
+   * Extends this [BoundingBox2D] in all directions by the given amount.
+   *
+   * @param amount The amount to extend the bounding box in all directions.
+   * @return A new [BoundingBox2D] that is extended in all directions by the given [amount].
+   */
+  fun extend(amount: Double): BoundingBox2D =
       BoundingBox2D(
           leftFront = leftFront + vectorLeft * amount + vectorFront * amount,
           rightFront = rightFront + vectorRight * amount + vectorFront * amount,

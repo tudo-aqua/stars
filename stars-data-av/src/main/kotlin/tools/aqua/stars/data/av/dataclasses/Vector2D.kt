@@ -49,11 +49,15 @@ data class Vector2D(val x: Double, val y: Double) {
   operator fun div(scalar: Number): Vector2D =
       Vector2D(x = this.x / scalar.toDouble(), y = this.y / scalar.toDouble())
 
+  /** Dot product with another [Vector2D]. */
   fun dot(other: Vector2D): Double = x * other.x + y * other.y
 
+  /** Cross (Vector) product with another [Vector3D] (in 2D resulting in a scalar determinant). */
   fun cross(other: Vector2D): Double = x * other.y - y * other.x
 
+  /** Length of the vector. */
   fun magnitude(): Double = sqrt(x * x + y * y)
 
+  /** Normalized vector with the same direction and length 1. */
   fun normalize(): Vector2D = magnitude().let { Vector2D(x / it, y / it) }
 }

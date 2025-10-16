@@ -28,6 +28,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property topRightFront The top right front vertex of the [BoundingBox].
  * @property topRightBack The top right back vertex of the [BoundingBox].
  * @property topLeftBack The top left back vertex of the [BoundingBox].
+ * @see Vector3D
  */
 data class BoundingBox(
     val bottomLeftFront: Location = Location(),
@@ -41,7 +42,7 @@ data class BoundingBox(
 ) {
 
   /** Converts this [BoundingBox] to a 2D [BoundingBox2D]. */
-  fun toBoundingBox2D() =
+  fun toBoundingBox2D(): BoundingBox2D =
       BoundingBox2D(
           leftFront = Location2D(x = bottomLeftFront.x, y = bottomLeftFront.y),
           rightFront = Location2D(x = bottomRightFront.x, y = bottomRightFront.y),

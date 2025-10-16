@@ -61,10 +61,10 @@ data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.
           z = this.z / scalar.toDouble(),
       )
 
-  /** Dot product with another vector. */
+  /** Dot product with another [Vector3D]. */
   fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
 
-  /** Cross (Vector) product with another vector. */
+  /** Cross (Vector) product with another [Vector3D]. */
   fun cross(other: Vector3D): Vector3D =
       Vector3D(
           x = y * other.z - z * other.y,

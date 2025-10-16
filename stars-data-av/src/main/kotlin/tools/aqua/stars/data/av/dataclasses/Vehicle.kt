@@ -25,17 +25,18 @@ import kotlin.math.sqrt
 /**
  * Data class for vehicles.
  *
- * @property id The identifier of the vehicle.
- * @property typeId The type identifier.
- * @property attributes The attributes of the vehicle.
- * @property isAlive Whether the vehicle is alive.
- * @property isActive Whether the vehicle is active.
- * @property isDormant Whether the vehicle is dormant.
- * @property semanticTags The semantic tags of the vehicle.
- * @property boundingBox The [BoundingBox] of the vehicle.
- * @property location The [Location] of the vehicle.
- * @property rotation The [Rotation] of the vehicle.
- * @property isEgo Whether this is the own vehicle.
+ * @param id The identifier of the [Vehicle].
+ * @param typeId The type identifier.
+ * @param attributes The attributes of the [Vehicle].
+ * @param isAlive Whether the [Vehicle] is alive.
+ * @param isActive Whether the [Vehicle] is active.
+ * @param isDormant Whether the [Vehicle] is dormant.
+ * @param semanticTags The semantic tags of the [Vehicle].
+ * @param boundingBox The [BoundingBox] of the [Vehicle].
+ * @param location The [Location] of the [Vehicle].
+ * @param rotation The [Rotation] of the [Vehicle].
+ * @param collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ * @property isEgo Whether this is the own [Vehicle].
  * @property forwardVector The current forward vector.
  * @property velocity The current velocity in m/s.
  * @property acceleration The current acceleration m/s².
@@ -46,16 +47,16 @@ import kotlin.math.sqrt
  */
 class Vehicle(
     id: Int = 0,
-    override val typeId: String = "",
-    override val attributes: Map<String, String> = emptyMap(),
-    override val isAlive: Boolean = true,
-    override val isActive: Boolean = true,
-    override val isDormant: Boolean = false,
-    override val semanticTags: List<Int> = emptyList(),
-    override val boundingBox: BoundingBox = BoundingBox(),
-    override val location: Location = Location(),
-    override val rotation: Rotation = Rotation(),
-    override val collisions: List<Int> = emptyList(),
+    typeId: String = "",
+    attributes: Map<String, String> = emptyMap(),
+    isAlive: Boolean = true,
+    isActive: Boolean = true,
+    isDormant: Boolean = false,
+    semanticTags: List<Int> = emptyList(),
+    boundingBox: BoundingBox = BoundingBox(),
+    location: Location = Location(),
+    rotation: Rotation = Rotation(),
+    collisions: List<Int> = emptyList(),
     var isEgo: Boolean = false,
     val forwardVector: Vector3D = Vector3D(),
     var velocity: Vector3D = Vector3D(),
@@ -64,7 +65,20 @@ class Vehicle(
     val lane: Lane = Lane(),
     var positionOnLane: Double = 0.0,
     val vehicleType: VehicleType = VehicleType.CAR,
-) : Actor(id) {
+) :
+    Actor(
+        id = id,
+        typeId = typeId,
+        attributes = attributes,
+        isAlive = isAlive,
+        isActive = isActive,
+        isDormant = isDormant,
+        semanticTags = semanticTags,
+        boundingBox = boundingBox,
+        location = location,
+        rotation = rotation,
+        collisions = collisions,
+    ) {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean

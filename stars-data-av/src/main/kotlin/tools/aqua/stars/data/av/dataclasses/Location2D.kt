@@ -29,10 +29,11 @@ import kotlin.math.sqrt
  */
 data class Location2D(val x: Double, val y: Double) {
 
+  /** Secondary constructor to create a [Location2D] from a [Vector2D]. */
   constructor(location: Vector2D) : this(location.x, location.y)
 
   /** Converts this [Location2D] to a 2D [Vector2D]. */
-  fun toVector2D() = Vector2D(x, y)
+  fun toVector2D(): Vector2D = Vector2D(x, y)
 
   /** Addition operator. */
   operator fun plus(other: Location2D): Vector2D =
@@ -50,6 +51,7 @@ data class Location2D(val x: Double, val y: Double) {
   operator fun minus(other: Vector2D): Location2D =
       Location2D(x = this.x - other.x, y = this.y - other.y)
 
+  /** Companion object for [Location2D]. */
   companion object {
     /**
      * Calculates the Euclidean distance between two locations, i.e., the square root of the sum of

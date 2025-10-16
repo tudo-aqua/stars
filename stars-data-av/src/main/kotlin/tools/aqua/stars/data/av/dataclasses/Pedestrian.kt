@@ -20,21 +20,44 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for pedestrians.
  *
- * @param id The identifier of the pedestrian.
+ * @param id The identifier of the [Pedestrian].
+ * @param typeId The type identifier.
+ * @param attributes The attributes of the [Pedestrian].
+ * @param isAlive Whether the [Pedestrian] is alive.
+ * @param isActive Whether the [Pedestrian] is active.
+ * @param isDormant Whether the [Pedestrian] is dormant.
+ * @param semanticTags The semantic tags of the [Pedestrian].
+ * @param boundingBox The [BoundingBox] of the [Pedestrian].
+ * @param location The [Location] of the [Pedestrian].
+ * @param rotation The [Rotation] of the [Pedestrian].
+ * @param collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
  */
 class Pedestrian(
     id: Int = 0,
-    override val typeId: String = "",
-    override val attributes: Map<String, String> = emptyMap(),
-    override val isAlive: Boolean = true,
-    override val isActive: Boolean = true,
-    override val isDormant: Boolean = false,
-    override val semanticTags: List<Int> = emptyList(),
-    override val boundingBox: BoundingBox = BoundingBox(),
-    override val location: Location = Location(),
-    override val rotation: Rotation = Rotation(),
-    override val collisions: List<Int> = emptyList(),
-) : Actor(id) {
+    typeId: String = "",
+    attributes: Map<String, String> = emptyMap(),
+    isAlive: Boolean = true,
+    isActive: Boolean = true,
+    isDormant: Boolean = false,
+    semanticTags: List<Int> = emptyList(),
+    boundingBox: BoundingBox = BoundingBox(),
+    location: Location = Location(),
+    rotation: Rotation = Rotation(),
+    collisions: List<Int> = emptyList(),
+) :
+    Actor(
+        id = id,
+        typeId = typeId,
+        attributes = attributes,
+        isAlive = isAlive,
+        isActive = isActive,
+        isDormant = isDormant,
+        semanticTags = semanticTags,
+        boundingBox = boundingBox,
+        location = location,
+        rotation = rotation,
+        collisions = collisions,
+    ) {
 
   override fun clone(newTickData: TickData): Actor =
       Pedestrian(
