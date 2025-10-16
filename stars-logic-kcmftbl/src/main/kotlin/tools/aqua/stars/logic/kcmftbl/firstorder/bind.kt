@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.logic.kcmftbl
+package tools.aqua.stars.logic.kcmftbl.firstorder
 
 /**
  * CMFTBL implementation of the 'bind' operator.

@@ -20,7 +20,7 @@ package tools.aqua.stars.logic.kcmftbl.formulas
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import tools.aqua.stars.logic.kcmftbl.bind
+import tools.aqua.stars.logic.kcmftbl.firstorder.bind
 
 /** This class tests the CMFTBL operator [bind]. */
 class TestBind {

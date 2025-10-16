@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Unify `NullaryPredicate`, `UninaryPredicate`, and `BinaryPredicate` to `Predicate`.
+- Introduce `Interval` class for predicates. 
 
 ## [1.0] - 14.10.2025
 

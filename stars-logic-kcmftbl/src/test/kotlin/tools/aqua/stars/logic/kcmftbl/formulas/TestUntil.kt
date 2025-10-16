@@ -23,7 +23,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
-import tools.aqua.stars.logic.kcmftbl.until
+import tools.aqua.stars.logic.kcmftbl.future.until
 
 /** This class tests the CMFTBL operator [until]. */
 class TestUntil {
@@ -304,8 +304,8 @@ class TestUntil {
    */
   @Test
   fun `Test when phi1 is true and phi2 is true after the interval starting at one`() {
-    val phi1 = listOf(1, 1, 1, 1)
-    val phi2 = listOf(0, 0, 1, 0)
+    val phi1 = listOf(1, 1, 1, 1, 1)
+    val phi2 = listOf(0, 0, 0, 1, 0)
     val interval = 1 to 2
 
     assertFalse {

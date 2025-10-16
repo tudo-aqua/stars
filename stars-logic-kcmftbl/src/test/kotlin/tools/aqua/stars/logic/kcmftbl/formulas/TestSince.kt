@@ -23,7 +23,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
-import tools.aqua.stars.logic.kcmftbl.since
+import tools.aqua.stars.logic.kcmftbl.past.since
 
 /** This class tests the CMFTBL operator [since]. */
 class TestSince {
@@ -296,16 +296,16 @@ class TestSince {
   }
 
   /**
-   * Test when phi1 is true and phi2 is true after the interval starting at zero.
+   * Test when phi1 is true and phi2 is true before the interval starting at zero.
    * - phi1: true since phi2 was true
    * - phi2: true directly after the interval
    * - interval: (1, 2)
    * - Expected: false
    */
   @Test
-  fun `Test when phi1 is true and phi2 is true after the interval starting at one`() {
-    val phi1 = listOf(1, 1, 1, 1)
-    val phi2 = listOf(0, 1, 0, 0)
+  fun `Test when phi1 is true and phi2 is true before the interval starting at one`() {
+    val phi1 = listOf(1, 1, 1, 1, 1)
+    val phi2 = listOf(1, 0, 0, 0, 0)
     val interval = 1 to 2
 
     assertFalse {

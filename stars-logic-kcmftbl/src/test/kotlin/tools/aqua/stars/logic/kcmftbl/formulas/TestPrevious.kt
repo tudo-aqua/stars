@@ -23,7 +23,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
-import tools.aqua.stars.logic.kcmftbl.previous
+import tools.aqua.stars.logic.kcmftbl.past.previous
 
 /** This class tests the CMFTBL operator [previous]. */
 class TestPrevious {
@@ -135,7 +135,7 @@ class TestPrevious {
    */
   @Test
   fun `Test when phi holds at the previous tick, but the tick is after the interval starts`() {
-    val ticks = createTicks(listOf(1, 1, 1))
+    val ticks = createTicks(phi1 = listOf(1, 1, 1), tickUnitMultiplier = 2)
 
     val interval = 0 to 1
 

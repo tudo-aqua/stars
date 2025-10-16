@@ -22,11 +22,20 @@ import tools.aqua.stars.logic.kcmftbl.data.TestDifference
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 
 /** Creates ticks and returns first by parsing INT-Lists to Boolean values. */
-fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTickData> =
+fun createTicks(
+    phi1: List<Int>,
+    phi2: List<Int>,
+    tickUnitMultiplier: Int = 1,
+): List<BooleanTickData> =
     phi1.indices
         .associate {
           TestUnit(it) to
-              BooleanTickData(TestUnit(it), LinkedHashSet(), phi1[it] == 1, phi2[it] == 1)
+              BooleanTickData(
+                  TestUnit(it * tickUnitMultiplier),
+                  LinkedHashSet(),
+                  phi1[it] == 1,
+                  phi2[it] == 1,
+              )
         }
         .values
         .toList()
@@ -42,11 +51,12 @@ fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTickData> =
  * Creates ticks and returns first by parsing INT-Lists to Boolean values. Phi2 is set to always
  * true
  */
-fun createTicks(phi1: List<Int>): List<BooleanTickData> = createTicks(phi1, List(phi1.size) { 1 })
+fun createTicks(phi1: List<Int>, tickUnitMultiplier: Int = 1): List<BooleanTickData> =
+    createTicks(phi1, List(phi1.size) { 1 }, tickUnitMultiplier)
 
 /** Creates an interval by wrapping the INT-Values into [TestDifference]s. */
-fun createInterval(interval: Pair<Int, Int>): Pair<TestDifference, TestDifference> =
-    TestDifference(interval.first) to TestDifference(interval.second)
+fun createInterval(interval: Pair<Int, Int>): Interval<TestDifference> =
+    Interval(TestDifference(interval.first) to TestDifference(interval.second))
 
 /** Creates all combinations of 0-1 arrays with length [n]. */
 fun combinations(n: Int): Collection<List<Int>> {
@@ -71,12 +81,12 @@ fun combinations(n: Int): Collection<List<Int>> {
  * All interval combinations with lower bound (lb) 0 and upper bound (ub) [ub], where lb < ub
  * including null.
  */
-fun intervals(ub: Int): List<Pair<TestDifference, TestDifference>?> {
-  val result = mutableListOf<Pair<TestDifference, TestDifference>?>(null)
+fun intervals(ub: Int): List<Interval<TestDifference>?> {
+  val result = mutableListOf<Interval<TestDifference>?>(null)
 
   for (i in 0 until ub) {
     for (j in i + 1..ub) {
-      result.add(TestDifference(i) to TestDifference(j))
+      result.add(Interval(TestDifference(i) to TestDifference(j)))
     }
   }
 

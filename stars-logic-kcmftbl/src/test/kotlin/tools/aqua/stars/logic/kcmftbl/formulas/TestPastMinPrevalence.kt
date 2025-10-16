@@ -22,6 +22,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.*
+import tools.aqua.stars.logic.kcmftbl.past.pastMinPrevalence
 
 /** This class tests the CMFTBL operator [pastMinPrevalence]. */
 class TestPastMinPrevalence {

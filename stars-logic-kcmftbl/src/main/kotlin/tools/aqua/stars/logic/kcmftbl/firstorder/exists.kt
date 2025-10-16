@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.logic.kcmftbl
+package tools.aqua.stars.logic.kcmftbl.firstorder
 
 /**
- * CMFTBL implementation of the 'for all' operator.
+ * CMFTBL implementation of the 'exists' operator.
  *
  * @param T Type of the field.
  * @param collection The collection.
  * @param phi The predicate.
  */
-fun <T> forAll(collection: Collection<T>, phi: (T) -> Boolean): Boolean = collection.all { phi(it) }
+fun <T> exists(collection: Collection<T>, phi: (T) -> Boolean): Boolean = collection.any { phi(it) }

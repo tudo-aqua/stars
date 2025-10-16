@@ -21,6 +21,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.logic.kcmftbl.*
+import tools.aqua.stars.logic.kcmftbl.past.once
+import tools.aqua.stars.logic.kcmftbl.past.since
 
 /** This class tests the CMFTBL operator [once]. */
 class TestOnce {
