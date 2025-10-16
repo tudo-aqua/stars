@@ -21,8 +21,10 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
 
+/** Tests for [BoundingBox2D.containsPoint]. */
 class BoundingBoxContainmentTest {
 
+  /** Axis-aligned bounding box (AABB) for testing. */
   val axisAlignedBoundingBox: BoundingBox2D
     get() =
         BoundingBox2D(
@@ -32,6 +34,7 @@ class BoundingBoxContainmentTest {
             leftBack = Location2D(0.0, 0.0),
         )
 
+  /** Oriented bounding box (OBB) for testing. */
   val orientedBoundingBox: BoundingBox2D
     get() =
         BoundingBox2D(
@@ -42,21 +45,25 @@ class BoundingBoxContainmentTest {
         )
 
   // region AABB
+  /** Test AABoundingBox2D containing point. */
   @Test
   fun `Test AABoundingBox2D containing point`() {
     assertTrue(axisAlignedBoundingBox.containsPoint(Location2D(1.0, 1.0)))
   }
 
+  /** Test AABoundingBox2D containing point on edge. */
   @Test
   fun `Test AABoundingBox2D containing point on edge`() {
     assertTrue(axisAlignedBoundingBox.containsPoint(Location2D(0.0, 1.0)))
   }
 
+  /** Test AABoundingBox2D containing point on vertex. */
   @Test
   fun `Test AABoundingBox2D containing point on vertex`() {
     assertTrue(axisAlignedBoundingBox.containsPoint(Location2D(2.0, 2.0)))
   }
 
+  /** Test AABoundingBox2D not containing point. */
   @Test
   fun `Test AABoundingBox2D not containing point`() {
     assertFalse(axisAlignedBoundingBox.containsPoint(Location2D(3.0, 1.0)))
@@ -65,16 +72,19 @@ class BoundingBoxContainmentTest {
   // endregion
 
   // region OBB
+  /** Test OrientedBoundingBox2D containing point. */
   @Test
   fun `Test OrientedBoundingBox2D containing point`() {
     assertTrue(orientedBoundingBox.containsPoint(Location2D(3.0, 2.0)))
   }
 
+  /** Test OrientedBoundingBox2D containing point on edge. */
   @Test
   fun `Test OrientedBoundingBox2D containing point on vertex`() {
     assertTrue(orientedBoundingBox.containsPoint(Location2D(0.0, 2.0)))
   }
 
+  /** Test OrientedBoundingBox2D containing point on vertex. */
   @Test
   fun `Test OrientedBoundingBox2D not containing point`() {
     assertFalse(orientedBoundingBox.containsPoint(Location2D(1.0, 1.0)))

@@ -21,8 +21,10 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
 
+/** Tests for [BoundingBox2D.collidesWith]. */
 class BoundingBoxCollisionTest {
 
+  /** Test AABoundingBox2D containing point on vertex. */
   @Test
   fun `Test AABoundingBox2D separated`() {
     val bb1 =
@@ -45,6 +47,7 @@ class BoundingBoxCollisionTest {
     assertFalse(bb2.collidesWith(bb1))
   }
 
+  /** Test AABoundingBox2D touching at one edge. */
   @Test
   fun `Test AABoundingBox2D touching at one edge`() {
     val bb1 =
@@ -67,6 +70,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test AABoundingBox2D touching at a single point. */
   @Test
   fun `Test AABoundingBox2D touching at a single point`() {
     val bb1 =
@@ -89,6 +93,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test AABoundingBox2D overlapping each other where one point is inside the other. */
   @Test
   fun `Test AABoundingBox2D completely inside another AABB`() {
     val bb1 =
@@ -111,6 +116,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test AABoundingBox2D overlapping each other where one point is inside the other. */
   @Test
   fun `Test AABoundingBox2D overlapping each other where no point is inside the other`() {
     val bb1 =
@@ -133,6 +139,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test AABoundingBox2D completely inside another OBB. */
   @Test
   fun `Test AABoundingBox2D completely inside another OBB`() {
     val bb1 =
@@ -155,6 +162,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test AABoundingBox2D inside another OBB where ABB points are on OBB edges. */
   @Test
   fun `Test AABoundingBox2D inside another OBB where ABB points are on OBB edges`() {
     val bb1 =
@@ -177,6 +185,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test OOBoundingBox2D completely inside another OBB. */
   @Test
   fun `Test OOBoundingBox2D completely inside another OBB`() {
     val bb1 =
@@ -199,6 +208,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test OOBoundingBox2D seperated. */
   @Test
   fun `Test OOBoundingBox2D seperated`() {
     val bb1 =
@@ -221,6 +231,7 @@ class BoundingBoxCollisionTest {
     assertFalse(bb2.collidesWith(bb1))
   }
 
+  /** Test OOBoundingBox2D touching at a single point. */
   @Test
   fun `Test OOBoundingBox2D touching at a single point`() {
     val bb1 =
@@ -243,6 +254,7 @@ class BoundingBoxCollisionTest {
     assertTrue(bb2.collidesWith(bb1))
   }
 
+  /** Test OOBoundingBox2D touching at one edge. */
   @Test
   fun `Test OOBoundingBox2D touching at one edge`() {
     val bb1 =
