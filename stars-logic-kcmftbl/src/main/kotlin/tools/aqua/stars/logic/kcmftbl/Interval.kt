@@ -51,7 +51,7 @@ data class Interval<D : TickDifference<D>>(
      * @return True if the current tick is before the interval start, false otherwise. False if the
      *   interval is null.
      */
-    fun <D : TickDifference<D>> D.isBefore(interval: Interval<D>?) =
+    fun <D : TickDifference<D>> D.isBefore(interval: Interval<D>?): Boolean =
         interval != null && this < interval.start
 
     /**
@@ -62,7 +62,7 @@ data class Interval<D : TickDifference<D>>(
      * @return True if the current tick is after the interval end, false otherwise. False if the
      *   interval is null.
      */
-    fun <D : TickDifference<D>> D.isAfter(interval: Interval<D>?) =
+    fun <D : TickDifference<D>> D.isAfter(interval: Interval<D>?): Boolean =
         interval != null && this > interval.end
 
     /**
@@ -73,7 +73,7 @@ data class Interval<D : TickDifference<D>>(
      * @return True if the current tick is in the interval, false otherwise. False if the interval
      *   is null.
      */
-    fun <D : TickDifference<D>> D.isIn(interval: Interval<D>?) =
+    fun <D : TickDifference<D>> D.isIn(interval: Interval<D>?): Boolean =
         interval != null && !isBefore(interval) && !isAfter(interval)
 
     /**
@@ -84,7 +84,7 @@ data class Interval<D : TickDifference<D>>(
      * @return True if the current tick is not in the interval, false otherwise. False if the
      *   interval is null.
      */
-    fun <D : TickDifference<D>> D.isNotIn(interval: Interval<D>?) =
+    fun <D : TickDifference<D>> D.isNotIn(interval: Interval<D>?): Boolean =
         isBefore(interval) || isAfter(interval)
 
     /** Extension function to create an [Interval] using the range operator. */
