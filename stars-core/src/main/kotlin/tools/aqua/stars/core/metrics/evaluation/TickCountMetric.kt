@@ -22,7 +22,7 @@ import tools.aqua.stars.core.metrics.providers.Loggable
 import tools.aqua.stars.core.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metrics.providers.Stateful
 import tools.aqua.stars.core.metrics.providers.TickMetricProvider
-import tools.aqua.stars.core.serialization.SerializableIntResult
+import tools.aqua.stars.core.serialization.SerializableLongResult
 import tools.aqua.stars.core.types.*
 
 /**
@@ -52,7 +52,7 @@ class TickCountMetric<
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TickMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /** Holds the count of [TickDataType]s that are analyzed. */
-  private var tickCount: Int = 0
+  private var tickCount: Long = 0L
 
   /**
    * Increases the count of evaluated [TickDataType]s.
@@ -60,7 +60,7 @@ class TickCountMetric<
    * @param tick The current [TickDataType] that is evaluated.
    * @return The number of analyzed [TickDataType]s so far.
    */
-  override fun evaluate(tick: T): Int =
+  override fun evaluate(tick: T): Long =
       (++tickCount).also { logFiner("==== Tick $tickCount: $tick ====") }
 
   /**
@@ -68,16 +68,16 @@ class TickCountMetric<
    *
    * @return Returns the current [tickCount].
    */
-  override fun getState(): Int = tickCount
+  override fun getState(): Long = tickCount
 
   /** Prints the current state using [println]. */
   override fun printState() {
     logInfo("Analyzed $tickCount ticks.")
   }
 
-  override fun getSerializableResults(): List<SerializableIntResult> =
+  override fun getSerializableResults(): List<SerializableLongResult> =
       listOf(
-          SerializableIntResult(
+          SerializableLongResult(
               identifier = loggerIdentifier,
               source = loggerIdentifier,
               value = tickCount,
