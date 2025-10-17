@@ -97,13 +97,15 @@ class TotalTickDifferenceMetric<
   }
 
   override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
-      totalTickDifference?.let {
-        listOf(
-            SerializableTickDifferenceResult(
-                identifier = loggerIdentifier,
-                source = loggerIdentifier,
-                value = it.serialize(),
+      totalTickDifference
+          ?.let {
+            listOf(
+                SerializableTickDifferenceResult(
+                    identifier = loggerIdentifier,
+                    source = loggerIdentifier,
+                    value = it.serialize(),
+                )
             )
-        )
-      } ?: emptyList()
+          }
+          .orEmpty()
 }

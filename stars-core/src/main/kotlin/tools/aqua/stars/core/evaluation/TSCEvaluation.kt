@@ -56,8 +56,7 @@ import tools.aqua.stars.core.utils.saveAsJsonFiles
 
 /**
  * This class runs the evaluation of [TSC]s. The [TSCEvaluation.runEvaluation] function evaluates
- * the [TSC]s based on the given [Sequence] of [TickDataType]s. This class implements
- * [tools.aqua.stars.core.metrics.providers.Loggable].
+ * the [TSC]s based on the given [Sequence] of [TickDataType]s. This class implements [Loggable].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -106,10 +105,7 @@ class TSCEvaluation<
       }
     }
 
-  /**
-   * Holds a [List] of all [tools.aqua.stars.core.metrics.providers.MetricProvider]s registered by
-   * [registerMetricProviders].
-   */
+  /** Holds a [List] of all [MetricProvider]s registered by [registerMetricProviders]. */
   private val metricProviders: MutableList<MetricProvider<E, T, U, D>> = mutableListOf()
 
   /** Holds the results of the [PreTSCEvaluationHook]s after calling [runEvaluation]. */

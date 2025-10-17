@@ -22,7 +22,7 @@ import tools.aqua.stars.core.types.*
 
 /**
  * The [TickMetricProvider] implements the [EvaluationMetricProvider] and provides an [evaluate]
- * function which gets a tick which is called during the evaluation phase.
+ * function which gets a [TickDataType] which is called during the evaluation phase.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
