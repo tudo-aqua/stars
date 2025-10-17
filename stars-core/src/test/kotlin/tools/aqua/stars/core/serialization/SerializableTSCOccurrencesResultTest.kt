@@ -167,10 +167,10 @@ class SerializableTSCOccurrencesResultTest {
 
   /**
    * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with the same
-   * content from the same segment source.
+   * content from the same source.
    */
   @Test
-  fun `Test correct comparison of two same valid TSC results from equal segment sources`() {
+  fun `Test correct comparison of two same valid TSC results from equal sources`() {
     val currentMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
@@ -204,10 +204,10 @@ class SerializableTSCOccurrencesResultTest {
 
   /**
    * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with the same
-   * content from different segment sources.
+   * content from different sources.
    */
   @Test
-  fun `Test correct comparison of two same valid TSC results from different segment sources`() {
+  fun `Test correct comparison of two same valid TSC results from different sources`() {
     val currentMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,

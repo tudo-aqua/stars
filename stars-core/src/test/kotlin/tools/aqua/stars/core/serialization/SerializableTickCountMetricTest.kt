@@ -38,11 +38,11 @@ class SerializableTickCountMetricTest {
             SimpleTickDataDifference,
         >()
 
-    // Evaluate to populate segmentCountMetric with a correct value
+    // Evaluate to populate tickCountMetric with a correct value
     tickCountMetric.evaluate(simpleTick)
 
-    val segmentCountResults = tickCountMetric.getSerializableResults()
+    val tickCountResults = tickCountMetric.getSerializableResults()
     val deserializedResults = serializeAndDeserialize(tickCountMetric)
-    assertEquals(segmentCountResults, deserializedResults)
+    assertEquals(tickCountResults, deserializedResults)
   }
 }
