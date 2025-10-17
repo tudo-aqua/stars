@@ -68,8 +68,6 @@ fun convertTickData(world: World, jsonSimulationRun: List<JsonTickData>): List<T
         v.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
       }
 
-  fixEgos(jsonVehicles) // TODO: Remove
-
   // Check that no two actors have the same id in every tick
   jsonVehicles.forEachIndexed { index, vehicles ->
     check(vehicles.map { it.id }.distinct().size == vehicles.size) {
@@ -103,14 +101,6 @@ fun convertTickData(world: World, jsonSimulationRun: List<JsonTickData>): List<T
   return jsonSimulationRun
       .map { it.toTickData(world) }
       .also { updateActorVelocityForSimulationRun(it) }
-}
-
-private fun fixEgos(jsonVehicles: List<List<JsonVehicle>>) {
-  jsonVehicles.forEach { vehicles ->
-    vehicles
-        .filter { it.egoVehicle }
-        .forEach { ego -> if (ego.typeId != "vehicle.lincoln.mkz_2020") ego.egoVehicle = false }
-  }
 }
 
 /**

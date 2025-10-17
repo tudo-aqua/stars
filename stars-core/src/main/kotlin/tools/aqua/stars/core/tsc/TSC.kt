@@ -56,7 +56,7 @@ class TSC<
    * @return The calculated [TSCInstance] based on the evaluation.
    */
   fun evaluate(tick: T): TSCInstance<E, T, U, D> =
-      TSCInstance(rootNode.evaluate(tick), "") // TODO: Add identifier
+      TSCInstance(rootNode.evaluate(tick), tick.toString())
 
   /**
    * Builds all possible TSCs ignoring those in [projectionIgnoreList].

@@ -127,7 +127,7 @@ class TSCEvaluation<
    * [EvaluationHookResult.OK] for each identifier.
    */
   val preTickEvaluationHookResults: MutableMap<String, Map<String, EvaluationHookResult>> =
-      mutableMapOf() // TODO: String = Tick Identifier -> Change to range
+      mutableMapOf()
 
   /**
    * Holds a [List] of all [PreTickEvaluationHook]s registered by [registerPreTickEvaluationHooks].

@@ -46,7 +46,7 @@ import kotlinx.serialization.Serializable
  * @property rotation The [JsonRotation] of the landmark.
  */
 @Serializable
-data class JsonLandmark( // TODO: Add bounding box
+data class JsonLandmark(
     @SerialName("id") var id: Int,
     @SerialName("road_id") val roadId: Int,
     @SerialName("name") val name: String,
