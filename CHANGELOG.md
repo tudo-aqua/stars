@@ -24,6 +24,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1] - TBD
+
+### Added
+
+- Add `MissedPredicatesPerTSCMetric`.
+
 ## [1.0] - 14.10.2025
 
 ### Added
