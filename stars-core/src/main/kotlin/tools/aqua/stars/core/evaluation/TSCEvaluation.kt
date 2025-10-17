@@ -135,6 +135,25 @@ class TSCEvaluation<
     registerDefaultHooks()
   }
 
+  /** Secondary constructor for a single [TSC]. */
+  constructor(
+      tsc: TSC<E, T, U, D>,
+      writePlots: Boolean = true,
+      writePlotDataCSV: Boolean = false,
+      writeSerializedResults: Boolean = true,
+      compareToPreviousRun: Boolean = false,
+      loggerIdentifier: String = "evaluation-time",
+      logger: Logger = Loggable.getLogger(loggerIdentifier),
+  ) : this(
+      tscList = listOf(tsc),
+      writePlots = writePlots,
+      writePlotDataCSV = writePlotDataCSV,
+      writeSerializedResults = writeSerializedResults,
+      compareToPreviousRun = compareToPreviousRun,
+      loggerIdentifier = loggerIdentifier,
+      logger = logger,
+  )
+
   /**
    * Registers all [MetricProvider]s to the list of metrics that should be called during evaluation.
    *
