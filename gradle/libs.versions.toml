@@ -27,7 +27,7 @@ gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-pl
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.4.4" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "4.0.1" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "8.0.0" }
-gradle-mavenPublish = { group = "com.vanniktech.maven.publish", name = "com.vanniktech.maven.publish.gradle.plugin", version = "0.33.0" }
+gradle-mavenPublish = { group = "com.vanniktech.maven.publish", name = "com.vanniktech.maven.publish.gradle.plugin", version = "0.34.0" }
 
 # Other
 dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "2.1.0" }
