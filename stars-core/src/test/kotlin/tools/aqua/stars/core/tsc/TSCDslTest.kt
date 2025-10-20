@@ -20,11 +20,19 @@ package tools.aqua.stars.core.tsc
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
-import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
+import tools.aqua.stars.core.metrics.E
 import tools.aqua.stars.core.tsc.builder.tsc
+
+typealias E = SimpleEntity
+
+typealias T = SimpleTickData
+
+typealias U = SimpleTickDataUnit
+
+typealias D = SimpleTickDataDifference
 
 /** Tests the DSL for the [TSC]. */
 class TSCDslTest {
@@ -32,16 +40,7 @@ class TSCDslTest {
   /** Tests the correct creation of a [TSC] with no identifier. */
   @Test
   fun testNoIdentifier() {
-    val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("")
-        }
+    val tsc = tsc<E, T, U, D> { all("") }
     assertEquals("TSC", tsc.identifier)
   }
 
@@ -49,18 +48,7 @@ class TSCDslTest {
   @Test
   fun testIdentifier() {
     val identifier = "TSC Identifier"
-    val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            identifier = identifier
-        ) {
-          all("")
-        }
+    val tsc = tsc<E, T, U, D>(identifier = identifier) { all("") }
     assertEquals(identifier, tsc.identifier)
   }
 
@@ -68,18 +56,7 @@ class TSCDslTest {
   @Test
   fun testEmptyIdentifier() {
     val identifier = ""
-    val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            identifier = identifier
-        ) {
-          all("")
-        }
+    val tsc = tsc<E, T, U, D>(identifier = identifier) { all("") }
     assertEquals(identifier, tsc.identifier)
   }
 }
