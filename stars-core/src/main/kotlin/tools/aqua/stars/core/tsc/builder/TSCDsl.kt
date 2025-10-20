@@ -38,6 +38,7 @@ const val ROOT_NODE_LABEL: String = "root"
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param identifier The identifier of the TSC.
  * @param init The init function. Must add exactly one edge.
  * @return The [TSCNode] at the root level of the TSC.
  */
@@ -47,7 +48,10 @@ fun <
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> tsc(init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {}): TSC<E, T, S, U, D> {
+> tsc(
+    identifier: String = "TSC",
+    init: TSCBoundedBuilder<E, T, S, U, D>.() -> Unit = {},
+): TSC<E, T, S, U, D> {
   val rootEdge =
       TSCBoundedBuilder<E, T, S, U, D>(ROOT_NODE_LABEL)
           .apply { init() }
@@ -64,5 +68,5 @@ fun <
     "Root node must not have a condition. Consider adding a fitting bounded parent node."
   }
 
-  return TSC(rootEdge.destination.edges[0].destination)
+  return TSC(rootNode = rootEdge.destination.edges[0].destination, identifier = identifier)
 }
