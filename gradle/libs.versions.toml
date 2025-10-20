@@ -30,7 +30,7 @@ gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gra
 gradle-mavenPublish = { group = "com.vanniktech.maven.publish", name = "com.vanniktech.maven.publish.gradle.plugin", version = "0.33.0" }
 
 # Other
-dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "2.0.0" }
+dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "2.1.0" }
 
 [bundles]
 gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin"]
