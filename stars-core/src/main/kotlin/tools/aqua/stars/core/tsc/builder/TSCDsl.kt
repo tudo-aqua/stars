@@ -65,5 +65,5 @@ fun <
     "Root node must not have a condition. Consider adding a fitting bounded parent node."
   }
 
-  return TSC(rootEdge.destination.edges[0].destination, identifier)
+  return TSC(rootNode = rootEdge.destination.edges[0].destination, identifier = identifier)
 }

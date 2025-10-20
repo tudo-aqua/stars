@@ -41,6 +41,13 @@ All notable changes to this project will be documented in this file.
 - Completely remove `Segment`s. Evaluation is now purely based on ticks. `TickSequence` provides necessary functionality to pass data to the `TSCEvaluation`.
 - Remove `Block` from `DataAV`.
 
+## [1.1] - To be released
+
+### Added
+
+- Add `MissedPredicatesPerTSCMetric`.
+- Add `identifier` parameter to `TSCDsl`.
+
 ## [1.0] - 14.10.2025
 
 ### Added
