@@ -17,12 +17,13 @@
 
 package tools.aqua.stars.core.tsc.edge
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Baseclass for TSC edges.
+ * Baseclass for [TSC] edges.
  *
  * @param E [EntityType].
  * @param T [TickDataType].

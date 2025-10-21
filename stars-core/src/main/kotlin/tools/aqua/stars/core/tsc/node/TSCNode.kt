@@ -25,7 +25,7 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Abstract baseclass for TSC nodes.
+ * Abstract baseclass for [TSC] nodes.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -58,10 +58,10 @@ sealed class TSCNode<
   val monitors: Map<String, (T) -> Boolean>
     get() = monitorsMap.orEmpty()
 
-  /** Generates all TSC instances. */
+  /** Generates all [TSC] instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
 
-  /** Evaluates this TSC in the given context. */
+  /** Evaluates this [TSC] in the given context. */
   fun evaluate(
       tick: T,
       depth: Int = 0,
@@ -82,7 +82,7 @@ sealed class TSCNode<
           }
 
   /**
-   * Builds the TSCs for each projection defined in this [TSCNode] and returns a [TSC] for each
+   * Builds the [TSC]s for each projection defined in this [TSCNode] and returns a [TSC] for each
    * projection id. All projection ids in [projectionIgnoreList] are ignored and will not be in the
    * resulting projection list.
    *
@@ -98,7 +98,7 @@ sealed class TSCNode<
           }
 
   /**
-   * Builds the TSC (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
+   * Builds the [TSC] (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
    * 'null' if the given [projectionId] is not found in [projections] of the current [TSCNode].
    *
    * @param projectionId The projection identifier as in [projections].

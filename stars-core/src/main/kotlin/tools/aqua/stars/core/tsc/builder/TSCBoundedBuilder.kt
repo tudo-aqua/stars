@@ -21,11 +21,12 @@ package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating bounded nodes in the DSL.
+ * Class to assist in creating [TSCBoundedNode] in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -137,7 +138,7 @@ open class TSCBoundedBuilder<
       TSCMonitorsBuilder<E, T, U, D>().apply { init() }.also { this.monitors = it.build() }
 
   /**
-   * DSL function for an edge with BoundedNode.
+   * DSL function for a [TSCEdge] with [TSCBoundedNode].
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -165,7 +166,7 @@ open class TSCBoundedBuilder<
           .also { this.addEdge(it) }
 
   /**
-   * DSL function for an edge with BoundedNode with the limits of (1,1).
+   * DSL function for a [TSCEdge] with [TSCBoundedNode] with the limits of (1,1).
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -191,7 +192,7 @@ open class TSCBoundedBuilder<
           .also { this.addEdge(it) }
 
   /**
-   * DSL function for an edge with BoundedNode with the limits of (0,#Edges).
+   * DSL function for a [TSCEdge] with [TSCBoundedNode] with the limits of (0,#Edges).
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -217,7 +218,7 @@ open class TSCBoundedBuilder<
           .also { this.addEdge(it) }
 
   /**
-   * DSL function for an edge with BoundedNode with the limits of (1,#Edges).
+   * DSL function for a [TSCEdge] with [TSCBoundedNode] with the limits of (1,#Edges).
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -243,7 +244,7 @@ open class TSCBoundedBuilder<
           .also { this.addEdge(it) }
 
   /**
-   * DSL function for an edge with BoundedNode with the limits of (#Edges,#Edges).
+   * DSL function for a [TSCEdge] with [TSCBoundedNode] with the limits of (#Edges,#Edges).
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -269,7 +270,7 @@ open class TSCBoundedBuilder<
           .also { this.addEdge(it) }
 
   /**
-   * DSL function for an edge with LeafNode.
+   * DSL function for a [TSCEdge] with [TSCLeafNode].
    *
    * @param E [EntityType].
    * @param T [TickDataType].

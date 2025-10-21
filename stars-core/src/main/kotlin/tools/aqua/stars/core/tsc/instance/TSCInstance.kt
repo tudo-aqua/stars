@@ -17,16 +17,19 @@
 
 package tools.aqua.stars.core.tsc.instance
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * Instance of a TSC.
+ * Instance of a [TSC].
+ *
+ * Each instance is a subtree of the original [TSC] that was observed during evaluation.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property rootNode The root node.
+ * @property rootNode The root [TSCInstanceNode].
  * @property sourceIdentifier Source identifier.
  */
 data class TSCInstance<

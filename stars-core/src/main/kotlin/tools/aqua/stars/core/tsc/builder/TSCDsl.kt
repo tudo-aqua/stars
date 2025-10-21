@@ -15,30 +15,29 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
-/** Constant predicate for always true edges. */
+/** Constant predicate for always true [TSCEdge]s. */
 val CONST_TRUE: ((Any) -> Boolean) = { true }
 
 /** Label of the [TSCNode] built by the [tsc] function. */
 const val ROOT_NODE_LABEL: String = "root"
 
 /**
- * Builds root node. Applies [init] function to [TSCNode].
+ * Builds root [TSCNode]. Applies [init] function to [TSCNode].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param identifier The identifier of the TSC.
- * @param init The init function. Must add exactly one edge.
- * @return The [TSCNode] at the root level of the TSC.
+ * @param identifier The identifier of the [TSC].
+ * @param init The init function. Must add exactly one [TSCEdge].
+ * @return The [TSCNode] at the root level of the [TSC].
  */
 fun <
     E : EntityType<E, T, U, D>,

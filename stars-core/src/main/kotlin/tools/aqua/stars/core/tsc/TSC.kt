@@ -23,7 +23,7 @@ import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * TSC graph.
+ * TSC tree structure.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -59,7 +59,7 @@ class TSC<
       TSCInstance(rootNode.evaluate(tick), tick.toString())
 
   /**
-   * Builds all possible TSCs ignoring those in [projectionIgnoreList].
+   * Builds all possible [TSC]s ignoring those in [projectionIgnoreList].
    *
    * @param projectionIgnoreList Projections to ignore.
    * @return The [List] of all [TSC]s for this [TSC].

@@ -19,10 +19,11 @@ package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating leaf nodes in the DSL.
+ * Class to assist in creating [TSCLeafNode]s in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -55,13 +56,13 @@ open class TSCLeafBuilder<
       )
 
   /**
-   * DSL function for edge conditions.
+   * DSL function for [TSCEdge] conditions.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param condition The edge condition.
+   * @param condition The [TSCEdge] condition.
    */
   fun <
       E : EntityType<E, T, U, D>,
@@ -111,14 +112,14 @@ open class TSCLeafBuilder<
       TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
-   * DSL function for an edge with MonitorsEdge in the leaf node scope.
+   * DSL function for a [TSCEdge] with MonitorsEdge in the [TSCLeafNode] scope.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a 'monitors' node.
+   * @return The [TSCEdge] that is connected to a 'monitors' [TSCNode].
    */
   fun <
       E : EntityType<E, T, U, D>,

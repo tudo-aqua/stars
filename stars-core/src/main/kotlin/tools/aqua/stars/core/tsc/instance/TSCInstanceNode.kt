@@ -17,15 +17,17 @@
 
 package tools.aqua.stars.core.tsc.instance
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.builder.ROOT_NODE_LABEL
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Evaluated TSC node.
+ * Evaluated [TSC] node.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -54,7 +56,9 @@ class TSCInstanceNode<
   fun getAllEdges(): List<TSCEdge<E, T, U, D>> =
       edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
 
-  /** Returns a [List] of all [TSCInstanceNode]s that are leaf nodes in the given [currentNode]. */
+  /**
+   * Returns a [List] of all [TSCInstanceNode]s that are [TSCLeafNode] in the given [currentNode].
+   */
   fun getLeafNodeEdges(
       currentNode: TSCInstanceNode<E, T, U, D>,
       currentNodeEdge: TSCInstanceEdge<E, T, U, D>? = null,
@@ -122,13 +126,12 @@ class TSCInstanceNode<
   }
 
   /**
-   * Validates own (and recursively all children's) results of the
-   * [TSCNode<E,T,S,U,D>.monitorFunction] results and returns a [TSCFailedMonitorInstance] for each
-   * incoming edge label with results != true.
+   * Validates own (and recursively all children's) results of the [TSCNode.monitors] results and
+   * returns a [TSCFailedMonitorInstance] for each incoming edge label with results != true.
    *
    * @param identifier Identifier of the tick.
    * @param label specifies the starting point in the TSC for the search.
-   * @return list of edge labels leading to a node with `false` monitor result.
+   * @return [List] of edge labels leading to a node with `false` monitor result.
    */
   fun validateMonitors(
       identifier: String,
@@ -144,12 +147,11 @@ class TSCInstanceNode<
       }
 
   /**
-   * Validates own (and recursively all children's) results of the
-   * [TSCNode<E,T,S,U,D>.monitorFunction] results and collects incoming edge labels for results !=
-   * true.
+   * Validates own (and recursively all children's) results of the [monitorResults] results and
+   * collects incoming edge labels for results != true.
    *
    * @param label the label added to the return list if the monitor result was `false`.
-   * @return List of [Pair]s of the failed monitor to the node label.
+   * @return [List] of [Pair]s of the failed monitor to the node label.
    */
   private fun validateMonitorsRec(label: String): List<Pair<String, String>> =
       this.monitorResults.filterValues { !it }.keys.map { it to label } +

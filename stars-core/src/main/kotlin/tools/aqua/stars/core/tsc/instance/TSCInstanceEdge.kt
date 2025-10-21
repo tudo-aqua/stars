@@ -17,11 +17,12 @@
 
 package tools.aqua.stars.core.tsc.instance
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.types.*
 
 /**
- * Evaluated TSC edge.
+ * Evaluated [TSC] edge.
  *
  * @param E [EntityType].
  * @param T [TickDataType].

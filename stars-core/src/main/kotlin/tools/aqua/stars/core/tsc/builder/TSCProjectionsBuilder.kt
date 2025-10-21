@@ -17,10 +17,11 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating monitors nodes in the DSL.
+ * Class to assist in creating monitors [TSCNode]s in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -34,7 +35,7 @@ open class TSCProjectionsBuilder<
     D : TickDifference<D>,
 > : TSCBuilder<E, T, U, D>() {
 
-  /** Holds all projections of the node. */
+  /** Holds all projections of the [TSCNode]. */
   private val projectionIDs: MutableMap<String, Boolean> = mutableMapOf()
 
   /** Creates the projections map. */

@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.builder
 
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -36,10 +37,10 @@ sealed class TSCBuilder<
     D : TickDifference<D>,
 > {
 
-  /** Holds all edges of the node. */
+  /** Holds all [TSCEdge]s of the [TSCNode]. */
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
-  /** Holds all monitors of the node. */
+  /** Holds all monitors of the [TSCNode]. */
   protected val monitorMap: MutableMap<String, (T) -> Boolean> = mutableMapOf()
 
   /** Holds the optional projections. */
@@ -49,14 +50,14 @@ sealed class TSCBuilder<
       field = value
     }
 
-  /** Holds the optional monitors edge. */
+  /** Holds the optional monitors [TSCEdge]. */
   protected var monitors: Map<String, (T) -> Boolean>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
     }
 
-  /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
+  /** Condition predicate of the [TSCEdge]. (Default: [CONST_TRUE]) */
   protected var condition: ((T) -> Boolean) = CONST_TRUE
     set(value) {
       check(!isConditionSet) { "Condition already set." }
@@ -66,7 +67,7 @@ sealed class TSCBuilder<
 
   private var isConditionSet = false
 
-  /** Value function predicate of the node. (Default: empty) */
+  /** Value function predicate of the [TSCNode]. (Default: empty) */
   protected var valueFunction: ((T) -> Any) = { _ -> }
     set(value) {
       check(!isValueFunctionSet) { "Value function already set." }
@@ -77,8 +78,8 @@ sealed class TSCBuilder<
   private var isValueFunctionSet = false
 
   /**
-   * Adds the given [edge] to [edges]. This will become the edges of the node that will be created
-   * off of this object.
+   * Adds the given [edge] to [edges]. This will become the [TSCEdge]s of the [TSCNode] that will be
+   * created off of this object.
    *
    * @param edge [TSCEdge] to be added.
    */

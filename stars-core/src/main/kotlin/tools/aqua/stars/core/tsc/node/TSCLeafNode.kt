@@ -17,10 +17,11 @@
 
 package tools.aqua.stars.core.tsc.node
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * Leaf TSC node.
+ * Leaf [TSC] node.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
