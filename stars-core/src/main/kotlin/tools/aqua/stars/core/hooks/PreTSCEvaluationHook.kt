@@ -17,11 +17,12 @@
 
 package tools.aqua.stars.core.hooks
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
+ * A pre-evaluation hook that can be registered to a [TSCEvaluation] to be executed before the
  * evaluation of the [TSC].
  *
  * @param E [EntityType].
@@ -44,13 +45,13 @@ open class PreTSCEvaluationHook<
   /** Companion object containing utility methods for working with [PreTSCEvaluationHook]. */
   companion object {
     /**
-     * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs.
+     * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing [TSC]s.
      *
      * @param E [EntityType].
      * @param T [TickDataType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @param tscList The list of TSCs to evaluate.
+     * @param tscList The [List] of [TSC]s to evaluate.
      */
     fun <
         E : EntityType<E, T, U, D>,

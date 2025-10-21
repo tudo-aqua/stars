@@ -17,18 +17,20 @@
 
 package tools.aqua.stars.core.hooks
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.types.*
 
 /**
- * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
- * evaluation of a tick of data.
+ * A pre-evaluation hook that can be registered to a [TSCEvaluation] to be executed before the
+ * evaluation of a [TickDataType].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param identifier The identifier to be used in the error message.
- * @param evaluationFunction The function to be executed before the evaluation of the tick.
+ * @param evaluationFunction The function to be executed before the evaluation of the
+ *   [TickDataType].
  */
 open class PreTickEvaluationHook<
     E : EntityType<E, T, U, D>,
@@ -38,7 +40,7 @@ open class PreTickEvaluationHook<
 >(identifier: String, evaluationFunction: (T) -> EvaluationHookResult) :
     EvaluationHook<T>(identifier = identifier, evaluationFunction = evaluationFunction) {
 
-  /** Companion object containing utility methods for working with [PreSegmentEvaluationHook]. */
+  /** Companion object containing utility methods for working with [PreTickEvaluationHook]. */
   companion object {
     /**
      * Executes all [PreTickEvaluationHook]s on the [List] of [TickDataType]s and returns an

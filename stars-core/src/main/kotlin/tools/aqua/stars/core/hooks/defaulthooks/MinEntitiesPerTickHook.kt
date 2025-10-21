@@ -22,15 +22,15 @@ import tools.aqua.stars.core.hooks.PreTickEvaluationHook
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreTickEvaluationHook] that checks if a tick contains at least [minEntities] [EntityType]s in
- * every tick.
+ * [PreTickEvaluationHook] that checks if a [TickDataType] contains at least [minEntities]
+ * [EntityType]s in every [TickDataType].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minEntities The minimum number of [EntityType]s each tick must contain. Must not be
- *   negative.
+ * @param minEntities The minimum number of [EntityType]s each [TickDataType] must contain. Must not
+ *   be negative.
  * @param failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s is
  *   not reached.
  */
