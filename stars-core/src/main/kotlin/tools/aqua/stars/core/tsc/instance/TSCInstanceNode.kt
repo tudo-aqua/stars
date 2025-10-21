@@ -130,7 +130,7 @@ class TSCInstanceNode<
    * returns a [TSCFailedMonitorInstance] for each incoming edge label with results != true.
    *
    * @param identifier Identifier of the tick.
-   * @param label specifies the starting point in the TSC for the search.
+   * @param label specifies the starting point in the [TSC] for the search.
    * @return [List] of edge labels leading to a node with `false` monitor result.
    */
   fun validateMonitors(

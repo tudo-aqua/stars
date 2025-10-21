@@ -37,14 +37,14 @@ data class World(
   /**
    * Returns a list of all lanes in the map.
    *
-   * @return List of all lanes in the map.
+   * @return [List] of all lanes in the map.
    */
   fun getAllLanes(): List<Lane> = getAllRoads().flatMap { it.lanes }
 
   /**
    * Returns a list of all roads in the map.
    *
-   * @return List of all roads in the map.
+   * @return [List] of all roads in the map.
    */
   fun getAllRoads(): List<Road> = straights + junctions.flatMap { it.roads }
 }

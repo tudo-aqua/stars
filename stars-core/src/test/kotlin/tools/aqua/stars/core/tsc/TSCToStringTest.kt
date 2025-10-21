@@ -26,7 +26,7 @@ import tools.aqua.stars.core.tsc.builder.tsc
 /** The tests in this class test the correct functionality of the [TSC.toString] method. */
 class TSCToStringTest {
 
-  /** Given an empty TSC, the println should also be empty. */
+  /** Given an empty [TSC], the println should also be empty. */
   @Test
   fun `Test empty TSC`() {
     assertThrows<IllegalStateException> {
@@ -40,7 +40,7 @@ class TSCToStringTest {
   }
 
   // region Single node TSCs
-  /** Given a TSC with only one single 'all' root node, "all(0..0)" should be returned. */
+  /** Given a [TSC] with only one single 'all' root node, "all(0..0)" should be returned. */
   @Test
   fun `Test TSC with single all node`() {
     val tsc =
@@ -55,7 +55,7 @@ class TSCToStringTest {
     assertEquals("all(0..0)", tsc.toString())
   }
 
-  /** Given a TSC with only one single 'any' root node, "any(1..0)" should be returned. */
+  /** Given a [TSC] with only one single 'any' root node, "any(1..0)" should be returned. */
   @Test
   fun `Test TSC with single any node`() {
     val tsc =
@@ -71,7 +71,7 @@ class TSCToStringTest {
   }
 
   /**
-   * Given a TSC with only one single 'exclusive' root node, "exclusive(1..1)" should be returned.
+   * Given a [TSC] with only one single 'exclusive' root node, "exclusive(1..1)" should be returned.
    */
   @Test
   fun `Test TSC with single exclusive node`() {
@@ -88,7 +88,8 @@ class TSCToStringTest {
   }
 
   /**
-   * Given a TSC with only one single 'exclusive' bounded node, "bounded(1..1)" should be returned.
+   * Given a [TSC] with only one single 'exclusive' bounded node, "bounded(1..1)" should be
+   * returned.
    */
   @Test
   fun `Test TSC with single bounded node with bounds (2,3) and no children`() {
@@ -104,7 +105,7 @@ class TSCToStringTest {
     assertEquals("bounded(2..3)", tsc.toString())
   }
 
-  /** Given a TSC with only one single 'leaf' root node, "leaf" should be returned. */
+  /** Given a [TSC] with only one single 'leaf' root node, "leaf" should be returned. */
   @Test
   fun `Test TSC with single leaf node`() {
     val tsc =
@@ -119,7 +120,9 @@ class TSCToStringTest {
     assertEquals("leaf", tsc.toString())
   }
 
-  /** Given a TSC with only one single 'optional' root node, "optional(0..0)" should be returned. */
+  /**
+   * Given a [TSC] with only one single 'optional' root node, "optional(0..0)" should be returned.
+   */
   @Test
   fun `Test TSC with single optional node`() {
     val tsc =
@@ -138,7 +141,7 @@ class TSCToStringTest {
 
   // region Simple node hierarchy TSCs
   /**
-   * Given a TSC with one 'all' root node and 3 child nodes, "all(3..3)\n-T-> leaf_1\n-T->
+   * Given a [TSC] with one 'all' root node and 3 child nodes, "all(3..3)\n-T-> leaf_1\n-T->
    * leaf_2\n-T-> leaf_3" should be returned.
    */
   @Test
@@ -160,7 +163,7 @@ class TSCToStringTest {
   }
 
   /**
-   * Given a TSC with one 'exclusive' root node and 3 child nodes, "exclusive(1..1)" should be
+   * Given a [TSC] with one 'exclusive' root node and 3 child nodes, "exclusive(1..1)" should be
    * returned.
    */
   @Test
@@ -181,7 +184,7 @@ class TSCToStringTest {
     assertEquals("exclusive(1..1)\n-T-> leaf_1\n-T-> leaf_2\n-T-> leaf_3", tsc.toString())
   }
 
-  /** Given a TSC with one 'any' root node and 3 child nodes, "any(1..3)" should be returned. */
+  /** Given a [TSC] with one 'any' root node and 3 child nodes, "any(1..3)" should be returned. */
   @Test
   fun `Test TSC with any node and 3 children`() {
     val tsc =
@@ -201,8 +204,8 @@ class TSCToStringTest {
   }
 
   /**
-   * Given a TSC with one 'bounded' root node, with bounds (2,3) and 3 child nodes, "bounded(2..3)"
-   * should be returned.
+   * Given a [TSC] with one 'bounded' root node, with bounds (2,3) and 3 child nodes,
+   * "bounded(2..3)" should be returned.
    */
   @Test
   fun `Test TSC with bounded node, with bounds (2,3) and 3 children`() {
@@ -223,7 +226,7 @@ class TSCToStringTest {
   }
 
   /**
-   * Given a TSC with one 'optional' root node and 3 child nodes, "optional(0..3)" should be
+   * Given a [TSC] with one 'optional' root node and 3 child nodes, "optional(0..3)" should be
    * returned.
    */
   @Test
@@ -248,7 +251,7 @@ class TSCToStringTest {
 
   // region TSC with multiple layers of hierarchy
   /**
-   * Given a TSC with one 'all' root node and 1 child node with 2 children, "all(1..1) -T->
+   * Given a [TSC] with one 'all' root node and 1 child node with 2 children, "all(1..1) -T->
    * any(1..3) -T-> leaf_1 -T-> leaf_2 -T-> leaf_3" should be returned.
    */
   @Test

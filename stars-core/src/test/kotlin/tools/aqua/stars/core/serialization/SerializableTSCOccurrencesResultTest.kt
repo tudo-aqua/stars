@@ -23,6 +23,7 @@ import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metrics.evaluation.InvalidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.serialization.extensions.compareTo
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 
 /**
  * Tests the [SerializableResult] sealed class implementation for the
@@ -66,7 +67,7 @@ class SerializableTSCOccurrencesResultTest {
 
   /**
    * Tests the correct calculation and return of a [SerializableTSCOccurrenceResult] for an invalid
-   * TSC instance.
+   * [TSCInstance].
    */
   @Test
   fun `Test return of invalid TSC Result`() {

@@ -121,7 +121,7 @@ fun <T> Iterator<T>.nextOrNull(): T? = if (hasNext()) next() else null
  * @param D [TickDifference].
  * @param start Start of the interval (inclusive).
  * @param end End of the interval (inclusive).
- * @return List of all ticks in the given interval.
+ * @return [List] of all ticks in the given interval.
  */
 fun <T : TickDataType<*, *, U, *>, U : TickUnit<U, D>, D : TickDifference<D>> List<T>
     .getTicksInInterval(start: U, end: U): List<T> {

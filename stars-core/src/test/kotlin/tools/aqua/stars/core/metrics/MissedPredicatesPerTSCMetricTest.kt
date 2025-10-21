@@ -27,6 +27,7 @@ import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metrics.postEvaluation.MissedPredicatesPerTSCMetric
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.tsc
 
 typealias E = SimpleEntity
@@ -41,8 +42,8 @@ typealias D = SimpleTickDataDifference
 class MissedPredicatesPerTSCMetricTest {
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a TSC in which
-   * no predicate holds.
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a [TSC] in
+   * which no predicate holds.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for one missing predicate`() {
@@ -69,8 +70,8 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a TSC in which
-   * all predicates hold.
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a [TSC] in
+   * which all predicates hold.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for no missing predicates`() {
@@ -96,7 +97,7 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two TSCs in
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two [TSC]s in
    * which no predicates hold.
    */
   @Test
@@ -131,7 +132,7 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two TSCs in
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two [TSC]s in
    * which all predicates hold.
    */
   @Test
@@ -164,7 +165,7 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two TSCs in
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two [TSC]s in
    * which one predicate holds and the other does not.
    */
   @Test
