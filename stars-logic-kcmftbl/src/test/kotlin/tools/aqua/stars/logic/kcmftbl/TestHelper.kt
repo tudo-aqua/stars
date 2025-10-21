@@ -33,9 +33,9 @@ fun createTicks(
               BooleanTickData(
                   TestUnit(it * tickUnitMultiplier),
                   LinkedHashSet(),
+                  identifier = "BooleanTickData",
                   phi1[it] == 1,
                   phi2[it] == 1,
-                  identifier = "BooleanTickData",
               )
         }
         .values

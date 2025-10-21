@@ -26,17 +26,22 @@ import tools.aqua.stars.core.types.TickDataType
  *
  * @param currentTickUnit The current tick.
  * @param entities The [List] of [TestEntity]s.
+ * @param identifier The identifier of the tick.
  * @property phi1 Represents the evaluation results of the formula 'phi1'.
  * @property phi2 Represents the evaluation results of the formula 'phi2'.
- * @property identifier The identifier of the tick.
  */
 class BooleanTickData(
     currentTickUnit: TestUnit,
     entities: LinkedHashSet<TestEntity>,
+    identifier: String,
     val phi1: Boolean,
     val phi2: Boolean,
-    override val identifier: String,
-) : TickDataType<TestEntity, BooleanTickData, TestUnit, TestDifference>(currentTickUnit, entities) {
+) :
+    TickDataType<TestEntity, BooleanTickData, TestUnit, TestDifference>(
+        currentTickUnit,
+        entities,
+        identifier,
+    ) {
   override val ego: TestEntity
     get() = throw UnsupportedOperationException("BooleanTickData does not have an ego entity")
 }

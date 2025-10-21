@@ -24,24 +24,25 @@ import tools.aqua.stars.core.types.TickDataType
  *
  * @param currentTickUnit Current tick value.
  * @param entities Set of all [Actor]s in the current tick.
+ * @param identifier The identifier of the tick data.
  * @property trafficLights List of all [TrafficLight]s.
  * @property weather The current [WeatherParameters].
  * @property daytime The current [Daytime].
  * @property world The [World].
- * @property identifier The identifier of the tick data.
  */
 class TickData(
     currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
     entities: Set<Actor>,
+    identifier: String,
     val trafficLights: List<TrafficLight> = emptyList(),
     val weather: WeatherParameters = WeatherParameters(),
     val daytime: Daytime = Daytime.Noon,
     val world: World = World(straights = listOf(Road(id = 0, lanes = listOf(Lane(laneId = 0))))),
-    override val identifier: String,
 ) :
     TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(
         currentTickUnit,
         entities,
+        identifier,
     ) {
 
   /** All pedestrians. */

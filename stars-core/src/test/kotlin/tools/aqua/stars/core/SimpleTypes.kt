@@ -40,11 +40,12 @@ class SimpleEntity(
 class SimpleTickData(
     currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
     entities: Set<SimpleEntity> = LinkedHashSet(),
-    override val identifier: String = "SimpleTickData",
+    identifier: String = "SimpleTickData",
 ) :
     TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
         currentTickUnit,
         entities,
+        identifier,
     ) {
   override val ego: SimpleEntity
     get() = throw UnsupportedOperationException("Ego not defined for SimpleTickData")

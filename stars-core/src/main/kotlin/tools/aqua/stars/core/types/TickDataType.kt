@@ -28,21 +28,19 @@ package tools.aqua.stars.core.types
  * @param D [TickDifference].
  * @property currentTickUnit The current [TickUnit].
  * @property entities List of [EntityType]s in tick data.
+ * @property identifier Identifier for [TickDataType].
  */
 abstract class TickDataType<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val currentTickUnit: U, val entities: Set<E> = LinkedHashSet()) {
+>(val currentTickUnit: U, val entities: Set<E> = LinkedHashSet(), val identifier: String) {
   /** The next [TickDataType] in the sequence. */
   var nextTick: T? = null
 
   /** The previous [TickDataType] in the sequence. */
   var previousTick: T? = null
-
-  /** Identifier for [TickDataType]. */
-  abstract val identifier: String
 
   /**
    * The number of predecessors in the tick sequence.
