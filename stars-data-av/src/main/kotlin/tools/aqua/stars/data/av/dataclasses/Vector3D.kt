@@ -22,9 +22,9 @@ import kotlin.math.sqrt
 /**
  * Data class for 3D vectors.
  *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
+ * @property x The x ordinate of the [Vector3D].
+ * @property y The y ordinate of the [Vector3D].
+ * @property z The z ordinate of the [Vector3D].
  */
 data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
   constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)

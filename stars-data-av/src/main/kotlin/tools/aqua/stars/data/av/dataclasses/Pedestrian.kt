@@ -21,7 +21,7 @@ package tools.aqua.stars.data.av.dataclasses
  * Data class for pedestrians.
  *
  * @param id The identifier of the [Pedestrian].
- * @param typeId The type identifier.
+ * @param typeId The type identifier of the [Pedestrian].
  * @param attributes The attributes of the [Pedestrian].
  * @param isAlive Whether the [Pedestrian] is alive.
  * @param isActive Whether the [Pedestrian] is active.

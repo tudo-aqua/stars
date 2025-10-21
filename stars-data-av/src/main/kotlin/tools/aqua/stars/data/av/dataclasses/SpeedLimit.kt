@@ -20,9 +20,9 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for speed limits.
  *
- * @property speedLimit The speed limit.
- * @property fromDistanceFromStart Distance from the start of speed limit start.
- * @property toDistanceFromStart Distance from the start of speed limit end.
+ * @property speedLimit The value of the [SpeedLimit].
+ * @property fromDistanceFromStart Distance from the start of the [SpeedLimit] start.
+ * @property toDistanceFromStart Distance from the start of the [SpeedLimit] end.
  */
 data class SpeedLimit(
     val speedLimit: Double,

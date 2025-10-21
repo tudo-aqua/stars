@@ -20,8 +20,8 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for roads.
  *
- * @property id The identifier of the road.
- * @property lanes List of [Lane]s on this road.
+ * @property id The identifier of the [Road].
+ * @property lanes List of [Lane]s on this [Road].
  */
 data class Road(var id: Int = 0, val lanes: List<Lane>) {
 
@@ -31,7 +31,7 @@ data class Road(var id: Int = 0, val lanes: List<Lane>) {
   /** The [World] this [Road] belongs to. */
   lateinit var world: World
 
-  /** Whether this [Road] is part of a junction. */
+  /** Whether this [Road] is part of a [Junction]. */
   val isJunction: Boolean
     get() = junction != null
 

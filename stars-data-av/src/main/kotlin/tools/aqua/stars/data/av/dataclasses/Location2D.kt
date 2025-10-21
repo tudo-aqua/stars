@@ -23,8 +23,8 @@ import kotlin.math.sqrt
 /**
  * Data class for 2D locations.
  *
- * @property x The x ordinate.
- * @property y The y ordinate.
+ * @property x The x ordinate of the [Location2D].
+ * @property y The y ordinate of the [Location2D].
  * @see Vector2D
  */
 data class Location2D(val x: Double, val y: Double) {

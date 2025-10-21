@@ -22,8 +22,8 @@ import kotlin.math.sqrt
 /**
  * Data class for 2D vectors.
  *
- * @property x The x ordinate.
- * @property y The y ordinate.
+ * @property x The x ordinate of the [Vector2D].
+ * @property y The y ordinate of the [Vector2D].
  */
 data class Vector2D(val x: Double, val y: Double) {
   constructor(vector: Vector2D) : this(vector.x, vector.y)
@@ -52,7 +52,7 @@ data class Vector2D(val x: Double, val y: Double) {
   /** Dot product with another [Vector2D]. */
   fun dot(other: Vector2D): Double = x * other.x + y * other.y
 
-  /** Cross (Vector) product with another [Vector3D] (in 2D resulting in a scalar determinant). */
+  /** Cross (Vector) product with another [Vector2D] (in 2D resulting in a scalar determinant). */
   fun cross(other: Vector2D): Double = x * other.y - y * other.x
 
   /** Length of the vector. */

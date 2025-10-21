@@ -20,8 +20,8 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for rotations.
  *
- * @property pitch The pitch.
- * @property yaw The yaw.
- * @property roll The roll.
+ * @property pitch The pitch of the [Rotation].
+ * @property yaw The yaw of the [Rotation].
+ * @property roll The roll of the [Rotation].
  */
 data class Rotation(val pitch: Double = 0.0, val yaw: Double = 0.0, val roll: Double = 0.0)

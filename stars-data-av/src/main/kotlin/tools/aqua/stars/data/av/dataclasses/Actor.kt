@@ -22,7 +22,7 @@ import tools.aqua.stars.core.types.EntityType
 /**
  * Abstract actor data class.
  *
- * @property id The ID of the actor.
+ * @property id The ID of the [Actor].
  * @property typeId String representation of the [Actor] type. Default: empty [String].
  * @property attributes Attributes map. Default: empty [Map].
  * @property isAlive Whether the [Actor] is alive. Default: true.

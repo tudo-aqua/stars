@@ -20,9 +20,9 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for static traffic lights.
  *
- * @property id The identifier of the traffic light.
- * @property location The [Location] of the traffic light.
- * @property rotation The [Rotation] of the traffic light.
+ * @property id The identifier of the [StaticTrafficLight].
+ * @property location The [Location] of the [StaticTrafficLight].
+ * @property rotation The [Rotation] of the [StaticTrafficLight].
  * @property stopLocations List of stop locations as [Location]s.
  * @see TrafficLight
  */

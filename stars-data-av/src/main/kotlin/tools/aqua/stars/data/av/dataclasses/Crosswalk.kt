@@ -18,10 +18,10 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for junctions.
+ * Data class for crosswalks.
  *
- * @property id The identifier of the crosswalk.
- * @property vertices List of vertices of this crosswalk as [Location]s.
+ * @property id The identifier of the [Crosswalk].
+ * @property vertices [List] of vertices of this [Crosswalk] as [Location]s.
  */
 data class Crosswalk(val id: Int, val vertices: List<Location>) {
   init {

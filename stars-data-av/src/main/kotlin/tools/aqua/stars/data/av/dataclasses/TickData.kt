@@ -23,12 +23,12 @@ import tools.aqua.stars.core.types.TickDataType
  * Data class for tick data.
  *
  * @param currentTickUnit Current tick value.
- * @param entities Set of all [Actor]s in the current tick.
- * @param identifier The identifier of the tick data.
- * @property trafficLights List of all [TrafficLight]s.
- * @property weather The current [WeatherParameters].
- * @property daytime The current [Daytime].
- * @property world The [World].
+ * @param entities Set of all [Actor]s in the current [TickData].
+ * @param identifier The identifier of the [TickData].
+ * @property trafficLights List of all [TrafficLight]s in this [TickData].
+ * @property weather The current [WeatherParameters] in this [TickData].
+ * @property daytime The current [Daytime] in this [TickData].
+ * @property world The [World] for this [TickData].
  */
 class TickData(
     currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),

@@ -20,8 +20,8 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for junctions.
  *
- * @property id The identifier of the junction.
- * @property roads List of [Road]s on this junction.
+ * @property id The identifier of the [Junction].
+ * @property roads List of [Road]s on this [Junction].
  */
 data class Junction(val id: Int, val roads: List<Road>) {
   init {

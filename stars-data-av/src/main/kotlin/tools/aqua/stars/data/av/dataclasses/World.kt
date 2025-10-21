@@ -18,11 +18,11 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Data class for the map.
+ * Data class for the world (i.e., the map).
  *
- * @property straights All straight roads in the map that are not pat of a junction.
- * @property junctions All junctions in the map, which contain multiple roads.
- * @property crosswalks All crosswalks in the map.
+ * @property straights All straight roads in the [World] that are not pat of a junction.
+ * @property junctions All junctions in the [World], which contain multiple roads.
+ * @property crosswalks All crosswalks in the [World].
  */
 data class World(
     val straights: List<Road> = emptyList(),
@@ -31,20 +31,20 @@ data class World(
 ) {
 
   init {
-    check(getAllRoads().isNotEmpty()) { "Map must have at least one road" }
+    check(getAllRoads().isNotEmpty()) { "World must have at least one road" }
   }
 
   /**
-   * Returns a list of all lanes in the map.
+   * Returns a list of all lanes in the [World].
    *
-   * @return [List] of all lanes in the map.
+   * @return [List] of all lanes in the [World].
    */
   fun getAllLanes(): List<Lane> = getAllRoads().flatMap { it.lanes }
 
   /**
-   * Returns a list of all roads in the map.
+   * Returns a list of all roads in the [World].
    *
-   * @return [List] of all roads in the map.
+   * @return [List] of all roads in the [World].
    */
   fun getAllRoads(): List<Road> = straights + junctions.flatMap { it.roads }
 }

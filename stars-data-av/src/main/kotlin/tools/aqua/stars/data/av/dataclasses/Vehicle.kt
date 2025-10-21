@@ -26,7 +26,7 @@ import kotlin.math.sqrt
  * Data class for vehicles.
  *
  * @param id The identifier of the [Vehicle].
- * @param typeId The type identifier.
+ * @param typeId The type identifier of the [Vehicle].
  * @param attributes The attributes of the [Vehicle].
  * @param isAlive Whether the [Vehicle] is alive.
  * @param isActive Whether the [Vehicle] is active.
@@ -35,15 +35,16 @@ import kotlin.math.sqrt
  * @param boundingBox The [BoundingBox] of the [Vehicle].
  * @param location The [Location] of the [Vehicle].
  * @param rotation The [Rotation] of the [Vehicle].
- * @param collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ * @param collisions The [List] of all colliding [Actor] IDs of the [Vehicle]. Default: empty
+ *   [List].
  * @property isEgo Whether this is the own [Vehicle].
- * @property forwardVector The current forward vector.
- * @property velocity The current velocity in m/s.
- * @property acceleration The current acceleration m/s².
- * @property angularVelocity The current angular velocity.
+ * @property forwardVector The current forward vector of the [Vehicle].
+ * @property velocity The current velocity in m/s of the [Vehicle].
+ * @property acceleration The current acceleration m/s² of the [Vehicle].
+ * @property angularVelocity The current angular velocity of the [Vehicle].
  * @property lane The [Vehicle]'s [Lane].
  * @property positionOnLane The [Vehicle]'s position in the [Lane].
- * @property vehicleType The [VehicleType].
+ * @property vehicleType The [VehicleType] of the [Vehicle].
  */
 class Vehicle(
     id: Int = 0,
