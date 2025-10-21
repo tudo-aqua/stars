@@ -237,8 +237,8 @@ class TSCEvaluation<
     require(metricProviders.any()) { "There needs to be at least one registered MetricProvider." }
 
     val totalEvaluationTime = measureTime {
-      // Filter TSCs to be evaluated^
-      val tscListToEvaluate = filterTSCs() ?: return
+      // Filter TSCs to be evaluated
+      val tscListToEvaluate = filterTSCsByPreEvaluations() ?: return
       if (tscListToEvaluate.isNotEmpty()) {
 
         val tscEvaluationTime = measureTime {
@@ -277,7 +277,7 @@ class TSCEvaluation<
    *
    * @return The list of [TSC]s that should be evaluated, or `null` if the evaluation was canceled.
    */
-  private fun filterTSCs(): List<TSC<E, T, U, D>>? {
+  private fun filterTSCsByPreEvaluations(): List<TSC<E, T, U, D>>? {
     val (passingTSCs, results) = preTSCEvaluationHooks.evaluate(tscList)
 
     results.forEach { (tsc, results) ->
