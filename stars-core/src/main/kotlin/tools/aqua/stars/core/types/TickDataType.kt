@@ -41,6 +41,9 @@ abstract class TickDataType<
   /** The previous [TickDataType] in the sequence. */
   var previousTick: T? = null
 
+  /** Identifier for [TickDataType]. */
+  abstract val identifier: String
+
   /**
    * The number of predecessors in the tick sequence.
    *
@@ -92,6 +95,9 @@ abstract class TickDataType<
    */
   @Suppress("UNCHECKED_CAST")
   fun backward(): TickDataIterator<T> = TickDataIterator(this as T) { it.previousTick }
+
+  override fun toString(): String =
+      "Tick ($identifier) @$currentTickUnit with ${entities.size} entities."
 
   /**
    * Iterator implementation for [TickDataType]. Instanced may be retrieved using [forward] or

@@ -91,7 +91,12 @@ class JSONTrafficLightTest {
             state = TrafficLightState.Red,
         )
     val tickData1 =
-        TickData(entities = vehicles, trafficLights = listOf(trafficLight), world = world)
+        TickData(
+            entities = vehicles,
+            trafficLights = listOf(trafficLight),
+            world = world,
+            identifier = "TickData",
+        )
 
     val trafficLight2 =
         TrafficLight(
@@ -100,7 +105,12 @@ class JSONTrafficLightTest {
             state = TrafficLightState.Green,
         )
     val tickData2 =
-        TickData(entities = vehicles, trafficLights = listOf(trafficLight2), world = world)
+        TickData(
+            entities = vehicles,
+            trafficLights = listOf(trafficLight2),
+            world = world,
+            identifier = "TickData",
+        )
 
     assertNotNull(tickData1.world.straights[0].lanes[0].trafficLights[0].getStateInTick(tickData1))
     assertEquals(

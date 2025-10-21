@@ -42,14 +42,16 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType
  * Converts [JsonTickData] to [TickData].
  *
  * @param world The [World].
+ * @param source The source from which the [JsonTickData] was loaded.
  */
-fun JsonTickData.toTickData(world: World): TickData =
+fun JsonTickData.toTickData(world: World, source: String): TickData =
     TickData(
         currentTickUnit = TickDataUnitSeconds(currentTick),
         entities = actorPositions.mapNotNull { it.toActorOrNull(world = world) }.toSet(),
         trafficLights = actorPositions.mapNotNull { it.toTrafficLightOrNull() },
         weather = weatherParameters.toWeatherParameters(),
         daytime = weatherParameters.type.toDaytime(),
+        identifier = source,
     )
 
 /**

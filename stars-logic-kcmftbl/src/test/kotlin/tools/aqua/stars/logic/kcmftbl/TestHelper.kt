@@ -35,6 +35,7 @@ fun createTicks(
                   LinkedHashSet(),
                   phi1[it] == 1,
                   phi2[it] == 1,
+                  identifier = "BooleanTickData",
               )
         }
         .values

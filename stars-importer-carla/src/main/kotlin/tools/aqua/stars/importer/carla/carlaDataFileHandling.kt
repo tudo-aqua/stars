@@ -149,6 +149,7 @@ fun loadTicks(
           convertTickData(
               world = currentSimulationRunsWrapper.world,
               jsonSimulationRun = simulationRun,
+              tickDataSourcePath = currentDynamicDataPath,
           )
 
       val iterator = ticks.iterator()

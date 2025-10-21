@@ -49,7 +49,7 @@ class AverageVehiclesInEgosRoadMetricTest {
   @Test
   fun testOnlyEgoInRoad() {
     val actor = Vehicle(isEgo = true, lane = lane)
-    val tick = TickData(entities = setOf(actor))
+    val tick = TickData(entities = setOf(actor), identifier = "TickData")
 
     val averageVehiclesInEgosRoadMetric = AverageVehiclesInEgoRoadMetric()
     val evaluationResult = averageVehiclesInEgosRoadMetric.evaluate(tick)
@@ -64,9 +64,24 @@ class AverageVehiclesInEgosRoadMetricTest {
     val ego = Vehicle(id = 0, isEgo = true, lane = lane)
     val other = Vehicle(id = 1, isEgo = false, lane = lane)
 
-    val tick1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = setOf(ego, other))
-    val tick2 = TickData(currentTickUnit = TickDataUnitSeconds(1.0), entities = setOf(ego, other))
-    val tick3 = TickData(currentTickUnit = TickDataUnitSeconds(2.0), entities = setOf(ego, other))
+    val tick1 =
+        TickData(
+            currentTickUnit = TickDataUnitSeconds(0.0),
+            entities = setOf(ego, other),
+            identifier = "TickData",
+        )
+    val tick2 =
+        TickData(
+            currentTickUnit = TickDataUnitSeconds(1.0),
+            entities = setOf(ego, other),
+            identifier = "TickData",
+        )
+    val tick3 =
+        TickData(
+            currentTickUnit = TickDataUnitSeconds(2.0),
+            entities = setOf(ego, other),
+            identifier = "TickData",
+        )
 
     var evaluationResult: Int
     val averageVehiclesInEgosRoadMetric = AverageVehiclesInEgoRoadMetric()
@@ -90,8 +105,18 @@ class AverageVehiclesInEgosRoadMetricTest {
     val ego = Vehicle(id = 0, isEgo = true, lane = lane)
     val other = Vehicle(id = 1, isEgo = false, lane = lane)
 
-    val tick1 = TickData(currentTickUnit = TickDataUnitSeconds(0.0), entities = setOf(ego, other))
-    val tick2 = TickData(currentTickUnit = TickDataUnitSeconds(1.0), entities = setOf(ego))
+    val tick1 =
+        TickData(
+            currentTickUnit = TickDataUnitSeconds(0.0),
+            entities = setOf(ego, other),
+            identifier = "TickData",
+        )
+    val tick2 =
+        TickData(
+            currentTickUnit = TickDataUnitSeconds(1.0),
+            entities = setOf(ego),
+            identifier = "TickData",
+        )
 
     var evaluationResult: Int
     val averageVehiclesInEgosRoadMetric = AverageVehiclesInEgoRoadMetric()

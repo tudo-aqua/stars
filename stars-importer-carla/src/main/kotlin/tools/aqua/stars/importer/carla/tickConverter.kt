@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.importer.carla
 
+import java.nio.file.Path
+import kotlin.io.path.name
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.importer.carla.dataclasses.JsonTickData
 import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
@@ -58,8 +60,13 @@ fun getSeed(fileName: String): Int =
  *
  * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
+ * @param tickDataSourcePath The [Path] from which the [JsonTickData] was loaded.
  */
-fun convertTickData(world: World, jsonSimulationRun: List<JsonTickData>): List<TickData> {
+fun convertTickData(
+    world: World,
+    jsonSimulationRun: List<JsonTickData>,
+    tickDataSourcePath: Path,
+): List<TickData> {
   cleanJsonData(world, jsonSimulationRun)
 
   // Extract vehicles from the JSON file
@@ -99,7 +106,7 @@ fun convertTickData(world: World, jsonSimulationRun: List<JsonTickData>): List<T
   }
 
   return jsonSimulationRun
-      .map { it.toTickData(world) }
+      .map { it.toTickData(world, tickDataSourcePath.fileName.name) }
       .also { updateActorVelocityForSimulationRun(it) }
 }
 

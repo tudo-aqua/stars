@@ -40,6 +40,7 @@ class SimpleEntity(
 class SimpleTickData(
     currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
     entities: Set<SimpleEntity> = LinkedHashSet(),
+    override val identifier: String = "SimpleTickData",
 ) :
     TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
         currentTickUnit,

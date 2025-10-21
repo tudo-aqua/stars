@@ -27,7 +27,8 @@ import tools.aqua.stars.core.types.TickDataType
  * @property trafficLights List of all [TrafficLight]s.
  * @property weather The current [WeatherParameters].
  * @property daytime The current [Daytime].
- * @property world the [World].
+ * @property world The [World].
+ * @property identifier The identifier of the tick data.
  */
 class TickData(
     currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
@@ -36,6 +37,7 @@ class TickData(
     val weather: WeatherParameters = WeatherParameters(),
     val daytime: Daytime = Daytime.Noon,
     val world: World = World(straights = listOf(Road(id = 0, lanes = listOf(Lane(laneId = 0))))),
+    override val identifier: String,
 ) :
     TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(
         currentTickUnit,

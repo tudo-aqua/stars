@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Add `World` object in DataAV to represent the static data of the simulation. The `World` contains the `Road`s, `Junction`s, and `Crosswalk`s.
 - Add `SerializableLongResult`.
+- Add `identifier` field to `TickDataType` to make it unique between loaded files.
 
 ### Changed
 
