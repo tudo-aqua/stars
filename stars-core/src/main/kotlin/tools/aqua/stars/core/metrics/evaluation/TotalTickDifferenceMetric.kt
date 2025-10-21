@@ -28,10 +28,10 @@ import tools.aqua.stars.core.types.*
 
 /**
  * This class implements the [TickMetricProvider] and tracks the total [TickDifference] of all
- * analyzed ticks.
+ * analyzed [TickDataType]s.
  *
  * This class implements the [SerializableMetric] interface. It serializes the [totalTickDifference]
- * for all analyzed ticks.
+ * for all analyzed [TickDataType]s.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
@@ -50,7 +50,7 @@ class TotalTickDifferenceMetric<
     override val loggerIdentifier: String = "total-tick-difference",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TickMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
-  /** Holds the current [TickDifference] for all already analyzed ticks. */
+  /** Holds the current [TickDifference] for all already analyzed [TickDataType]s. */
   private var totalTickDifference: D? = null
 
   /**
@@ -84,10 +84,10 @@ class TotalTickDifferenceMetric<
   }
 
   /**
-   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no ticks
-   * have been analyzed yet.
+   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no
+   * [TickDataType]s have been analyzed yet.
    *
-   * @return The current [totalTickDifference] for all already analyzed ticks.
+   * @return The current [totalTickDifference] for all already analyzed [TickDataType]s.
    */
   override fun getState(): Optional<D> = Optional.ofNullable(totalTickDifference)
 
