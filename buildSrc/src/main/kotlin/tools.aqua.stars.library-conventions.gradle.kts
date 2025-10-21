@@ -72,7 +72,18 @@ val kdoc: Configuration by
       isCanBeResolved = false
     }
 
-artifacts { add(kdoc.name, kdocJar) }
+val tests by configurations.creating
+
+val testJar by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("tests")
+      from(sourceSets["test"].output)
+    }
+
+artifacts {
+  add(kdoc.name, kdocJar)
+  add(tests.name, testJar.get())
+}
 
 val javadocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
@@ -94,7 +105,7 @@ tasks.test {
   testLogging { events(FAILED, PASSED, SKIPPED) }
 }
 
-kotlin { jvmToolchain(17) }
+kotlin { jvmToolchain(21) }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 

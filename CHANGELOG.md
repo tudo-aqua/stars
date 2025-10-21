@@ -24,13 +24,30 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.1] - TBD
+## [2.0] - To be released
+
+### Added
+- Add `World` object in DataAV to represent the static data of the simulation. The `World` contains the `Road`s, `Junction`s, and `Crosswalk`s.
+- Add `SerializableLongResult`.
+- Add `identifier` field to `TickDataType` to make it unique between loaded files.
+
+### Changed
+
+- Unify `NullaryPredicate`, `UninaryPredicate`, and `BinaryPredicate` to `Predicate`.
+- Introduce `Interval` class for predicates. 
+- `TickCountMetric` now tracks ticks as `Long`.
+
+### Removed
+
+- Completely remove `Segment`s. Evaluation is now purely based on ticks. `TickSequence` provides necessary functionality to pass data to the `TSCEvaluation`.
+- Remove `Block` from `DataAV`.
+
+## [1.1] - To be released
 
 ### Added
 
 - Add `MissedPredicatesPerTSCMetric`.
 - Add `identifier` parameter to `TSCDsl`.
-
 
 ## [1.0] - 14.10.2025
 

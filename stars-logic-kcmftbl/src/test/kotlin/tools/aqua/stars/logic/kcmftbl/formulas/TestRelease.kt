@@ -23,7 +23,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
-import tools.aqua.stars.logic.kcmftbl.release
+import tools.aqua.stars.logic.kcmftbl.future.release
 
 /** This class tests the CMFTBL operator [release]. */
 class TestRelease {

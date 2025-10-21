@@ -25,12 +25,11 @@ import kotlinx.serialization.Serializable
  *
  * @property currentTick Current tick value.
  * @property actorPositions The current [JsonActorPosition]s of all actors.
- * @property weatherParameters The current [JSonDataWeatherParameters].
+ * @property weatherParameters The current [JsonDataWeatherParameters].
  */
 @Serializable
 data class JsonTickData(
-    @SerialName("current_tick") val currentTick: Double = 0.0,
-    @SerialName("actor_positions") val actorPositions: List<JsonActorPosition> = emptyList(),
-    @SerialName("weather_parameters")
-    val weatherParameters: JSonDataWeatherParameters = JSonDataWeatherParameters(),
+    @SerialName("current_tick") val currentTick: Double,
+    @SerialName("actor_positions") val actorPositions: List<JsonActorPosition>,
+    @SerialName("weather_parameters") val weatherParameters: JsonDataWeatherParameters,
 )

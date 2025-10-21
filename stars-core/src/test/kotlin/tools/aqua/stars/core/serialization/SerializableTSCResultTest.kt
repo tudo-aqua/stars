@@ -37,7 +37,6 @@ class SerializableTSCResultTest {
         MissedTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -60,7 +59,6 @@ class SerializableTSCResultTest {
         MissedTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -83,7 +81,6 @@ class SerializableTSCResultTest {
         MissedTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()

@@ -40,19 +40,18 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class JsonLane(
-    @SerialName("road_id") val roadId: Int = 0,
-    @SerialName("lane_id") val laneId: Int = 0,
+    @SerialName("road_id") val roadId: Int,
+    @SerialName("lane_id") val laneId: Int,
     @SerialName("lane_type") val laneType: JsonLaneType = JsonLaneType.Driving,
-    @SerialName("lane_width") val laneWidth: Double = 0.0,
-    @SerialName("lane_length") var laneLength: Double = 0.0,
-    @SerialName("s") val s: Double = 0.0,
-    @SerialName("predecessor_lanes") val predecessorLanes: List<JsonContactLaneInfo> = emptyList(),
-    @SerialName("successor_lanes") val successorLanes: List<JsonContactLaneInfo> = emptyList(),
-    @SerialName("intersecting_lanes")
-    val intersectingLanes: List<JsonContactLaneInfo> = emptyList(),
-    @SerialName("lane_midpoints") val laneMidpoints: List<JsonLaneMidpoint> = emptyList(),
-    @SerialName("speed_limits") val speedLimits: List<JsonSpeedLimit> = emptyList(),
-    @SerialName("landmarks") var landmarks: List<JsonLandmark> = emptyList(),
-    @SerialName("contact_areas") val contactAreas: List<JsonContactArea> = emptyList(),
-    @SerialName("traffic_lights") var trafficLights: List<JsonStaticTrafficLight> = emptyList(),
+    @SerialName("lane_width") val laneWidth: Double,
+    @SerialName("lane_length") var laneLength: Double,
+    @SerialName("s") val s: Double,
+    @SerialName("predecessor_lanes") val predecessorLanes: List<JsonContactLaneInfo>,
+    @SerialName("successor_lanes") val successorLanes: List<JsonContactLaneInfo>,
+    @SerialName("intersecting_lanes") val intersectingLanes: List<JsonContactLaneInfo>,
+    @SerialName("lane_midpoints") val laneMidpoints: List<JsonLaneMidpoint>,
+    @SerialName("speed_limits") val speedLimits: List<JsonSpeedLimit>,
+    @SerialName("landmarks") var landmarks: List<JsonLandmark>,
+    @SerialName("contact_areas") val contactAreas: List<JsonContactArea>,
+    @SerialName("traffic_lights") var trafficLights: List<JsonStaticTrafficLight>,
 )

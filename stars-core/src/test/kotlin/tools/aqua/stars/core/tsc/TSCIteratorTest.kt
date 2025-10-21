@@ -21,16 +21,15 @@ import kotlin.test.Test
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.tsc
 
-/** Test class for TSC iterator. */
+/** Test class for [TSC] iterator. */
 class TSCIteratorTest {
-  /** Test TSC Iterator. */
+  /** Test [TSC] Iterator. */
   @Test
   fun `Test TSC Iterator`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {

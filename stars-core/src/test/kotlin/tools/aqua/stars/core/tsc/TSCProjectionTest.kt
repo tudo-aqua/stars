@@ -37,7 +37,6 @@ class TSCProjectionTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -69,7 +68,6 @@ class TSCProjectionTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -131,7 +129,6 @@ class TSCProjectionTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -153,7 +150,6 @@ class TSCProjectionTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {

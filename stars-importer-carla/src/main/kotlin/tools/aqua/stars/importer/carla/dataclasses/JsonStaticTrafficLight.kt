@@ -19,7 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
 
 /**
  * Json object for static traffic lights.
@@ -32,19 +31,9 @@ import tools.aqua.stars.data.av.dataclasses.StaticTrafficLight
  */
 @Serializable
 data class JsonStaticTrafficLight(
-    @SerialName("open_drive_id") var id: Int = 0,
-    @SerialName("position_distance") val positionDistance: Float = 0.0f,
-    @SerialName("location") var location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") var rotation: JsonRotation = JsonRotation(),
-    @SerialName("stop_locations") var stopLocations: List<JsonLocation> = emptyList(),
-) {
-
-  /** Converts [JsonStaticTrafficLight] to [StaticTrafficLight]. */
-  fun toStaticTrafficLight(): StaticTrafficLight =
-      StaticTrafficLight(
-          id = this.id,
-          location = this.location.toLocation(),
-          rotation = this.rotation.toRotation(),
-          stopLocations = this.stopLocations.map { it.toLocation() },
-      )
-}
+    @SerialName("open_drive_id") var id: Int,
+    @SerialName("position_distance") val positionDistance: Float,
+    @SerialName("location") var location: JsonLocation,
+    @SerialName("rotation") var rotation: JsonRotation,
+    @SerialName("stop_locations") var stopLocations: List<JsonLocation>,
+)

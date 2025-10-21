@@ -19,35 +19,39 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.TrafficLight
-import tools.aqua.stars.data.av.dataclasses.TrafficLightState
 
 /**
- * Json object for traffic lights.
+ * JSON object for traffic lights.
  *
  * @property id The identifier of the traffic light.
  * @property typeId The type identifier.
- * @property state The current state oif the traffic light.
+ * @property attributes The additional attributes for the [JsonTrafficLight] from the CARLA
+ *   simulation.
+ * @property isAlive Whether the [JsonTrafficLight] is alive in the simulation.
+ * @property isActive Whether the [JsonTrafficLight] is active in the simulation.
+ * @property isDormant Whether the [JsonTrafficLight] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonTrafficLight] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonTrafficLight].
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
+ * @property collisions The list of actor IDs, this [JsonTrafficLight] is colliding with.
+ * @property state The current state oif the traffic light.
  * @property relatedOpenDriveId The related open drive identifier.
  */
 @Serializable
 @SerialName("TrafficLight")
 data class JsonTrafficLight(
-    @SerialName("id") override var id: Int = 0,
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("state") var state: Int = 0,
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
-    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int = 0,
-) : JsonActor() {
-
-  /** Converts [JsonTrafficLight] to [TrafficLight]. */
-  fun toTrafficLight(): TrafficLight =
-      TrafficLight(
-          id = this.id,
-          state = TrafficLightState.getByValue(this.state),
-          relatedOpenDriveId = this.relatedOpenDriveId,
-      )
-}
+    @SerialName("id") override val id: Int,
+    @SerialName("type_id") override val typeId: String,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("collisions") override val collisions: List<Int>,
+    @SerialName("state") var state: Int,
+    @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
+) : JsonActor()

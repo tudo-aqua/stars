@@ -42,7 +42,7 @@ class TickDataUnitSeconds(val tickSeconds: Double) :
 
   override fun deserialize(str: String): TickDataUnitSeconds = TickDataUnitSeconds(str.toDouble())
 
-  override fun toString(): String = "TickDataUnitSeconds(tickSeconds: ${this.tickSeconds})"
+  override fun toString(): String = "${this.tickSeconds}s"
 
   override fun equals(other: Any?): Boolean =
       if (other is TickDataUnitSeconds) this.tickSeconds == other.tickSeconds

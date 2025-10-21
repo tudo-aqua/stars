@@ -22,7 +22,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.*
-import tools.aqua.stars.logic.kcmftbl.data.TestUnit
+import tools.aqua.stars.logic.kcmftbl.past.pastMinPrevalence
 
 /** This class tests the CMFTBL operator [pastMinPrevalence]. */
 class TestPastMinPrevalence {
@@ -136,7 +136,7 @@ class TestPastMinPrevalence {
   fun `Test when phi is true for 8 of 10 ticks and percentage is 80, and 4 of 5 in interval are true`() {
     val phi = listOf(1, 1, 1, 1, 0, 1, 1, 0, 1, 1)
     val percentage = 0.8
-    val interval = 0 to 5
+    val interval = 0 to 4
 
     assertTrue {
       pastMinPrevalence(
@@ -159,7 +159,7 @@ class TestPastMinPrevalence {
   fun `Test when phi is true for 8 of 10 ticks and percentage is 80, and 3 of 5 in interval are true`() {
     val phi = listOf(1, 1, 1, 1, 1, 1, 0, 0, 1, 1)
     val percentage = 0.8
-    val interval = 0 to 5
+    val interval = 0 to 4
 
     assertFalse {
       pastMinPrevalence(
@@ -181,12 +181,9 @@ class TestPastMinPrevalence {
   @Test
   fun `Test when phi is true and percentage is 100, but no tick is in the interval`() {
     val ticks = createTicks(listOf(1, 1, 1))
-    ticks[0].currentTick = TestUnit(0)
-    ticks[1].currentTick = TestUnit(2)
-    ticks[2].currentTick = TestUnit(4)
 
     val percentage = 1.0
-    val interval = 1 to 2
+    val interval = 3 to 4
 
     assertTrue {
       pastMinPrevalence(ticks[2], percentage, createInterval(interval), phi = { it.phi1 })

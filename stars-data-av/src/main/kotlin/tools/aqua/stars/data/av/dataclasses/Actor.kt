@@ -19,14 +19,46 @@ package tools.aqua.stars.data.av.dataclasses
 
 import tools.aqua.stars.core.types.EntityType
 
-/** Abstract actor data class. */
-sealed class Actor :
-    EntityType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
-
+/**
+ * Abstract actor data class.
+ *
+ * @property id The ID of the [Actor].
+ * @property typeId String representation of the [Actor] type. Default: empty [String].
+ * @property attributes Attributes map. Default: empty [Map].
+ * @property isAlive Whether the [Actor] is alive. Default: true.
+ * @property isActive Whether the [Actor] is active. Default: true.
+ * @property isDormant Whether the [Actor] is dormant. Default: false.
+ * @property semanticTags [List] of semantic tags. Default: empty [List].
+ * @property boundingBox The 3D [BoundingBox] of the [Actor]. Default: unit [BoundingBox].
+ * @property location The [Location] of the [Actor]. Default: origin.
+ * @property rotation The [Rotation] of the [Actor]. Default: no rotation.
+ * @property collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ */
+sealed class Actor(
+    val id: Int,
+    val typeId: String = "",
+    val attributes: Map<String, String> = emptyMap(),
+    val isAlive: Boolean = true,
+    val isActive: Boolean = true,
+    val isDormant: Boolean = false,
+    val semanticTags: List<Int> = emptyList(),
+    val boundingBox: BoundingBox = BoundingBox(),
+    val location: Location = Location(),
+    val rotation: Rotation = Rotation(),
+    val collisions: List<Int> = emptyList(),
+) : EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
   /**
    * Clones the actor.
    *
    * @param newTickData New [TickData] to copy to new object.
    */
   abstract fun clone(newTickData: TickData): Actor
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Actor) return false
+    return id == other.id
+  }
+
+  override fun hashCode(): Int = id
 }

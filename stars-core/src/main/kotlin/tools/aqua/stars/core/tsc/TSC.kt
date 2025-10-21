@@ -17,31 +17,28 @@
 
 package tools.aqua.stars.core.tsc
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * TSC graph.
+ * TSC tree structure.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property rootNode The root node of the [TSC].
  * @property identifier The identifier of the [TSC].
  */
 class TSC<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val rootNode: TSCNode<E, T, S, U, D>, val identifier: String = "TSC") :
-    Iterable<TSCNode<E, T, S, U, D>> {
+>(val rootNode: TSCNode<E, T, U, D>, val identifier: String = "TSC") :
+    Iterable<TSCNode<E, T, U, D>> {
 
   init {
     charArrayOf('"', '*', '<', '>', '?', '|', '\u0000').forEach {
@@ -50,27 +47,27 @@ class TSC<
   }
 
   /** Holds the [List] of all possible [TSCInstanceNode]s. */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, S, U, D>> = rootNode.generateAllInstances()
+  val possibleTSCInstances: List<TSCInstanceNode<E, T, U, D>> = rootNode.generateAllInstances()
 
   /**
-   * Evaluates [PredicateContext] on [TSC].
+   * Evaluates [List] of [TickDataType]s on [TSC].
    *
-   * @param context The [PredicateContext].
+   * @param tick The current [TickDataType].
    * @return The calculated [TSCInstance] based on the evaluation.
    */
-  fun evaluate(context: PredicateContext<E, T, S, U, D>): TSCInstance<E, T, S, U, D> =
-      TSCInstance(rootNode.evaluate(context), context.segment.getSegmentIdentifier())
+  fun evaluate(tick: T): TSCInstance<E, T, U, D> =
+      TSCInstance(rootNode.evaluate(tick), tick.toString())
 
   /**
-   * Builds all possible TSCs ignoring those in [projectionIgnoreList].
+   * Builds all possible [TSC]s ignoring those in [projectionIgnoreList].
    *
    * @param projectionIgnoreList Projections to ignore.
    * @return The [List] of all [TSC]s for this [TSC].
    */
-  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, S, U, D>> =
+  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, U, D>> =
       rootNode.buildProjections(projectionIgnoreList)
 
   override fun toString(): String = this.rootNode.toString()
 
-  override fun iterator(): Iterator<TSCNode<E, T, S, U, D>> = TSCIterator(rootNode)
+  override fun iterator(): Iterator<TSCNode<E, T, U, D>> = TSCIterator(rootNode)
 }

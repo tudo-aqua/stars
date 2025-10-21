@@ -36,7 +36,6 @@ class TSCMonitorTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -54,7 +53,6 @@ class TSCMonitorTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -63,7 +61,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = generateTicks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -79,7 +77,6 @@ class TSCMonitorTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -99,7 +96,6 @@ class TSCMonitorTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -108,7 +104,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = generateTicks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -124,7 +120,6 @@ class TSCMonitorTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -149,7 +144,6 @@ class TSCMonitorTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -158,7 +152,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = generateTicks())
         }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
@@ -181,7 +175,6 @@ class TSCMonitorTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -206,7 +199,6 @@ class TSCMonitorTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -215,7 +207,7 @@ class TSCMonitorTest {
     TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
         .apply {
           registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(segments = segments())
+          runEvaluation(ticks = generateTicks())
         }
 
     assertTrue { failedMonitorsMetric.failedMonitors.any() }
@@ -225,17 +217,5 @@ class TSCMonitorTest {
     assertEquals(2, failedMonitors.size)
     assertTrue(failedMonitors.any { it.nodeLabel == "root" && it.monitorLabel == "MonitorFalse" })
     assertTrue(failedMonitors.any { it.nodeLabel == "leaf" && it.monitorLabel == "MonitorFalse" })
-  }
-
-  private fun segments(): Sequence<SimpleSegment> {
-    val entities = mutableListOf<SimpleEntity>()
-    val tickdatas = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
-    val segments = listOf(SimpleSegment(tickdatas)).asSequence()
-    val tick = SimpleTickDataUnit(0)
-    val tickdata = SimpleTickData(tick)
-    tickdatas[tick] = tickdata
-    entities.add(SimpleEntity(0, tickdata))
-
-    return segments
   }
 }

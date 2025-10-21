@@ -21,12 +21,12 @@ import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
-import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metrics.postEvaluation.MissedPredicateCombinationsPerTSCMetric
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 
 /**
  * Tests the [SerializableResult] sealed class implementation for the
@@ -36,7 +36,7 @@ class SerializablePredicateCombinationResultTest {
 
   /**
    * Tests the correct calculation and return of a [SerializablePredicateCombinationResult] for a
-   * valid TSC instance with no remaining missed predicates combinations.
+   * valid [TSCInstance] with no remaining missed predicates combinations.
    */
   @Test
   fun `Test no missing predicate combinations`() {
@@ -45,7 +45,6 @@ class SerializablePredicateCombinationResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -55,15 +54,7 @@ class SerializablePredicateCombinationResultTest {
 
     // Initialize actual metric
     val missedPredicateCombinationsPerTSCMetric =
-        MissedPredicateCombinationsPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+        MissedPredicateCombinationsPerTSCMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     missedPredicateCombinationsPerTSCMetric.postEvaluate()
@@ -76,7 +67,7 @@ class SerializablePredicateCombinationResultTest {
 
   /**
    * Tests the correct calculation and return of a [SerializablePredicateCombinationResult] for a
-   * valid TSC instance with one remaining missed predicates combination.
+   * valid [TSCInstance] with one remaining missed predicates combination.
    */
   @Test
   fun `Test one missing predicate combination`() {
@@ -85,7 +76,6 @@ class SerializablePredicateCombinationResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -96,15 +86,7 @@ class SerializablePredicateCombinationResultTest {
 
     // Initialize actual metric
     val missedPredicateCombinationsPerTSCMetric =
-        MissedPredicateCombinationsPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+        MissedPredicateCombinationsPerTSCMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     missedPredicateCombinationsPerTSCMetric.postEvaluate()
@@ -119,7 +101,7 @@ class SerializablePredicateCombinationResultTest {
 
   /**
    * Tests the correct calculation and return of a [SerializablePredicateCombinationResult] for an
-   * invalid TSC instance with one remaining missed predicates combination.
+   * invalid [TSCInstance] with one remaining missed predicates combination.
    */
   @Test
   fun `Test one missing predicate combination with no valid TSC instance`() {
@@ -128,7 +110,6 @@ class SerializablePredicateCombinationResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -139,15 +120,7 @@ class SerializablePredicateCombinationResultTest {
 
     // Initialize actual metric
     val missedPredicateCombinationsPerTSCMetric =
-        MissedPredicateCombinationsPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+        MissedPredicateCombinationsPerTSCMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     missedPredicateCombinationsPerTSCMetric.postEvaluate()
@@ -162,7 +135,7 @@ class SerializablePredicateCombinationResultTest {
 
   /**
    * Tests the correct calculation and return of a [SerializablePredicateCombinationResult] for a
-   * valid but empty TSC instance with all remaining missed predicates combination.
+   * valid but empty [TSCInstance] with all remaining missed predicates combination.
    */
   @Test
   fun `Test multiple missing predicate combinations with valid empty TSC instance`() {
@@ -171,7 +144,6 @@ class SerializablePredicateCombinationResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -182,15 +154,7 @@ class SerializablePredicateCombinationResultTest {
 
     // Initialize actual metric
     val missedPredicateCombinationsPerTSCMetric =
-        MissedPredicateCombinationsPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+        MissedPredicateCombinationsPerTSCMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     missedPredicateCombinationsPerTSCMetric.postEvaluate()

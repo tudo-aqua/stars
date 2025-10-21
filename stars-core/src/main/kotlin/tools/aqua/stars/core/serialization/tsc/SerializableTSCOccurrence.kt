@@ -18,17 +18,18 @@
 package tools.aqua.stars.core.serialization.tsc
 
 import kotlinx.serialization.Serializable
+import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 
 /**
- * This class stores a pair of the TSC instance as [String] and a [List] of segment identifiers in
- * which the TSC instance occurred for serialization.
+ * This class stores a pair of the [TSCInstance] as [String] and a [List] of identifiers in which
+ * the [TSCInstance] occurred for serialization.
  *
- * @property tscInstance The [List] of active TSC edges.
- * @property segmentIdentifiers The [List] of segment identifiers in which the TSC instance
- *   occurred.
+ * @property tscInstance The [List] of active [TSCEdge]s.
+ * @property identifiers The [List] of identifiers in which the [TSCInstance] occurred.
  */
 @Serializable
 data class SerializableTSCOccurrence(
     val tscInstance: SerializableTSCNode,
-    val segmentIdentifiers: List<String>,
+    val identifiers: List<String>,
 )

@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for traffic signs.
+ * JSON object for traffic signs.
  *
  * @property id The identifier of the traffic light.
  * @property trafficSignType The [JsonTrafficSignType] of the traffic sign.
@@ -29,15 +29,29 @@ import kotlinx.serialization.Serializable
  * @property typeId List type identifier.
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
+ * @property attributes The additional attributes for the [JsonTrafficSign] from the CARLA
+ *   simulation.
+ * @property isAlive Whether the [JsonTrafficSign] is alive in the simulation.
+ * @property isActive Whether the [JsonTrafficSign] is active in the simulation.
+ * @property isDormant Whether the [JsonTrafficSign] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonTrafficSign] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonTrafficSign].
+ * @property collisions The list of actor IDs, this [JsonTrafficSign] is colliding with.
  */
 @Serializable
 @SerialName("TrafficSign")
 data class JsonTrafficSign(
     @SerialName("id") override val id: Int = 0,
-    @SerialName("traffic_sign_type")
-    val trafficSignType: JsonTrafficSignType = JsonTrafficSignType.INVALID,
-    @SerialName("speed_limit") val speedLimit: Double? = null,
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
+    @SerialName("traffic_sign_type") val trafficSignType: JsonTrafficSignType,
+    @SerialName("speed_limit") val speedLimit: Double?,
+    @SerialName("type_id") override val typeId: String,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
+    @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor()

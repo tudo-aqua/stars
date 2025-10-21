@@ -20,9 +20,9 @@ package tools.aqua.stars.logic.kcmftbl.formulas
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import tools.aqua.stars.logic.kcmftbl.forAll
+import tools.aqua.stars.logic.kcmftbl.firstorder.forAll
 
-/** This class tests the CMFTBL operator [forall]. */
+/** This class tests the CMFTBL operator [forAll]. */
 class TestForall {
   /** Test when all elements match the predicate. */
   @Test

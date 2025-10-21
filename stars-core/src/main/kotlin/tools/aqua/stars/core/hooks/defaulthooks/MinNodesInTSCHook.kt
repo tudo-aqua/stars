@@ -19,31 +19,30 @@ package tools.aqua.stars.core.hooks.defaulthooks
 
 import tools.aqua.stars.core.hooks.EvaluationHookResult
 import tools.aqua.stars.core.hooks.PreTSCEvaluationHook
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * [PreTSCEvaluationHook] that checks if a TSC has at least minNodes nodes.
+ * [PreTSCEvaluationHook] that checks if a [TSC] has at least [minNodes] nodes.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minNodes The minimum number of nodes the TSC must have.
- * @param failPolicy The [EvaluationHookResult] to return if the TSC has less minNodes nodes.
+ * @param minNodes The minimum number of nodes the [TSC] must have.
+ * @param failPolicy The [EvaluationHookResult] to return if the [TSC] has less [minNodes] nodes.
  */
 open class MinNodesInTSCHook<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
     minNodes: Int,
     failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
-    PreTSCEvaluationHook<E, T, S, U, D>(
-        identifier = "EmptyTSCHook",
+    PreTSCEvaluationHook<E, T, U, D>(
+        identifier = "MinNodesInTSCHook",
         evaluationFunction = { tsc ->
           if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy
         },

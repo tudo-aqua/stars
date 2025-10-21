@@ -20,26 +20,57 @@ package tools.aqua.stars.data.av.dataclasses
 /**
  * Data class for pedestrians.
  *
- * @property id The identifier of the pedestrian.
- * @property positionOnLane The [Pedestrian]'s position on the [Lane].
- * @property lane The [Pedestrian]'s [Lane].
+ * @param id The identifier of the [Pedestrian].
+ * @param typeId The type identifier of the [Pedestrian].
+ * @param attributes The attributes of the [Pedestrian].
+ * @param isAlive Whether the [Pedestrian] is alive.
+ * @param isActive Whether the [Pedestrian] is active.
+ * @param isDormant Whether the [Pedestrian] is dormant.
+ * @param semanticTags The semantic tags of the [Pedestrian].
+ * @param boundingBox The [BoundingBox] of the [Pedestrian].
+ * @param location The [Location] of the [Pedestrian].
+ * @param rotation The [Rotation] of the [Pedestrian].
+ * @param collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
  */
-data class Pedestrian(
-    override val id: Int = 0,
-    val positionOnLane: Double = 0.0,
-    val lane: Lane,
-) : Actor() {
-
-  override lateinit var tickData: TickData
+class Pedestrian(
+    id: Int = 0,
+    typeId: String = "",
+    attributes: Map<String, String> = emptyMap(),
+    isAlive: Boolean = true,
+    isActive: Boolean = true,
+    isDormant: Boolean = false,
+    semanticTags: List<Int> = emptyList(),
+    boundingBox: BoundingBox = BoundingBox(),
+    location: Location = Location(),
+    rotation: Rotation = Rotation(),
+    collisions: List<Int> = emptyList(),
+) :
+    Actor(
+        id = id,
+        typeId = typeId,
+        attributes = attributes,
+        isAlive = isAlive,
+        isActive = isActive,
+        isDormant = isDormant,
+        semanticTags = semanticTags,
+        boundingBox = boundingBox,
+        location = location,
+        rotation = rotation,
+        collisions = collisions,
+    ) {
 
   override fun clone(newTickData: TickData): Actor =
-      Pedestrian(id, positionOnLane, lane).apply { tickData = newTickData }
-
-  override fun toString(): String =
-      "Pedestrian(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
-
-  override fun equals(other: Any?): Boolean =
-      other is Pedestrian && id == other.id && tickData.currentTick == other.tickData.currentTick
-
-  override fun hashCode(): Int = 31 * id + tickData.currentTick.hashCode()
+      Pedestrian(
+          id = id,
+          typeId = typeId,
+          attributes = attributes,
+          isAlive = isAlive,
+          isActive = isActive,
+          isDormant = isDormant,
+          semanticTags = semanticTags,
+          boundingBox = boundingBox,
+          location = location,
+          rotation = rotation,
+          collisions = collisions,
+      )
 }

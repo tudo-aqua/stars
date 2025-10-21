@@ -17,41 +17,47 @@
 
 package tools.aqua.stars.logic.kcmftbl
 
-import tools.aqua.stars.logic.kcmftbl.data.BooleanTick
+import tools.aqua.stars.logic.kcmftbl.data.BooleanTickData
 import tools.aqua.stars.logic.kcmftbl.data.TestDifference
-import tools.aqua.stars.logic.kcmftbl.data.TestSegment
 import tools.aqua.stars.logic.kcmftbl.data.TestUnit
 
 /** Creates ticks and returns first by parsing INT-Lists to Boolean values. */
-fun createTicks(phi1: List<Int>, phi2: List<Int>): List<BooleanTick> {
-  val ticks =
-      phi1.indices.associate {
-        TestUnit(it) to
-            BooleanTick(
-                TestUnit(it),
-                emptyList(),
-                TestSegment(emptyList(), emptyMap(), "", -1),
-                phi1[it] == 1,
-                phi2[it] == 1,
-            )
-      }
+fun createTicks(
+    phi1: List<Int>,
+    phi2: List<Int>,
+    tickUnitMultiplier: Int = 1,
+): List<BooleanTickData> =
+    phi1.indices
+        .associate {
+          TestUnit(it) to
+              BooleanTickData(
+                  TestUnit(it * tickUnitMultiplier),
+                  LinkedHashSet(),
+                  identifier = "BooleanTickData",
+                  phi1[it] == 1,
+                  phi2[it] == 1,
+              )
+        }
+        .values
+        .toList()
+        .also {
+          it.forEachIndexed { index, tick ->
+            if (index > 0) tick.previousTick = it[index - 1]
 
-  TestSegment(ticks.values.toList(), ticks.toMap(), "", -1).also {
-    it.tickData.forEach { t -> t.segment = it }
-  }
-
-  return ticks.values.toList()
-}
+            if (index < it.size - 1) tick.nextTick = it[index + 1]
+          }
+        }
 
 /**
  * Creates ticks and returns first by parsing INT-Lists to Boolean values. Phi2 is set to always
  * true
  */
-fun createTicks(phi1: List<Int>): List<BooleanTick> = createTicks(phi1, List(phi1.size) { 1 })
+fun createTicks(phi1: List<Int>, tickUnitMultiplier: Int = 1): List<BooleanTickData> =
+    createTicks(phi1, List(phi1.size) { 1 }, tickUnitMultiplier)
 
 /** Creates an interval by wrapping the INT-Values into [TestDifference]s. */
-fun createInterval(interval: Pair<Int, Int>): Pair<TestDifference, TestDifference> =
-    TestDifference(interval.first) to TestDifference(interval.second)
+fun createInterval(interval: Pair<Int, Int>): Interval<TestDifference> =
+    Interval(TestDifference(interval.first) to TestDifference(interval.second))
 
 /** Creates all combinations of 0-1 arrays with length [n]. */
 fun combinations(n: Int): Collection<List<Int>> {
@@ -76,12 +82,12 @@ fun combinations(n: Int): Collection<List<Int>> {
  * All interval combinations with lower bound (lb) 0 and upper bound (ub) [ub], where lb < ub
  * including null.
  */
-fun intervals(ub: Int): List<Pair<TestDifference, TestDifference>?> {
-  val result = mutableListOf<Pair<TestDifference, TestDifference>?>(null)
+fun intervals(ub: Int): List<Interval<TestDifference>?> {
+  val result = mutableListOf<Interval<TestDifference>?>(null)
 
   for (i in 0 until ub) {
     for (j in i + 1..ub) {
-      result.add(TestDifference(i) to TestDifference(j))
+      result.add(Interval(TestDifference(i) to TestDifference(j)))
     }
   }
 

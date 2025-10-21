@@ -21,9 +21,9 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import tools.aqua.stars.logic.kcmftbl.backTo
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
+import tools.aqua.stars.logic.kcmftbl.past.backTo
 
 /** This class tests the CMFTBL operator [backTo]. */
 class TestBackTo {

@@ -18,25 +18,28 @@
 package tools.aqua.stars.core.types
 
 /**
- * Interface for entity types.
+ * Class storing data of dynamic objects (entities).
+ *
+ * The [equals] and [hashCode] functions must be implemented in order to track entities across ticks
+ * with altered dynamic values.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 abstract class EntityType<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 > {
 
-  /** Entity identifier. */
-  abstract val id: Int
+  /** The associated [TickDataType]. */
+  lateinit var currentTick: T
+    internal set
 
-  /** Tick data. */
-  abstract var tickData: T
+  abstract override fun equals(other: Any?): Boolean
+
+  abstract override fun hashCode(): Int
 }

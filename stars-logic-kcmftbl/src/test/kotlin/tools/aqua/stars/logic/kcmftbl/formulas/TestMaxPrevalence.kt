@@ -22,7 +22,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.*
-import tools.aqua.stars.logic.kcmftbl.data.TestUnit
+import tools.aqua.stars.logic.kcmftbl.future.maxPrevalence
 
 /** This class tests the CMFTBL operator [maxPrevalence]. */
 class TestMaxPrevalence {
@@ -171,12 +171,9 @@ class TestMaxPrevalence {
   @Test
   fun `Test when phi is true and percentage is 0, but no tick is in the interval`() {
     val ticks = createTicks(listOf(1, 1, 1))
-    ticks[0].currentTick = TestUnit(0)
-    ticks[1].currentTick = TestUnit(2)
-    ticks[2].currentTick = TestUnit(4)
 
     val percentage = 0.0
-    val interval = 1 to 2
+    val interval = 3 to 4
 
     assertTrue { maxPrevalence(ticks[0], percentage, createInterval(interval), phi = { it.phi1 }) }
   }

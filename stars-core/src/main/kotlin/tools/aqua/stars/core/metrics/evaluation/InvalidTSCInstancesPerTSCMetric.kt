@@ -46,7 +46,6 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property loggerIdentifier identifier (name) for the logger.
@@ -54,20 +53,19 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  */
 @Suppress("unused")
 class InvalidTSCInstancesPerTSCMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
     override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TSCAndTSCInstanceMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
+) : TSCAndTSCInstanceMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */
   private val invalidInstancesMap:
       MutableMap<
-          TSC<E, T, S, U, D>,
-          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>,
+          TSC<E, T, U, D>,
+          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>,
       > =
       mutableMapOf()
 
@@ -78,7 +76,7 @@ class InvalidTSCInstancesPerTSCMetric<
    * @param tsc The current [TSC] for which the invalidity should be checked.
    * @param tscInstance The current [TSCInstance] which is checked for invalidity.
    */
-  override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
+  override fun evaluate(tsc: TSC<E, T, U, D>, tscInstance: TSCInstance<E, T, U, D>) {
     invalidInstancesMap.putIfAbsent(tsc, mutableMapOf())
     // Check if the given tscInstance is valid. If so, skip
     if (tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
@@ -96,8 +94,8 @@ class InvalidTSCInstancesPerTSCMetric<
    */
   override fun getState():
       MutableMap<
-          TSC<E, T, S, U, D>,
-          MutableMap<TSCInstanceNode<E, T, S, U, D>, MutableList<TSCInstance<E, T, S, U, D>>>,
+          TSC<E, T, U, D>,
+          MutableMap<TSCInstanceNode<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>>,
       > = invalidInstancesMap
 
   /**
@@ -110,8 +108,7 @@ class InvalidTSCInstancesPerTSCMetric<
     )
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
-          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size} (of " +
-              "${tsc.possibleTSCInstances.size} possible instances)."
+          "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size}"
       )
 
       logFine(
@@ -133,7 +130,7 @@ class InvalidTSCInstancesPerTSCMetric<
         referenceInstance.validate().forEach { validation -> logFiner("- ${validation.second}") }
         logFiner("Occurred in:")
         invalidInstances.forEachIndexed { index, instance ->
-          logFiner("- $index -  ${instance.sourceSegmentIdentifier}")
+          logFiner("- $index -  ${instance.sourceIdentifier}")
         }
         logFiner()
       }
@@ -146,7 +143,7 @@ class InvalidTSCInstancesPerTSCMetric<
             invalidInstances.map { (tscInstanceNode, tscInstances) ->
               SerializableTSCOccurrence(
                   tscInstance = SerializableTSCNode(tscInstanceNode),
-                  segmentIdentifiers = tscInstances.map { it.sourceSegmentIdentifier },
+                  identifiers = tscInstances.map { it.sourceIdentifier },
               )
             }
         SerializableTSCOccurrenceResult(

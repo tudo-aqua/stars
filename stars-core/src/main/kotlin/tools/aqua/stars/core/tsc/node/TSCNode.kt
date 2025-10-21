@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
@@ -26,11 +25,10 @@ import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Abstract baseclass for TSC nodes.
+ * Abstract baseclass for [TSC] nodes.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property label Label of the [TSCNode].
@@ -40,17 +38,16 @@ import tools.aqua.stars.core.types.*
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
     val label: String,
-    open val edges: List<TSCEdge<E, T, S, U, D>>,
-    private val monitorsMap: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>?,
+    open val edges: List<TSCEdge<E, T, U, D>>,
+    private val monitorsMap: Map<String, (T) -> Boolean>?,
     private val projectionsMap: Map<String, Boolean>?,
-    val valueFunction: (PredicateContext<E, T, S, U, D>) -> Any,
+    val valueFunction: (T) -> Any,
 ) {
 
   /** Map of projection labels to their recursive state. */
@@ -58,40 +55,40 @@ sealed class TSCNode<
     get() = projectionsMap.orEmpty()
 
   /** Map of monitor labels to their predicates. */
-  val monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>
+  val monitors: Map<String, (T) -> Boolean>
     get() = monitorsMap.orEmpty()
 
-  /** Generates all TSC instances. */
-  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
+  /** Generates all [TSC] instances. */
+  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
 
-  /** Evaluates this TSC in the given context. */
+  /** Evaluates this [TSC] in the given context. */
   fun evaluate(
-      ctx: PredicateContext<E, T, S, U, D>,
+      tick: T,
       depth: Int = 0,
-  ): TSCInstanceNode<E, T, S, U, D> =
+  ): TSCInstanceNode<E, T, U, D> =
       TSCInstanceNode(
               this,
               this.label,
-              this.monitors.mapValues { (_, monitor) -> monitor(ctx) },
-              this.valueFunction(ctx),
+              this.monitors.mapValues { (_, monitor) -> monitor(tick) },
+              this.valueFunction(tick),
           )
           .also {
             it.edges +=
                 this.edges
-                    .filter { t -> t.condition(ctx) }
+                    .filter { t -> t.condition(tick) }
                     .map { tscEdge ->
-                      TSCInstanceEdge(tscEdge.destination.evaluate(ctx, depth + 1), tscEdge)
+                      TSCInstanceEdge(tscEdge.destination.evaluate(tick, depth + 1), tscEdge)
                     }
           }
 
   /**
-   * Builds the TSCs for each projection defined in this [TSCNode] and returns a [TSC] for each
+   * Builds the [TSC]s for each projection defined in this [TSCNode] and returns a [TSC] for each
    * projection id. All projection ids in [projectionIgnoreList] are ignored and will not be in the
    * resulting projection list.
    *
    * @param projectionIgnoreList Projections to ignore.
    */
-  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, S, U, D>> =
+  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, U, D>> =
       projections
           .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
           .mapNotNull { (projectionId, _) ->
@@ -101,12 +98,12 @@ sealed class TSCNode<
           }
 
   /**
-   * Builds the TSC (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
+   * Builds the [TSC] (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
    * 'null' if the given [projectionId] is not found in [projections] of the current [TSCNode].
    *
    * @param projectionId The projection identifier as in [projections].
    */
-  private fun buildProjection(projectionId: Any): TSCNode<E, T, S, U, D>? {
+  private fun buildProjection(projectionId: Any): TSCNode<E, T, U, D>? {
     val isRecursive = projections[projectionId] ?: return null
 
     // projection id is there and everything below should be included -> just deep clone
@@ -149,7 +146,7 @@ sealed class TSCNode<
   }
 
   /** Deeply clones [TSCNode]. */
-  private fun deepClone(): TSCNode<E, T, S, U, D> {
+  private fun deepClone(): TSCNode<E, T, U, D> {
     val outgoingEdges =
         edges
             .map { it to it.destination.deepClone() }
@@ -204,10 +201,10 @@ sealed class TSCNode<
    * @return The [String] representation of the [TSCNode] with labels on the edges.
    */
   @Suppress("unused")
-  fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, S, U, D>, Int>): String =
+  fun toStringWithEdgeLabels(labels: Map<TSCEdge<E, T, U, D>, Int>): String =
       toStringWithEdgeLabels(0, labels)
 
-  private fun toStringWithEdgeLabels(depth: Int, labels: Map<TSCEdge<E, T, S, U, D>, Any>): String {
+  private fun toStringWithEdgeLabels(depth: Int, labels: Map<TSCEdge<E, T, U, D>, Any>): String {
     val builder = StringBuilder()
     when (this) {
       is TSCBoundedNode -> builder.append("(${this.bounds.first}..${this.bounds.second})\n")

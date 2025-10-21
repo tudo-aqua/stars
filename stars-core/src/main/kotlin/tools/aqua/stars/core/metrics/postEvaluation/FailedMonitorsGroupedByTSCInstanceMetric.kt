@@ -39,7 +39,6 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
@@ -49,16 +48,15 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  */
 @Suppress("unused")
 class FailedMonitorsGroupedByTSCInstanceMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
+    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors-grouped-by-tsc-instance",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
+) : PostEvaluationMetricProvider<E, T, U, D>, Loggable {
 
   /**
    * Holds a [Map] from a [TSC] to a [Map] from a node label (as [String], representing the ID of
@@ -67,8 +65,8 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
    */
   private val failedMonitors:
       MutableMap<
-          TSC<E, T, S, U, D>,
-          Map<String, Map<TSCInstanceNode<E, T, S, U, D>, List<TSCInstance<E, T, S, U, D>>>>,
+          TSC<E, T, U, D>,
+          Map<String, Map<TSCInstanceNode<E, T, U, D>, List<TSCInstance<E, T, U, D>>>>,
       > =
       mutableMapOf()
 
@@ -83,7 +81,7 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
           validInstancesMap.values
               .flatten()
               .flatMap { tscInstance ->
-                tscInstance.rootNode.validateMonitors(tscInstance.sourceSegmentIdentifier).map {
+                tscInstance.rootNode.validateMonitors(tscInstance.sourceIdentifier).map {
                     failedMonitor ->
                   failedMonitor to tscInstance
                 }
@@ -117,7 +115,7 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
           logFine("Failed ${tscInstances.size} times for the following tsc instance:")
           tscInstances.forEach {
             logFiner()
-            logFiner(it.sourceSegmentIdentifier)
+            logFiner(it.sourceIdentifier)
           }
           logFine(tscInstanceNode)
         }

@@ -22,36 +22,28 @@ import tools.aqua.stars.core.types.TickDataType
 /**
  * Data class for tick data.
  *
- * @property currentTick Current tick value.
- * @property entities List of all [Actor]s.
- * @property trafficLights List of all [TrafficLight]s.
- * @property blocks ist of all [Block]s.
- * @property weather The current [WeatherParameters].
- * @property daytime The current [Daytime].
+ * @param currentTickUnit Current tick value.
+ * @param entities Set of all [Actor]s in the current [TickData].
+ * @param identifier The identifier of the [TickData].
+ * @property trafficLights List of all [TrafficLight]s in this [TickData].
+ * @property weather The current [WeatherParameters] in this [TickData].
+ * @property daytime The current [Daytime] in this [TickData].
+ * @property world The [World] for this [TickData].
  */
-data class TickData(
-    override val currentTick: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
-    override var entities: List<Actor>,
+class TickData(
+    currentTickUnit: TickDataUnitSeconds = TickDataUnitSeconds(0.0),
+    entities: Set<Actor>,
+    identifier: String,
     val trafficLights: List<TrafficLight> = emptyList(),
-    val blocks: List<Block> = emptyList(),
     val weather: WeatherParameters = WeatherParameters(),
     val daytime: Daytime = Daytime.Noon,
-) : TickDataType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
-
-  override lateinit var segment: Segment
-
-  init {
-    entities.onEach { it.tickData = this }
-
-    vehicles
-        .filter { it.isEgo }
-        .let {
-          check(it.size == 1) {
-            "There must be exactly one ego vehicle in the tick data. Was ${it.size} of ${vehicles.size}$ vehicles."
-          }
-          ego = it.first()
-        }
-  }
+    val world: World = World(straights = listOf(Road(id = 0, lanes = listOf(Lane(laneId = 0))))),
+) :
+    TickDataType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>(
+        currentTickUnit,
+        entities,
+        identifier,
+    ) {
 
   /** All pedestrians. */
   val pedestrians: List<Pedestrian>
@@ -62,16 +54,5 @@ data class TickData(
     get() = entities.filterIsInstance<Vehicle>()
 
   /** The ego vehicle. */
-  val ego: Vehicle
-
-  /** Returns all [Vehicle]s in given [Block]. */
-  fun vehiclesInBlock(block: Block): List<Vehicle> = vehicles.filter { it.lane.road.block == block }
-
-  /** Clones current [TickData]. */
-  fun clone(): TickData =
-      TickData(currentTick, entities, trafficLights, blocks, weather, daytime).also {
-        it.entities = entities.map { t -> t.clone(it) }
-      }
-
-  override fun toString(): String = "$currentTick"
+  override val ego: Vehicle = vehicles.first { it.isEgo }
 }

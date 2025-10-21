@@ -19,7 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Vector3D
 
 /**
  * Json object for 3D vector.
@@ -31,11 +30,7 @@ import tools.aqua.stars.data.av.dataclasses.Vector3D
  */
 @Serializable
 data class JsonVector3D(
-    @SerialName("x") val x: Double = 0.0,
-    @SerialName("y") val y: Double = 0.0,
-    @SerialName("z") val z: Double = 0.0,
-) {
-
-  /** Converts [JsonVector3D] to [Vector3D]. */
-  fun toVector3D(): Vector3D = Vector3D(x, y, z)
-}
+    @SerialName("x") val x: Double,
+    @SerialName("y") val y: Double,
+    @SerialName("z") val z: Double,
+)

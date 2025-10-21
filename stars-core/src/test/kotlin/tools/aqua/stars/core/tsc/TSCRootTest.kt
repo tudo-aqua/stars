@@ -36,7 +36,6 @@ class TSCRootTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -53,7 +52,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -69,7 +67,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -86,7 +83,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {}
@@ -103,7 +99,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -119,7 +114,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -135,7 +129,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -151,7 +144,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -167,7 +159,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -183,7 +174,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -202,7 +192,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -218,7 +207,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -234,7 +222,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -250,7 +237,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -266,7 +252,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -282,7 +267,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -301,7 +285,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -317,7 +300,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -333,7 +315,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -349,7 +330,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -365,7 +345,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -381,7 +360,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -400,7 +378,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -416,7 +393,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -432,7 +408,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -448,7 +423,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -464,7 +438,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {
@@ -480,7 +453,6 @@ class TSCRootTest {
       tsc<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       > {

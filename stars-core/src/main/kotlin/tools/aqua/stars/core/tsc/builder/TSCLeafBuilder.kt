@@ -17,35 +17,33 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating leaf nodes in the DSL.
+ * Class to assist in creating [TSCLeafNode]s in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property label Label of the [TSCLeafNode].
  */
 open class TSCLeafBuilder<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val label: String) : TSCBuilder<E, T, S, U, D>() {
+>(val label: String) : TSCBuilder<E, T, U, D>() {
 
   /**
    * Creates a [TSCEdge] with a [TSCLeafNode].
    *
    * @return The created [TSCEdge].
    */
-  fun build(): TSCEdge<E, T, S, U, D> =
+  fun build(): TSCEdge<E, T, U, D> =
       TSCEdge(
           condition = condition,
           destination =
@@ -58,24 +56,20 @@ open class TSCLeafBuilder<
       )
 
   /**
-   * DSL function for edge conditions.
+   * DSL function for [TSCEdge] conditions.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param condition The edge condition.
+   * @param condition The [TSCEdge] condition.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, S, U, D>.condition(
-      condition: (PredicateContext<E, T, S, U, D>) -> Boolean
-  ) {
+  > TSCLeafBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
     this.condition = condition
   }
 
@@ -84,20 +78,16 @@ open class TSCLeafBuilder<
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param valueFunction The value function.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, S, U, D>.valueFunction(
-      valueFunction: (PredicateContext<E, T, S, U, D>) -> Any
-  ) {
+  > TSCLeafBuilder<E, T, U, D>.valueFunction(valueFunction: (T) -> Any) {
     this.valueFunction = valueFunction
   }
 
@@ -106,42 +96,36 @@ open class TSCLeafBuilder<
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a projections node.
+   * @return The [TSCEdge] that is connected to a 'projections' node.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, S, U, D>.projections(
-      init: TSCProjectionsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCProjectionsBuilder<E, T, S, U, D> =
-      TSCProjectionsBuilder<E, T, S, U, D>().apply { init() }.also { this.projections = it.build() }
+  > TSCLeafBuilder<E, T, U, D>.projections(
+      init: TSCProjectionsBuilder<E, T, U, D>.() -> Unit = {}
+  ): TSCProjectionsBuilder<E, T, U, D> =
+      TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
-   * DSL function for an edge with MonitorsEdge in the leaf node scope.
+   * DSL function for a [TSCEdge] with MonitorsEdge in the [TSCLeafNode] scope.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param init The init function.
-   * @return The [TSCEdge] that is connected to a monitors node.
+   * @return The [TSCEdge] that is connected to a 'monitors' [TSCNode].
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, S, U, D>.monitors(
-      init: TSCMonitorsBuilder<E, T, S, U, D>.() -> Unit = {}
-  ): TSCMonitorsBuilder<E, T, S, U, D> =
-      TSCMonitorsBuilder<E, T, S, U, D>().apply { init() }.also { this.monitors = it.build() }
+  > TSCLeafBuilder<E, T, U, D>.monitors(init: TSCMonitorsBuilder<E, T, U, D>.() -> Unit = {}) =
+      TSCMonitorsBuilder<E, T, U, D>().apply { init() }.also { this.monitors = it.build() }
 }

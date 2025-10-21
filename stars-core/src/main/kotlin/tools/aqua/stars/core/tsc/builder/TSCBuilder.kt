@@ -17,8 +17,8 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
@@ -26,25 +26,22 @@ import tools.aqua.stars.core.types.*
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 @TSCBuilderMarker
 sealed class TSCBuilder<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 > {
 
-  /** Holds all edges of the node. */
-  protected val edges: MutableList<TSCEdge<E, T, S, U, D>> = mutableListOf()
+  /** Holds all [TSCEdge]s of the [TSCNode]. */
+  protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
-  /** Holds all monitors of the node. */
-  protected val monitorMap: MutableMap<String, (PredicateContext<E, T, S, U, D>) -> Boolean> =
-      mutableMapOf()
+  /** Holds all monitors of the [TSCNode]. */
+  protected val monitorMap: MutableMap<String, (T) -> Boolean> = mutableMapOf()
 
   /** Holds the optional projections. */
   protected var projections: Map<String, Boolean>? = null
@@ -53,15 +50,15 @@ sealed class TSCBuilder<
       field = value
     }
 
-  /** Holds the optional monitors edge. */
-  protected var monitors: Map<String, (PredicateContext<E, T, S, U, D>) -> Boolean>? = null
+  /** Holds the optional monitors [TSCEdge]. */
+  protected var monitors: Map<String, (T) -> Boolean>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
     }
 
-  /** Condition predicate of the edge. (Default: [CONST_TRUE]) */
-  protected var condition: ((PredicateContext<E, T, S, U, D>) -> Boolean) = CONST_TRUE
+  /** Condition predicate of the [TSCEdge]. (Default: [CONST_TRUE]) */
+  protected var condition: ((T) -> Boolean) = CONST_TRUE
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true
@@ -70,8 +67,8 @@ sealed class TSCBuilder<
 
   private var isConditionSet = false
 
-  /** Value function predicate of the node. (Default: empty) */
-  protected var valueFunction: ((PredicateContext<E, T, S, U, D>) -> Any) = { _ -> }
+  /** Value function predicate of the [TSCNode]. (Default: empty) */
+  protected var valueFunction: ((T) -> Any) = { _ -> }
     set(value) {
       check(!isValueFunctionSet) { "Value function already set." }
       isValueFunctionSet = true
@@ -81,12 +78,12 @@ sealed class TSCBuilder<
   private var isValueFunctionSet = false
 
   /**
-   * Adds the given [edge] to [edges]. This will become the edges of the node that will be created
-   * off of this object.
+   * Adds the given [edge] to [edges]. This will become the [TSCEdge]s of the [TSCNode] that will be
+   * created off of this object.
    *
    * @param edge [TSCEdge] to be added.
    */
-  fun addEdge(edge: TSCEdge<E, T, S, U, D>) {
+  fun addEdge(edge: TSCEdge<E, T, U, D>) {
     check(edges.none { it.destination.label == edge.destination.label }) {
       "Edge to node with label ${edge.destination.label} already exists in this scope."
     }

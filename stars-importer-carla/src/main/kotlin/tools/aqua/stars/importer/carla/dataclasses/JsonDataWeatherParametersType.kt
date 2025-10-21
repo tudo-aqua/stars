@@ -19,8 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Daytime
-import tools.aqua.stars.data.av.dataclasses.WeatherType
 
 /**
  * JSON enum for CARLA weather presets. [Default] is equal to [ClearSunset].
@@ -75,45 +73,5 @@ enum class JsonDataWeatherParametersType(val value: Int) {
   @SerialName("13") MidRainSunset(13),
 
   /** Heavy rain at sunset. */
-  @SerialName("14") HardRainSunset(14);
-
-  /** Maps this JSON preset to the high-level [WeatherType] category. */
-  fun toWeatherType(): WeatherType =
-      when (this) {
-        ClearNoon,
-        ClearSunset,
-        Default -> WeatherType.Clear
-        CloudyNoon,
-        CloudySunset -> WeatherType.Cloudy
-        WetNoon,
-        WetSunset -> WeatherType.Wet
-        WetCloudyNoon,
-        WetCloudySunset -> WeatherType.WetCloudy
-        SoftRainNoon,
-        SoftRainSunset -> WeatherType.SoftRainy
-        MidRainNoon,
-        MidRainSunset -> WeatherType.MidRainy
-        HardRainNoon,
-        HardRainSunset -> WeatherType.HardRainy
-      }
-
-  /** Extracts [Daytime] from [JsonDataWeatherParametersType]. */
-  fun toDaytime(): Daytime =
-      when (this) {
-        HardRainNoon,
-        WetNoon,
-        MidRainNoon,
-        SoftRainNoon,
-        CloudyNoon,
-        WetCloudyNoon,
-        ClearNoon -> Daytime.Noon
-        HardRainSunset,
-        SoftRainSunset,
-        MidRainSunset,
-        WetSunset,
-        WetCloudySunset,
-        CloudySunset,
-        ClearSunset,
-        Default -> Daytime.Sunset
-      }
+  @SerialName("14") HardRainSunset(14),
 }

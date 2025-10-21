@@ -20,7 +20,6 @@ package tools.aqua.stars.core.serialization
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
-import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
@@ -41,7 +40,6 @@ class SerializableFailedMonitorResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -51,16 +49,7 @@ class SerializableFailedMonitorResultTest {
     validTSCInstancesPerTSCMetric.evaluate(simpleTSC, simpleTSCValidInstance)
 
     // Initialize actual metric
-    val failedMonitorsMetric =
-        FailedMonitorsMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+    val failedMonitorsMetric = FailedMonitorsMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     failedMonitorsMetric.postEvaluate()
@@ -82,7 +71,6 @@ class SerializableFailedMonitorResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -92,16 +80,7 @@ class SerializableFailedMonitorResultTest {
     validTSCInstancesPerTSCMetric.evaluate(simpleTSC2, simpleTSC2ValidInstance)
 
     // Initialize actual metric
-    val failedMonitorsMetric =
-        FailedMonitorsMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+    val failedMonitorsMetric = FailedMonitorsMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     failedMonitorsMetric.postEvaluate()
@@ -123,7 +102,6 @@ class SerializableFailedMonitorResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -133,16 +111,7 @@ class SerializableFailedMonitorResultTest {
     validTSCInstancesPerTSCMetric.evaluate(simpleTSC4, simpleTSC4ValidInstance2)
 
     // Initialize actual metric
-    val failedMonitorsMetric =
-        FailedMonitorsMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >(
-            validTSCInstancesPerTSCMetric
-        )
+    val failedMonitorsMetric = FailedMonitorsMetric(validTSCInstancesPerTSCMetric)
 
     // Post evaluate and populate actual metric
     failedMonitorsMetric.postEvaluate()

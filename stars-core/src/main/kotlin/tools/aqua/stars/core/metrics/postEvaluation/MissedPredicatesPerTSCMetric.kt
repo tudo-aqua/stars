@@ -40,7 +40,6 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
@@ -49,19 +48,18 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  * @property logger [Logger] instance.
  */
 class MissedPredicatesPerTSCMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
+    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "missed-predicates",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : PostEvaluationMetricProvider<E, T, S, U, D>, SerializableMetric, Loggable {
+) : PostEvaluationMetricProvider<E, T, U, D>, SerializableMetric, Loggable {
 
   /** Holds the evaluation result after calling [postEvaluate]. */
-  private var evaluationResultCache: Map<TSC<E, T, S, U, D>, Set<String>>? = null
+  private var evaluationResultCache: Map<TSC<E, T, U, D>, Set<String>>? = null
 
   /**
    * Returns a [Map] of all missing predicates for all [TSC]s that are calculated by the
@@ -69,7 +67,7 @@ class MissedPredicatesPerTSCMetric<
    *
    * @return The [Map] of all missing predicates to its associated [TSC].
    */
-  override fun postEvaluate(): Map<TSC<E, T, S, U, D>, Set<String>> =
+  override fun postEvaluate(): Map<TSC<E, T, U, D>, Set<String>> =
       evaluationResultCache
           ?: dependsOn
               .getState()
@@ -99,8 +97,8 @@ class MissedPredicatesPerTSCMetric<
    *   the given [tscInstances].
    */
   private fun getAllMissingPredicatesForTSC(
-      tsc: TSC<E, T, S, U, D>,
-      tscInstances: List<TSCInstanceNode<E, T, S, U, D>>,
+      tsc: TSC<E, T, U, D>,
+      tscInstances: List<TSCInstanceNode<E, T, U, D>>,
   ): Set<String> {
     // Get all possible predicates
     val possiblePredicates = getAllPredicates(tsc.possibleTSCInstances)
@@ -117,7 +115,7 @@ class MissedPredicatesPerTSCMetric<
    *   calculated.
    * @return the [Set] of predicates based on the [tscInstances].
    */
-  private fun getAllPredicates(tscInstances: List<TSCInstanceNode<E, T, S, U, D>>): Set<String> {
+  private fun getAllPredicates(tscInstances: List<TSCInstanceNode<E, T, U, D>>): Set<String> {
     // Create a set for storage of all predicates
     val predicates = mutableSetOf<String>()
     tscInstances.forEach { t ->

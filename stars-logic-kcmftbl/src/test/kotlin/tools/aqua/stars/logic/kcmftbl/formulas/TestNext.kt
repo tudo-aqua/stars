@@ -23,8 +23,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.logic.kcmftbl.createInterval
 import tools.aqua.stars.logic.kcmftbl.createTicks
-import tools.aqua.stars.logic.kcmftbl.data.TestUnit
-import tools.aqua.stars.logic.kcmftbl.next
+import tools.aqua.stars.logic.kcmftbl.future.next
 
 /** This class tests the CMFTBL operator [next]. */
 class TestNext {
@@ -136,11 +135,8 @@ class TestNext {
   @Test
   fun `Test when phi holds at the next tick, but the tick is before the interval starts`() {
     val ticks = createTicks(listOf(1, 1, 1))
-    ticks[0].currentTick = TestUnit(0)
-    ticks[1].currentTick = TestUnit(2)
-    ticks[2].currentTick = TestUnit(4)
 
-    val interval = 1 to 2
+    val interval = 3 to 4
 
     assertFalse { next(ticks[0], createInterval(interval), phi = { it.phi1 }) }
   }

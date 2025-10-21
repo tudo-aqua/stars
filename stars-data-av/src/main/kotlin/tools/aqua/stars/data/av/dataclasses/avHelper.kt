@@ -17,15 +17,12 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-/** Returns [Lane] in list of [Block]s with given [roadId] and [laneId]. */
-fun List<Block>.getLane(roadId: Int, laneId: Int): Lane? =
-    this.flatMap { it.roads }
+/** Returns [Lane] in list of [World]s with given [roadId] and [laneId]. */
+fun World.getLane(roadId: Int, laneId: Int): Lane? =
+    getAllRoads()
         .first { pRoad -> pRoad.id == roadId }
         .lanes
         .firstOrNull { pLane -> pLane.laneId == laneId }
-
-/** Returns all [Lane]s in list of [Block]s. */
-fun List<Block>.lanes(): List<Lane> = this.flatMap { it.roads.flatMap { road -> road.lanes } }
 
 /** Generates UID from [Lane]. */
 val Lane.uid: String

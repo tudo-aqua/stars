@@ -23,7 +23,14 @@ import tools.aqua.stars.core.types.EntityType
  * This class is used for tests and implements the [EntityType] interface.
  *
  * @property id The ID of this entity.
- * @property tickData The [BooleanTick] this [TestEntity] belongs to.
  */
-class TestEntity(override val id: Int, override var tickData: BooleanTick) :
-    EntityType<TestEntity, BooleanTick, TestSegment, TestUnit, TestDifference>()
+class TestEntity(val id: Int) :
+    EntityType<TestEntity, BooleanTickData, TestUnit, TestDifference>() {
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TestEntity) return false
+    return id == other.id
+  }
+
+  override fun hashCode(): Int = id
+}

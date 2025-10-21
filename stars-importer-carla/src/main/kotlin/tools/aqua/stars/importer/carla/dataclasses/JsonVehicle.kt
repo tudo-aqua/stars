@@ -23,31 +23,49 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Json object for vehicles.
+ * JSON object for vehicles.
  *
  * @property id The identifier of the vehicle.
+ * @property typeId The type identifier, i.e. "vehicle.ford.mustang".
+ * @property attributes The additional attributes for the [JsonVehicle] from the CARLA simulation.
+ * @property isAlive Whether the [JsonVehicle] is alive in the simulation.
+ * @property isActive Whether the [JsonVehicle] is active in the simulation.
+ * @property isDormant Whether the [JsonVehicle] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonVehicle] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonVehicle].
  * @property location The [JsonLocation] of the vehicle.
  * @property rotation The [JsonRotation] of the vehicle.
- * @property typeId The type identifier, i.e. "vehicle.ford.mustang".
  * @property egoVehicle Whether this is the own vehicle.
  * @property forwardVector The current forward vector.
  * @property velocity The current velocity.
  * @property acceleration The current acceleration.
  * @property angularVelocity The current angular velocity.
+ * @property lane The [JsonLane] the vehicle is currently on.
+ * @property positionOnLane The position from the start of the [JsonLane] in meters.
+ * @property collisions The list of actor IDs, this [JsonVehicle] is colliding with.
  */
 @Serializable
 @SerialName("Vehicle")
 @Suppress("BooleanPropertyNaming")
 data class JsonVehicle(
-    @SerialName("id") override val id: Int = 0,
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("ego_vehicle") var egoVehicle: Boolean = false,
-    @SerialName("forward_vector") val forwardVector: JsonVector3D = JsonVector3D(),
-    @SerialName("velocity") val velocity: JsonVector3D = JsonVector3D(),
-    @SerialName("acceleration") val acceleration: JsonVector3D = JsonVector3D(),
-    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D(),
+    @SerialName("id") override val id: Int,
+    @SerialName("type_id") override val typeId: String,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("ego_vehicle") var egoVehicle: Boolean,
+    @SerialName("forward_vector") val forwardVector: JsonVector3D,
+    @SerialName("velocity") val velocity: JsonVector3D,
+    @SerialName("acceleration") val acceleration: JsonVector3D,
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
+    @SerialName("lane") val lane: JsonLane,
+    @SerialName("position_on_lane") val positionOnLane: Double,
+    @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor() {
 
   /** The effective velocity. */

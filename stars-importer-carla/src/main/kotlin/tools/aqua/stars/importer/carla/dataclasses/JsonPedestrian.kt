@@ -25,14 +25,29 @@ import kotlinx.serialization.Serializable
  *
  * @property id The identifier of the pedestrian.
  * @property typeId The type identifier.
+ * @property attributes The additional attributes for the [JsonPedestrian] from the CARLA
+ *   simulation.
+ * @property isAlive Whether the [JsonPedestrian] is alive in the simulation.
+ * @property isActive Whether the [JsonPedestrian] is active in the simulation.
+ * @property isDormant Whether the [JsonPedestrian] is dormant in the simulation.
+ * @property semanticTags The semantic tags of the [JsonPedestrian] from the CARLA simulation.
+ * @property boundingBox The bounding box of the [JsonPedestrian].
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
+ * @property collisions The list of actor IDs, this [JsonPedestrian] is colliding with.
  */
 @Serializable
 @SerialName("Pedestrian")
 data class JsonPedestrian(
-    @SerialName("id") override val id: Int = 0,
-    @SerialName("type_id") val typeId: String = "",
-    @SerialName("location") override val location: JsonLocation = JsonLocation(),
-    @SerialName("rotation") override val rotation: JsonRotation = JsonRotation(),
+    @SerialName("id") override val id: Int,
+    @SerialName("type_id") override val typeId: String,
+    @SerialName("attributes") override val attributes: Map<String, String>,
+    @SerialName("is_alive") override val isAlive: Boolean,
+    @SerialName("is_active") override val isActive: Boolean,
+    @SerialName("is_dormant") override val isDormant: Boolean,
+    @SerialName("semantic_tags") override val semanticTags: List<Int>,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
+    @SerialName("location") override val location: JsonLocation,
+    @SerialName("rotation") override val rotation: JsonRotation,
+    @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor()

@@ -17,23 +17,24 @@
 
 package tools.aqua.stars.core.tsc.instance
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * Instance of a TSC.
+ * Instance of a [TSC].
+ *
+ * Each instance is a subtree of the original [TSC] that was observed during evaluation.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property rootNode The root node.
- * @property sourceSegmentIdentifier Segment identifier.
+ * @property rootNode The root [TSCInstanceNode].
+ * @property sourceIdentifier Source identifier.
  */
 data class TSCInstance<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val rootNode: TSCInstanceNode<E, T, S, U, D>, val sourceSegmentIdentifier: String)
+>(val rootNode: TSCInstanceNode<E, T, U, D>, val sourceIdentifier: String)

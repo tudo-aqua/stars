@@ -17,55 +17,52 @@
 
 package tools.aqua.stars.core.hooks
 
+import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
 
 /**
- * A pre-evaluation hook that can be registered to a TSCEvaluation to be executed before the
+ * A pre-evaluation hook that can be registered to a [TSCEvaluation] to be executed before the
  * evaluation of the [TSC].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param identifier The identifier to be used in the error message.
  * @param evaluationFunction The function to be executed before the evaluation of the [TSC].
  */
 open class PreTSCEvaluationHook<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(identifier: String, evaluationFunction: (TSC<E, T, S, U, D>) -> EvaluationHookResult) :
-    EvaluationHook<TSC<E, T, S, U, D>>(
+>(identifier: String, evaluationFunction: (TSC<E, T, U, D>) -> EvaluationHookResult) :
+    EvaluationHook<TSC<E, T, U, D>>(
         identifier = identifier,
         evaluationFunction = evaluationFunction,
     ) {
   /** Companion object containing utility methods for working with [PreTSCEvaluationHook]. */
   companion object {
     /**
-     * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing TSCs.
+     * Executes all [PreTSCEvaluationHook]s on the [tscList] and returns all passing [TSC]s.
      *
      * @param E [EntityType].
      * @param T [TickDataType].
-     * @param S [SegmentType].
      * @param U [TickUnit].
      * @param D [TickDifference].
-     * @param tscList The list of TSCs to evaluate.
+     * @param tscList The [List] of [TSC]s to evaluate.
      */
     fun <
-        E : EntityType<E, T, S, U, D>,
-        T : TickDataType<E, T, S, U, D>,
-        S : SegmentType<E, T, S, U, D>,
+        E : EntityType<E, T, U, D>,
+        T : TickDataType<E, T, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>,
-    > List<PreTSCEvaluationHook<E, T, S, U, D>>.evaluate(
-        tscList: List<TSC<E, T, S, U, D>>
+    > List<PreTSCEvaluationHook<E, T, U, D>>.evaluate(
+        tscList: List<TSC<E, T, U, D>>
     ): Pair<
-        List<TSC<E, T, S, U, D>>?,
-        Map<TSC<E, T, S, U, D>, Map<PreTSCEvaluationHook<E, T, S, U, D>, EvaluationHookResult>>,
+        List<TSC<E, T, U, D>>?,
+        Map<TSC<E, T, U, D>, Map<PreTSCEvaluationHook<E, T, U, D>, EvaluationHookResult>>,
     > {
       // Evaluate PreEvaluationHooks
       val hookResults =
@@ -73,7 +70,7 @@ open class PreTSCEvaluationHook<
 
       // Filter out all TSCs that have not returned OK. Do not optimize by using
       // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
-      val resultingList = mutableListOf<TSC<E, T, S, U, D>>()
+      val resultingList = mutableListOf<TSC<E, T, U, D>>()
       hookResults.forEach { (tsc, results) ->
         val (result, hooks) = results.evaluate()
         when (result) {

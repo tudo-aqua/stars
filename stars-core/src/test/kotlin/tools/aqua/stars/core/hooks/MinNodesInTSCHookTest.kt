@@ -24,7 +24,7 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.hooks.defaulthooks.MinNodesInTSCHook
-import tools.aqua.stars.core.metrics.evaluation.SegmentCountMetric
+import tools.aqua.stars.core.metrics.evaluation.TickCountMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
 /** Class that contains tests for the [MinNodesInTSCHook]. */
@@ -36,21 +36,20 @@ class MinNodesInTSCHookTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
-      val segmentCountMetric = setup()
+      val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.OK)
       )
 
-      runEvaluation(segments = segments())
+      runEvaluation(ticks = generateTicks())
 
-      assertEquals(1, segmentCountMetric.getState())
+      assertEquals(1, tickCountMetric.getState())
     }
   }
 
@@ -61,21 +60,20 @@ class MinNodesInTSCHookTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
-      val segmentCountMetric = setup()
+      val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.SKIP)
       )
 
-      runEvaluation(segments = segments())
+      runEvaluation(ticks = generateTicks())
 
-      assertEquals(0, segmentCountMetric.getState())
+      assertEquals(0, tickCountMetric.getState())
     }
   }
 
@@ -86,7 +84,6 @@ class MinNodesInTSCHookTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -98,7 +95,7 @@ class MinNodesInTSCHookTest {
           MinNodesInTSCHook(minNodes = 2, failPolicy = EvaluationHookResult.ABORT)
       )
 
-      assertThrows<EvaluationHookAbort> { runEvaluation(segments = segments()) }
+      assertThrows<EvaluationHookAbort> { runEvaluation(ticks = generateTicks()) }
     }
   }
 
@@ -109,21 +106,20 @@ class MinNodesInTSCHookTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
           any("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
-      val segmentCountMetric = setup()
+      val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT)
       )
 
-      runEvaluation(segments = segments())
+      runEvaluation(ticks = generateTicks())
 
-      assertEquals(1, segmentCountMetric.getState())
+      assertEquals(1, tickCountMetric.getState())
     }
   }
 
@@ -134,21 +130,20 @@ class MinNodesInTSCHookTest {
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
           any("") { any("") {} }
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
-      val segmentCountMetric = setup()
+      val tickCountMetric = setup()
       registerPreTSCEvaluationHooks(
           MinNodesInTSCHook(minNodes = 1, failPolicy = EvaluationHookResult.ABORT)
       )
 
-      runEvaluation(segments = segments())
+      runEvaluation(ticks = generateTicks())
 
-      assertEquals(1, segmentCountMetric.getState())
+      assertEquals(1, tickCountMetric.getState())
     }
   }
 
@@ -159,7 +154,6 @@ class MinNodesInTSCHookTest {
       MinNodesInTSCHook<
           SimpleEntity,
           SimpleTickData,
-          SimpleSegment,
           SimpleTickDataUnit,
           SimpleTickDataDifference,
       >(
@@ -171,45 +165,15 @@ class MinNodesInTSCHookTest {
   private fun TSCEvaluation<
       SimpleEntity,
       SimpleTickData,
-      SimpleSegment,
       SimpleTickDataUnit,
       SimpleTickDataDifference,
   >
       .setup():
-      SegmentCountMetric<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-      > =
-      SegmentCountMetric<
-              SimpleEntity,
-              SimpleTickData,
-              SimpleSegment,
-              SimpleTickDataUnit,
-              SimpleTickDataDifference,
-          >()
+      TickCountMetric<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> =
+      TickCountMetric<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>()
           .also {
             // Clear hooks to test them individually
             clearHooks()
             registerMetricProviders(it)
           }
-
-  private fun segments(): Sequence<SimpleSegment> {
-    val entities = mutableListOf<SimpleEntity>()
-    val tickDataList = mutableMapOf<SimpleTickDataUnit, SimpleTickData>()
-
-    val segments = listOf(SimpleSegment(tickDataList)).asSequence()
-
-    val tick = SimpleTickDataUnit(0)
-
-    val tickData = SimpleTickData(tick, entities)
-
-    tickDataList[tick] = tickData
-
-    entities.add(SimpleEntity(0, tickData))
-
-    return segments
-  }
 }

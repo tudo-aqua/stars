@@ -23,12 +23,31 @@ import kotlin.math.sqrt
 /**
  * Data class for 3D locations.
  *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
+ * @property x The x ordinate of the [Location].
+ * @property y The y ordinate of the [Location].
+ * @property z The z ordinate of the [Location].
  * @see Vector3D
  */
 data class Location(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
+  /** Converts this [Location] to a [Vector3D]. */
+  fun toVector3D(): Vector3D = Vector3D(x, y, z)
+
+  /** Addition operator. */
+  operator fun plus(other: Location): Vector3D =
+      Vector3D(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
+
+  /** Addition operator. */
+  operator fun plus(other: Vector3D): Location =
+      Location(x = this.x + other.x, y = this.y + other.y, z = this.z + other.z)
+
+  /** Subtraction operator. */
+  operator fun minus(other: Location): Vector3D =
+      Vector3D(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
+
+  /** Subtraction operator. */
+  operator fun minus(other: Vector3D): Location =
+      Location(x = this.x - other.x, y = this.y - other.y, z = this.z - other.z)
+
   /** Companion object for [Location]. */
   companion object {
     /**

@@ -17,26 +17,25 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
 /**
- * Class to assist in creating monitors nodes in the DSL.
+ * Class to assist in creating monitors [TSCNode]s in the DSL.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 open class TSCProjectionsBuilder<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> : TSCBuilder<E, T, S, U, D>() {
+> : TSCBuilder<E, T, U, D>() {
 
-  /** Holds all projections of the node. */
+  /** Holds all projections of the [TSCNode]. */
   private val projectionIDs: MutableMap<String, Boolean> = mutableMapOf()
 
   /** Creates the projections map. */
@@ -47,18 +46,16 @@ open class TSCProjectionsBuilder<
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCProjectionsBuilder<E, T, S, U, D>.projection(label: String) {
+  > TSCProjectionsBuilder<E, T, U, D>.projection(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = false
   }
@@ -68,18 +65,16 @@ open class TSCProjectionsBuilder<
    *
    * @param E [EntityType].
    * @param T [TickDataType].
-   * @param S [SegmentType].
    * @param U [TickUnit].
    * @param D [TickDifference].
    * @param label Name of the projection.
    */
   fun <
-      E : EntityType<E, T, S, U, D>,
-      T : TickDataType<E, T, S, U, D>,
-      S : SegmentType<E, T, S, U, D>,
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCProjectionsBuilder<E, T, S, U, D>.projectionRecursive(label: String) {
+  > TSCProjectionsBuilder<E, T, U, D>.projectionRecursive(label: String) {
     check(!projectionIDs.containsKey(label)) { "Projection $label already exists" }
     projectionIDs[label] = true
   }

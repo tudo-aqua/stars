@@ -20,7 +20,7 @@ package tools.aqua.stars.logic.kcmftbl.formulas
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import tools.aqua.stars.logic.kcmftbl.exists
+import tools.aqua.stars.logic.kcmftbl.firstorder.exists
 
 /** This class tests the CMFTBL operator [exists]. */
 class TestExists {

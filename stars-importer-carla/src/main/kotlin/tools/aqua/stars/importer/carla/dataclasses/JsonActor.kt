@@ -20,16 +20,40 @@ package tools.aqua.stars.importer.carla.dataclasses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** Abstract Json actor. */
+/** Abstract JSON actor. */
 @Serializable
 @SerialName("Actor")
 sealed class JsonActor {
   /** Identifier of the actor. */
-  abstract val id: Int
+  @SerialName("id") abstract val id: Int
+
+  /** Type identifier of the actor. */
+  @SerialName("type_id") abstract val typeId: String
 
   /** Current [JsonLocation]. */
-  abstract val location: JsonLocation
+  @SerialName("location") abstract val location: JsonLocation
 
   /** Current [JsonRotation]. */
-  abstract val rotation: JsonRotation
+  @SerialName("rotation") abstract val rotation: JsonRotation
+
+  /** All additional attributes from CARLA. */
+  @SerialName("attributes") abstract val attributes: Map<String, String>
+
+  /** Whether the [JsonActor] is alive in the simulation. */
+  @SerialName("is_alive") abstract val isAlive: Boolean
+
+  /** Whether the [JsonActor] is active in the simulation. */
+  @SerialName("is_active") abstract val isActive: Boolean
+
+  /** Whether the [JsonActor] is dormant in the simulation. */
+  @SerialName("is_dormant") abstract val isDormant: Boolean
+
+  /** All semantic tags from CARLA. */
+  @SerialName("semantic_tags") abstract val semanticTags: List<Int>
+
+  /** The [JsonBoundingBox] of the [JsonActor]. */
+  @SerialName("bounding_box") abstract val boundingBox: JsonBoundingBox?
+
+  /** The [List] of all collision events ([List] of ActorIDs). */
+  @SerialName("collisions") abstract val collisions: List<Int>
 }

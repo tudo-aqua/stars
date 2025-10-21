@@ -22,6 +22,7 @@ package tools.aqua.stars.data.av.dataclasses
  *
  * @property type The [WeatherType] of the weather parameter.
  * @property cloudiness The cloudiness.
+ * @property dustStorm The intensity of a dust storm.
  * @property precipitation The precipitation.
  * @property precipitationDeposits The deposits of precipitation.
  * @property windIntensity The intensity of the wind.
@@ -38,6 +39,7 @@ package tools.aqua.stars.data.av.dataclasses
 data class WeatherParameters(
     val type: WeatherType = WeatherType.Clear,
     val cloudiness: Double = 0.0,
+    val dustStorm: Double = 0.0,
     val precipitation: Double = 0.0,
     val precipitationDeposits: Double = 0.0,
     val windIntensity: Double = 0.0,

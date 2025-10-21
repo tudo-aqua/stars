@@ -17,33 +17,32 @@
 
 package tools.aqua.stars.core.tsc.instance
 
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.types.*
 
 /**
- * Evaluated TSC edge.
+ * Evaluated [TSC] edge.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property destination Destination [TSCInstanceNode].
  * @property tscEdge Associated [TSCEdge].
  */
 data class TSCInstanceEdge<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    val destination: TSCInstanceNode<E, T, S, U, D>,
-    val tscEdge: TSCEdge<E, T, S, U, D>,
+    val destination: TSCInstanceNode<E, T, U, D>,
+    val tscEdge: TSCEdge<E, T, U, D>,
 ) {
 
   override fun equals(other: Any?): Boolean =
-      other is TSCInstanceEdge<*, *, *, *, *> && destination == other.destination
+      other is TSCInstanceEdge<*, *, *, *> && destination == other.destination
 
   override fun hashCode(): Int = destination.hashCode()
 }

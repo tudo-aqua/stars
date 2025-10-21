@@ -23,6 +23,7 @@ import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metrics.evaluation.InvalidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.serialization.extensions.compareTo
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 
 /**
  * Tests the [SerializableResult] sealed class implementation for the
@@ -40,7 +41,6 @@ class SerializableTSCOccurrencesResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -67,7 +67,7 @@ class SerializableTSCOccurrencesResultTest {
 
   /**
    * Tests the correct calculation and return of a [SerializableTSCOccurrenceResult] for an invalid
-   * TSC instance.
+   * [TSCInstance].
    */
   @Test
   fun `Test return of invalid TSC Result`() {
@@ -75,7 +75,6 @@ class SerializableTSCOccurrencesResultTest {
         InvalidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -106,7 +105,6 @@ class SerializableTSCOccurrencesResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -115,7 +113,6 @@ class SerializableTSCOccurrencesResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -142,7 +139,6 @@ class SerializableTSCOccurrencesResultTest {
         InvalidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -151,7 +147,6 @@ class SerializableTSCOccurrencesResultTest {
         InvalidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -173,15 +168,14 @@ class SerializableTSCOccurrencesResultTest {
 
   /**
    * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with the same
-   * content from the same segment source.
+   * content from the same source.
    */
   @Test
-  fun `Test correct comparison of two same valid TSC results from equal segment sources`() {
+  fun `Test correct comparison of two same valid TSC results from equal sources`() {
     val currentMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -190,7 +184,6 @@ class SerializableTSCOccurrencesResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -212,15 +205,14 @@ class SerializableTSCOccurrencesResultTest {
 
   /**
    * Tests the correct comparison of two valid [SerializableTSCOccurrenceResult] with the same
-   * content from different segment sources.
+   * content from different sources.
    */
   @Test
-  fun `Test correct comparison of two same valid TSC results from different segment sources`() {
+  fun `Test correct comparison of two same valid TSC results from different sources`() {
     val currentMetric =
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()
@@ -229,7 +221,6 @@ class SerializableTSCOccurrencesResultTest {
         ValidTSCInstancesPerTSCMetric<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         >()

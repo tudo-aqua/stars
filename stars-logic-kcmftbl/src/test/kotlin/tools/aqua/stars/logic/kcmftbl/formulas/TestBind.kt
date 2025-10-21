@@ -18,8 +18,9 @@
 package tools.aqua.stars.logic.kcmftbl.formulas
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import tools.aqua.stars.logic.kcmftbl.bind
+import tools.aqua.stars.logic.kcmftbl.firstorder.bind
 
 /** This class tests the CMFTBL operator [bind]. */
 class TestBind {
@@ -44,7 +45,7 @@ class TestBind {
     val expected = listOf(2, 4, 6, 8, 10)
     bind(list) { it.add(10) }
 
-    assertTrue(list == expected)
+    assertEquals(list, expected)
   }
 
   /** Test bind on null. */

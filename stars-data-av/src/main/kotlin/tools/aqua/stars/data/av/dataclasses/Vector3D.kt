@@ -22,14 +22,17 @@ import kotlin.math.sqrt
 /**
  * Data class for 3D vectors.
  *
- * @property x The x ordinate.
- * @property y The y ordinate.
- * @property z The z ordinate.
+ * @property x The x ordinate of the [Vector3D].
+ * @property y The y ordinate of the [Vector3D].
+ * @property z The z ordinate of the [Vector3D].
  */
 data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.0) {
   constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)
 
   constructor(location: Location) : this(location.x, location.y, location.z)
+
+  /** Converts [Vector3D] to [Vector2D]. */
+  fun toVector2D(): Vector2D = Vector2D(x, y)
 
   /** Addition operator. */
   operator fun plus(other: Vector3D): Vector3D =
@@ -58,10 +61,10 @@ data class Vector3D(val x: Double = 0.0, val y: Double = 0.0, val z: Double = 0.
           z = this.z / scalar.toDouble(),
       )
 
-  /** Dot product with another vector. */
+  /** Dot product with another [Vector3D]. */
   fun dot(other: Vector3D): Double = x * other.x + y * other.y + z * other.z
 
-  /** Cross (Vector) product with another vector. */
+  /** Cross (Vector) product with another [Vector3D]. */
   fun cross(other: Vector3D): Vector3D =
       Vector3D(
           x = y * other.z - z * other.y,

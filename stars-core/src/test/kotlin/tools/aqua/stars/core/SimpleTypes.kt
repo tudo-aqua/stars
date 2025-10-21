@@ -17,56 +17,40 @@
 
 package tools.aqua.stars.core
 
+import kotlin.sequences.Sequence
+import tools.aqua.stars.core.evaluation.TickSequence
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.core.types.*
 
-/** Simple entity. */
+/**
+ * Simple entity.
+ *
+ * @property id The unique identifier of the entity.
+ */
 class SimpleEntity(
-    override val id: Int = 0,
-    override var tickData: SimpleTickData = SimpleTickData(),
-) :
-    EntityType<
-        SimpleEntity,
-        SimpleTickData,
-        SimpleSegment,
-        SimpleTickDataUnit,
-        SimpleTickDataDifference,
-    >() {
-  override fun toString(): String = "Entity[$id] in Tick[${tickData}]"
-}
+    val id: Int = 0,
+) : EntityType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>() {
+  override fun equals(other: Any?): Boolean =
+      if (other !is SimpleEntity) false else id == (other).id
 
-/** Simple segment. */
-class SimpleSegment(
-    override val ticks: Map<SimpleTickDataUnit, SimpleTickData> = emptyMap(),
-    override val segmentSource: String = "",
-    override val primaryEntityId: Int = 0,
-) :
-    SegmentType<
-        SimpleEntity,
-        SimpleTickData,
-        SimpleSegment,
-        SimpleTickDataUnit,
-        SimpleTickDataDifference,
-    >() {
-  override fun toString(): String =
-      "Segment[(${tickData.firstOrNull()}..${tickData.lastOrNull()})] with identifier: '$segmentSource'"
-
-  override fun getSegmentIdentifier(): String = this.toString()
+  override fun hashCode(): Int = id
 }
 
 /** Simple tick data. */
 class SimpleTickData(
-    override val currentTick: SimpleTickDataUnit = SimpleTickDataUnit(0),
-    override var entities: List<SimpleEntity> = emptyList(),
-    override var segment: SimpleSegment = SimpleSegment(),
+    currentTickUnit: SimpleTickDataUnit = SimpleTickDataUnit(0),
+    entities: Set<SimpleEntity> = LinkedHashSet(),
+    identifier: String = "SimpleTickData",
 ) :
-    TickDataType<
-        SimpleEntity,
-        SimpleTickData,
-        SimpleSegment,
-        SimpleTickDataUnit,
-        SimpleTickDataDifference,
-    >() {
-  override fun toString(): String = "$currentTick"
+    TickDataType<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference>(
+        currentTickUnit,
+        entities,
+        identifier,
+    ) {
+  override val ego: SimpleEntity
+    get() = throw UnsupportedOperationException("Ego not defined for SimpleTickData")
+
+  override fun toString(): String = "$currentTickUnit"
 }
 
 /**
@@ -113,3 +97,15 @@ class SimpleTickDataDifference(val tickDifference: Long) :
   override fun deserialize(str: String): SimpleTickDataDifference =
       SimpleTickDataDifference(str.toLong())
 }
+
+/** Generates a simple tick sequence with one tick. */
+fun generateTicks(): Sequence<TickSequence<SimpleTickData>> =
+    sequenceOf(
+        mutableListOf(
+                SimpleTickData(
+                    SimpleTickDataUnit(0),
+                    setOf(SimpleEntity(0)),
+                )
+            )
+            .asTickSequence()
+    )

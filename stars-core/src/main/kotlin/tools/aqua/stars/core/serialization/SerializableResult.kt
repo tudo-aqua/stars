@@ -45,7 +45,7 @@ sealed class SerializableResult {
    * [SerializableResultComparison].
    *
    * No [SerializableResultComparison] is created when either:
-   * 1. The [SerializableResult]s have different implementation (i.e. have incomparable [value]s.
+   * 1. The [SerializableResult]s have different implementation (i.e. have incomparable [value]s).
    * 2. The [source] and [identifier] do not match.
    *
    * @param otherResult The [SerializableResult] to which this [SerializableResult] is compared

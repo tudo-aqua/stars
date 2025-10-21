@@ -18,36 +18,107 @@
 package tools.aqua.stars.core.types
 
 /**
- * Interface for tick data types.
+ * Class storing data of the current tick. Forms a double-linked list with the previous and next
+ * tick. Global/Static data should be stored directly in this class, dynamic entities are held in
+ * [entities]. The current timestamp is represented by [currentTickUnit].
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property currentTickUnit The current [TickUnit].
+ * @property entities List of [EntityType]s in tick data.
+ * @property identifier Identifier for [TickDataType].
  */
 abstract class TickDataType<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-> {
+>(val currentTickUnit: U, val entities: Set<E> = LinkedHashSet(), val identifier: String) {
+  /** The next [TickDataType] in the sequence. */
+  var nextTick: T? = null
 
-  /** The current tick. */
-  abstract val currentTick: U
-
-  /** List of [EntityType]s in tick data. */
-  abstract var entities: List<E>
-
-  /** Current [SegmentType]. */
-  abstract var segment: S
+  /** The previous [TickDataType] in the sequence. */
+  var previousTick: T? = null
 
   /**
-   * Retrieves [EntityType] from [entities] by given [entityID].
+   * The number of predecessors in the tick sequence.
    *
-   * @param entityID Entity identifier.
-   * @return The [EntityType] with the ID [entityID] if existing. Null otherwise.
+   * This is the number of ticks that precede this tick in the sequence, including the previous
+   * tick. If there is no previous tick, this will return 0.
    */
-  fun getEntityById(entityID: Int): E? = entities.firstOrNull { it.id == entityID }
+  val numPredecessors: Int
+    get() = previousTick?.numPredecessors?.plus(1) ?: 0
+
+  /**
+   * The number of successors in the tick sequence.
+   *
+   * This is the number of ticks that follow this tick in the sequence, including the next tick. If
+   * there is no next tick, this will return 0.
+   */
+  val numSuccessors: Int
+    get() = nextTick?.numSuccessors?.plus(1) ?: 0
+
+  /**
+   * The total length of the tick sequence.
+   *
+   * This is the total number of ticks in the sequence, including this tick.
+   */
+  val sequenceLength: Int
+    get() = numPredecessors + numSuccessors + 1
+
+  /** The ego [EntityType]. */
+  abstract val ego: E
+
+  init {
+    entities.forEach {
+      @Suppress("UNCHECKED_CAST")
+      it.currentTick = this as T
+    }
+  }
+
+  /**
+   * Returns a forward iterator over the ticks in the sequence.
+   *
+   * @return A [TickDataIterator] that iterates over the ticks in the sequence in forward order.
+   */
+  @Suppress("UNCHECKED_CAST")
+  fun forward(): TickDataIterator<T> = TickDataIterator(this as T) { it.nextTick }
+
+  /**
+   * Returns a backward iterator over the ticks in the sequence.
+   *
+   * @return A [TickDataIterator] that iterates over the ticks in the sequence in backward order.
+   */
+  @Suppress("UNCHECKED_CAST")
+  fun backward(): TickDataIterator<T> = TickDataIterator(this as T) { it.previousTick }
+
+  override fun toString(): String =
+      "Tick ($identifier) @$currentTickUnit with ${entities.size} entities."
+
+  /**
+   * Iterator implementation for [TickDataType]. Instanced may be retrieved using [forward] or
+   * [backward] methods.
+   *
+   * @param T [TickDataType].
+   * @param tick The initial tick to start the iteration from.
+   * @param iter The function to get the next tick from the current tick.
+   * @return An [Iterable] that allows iteration over the ticks in the sequence.
+   */
+  class TickDataIterator<T> internal constructor(private val tick: T, private val iter: (T) -> T?) :
+      Iterable<T> {
+    override fun iterator(): Iterator<T> =
+        object : Iterator<T> {
+          private var current: T? = tick
+
+          override fun hasNext(): Boolean = current != null
+
+          override fun next(): T {
+            val nextTick = current ?: throw NoSuchElementException("No more ticks in the sequence")
+            current = iter(nextTick)
+            return nextTick
+          }
+        }
+  }
 }

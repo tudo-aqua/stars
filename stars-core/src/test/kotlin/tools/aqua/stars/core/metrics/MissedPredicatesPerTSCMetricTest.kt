@@ -20,35 +20,35 @@ package tools.aqua.stars.core.metrics
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
-import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.evaluation.TSCEvaluation
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metrics.postEvaluation.MissedPredicatesPerTSCMetric
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.tsc
+
+typealias E = SimpleEntity
+
+typealias T = SimpleTickData
+
+typealias U = SimpleTickDataUnit
+
+typealias D = SimpleTickDataDifference
 
 /** Tests the [MissedPredicatesPerTSCMetric] implementation. */
 class MissedPredicatesPerTSCMetricTest {
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a TSC in which
-   * no predicate holds.
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a [TSC] in
+   * which no predicate holds.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for one missing predicate`() {
-    val simpleTsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root") { leaf("leaf1") { condition { false } } }
-        }
-    val simpleSegment = SimpleSegment()
+    val simpleTsc = tsc<E, T, U, D> { all("root") { leaf("leaf1") { condition { false } } } }
+    val simpleTick = SimpleTickData()
     val evaluation =
         TSCEvaluation(
             tscList = listOf(simpleTsc),
@@ -58,16 +58,9 @@ class MissedPredicatesPerTSCMetricTest {
             compareToPreviousRun = false,
         )
     evaluation.clearHooks()
-    val validTSCInstancesPerTSCMetric =
-        ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >()
+    val validTSCInstancesPerTSCMetric = ValidTSCInstancesPerTSCMetric<E, T, U, D>()
     evaluation.registerMetricProviders(validTSCInstancesPerTSCMetric)
-    evaluation.runEvaluation(sequenceOf(simpleSegment))
+    evaluation.runEvaluation(sequenceOf(listOf(simpleTick).asTickSequence()))
 
     val missedPredicatesPerTSCMetric = MissedPredicatesPerTSCMetric(validTSCInstancesPerTSCMetric)
 
@@ -77,21 +70,12 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a TSC in which
-   * all predicates hold.
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for a [TSC] in
+   * which all predicates hold.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for no missing predicates`() {
-    val simpleTsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root") { leaf("leaf1") { condition { true } } }
-        }
+    val simpleTsc = tsc<E, T, U, D> { all("root") { leaf("leaf1") { condition { true } } } }
     val evaluation =
         TSCEvaluation(
             tscList = listOf(simpleTsc),
@@ -101,17 +85,10 @@ class MissedPredicatesPerTSCMetricTest {
             compareToPreviousRun = false,
         )
     evaluation.clearHooks()
-    val validTSCInstancesPerTSCMetric =
-        ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >()
+    val validTSCInstancesPerTSCMetric = ValidTSCInstancesPerTSCMetric<E, T, U, D>()
     evaluation.registerMetricProviders(validTSCInstancesPerTSCMetric)
-    val simpleSegment = SimpleSegment()
-    evaluation.runEvaluation(sequenceOf(simpleSegment))
+    val simpleTick = SimpleTickData()
+    evaluation.runEvaluation(sequenceOf(listOf(simpleTick).asTickSequence()))
 
     val missedPredicatesPerTSCMetric = MissedPredicatesPerTSCMetric(validTSCInstancesPerTSCMetric)
 
@@ -120,32 +97,14 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two TSCs in
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two [TSC]s in
    * which no predicates hold.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for one missing predicate for two TSCs`() {
-    val simpleTsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root1") { leaf("leaf1") { condition { false } } }
-        }
-    val simpleTsc2 =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root2") { leaf("leaf2") { condition { false } } }
-        }
-    val simpleSegment = SimpleSegment()
+    val simpleTsc = tsc<E, T, U, D> { all("root1") { leaf("leaf1") { condition { false } } } }
+    val simpleTsc2 = tsc<E, T, U, D> { all("root2") { leaf("leaf2") { condition { false } } } }
+    val simpleTick = SimpleTickData()
     val evaluation =
         TSCEvaluation(
             tscList = listOf(simpleTsc, simpleTsc2),
@@ -155,16 +114,9 @@ class MissedPredicatesPerTSCMetricTest {
             compareToPreviousRun = false,
         )
     evaluation.clearHooks()
-    val validTSCInstancesPerTSCMetric =
-        ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >()
+    val validTSCInstancesPerTSCMetric = ValidTSCInstancesPerTSCMetric<E, T, U, D>()
     evaluation.registerMetricProviders(validTSCInstancesPerTSCMetric)
-    evaluation.runEvaluation(sequenceOf(simpleSegment))
+    evaluation.runEvaluation(sequenceOf(listOf(simpleTick).asTickSequence()))
 
     val missedPredicatesPerTSCMetric = MissedPredicatesPerTSCMetric(validTSCInstancesPerTSCMetric)
 
@@ -180,32 +132,14 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two TSCs in
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two [TSC]s in
    * which all predicates hold.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for no missing predicates for two TSCs`() {
-    val simpleTsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root1") { leaf("leaf1") { condition { true } } }
-        }
-    val simpleTsc2 =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root2") { leaf("leaf2") { condition { true } } }
-        }
-    val simpleSegment = SimpleSegment()
+    val simpleTsc = tsc<E, T, U, D> { all("root1") { leaf("leaf1") { condition { true } } } }
+    val simpleTsc2 = tsc<E, T, U, D> { all("root2") { leaf("leaf2") { condition { true } } } }
+    val simpleTick = SimpleTickData()
     val evaluation =
         TSCEvaluation(
             tscList = listOf(simpleTsc, simpleTsc2),
@@ -215,16 +149,9 @@ class MissedPredicatesPerTSCMetricTest {
             compareToPreviousRun = false,
         )
     evaluation.clearHooks()
-    val validTSCInstancesPerTSCMetric =
-        ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >()
+    val validTSCInstancesPerTSCMetric = ValidTSCInstancesPerTSCMetric<E, T, U, D>()
     evaluation.registerMetricProviders(validTSCInstancesPerTSCMetric)
-    evaluation.runEvaluation(sequenceOf(simpleSegment))
+    evaluation.runEvaluation(sequenceOf(listOf(simpleTick).asTickSequence()))
 
     val missedPredicatesPerTSCMetric = MissedPredicatesPerTSCMetric(validTSCInstancesPerTSCMetric)
 
@@ -238,32 +165,14 @@ class MissedPredicatesPerTSCMetricTest {
   }
 
   /**
-   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two TSCs in
+   * Tests the correct calculation and return of a [MissedPredicatesPerTSCMetric] for two [TSC]s in
    * which one predicate holds and the other does not.
    */
   @Test
   fun `Test MissedPredicatesPerTSCMetric for one missing predicate for one of two TSCs`() {
-    val simpleTsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root1") { leaf("leaf1") { condition { false } } }
-        }
-    val simpleTsc2 =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root2") { leaf("leaf2") { condition { true } } }
-        }
-    val simpleSegment = SimpleSegment()
+    val simpleTsc = tsc<E, T, U, D> { all("root1") { leaf("leaf1") { condition { false } } } }
+    val simpleTsc2 = tsc<E, T, U, D> { all("root2") { leaf("leaf2") { condition { true } } } }
+    val simpleTick = SimpleTickData()
     val evaluation =
         TSCEvaluation(
             tscList = listOf(simpleTsc, simpleTsc2),
@@ -273,16 +182,9 @@ class MissedPredicatesPerTSCMetricTest {
             compareToPreviousRun = false,
         )
     evaluation.clearHooks()
-    val validTSCInstancesPerTSCMetric =
-        ValidTSCInstancesPerTSCMetric<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        >()
+    val validTSCInstancesPerTSCMetric = ValidTSCInstancesPerTSCMetric<E, T, U, D>()
     evaluation.registerMetricProviders(validTSCInstancesPerTSCMetric)
-    evaluation.runEvaluation(sequenceOf(simpleSegment))
+    evaluation.runEvaluation(sequenceOf(listOf(simpleTick).asTickSequence()))
 
     val missedPredicatesPerTSCMetric = MissedPredicatesPerTSCMetric(validTSCInstancesPerTSCMetric)
 

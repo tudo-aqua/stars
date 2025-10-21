@@ -19,7 +19,6 @@ package tools.aqua.stars.importer.carla.dataclasses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import tools.aqua.stars.data.av.dataclasses.Location
 
 /**
  * Json object for 3D locations.
@@ -30,13 +29,7 @@ import tools.aqua.stars.data.av.dataclasses.Location
  */
 @Serializable
 data class JsonLocation(
-    @SerialName("x") val x: Double = 0.0,
-    @SerialName("y") val y: Double = 0.0,
-    @SerialName("z") val z: Double = 0.0,
-) {
-
-  /** Converts [JsonLocation] to [Location]. */
-  fun toLocation(): Location = Location(x, y, z)
-
-  override fun toString(): String = "($x,$y,$z)"
-}
+    @SerialName("x") val x: Double,
+    @SerialName("y") val y: Double,
+    @SerialName("z") val z: Double,
+)

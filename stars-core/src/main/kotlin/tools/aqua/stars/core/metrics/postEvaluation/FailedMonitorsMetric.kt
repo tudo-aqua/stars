@@ -43,7 +43,6 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  *
  * @param E [EntityType].
  * @param T [TickDataType].
- * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
@@ -53,20 +52,18 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  */
 @Suppress("unused")
 class FailedMonitorsMetric<
-    E : EntityType<E, T, S, U, D>,
-    T : TickDataType<E, T, S, U, D>,
-    S : SegmentType<E, T, S, U, D>,
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
+    override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, U, D>,
     override val loggerIdentifier: String = "failed-monitors",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : PostEvaluationMetricProvider<E, T, S, U, D>, SerializableMetric, Loggable {
+) : PostEvaluationMetricProvider<E, T, U, D>, SerializableMetric, Loggable {
 
   /** Holds all failed monitors after calling [postEvaluate]. */
-  val failedMonitors:
-      MutableMap<TSC<E, T, S, U, D>, List<TSCFailedMonitorInstance<E, T, S, U, D>>> =
+  val failedMonitors: MutableMap<TSC<E, T, U, D>, List<TSCFailedMonitorInstance<E, T, U, D>>> =
       mutableMapOf()
 
   /**
@@ -79,7 +76,7 @@ class FailedMonitorsMetric<
         dependsOn.getState().mapValues { (_, validInstancesMap) ->
           validInstancesMap.flatMap { (_, validInstances) ->
             validInstances.flatMap { validInstance ->
-              validInstance.rootNode.validateMonitors(validInstance.sourceSegmentIdentifier)
+              validInstance.rootNode.validateMonitors(validInstance.sourceIdentifier)
             }
           }
         }
@@ -98,9 +95,7 @@ class FailedMonitorsMetric<
 
       logFine("Failed monitors for tsc '${tsc.identifier}':")
       failedMonitors.forEach { failedMonitor ->
-        logFine(
-            "Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.segmentIdentifier}"
-        )
+        logFine("Monitors ${failedMonitor.monitorLabel} failed in: ${failedMonitor.identifier}")
         logFine("Monitor failed at: ${failedMonitor.nodeLabel}")
         logFiner("Failed in TSC instance:\n${failedMonitor.tscInstance}")
       }
@@ -113,7 +108,7 @@ class FailedMonitorsMetric<
         val resultList =
             failedMonitorInstances.map {
               SerializableFailedMonitorInstance(
-                  segmentIdentifier = it.segmentIdentifier,
+                  identifier = it.identifier,
                   tscInstance = SerializableTSCNode(it.tscInstance),
                   monitorLabel = it.monitorLabel,
                   nodeLabel = it.nodeLabel,
