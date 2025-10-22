@@ -17,8 +17,8 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.types.*
+import java.math.BigInteger
 
 /**
  * Leaf [TSC] node.
@@ -50,4 +50,6 @@ open class TSCLeafNode<
         projectionsMap = projectionsMap,
         valueFunction = valueFunction,
         bounds = 0 to 0,
-    )
+    ) {
+  override fun countAllInstances(): BigInteger = BigInteger.ONE
+}

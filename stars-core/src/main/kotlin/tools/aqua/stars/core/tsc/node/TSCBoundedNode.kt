@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.tsc.node
 
+import java.math.BigInteger
+import tools.aqua.stars.core.binomial
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
@@ -59,6 +61,44 @@ open class TSCBoundedNode<
         projectionsMap = projectionsMap,
         valueFunction = valueFunction,
     ) {
+
+  init {
+    check(bounds.first >= 0) {
+      "Lower bound (${bounds.first}) of TSC node $label must be non-negative."
+    }
+    check(bounds.second >= bounds.first) {
+      "Upper bound (${bounds.first}) of TSC node $label must be >= lower bound (${bounds.second})."
+    }
+    check(bounds.second <= edges.size) {
+      "Upper bound (${bounds.second}) of TSC node $label must be <= number of edges (${edges.size})."
+    }
+  }
+
+  override fun countAllInstances(): BigInteger {
+    val edgeCount = edges.map { it.destination.countAllInstances() }
+
+    // Shortcut calculation if all edges lead to leaves
+    if (edgeCount.all { it == BigInteger.ONE }) {
+      // Shortcut if bounds are unbounded
+      return if (bounds == 0 to edges.size) BigInteger.valueOf(2).pow(edges.size)
+      else (bounds.first..bounds.second).sumOf { BigInteger.valueOf(binomial(edges.size, it)) }
+    }
+
+    // At least one edge leads to non-leaf, do full calculation
+    val boundedSuccessors =
+      edgeCount
+        .powerlist()
+        .filter { subset -> subset.size in bounds.first..bounds.second }
+        .toList()
+
+    return boundedSuccessors.sumOf { subset ->
+      when (subset.size) {
+        0 -> BigInteger.ONE
+        1 -> subset.first()
+        else -> subset.reduce { acc, possibleCombinations -> acc * possibleCombinations }
+      }
+    }
+  }
 
   override fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, U, D>>>>()

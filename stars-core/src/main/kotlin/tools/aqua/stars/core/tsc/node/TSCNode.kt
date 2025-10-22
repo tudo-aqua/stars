@@ -17,12 +17,12 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
+import java.math.BigInteger
 
 /**
  * Abstract baseclass for [TSC] nodes.
@@ -57,6 +57,9 @@ sealed class TSCNode<
   /** Map of monitor labels to their predicates. */
   val monitors: Map<String, (T) -> Boolean>
     get() = monitorsMap.orEmpty()
+
+  /** Counts all [TSC] instances. */
+  abstract fun countAllInstances(): BigInteger
 
   /** Generates all [TSC] instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
