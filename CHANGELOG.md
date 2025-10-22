@@ -41,6 +41,7 @@ All notable changes to this project will be documented in this file.
 
 - Completely remove `Segment`s. Evaluation is now purely based on ticks. `TickSequence` provides necessary functionality to pass data to the `TSCEvaluation`.
 - Remove `Block` from `DataAV`.
+- Remove `buildProjections` and `projections` node from tsc DSL.
 
 ## [1.1] - To be released
 

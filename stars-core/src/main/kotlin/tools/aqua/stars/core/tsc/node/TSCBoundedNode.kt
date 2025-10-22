@@ -35,7 +35,6 @@ import tools.aqua.stars.core.utils.powerlist
  * @param label Label of the [TSCBoundedNode].
  * @param edges [TSCEdge]s of the [TSCBoundedNode].
  * @param monitorsMap Map of monitor labels to their predicates of the [TSCBoundedNode].
- * @param projectionsMap Map of projections of the [TSCBoundedNode].
  * @param valueFunction Value function predicate of the [TSCBoundedNode].
  * @property bounds [Pair] of bounds of the [TSCBoundedNode].
  */
@@ -48,7 +47,6 @@ open class TSCBoundedNode<
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
     monitorsMap: Map<String, (T) -> Boolean>?,
-    projectionsMap: Map<String, Boolean>?,
     valueFunction: (T) -> Any = {},
     val bounds: Pair<Int, Int>,
 ) :
@@ -56,7 +54,6 @@ open class TSCBoundedNode<
         label = label,
         edges = edges,
         monitorsMap = monitorsMap,
-        projectionsMap = projectionsMap,
         valueFunction = valueFunction,
     ) {
 

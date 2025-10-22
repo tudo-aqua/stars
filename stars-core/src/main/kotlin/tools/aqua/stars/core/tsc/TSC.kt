@@ -58,15 +58,6 @@ class TSC<
   fun evaluate(tick: T): TSCInstance<E, T, U, D> =
       TSCInstance(rootNode.evaluate(tick), tick.toString())
 
-  /**
-   * Builds all possible [TSC]s ignoring those in [projectionIgnoreList].
-   *
-   * @param projectionIgnoreList Projections to ignore.
-   * @return The [List] of all [TSC]s for this [TSC].
-   */
-  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, U, D>> =
-      rootNode.buildProjections(projectionIgnoreList)
-
   override fun toString(): String = this.rootNode.toString()
 
   override fun iterator(): Iterator<TSCNode<E, T, U, D>> = TSCIterator(rootNode)

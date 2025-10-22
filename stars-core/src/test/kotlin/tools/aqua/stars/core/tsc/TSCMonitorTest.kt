@@ -40,8 +40,6 @@ class TSCMonitorTest {
             SimpleTickDataDifference,
         > {
           all("root") {
-            projections { projectionRecursive("all") }
-
             monitors {
               monitor("RootMonitorFalse") { _ -> false } // Always trigger
               monitor("RootMonitorTrue") { _ -> true } // Never trigger
@@ -58,11 +56,10 @@ class TSCMonitorTest {
         >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
-        .apply {
-          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = generateTicks())
-        }
+    TSCEvaluation(tsc = tsc, writePlots = false, writePlotDataCSV = false).apply {
+      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+      runEvaluation(ticks = generateTicks())
+    }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(1, failedMonitors.size)
@@ -81,8 +78,6 @@ class TSCMonitorTest {
             SimpleTickDataDifference,
         > {
           all("root") {
-            projections { projectionRecursive("all") }
-
             leaf("leaf") {
               monitors {
                 monitor("LeafMonitorFalse") { _ -> false } // Always trigger
@@ -101,11 +96,10 @@ class TSCMonitorTest {
         >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
-        .apply {
-          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = generateTicks())
-        }
+    TSCEvaluation(tsc = tsc, writePlots = false, writePlotDataCSV = false).apply {
+      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+      runEvaluation(ticks = generateTicks())
+    }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(1, failedMonitors.size)
@@ -124,8 +118,6 @@ class TSCMonitorTest {
             SimpleTickDataDifference,
         > {
           all("root") {
-            projections { projectionRecursive("all") }
-
             monitors {
               monitor("RootMonitorFalse") { _ -> false } // Always trigger
               monitor("RootMonitorTrue") { _ -> true } // Never trigger
@@ -149,11 +141,10 @@ class TSCMonitorTest {
         >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
-        .apply {
-          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = generateTicks())
-        }
+    TSCEvaluation(tsc = tsc, writePlots = false, writePlotDataCSV = false).apply {
+      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+      runEvaluation(ticks = generateTicks())
+    }
 
     val failedMonitors = failedMonitorsMetric.failedMonitors.values.first()
     assertEquals(2, failedMonitors.size)
@@ -179,8 +170,6 @@ class TSCMonitorTest {
             SimpleTickDataDifference,
         > {
           all("root") {
-            projections { projectionRecursive("all") }
-
             monitors {
               monitor("MonitorFalse") { _ -> false } // Always trigger
               monitor("MonitorTrue") { _ -> true } // Never trigger
@@ -204,11 +193,10 @@ class TSCMonitorTest {
         >()
     val failedMonitorsMetric = FailedMonitorsMetric(validInstancesMetric)
 
-    TSCEvaluation(tscList = tsc.buildProjections(), writePlots = false, writePlotDataCSV = false)
-        .apply {
-          registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
-          runEvaluation(ticks = generateTicks())
-        }
+    TSCEvaluation(tsc = tsc, writePlots = false, writePlotDataCSV = false).apply {
+      registerMetricProviders(validInstancesMetric, failedMonitorsMetric)
+      runEvaluation(ticks = generateTicks())
+    }
 
     assertTrue { failedMonitorsMetric.failedMonitors.any() }
 
