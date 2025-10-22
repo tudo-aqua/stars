@@ -39,7 +39,7 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
@@ -64,7 +64,7 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
@@ -89,7 +89,7 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       setup()
@@ -112,7 +112,7 @@ class MinTicksPerSegmentHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val segmentCountMetric = setup()
