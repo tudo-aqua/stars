@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core
 
+/** Computes the binomial coefficient "n choose k". */
 fun binomial(n: Int, k: Int): Long {
   var k = k
   if (2 * k > n) k = n - k
