@@ -5,9 +5,11 @@ on:
     types: [opened, synchronize, ready_for_review]
     branches:
       - main
+      - v1-dev
   push:
     branches:
         - main
+        - v1-dev
   workflow_dispatch:
 
 env:
