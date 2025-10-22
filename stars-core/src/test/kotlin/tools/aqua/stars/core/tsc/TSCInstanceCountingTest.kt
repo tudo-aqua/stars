@@ -26,13 +26,13 @@ import tools.aqua.stars.core.tsc.builder.tsc
 /** Tests for counting of possible tsc instances. */
 class TSCInstanceCountingTest {
 
+  /** Test empty tsc. */
   @Test
   fun `Test empty tsc`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -42,13 +42,13 @@ class TSCInstanceCountingTest {
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
 
+  /** Test simple tsc with only leaves and all node. */
   @Test
   fun `Test simple tsc with only leaves and all node`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -62,13 +62,16 @@ class TSCInstanceCountingTest {
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
 
+  /**
+   * Test simple tsc with only leaves and optional nodeTest simple tsc with only leaves and optional
+   * node.
+   */
   @Test
   fun `Test simple tsc with only leaves and optional node`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -86,13 +89,13 @@ class TSCInstanceCountingTest {
     assertEquals(BigInteger.valueOf(8), tsc.instanceCount)
   }
 
+  /** Test simple tsc with only leaves and bounded node. */
   @Test
   fun `Test simple tsc with only leaves and bounded node`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -108,13 +111,13 @@ class TSCInstanceCountingTest {
     assertEquals(BigInteger.valueOf(6), tsc.instanceCount)
   }
 
+  /** Test tsc with nested all nodes. */
   @Test
   fun `Test tsc with nested all nodes`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
@@ -124,13 +127,13 @@ class TSCInstanceCountingTest {
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
 
+  /** Test complex tsc. */
   @Test
   fun `Test complex tsc`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
-            SimpleSegment,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {

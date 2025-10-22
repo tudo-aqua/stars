@@ -17,8 +17,8 @@
 
 package tools.aqua.stars.core.tsc.node
 
-import tools.aqua.stars.core.types.*
 import java.math.BigInteger
+import tools.aqua.stars.core.types.*
 
 /**
  * Leaf [TSC] node.

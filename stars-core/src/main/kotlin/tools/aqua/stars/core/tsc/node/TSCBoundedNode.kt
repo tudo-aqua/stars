@@ -86,10 +86,10 @@ open class TSCBoundedNode<
 
     // At least one edge leads to non-leaf, do full calculation
     val boundedSuccessors =
-      edgeCount
-        .powerlist()
-        .filter { subset -> subset.size in bounds.first..bounds.second }
-        .toList()
+        edgeCount
+            .powerlist()
+            .filter { subset -> subset.size in bounds.first..bounds.second }
+            .toList()
 
     return boundedSuccessors.sumOf { subset ->
       when (subset.size) {
