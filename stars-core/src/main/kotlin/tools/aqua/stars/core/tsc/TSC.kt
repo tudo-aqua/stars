@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc
 
+import java.math.BigInteger
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
@@ -49,8 +50,27 @@ class TSC<
     }
   }
 
-  /** Holds the [List] of all possible [TSCInstanceNode]s. */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, S, U, D>> = rootNode.generateAllInstances()
+  /** Buffer for the number of possible [TSCInstance]s. */
+  private var instanceCountBuffer: BigInteger? = null
+
+  /**
+   * Returns the number of possible [TSCInstance]s. The calculation is performed on-demand upon
+   * first access and is the buffered.
+   */
+  val instanceCount: BigInteger
+    get() = instanceCountBuffer ?: rootNode.countAllInstances().also { instanceCountBuffer = it }
+
+  /** Buffer for the possible [TSCInstanceNode]s. */
+  private var possibleTSCInstancesBuffer: List<TSCInstanceNode<E, T, S, U, D>>? = null
+
+  /**
+   * Returns the [List] of all possible [TSCInstanceNode]s. The generation is performed on-demand
+   * upon first access and is then buffered.
+   */
+  val possibleTSCInstances: List<TSCInstanceNode<E, T, S, U, D>>
+    get() =
+        possibleTSCInstancesBuffer
+            ?: rootNode.generateAllInstances().also { possibleTSCInstancesBuffer = it }
 
   /**
    * Evaluates [PredicateContext] on [TSC].
