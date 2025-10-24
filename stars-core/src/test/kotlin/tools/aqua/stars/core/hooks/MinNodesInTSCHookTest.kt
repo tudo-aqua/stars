@@ -39,7 +39,7 @@ class MinNodesInTSCHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
@@ -63,7 +63,7 @@ class MinNodesInTSCHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
@@ -87,7 +87,7 @@ class MinNodesInTSCHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       setup()
@@ -109,7 +109,7 @@ class MinNodesInTSCHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") {}
+          all("") {}
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()
@@ -133,7 +133,7 @@ class MinNodesInTSCHookTest {
             SimpleTickDataUnit,
             SimpleTickDataDifference,
         > {
-          any("") { any("") {} }
+          all("") { all("") {} }
         }
     TSCEvaluation(tscList = listOf(tsc), writePlots = false, writePlotDataCSV = false).apply {
       val tickCountMetric = setup()

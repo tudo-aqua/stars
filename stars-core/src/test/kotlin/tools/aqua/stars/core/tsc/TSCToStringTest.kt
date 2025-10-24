@@ -49,7 +49,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           all("all")
         }
     assertEquals("all(0..0)", tsc.toString())
@@ -64,10 +64,10 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
-          any("any")
+        > {
+          any("any") { leaf("leaf") }
         }
-    assertEquals("any(1..0)", tsc.toString())
+    assertEquals("any(1..1)\n-T-> leaf", tsc.toString())
   }
 
   /**
@@ -81,28 +81,32 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
-          exclusive("exclusive")
+        > {
+          exclusive("exclusive") { leaf("leaf") }
         }
-    assertEquals("exclusive(1..1)", tsc.toString())
+    assertEquals("exclusive(1..1)\n-T-> leaf", tsc.toString())
   }
 
   /**
-   * Given a [TSC] with only one single 'exclusive' bounded node, "bounded(1..1)" should be
+   * Given a [TSC] with only one single 'exclusive' bounded node, "bounded(2..3)" should be
    * returned.
    */
   @Test
-  fun `Test TSC with single bounded node with bounds (2,3) and no children`() {
+  fun `Test TSC with single bounded node with bounds (2,3)`() {
     val tsc =
         tsc<
             SimpleEntity,
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
-          bounded("bounded", 2 to 3)
+        > {
+          bounded("bounded", 2 to 3) {
+            leaf("leaf 1")
+            leaf("leaf 2")
+            leaf("leaf 3")
+          }
         }
-    assertEquals("bounded(2..3)", tsc.toString())
+    assertEquals("bounded(2..3)\n-T-> leaf 1\n-T-> leaf 2\n-T-> leaf 3", tsc.toString())
   }
 
   /** Given a [TSC] with only one single 'leaf' root node, "leaf" should be returned. */
@@ -114,7 +118,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           leaf("leaf")
         }
     assertEquals("leaf", tsc.toString())
@@ -131,7 +135,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           optional("optional")
         }
     assertEquals("optional(0..0)", tsc.toString())
@@ -152,7 +156,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           all("all") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -174,7 +178,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           exclusive("exclusive") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -193,7 +197,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           any("any") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -215,7 +219,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           bounded("bounded", 2 to 3) {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -237,7 +241,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           optional("optional") {
             leaf("leaf_1")
             leaf("leaf_2")
@@ -262,7 +266,7 @@ class TSCToStringTest {
             SimpleTickData,
             SimpleTickDataUnit,
             SimpleTickDataDifference,
-        >() {
+        > {
           all("all") {
             any("any") {
               leaf("leaf_1")
