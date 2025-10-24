@@ -50,7 +50,6 @@ open class TSCLeafBuilder<
               TSCLeafNode(
                   label = label,
                   monitorsMap = monitors,
-                  projectionsMap = projections,
                   valueFunction = valueFunction,
               ),
       )
@@ -90,26 +89,6 @@ open class TSCLeafBuilder<
   > TSCLeafBuilder<E, T, U, D>.valueFunction(valueFunction: (T) -> Any) {
     this.valueFunction = valueFunction
   }
-
-  /**
-   * DSL function for the projections block.
-   *
-   * @param E [EntityType].
-   * @param T [TickDataType].
-   * @param U [TickUnit].
-   * @param D [TickDifference].
-   * @param init The init function.
-   * @return The [TSCEdge] that is connected to a 'projections' node.
-   */
-  fun <
-      E : EntityType<E, T, U, D>,
-      T : TickDataType<E, T, U, D>,
-      U : TickUnit<U, D>,
-      D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, U, D>.projections(
-      init: TSCProjectionsBuilder<E, T, U, D>.() -> Unit = {}
-  ): TSCProjectionsBuilder<E, T, U, D> =
-      TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
    * DSL function for a [TSCEdge] with MonitorsEdge in the [TSCLeafNode] scope.

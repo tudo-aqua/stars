@@ -58,7 +58,6 @@ open class TSCBoundedBuilder<
                   label = label,
                   edges = edges.toList(),
                   monitorsMap = monitors,
-                  projectionsMap = projections,
                   bounds = bounds,
               ),
       )
@@ -98,26 +97,6 @@ open class TSCBoundedBuilder<
   > TSCBoundedBuilder<E, T, U, D>.valueFunction(valueFunction: (T) -> Any) {
     this.valueFunction = valueFunction
   }
-
-  /**
-   * DSL function for the projections block.
-   *
-   * @param E [EntityType].
-   * @param T [TickDataType].
-   * @param U [TickUnit].
-   * @param D [TickDifference].
-   * @param init The init function.
-   * @return The [TSCEdge] that is connected to a projections' node.
-   */
-  fun <
-      E : EntityType<E, T, U, D>,
-      T : TickDataType<E, T, U, D>,
-      U : TickUnit<U, D>,
-      D : TickDifference<D>,
-  > TSCBoundedBuilder<E, T, U, D>.projections(
-      init: TSCProjectionsBuilder<E, T, U, D>.() -> Unit = {}
-  ): TSCProjectionsBuilder<E, T, U, D> =
-      TSCProjectionsBuilder<E, T, U, D>().apply { init() }.also { this.projections = it.build() }
 
   /**
    * DSL function for the monitors block.

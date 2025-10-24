@@ -29,7 +29,6 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @param label Label of the [TSCLeafNode].
  * @param monitorsMap Map of monitor labels to their predicates of the [TSCLeafNode].
- * @param projectionsMap Map of projections of the [TSCLeafNode].
  * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
 open class TSCLeafNode<
@@ -40,14 +39,12 @@ open class TSCLeafNode<
 >(
     label: String,
     monitorsMap: Map<String, (T) -> Boolean>?,
-    projectionsMap: Map<String, Boolean>?,
     valueFunction: (T) -> Any = {},
 ) :
     TSCBoundedNode<E, T, U, D>(
         label = label,
         edges = emptyList(),
         monitorsMap = monitorsMap,
-        projectionsMap = projectionsMap,
         valueFunction = valueFunction,
         bounds = 0 to 0,
     ) {

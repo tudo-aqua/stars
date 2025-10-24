@@ -43,13 +43,6 @@ sealed class TSCBuilder<
   /** Holds all monitors of the [TSCNode]. */
   protected val monitorMap: MutableMap<String, (T) -> Boolean> = mutableMapOf()
 
-  /** Holds the optional projections. */
-  protected var projections: Map<String, Boolean>? = null
-    set(value) {
-      check(projections == null) { "Projections node already set." }
-      field = value
-    }
-
   /** Holds the optional monitors [TSCEdge]. */
   protected var monitors: Map<String, (T) -> Boolean>? = null
     set(value) {

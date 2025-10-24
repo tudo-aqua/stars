@@ -36,8 +36,6 @@ class TSCDuplicatedLabelsTest {
           SimpleTickDataDifference,
       > {
         all("root") {
-          projections { projection("all") }
-
           any("label")
 
           optional("label")
@@ -50,57 +48,12 @@ class TSCDuplicatedLabelsTest {
   @Test
   fun `Test duplicated node labels on different levels throwing no exception`() {
     tsc<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTickDataDifference> {
-      all("root") {
-        projections { projection("all") }
-
-        any("label") { optional("label") }
-      }
+      all("root") { any("label") { optional("label") } }
     }
   }
 
   // endregion
-  // region projection labels
-  /** Test duplicated projection labels on same level throwing exception. */
-  @Test
-  fun `Test duplicated projection labels on same level throwing exception`() {
-    assertFailsWith<IllegalStateException> {
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-      > {
-        all("root") {
-          projections {
-            projection("P1")
-            projection("P1")
-          }
-        }
-      }
-    }
-  }
 
-  /** Test duplicated projection labels on different levels throwing no exception. */
-  @Test
-  fun `Test duplicated projection labels on same level throwing exception 2`() {
-    assertFailsWith<IllegalStateException> {
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-      > {
-        all("root") {
-          projections {
-            projection("P1")
-            projectionRecursive("P1")
-          }
-        }
-      }
-    }
-  }
-
-  // endregion
   // region monitor labels
   /** Test duplicated monitor labels on same level throwing exception. */
   @Test

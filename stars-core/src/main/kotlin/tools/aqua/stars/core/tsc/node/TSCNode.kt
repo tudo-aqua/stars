@@ -35,7 +35,6 @@ import tools.aqua.stars.core.types.*
  * @property label Label of the [TSCNode].
  * @property edges Outgoing [TSCEdge]s of the [TSCNode].
  * @param monitorsMap Map of monitor labels to their predicates of the [TSCNode].
- * @param projectionsMap Map of projections of the [TSCNode].
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
@@ -47,13 +46,8 @@ sealed class TSCNode<
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
     private val monitorsMap: Map<String, (T) -> Boolean>?,
-    private val projectionsMap: Map<String, Boolean>?,
     val valueFunction: (T) -> Any,
 ) {
-
-  /** Map of projection labels to their recursive state. */
-  private val projections: Map<String, Boolean>
-    get() = projectionsMap.orEmpty()
 
   /** Map of monitor labels to their predicates. */
   val monitors: Map<String, (T) -> Boolean>
@@ -85,70 +79,6 @@ sealed class TSCNode<
                     }
           }
 
-  /**
-   * Builds the [TSC]s for each projection defined in this [TSCNode] and returns a [TSC] for each
-   * projection id. All projection ids in [projectionIgnoreList] are ignored and will not be in the
-   * resulting projection list.
-   *
-   * @param projectionIgnoreList Projections to ignore.
-   */
-  fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, U, D>> =
-      projections
-          .filter { wrapper -> !projectionIgnoreList.any { wrapper.key == it } }
-          .mapNotNull { (projectionId, _) ->
-            buildProjection(projectionId = projectionId)?.let { rootNode ->
-              TSC(rootNode = rootNode, identifier = projectionId)
-            }
-          }
-
-  /**
-   * Builds the [TSC] (rooted in the returned [TSCNode]) based on the given [projectionId]. Returns
-   * 'null' if the given [projectionId] is not found in [projections] of the current [TSCNode].
-   *
-   * @param projectionId The projection identifier as in [projections].
-   */
-  private fun buildProjection(projectionId: Any): TSCNode<E, T, U, D>? {
-    val isRecursive = projections[projectionId] ?: return null
-
-    // projection id is there and everything below should be included -> just deep clone
-    if (isRecursive) return deepClone()
-
-    // the normal case: projection id is there, but recursive is off
-    else
-        return when (this) {
-          is TSCLeafNode ->
-              TSCLeafNode(
-                  label = label,
-                  monitorsMap = monitorsMap,
-                  projectionsMap = projectionsMap,
-                  valueFunction = valueFunction,
-              )
-          is TSCBoundedNode -> {
-            val outgoingEdges =
-                edges
-                    .mapNotNull { edge ->
-                      edge.destination.buildProjection(projectionId = projectionId)?.let {
-                          projection ->
-                        TSCEdge(edge.condition, projection)
-                      }
-                    }
-                    .toList()
-            val alwaysEdgesBefore = edges.count { it.condition == CONST_TRUE }
-            val alwaysEdgesAfter = outgoingEdges.count { it.condition == CONST_TRUE }
-            val alwaysEdgesDiff = alwaysEdgesBefore - alwaysEdgesAfter
-            TSCBoundedNode(
-                label = this.label,
-                edges = outgoingEdges,
-                monitorsMap = this.monitorsMap,
-                projectionsMap = this.projectionsMap,
-                valueFunction = this.valueFunction,
-                bounds =
-                    this.bounds.first - alwaysEdgesDiff to this.bounds.second - alwaysEdgesDiff,
-            )
-          }
-        }
-  }
-
   /** Deeply clones [TSCNode]. */
   private fun deepClone(): TSCNode<E, T, U, D> {
     val outgoingEdges =
@@ -162,7 +92,6 @@ sealed class TSCNode<
           TSCLeafNode(
               label = this.label,
               monitorsMap = this.monitorsMap,
-              projectionsMap = this.projectionsMap,
               valueFunction = this.valueFunction,
           )
       is TSCBoundedNode ->
@@ -170,7 +99,6 @@ sealed class TSCNode<
               label = this.label,
               edges = outgoingEdges,
               monitorsMap = this.monitorsMap,
-              projectionsMap = this.projectionsMap,
               valueFunction = this.valueFunction,
               bounds = this.bounds,
           )
