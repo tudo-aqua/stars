@@ -82,7 +82,7 @@ class TSCDuplicatedLabelsTest {
       all("root") {
         monitors { monitor("monitor1") { _ -> true } }
 
-        any("label") { monitors { monitor("monitor1") { _ -> true } } }
+        all("label") { monitors { monitor("monitor1") { _ -> true } } }
       }
     }
   }
