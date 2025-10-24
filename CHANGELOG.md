@@ -1,3 +1,5 @@
+[2.0]: https://github.com/tudo-aqua/stars/releases/tag/v2.0
+
 [1.0]: https://github.com/tudo-aqua/stars/releases/tag/v1.0
 
 [0.5]: https://github.com/tudo-aqua/stars/releases/tag/v0.5
@@ -24,7 +26,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.0] - To be released
+## [2.0] - 24.10.2025
 
 ### Added
 - Add `World` object in DataAV to represent the static data of the simulation. The `World` contains the `Road`s, `Junction`s, and `Crosswalk`s.
@@ -42,7 +44,7 @@ All notable changes to this project will be documented in this file.
 
 - Completely remove `Segment`s. Evaluation is now purely based on ticks. `TickSequence` provides necessary functionality to pass data to the `TSCEvaluation`.
 - Remove `Block` from `DataAV`.
-- Remove `buildProjections` and `projections` node from tsc DSL.
+- Remove `buildProjections` and `projections` node from `TSC` DSL.
 
 ## [1.1] - To be released
 
