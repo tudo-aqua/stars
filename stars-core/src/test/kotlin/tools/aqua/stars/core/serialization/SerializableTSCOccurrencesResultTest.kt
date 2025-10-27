@@ -157,7 +157,7 @@ class SerializableTSCOccurrencesResultTest {
         >()
 
     currentMetric.evaluate(simpleTSC, simpleTSCInvalidInstance)
-    baselineMetric.evaluate(simpleTSC2, simpleTSCInvalidInstance)
+    baselineMetric.evaluate(simpleTSC2, simpleTSC2InvalidInstance)
 
     val currentResult = currentMetric.getSerializableResults()
     assertEquals(1, currentResult.size)

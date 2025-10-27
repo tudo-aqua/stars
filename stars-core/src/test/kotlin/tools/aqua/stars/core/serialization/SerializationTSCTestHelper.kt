@@ -220,6 +220,19 @@ val simpleTSC2LeafNode:
     > =
     simpleTSC2LeafEdge.destination
 
+/** Holds an invalid [TSCInstance] for the [simpleTSC]. */
+val simpleTSC2InvalidInstance:
+    TSCInstance<
+        SimpleEntity,
+        SimpleTickData,
+        SimpleSegment,
+        SimpleTickDataUnit,
+        SimpleTickDataDifference,
+    > =
+    TSCInstance(
+        rootNode = TSCInstanceNode(simpleTSC2.rootNode),
+        sourceSegmentIdentifier = "file 1",
+    )
 /** Holds a valid [TSCInstance] for the [simpleTSC2]. */
 val simpleTSC2ValidInstance:
     TSCInstance<
