@@ -29,7 +29,6 @@ import tools.aqua.stars.core.serialization.SerializableNWayFeatureCombinationsRe
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
-import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
@@ -114,15 +113,9 @@ class NWayFeatureCombinationsPerTSCMetric<
     possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }
 
     // Only consider instances that are valid, according to the same rule as the dependency metric
-    val isValid = tsc.possibleTSCInstances.contains(tscInstance.rootNode)
-    if (isValid) {
-      // Extract leaf labels of the *evaluated* valid instance
-      val instanceLeafLabels = tscInstance.rootNode.extractLeafLabels()
-
-      // Add all n-combinations from this instance
-      combinations(instanceLeafLabels, n).forEach { combo ->
-        observedSet += NWayPredicateCombination(combo.sorted())
-      }
+    if (tscInstance.isValid()) {
+      val observedCombinations = tscInstance.rootNode.getObservedFromValidState(n)
+      observedSet.addAll(observedCombinations)
     }
 
     // Track time-series (cumulative size of observed unique combinations) at every step
