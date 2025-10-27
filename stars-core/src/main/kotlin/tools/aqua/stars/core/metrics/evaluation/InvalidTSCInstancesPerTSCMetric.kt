@@ -81,7 +81,7 @@ class InvalidTSCInstancesPerTSCMetric<
   override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
     invalidInstancesMap.putIfAbsent(tsc, mutableMapOf())
     // Check if the given tscInstance is valid. If so, skip
-    if (tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
+    if (tscInstance.isValid()) return
 
     // Get already observed invalid instances for current tsc and add current instance
     invalidInstancesMap

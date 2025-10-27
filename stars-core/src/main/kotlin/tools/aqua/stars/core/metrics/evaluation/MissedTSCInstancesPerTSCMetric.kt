@@ -83,7 +83,7 @@ class MissedTSCInstancesPerTSCMetric<
   override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
     missedInstancesMap.putIfAbsent(tsc, createDefaultMissedInstanceFlagMap(tsc))
     // Check if the given tscInstance is invalid. If so, skip
-    if (!tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
+    if (!tscInstance.isValid()) return
 
     // Get the valid instances map for the current tsc and set state to "not missed"
     missedInstancesMap.getValue(tsc)[tscInstance.rootNode] = false
