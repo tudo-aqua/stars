@@ -65,7 +65,7 @@ class SerializableTSCResultTest {
             SimpleTickDataDifference,
         >()
 
-    missedInstancesMetric.evaluate(simpleTSC3, simpleTSCInvalidInstance)
+    missedInstancesMetric.evaluate(simpleTSC3, simpleTSC3InvalidInstance)
 
     val missedInstancesResult = missedInstancesMetric.getSerializableResults()
     assertEquals(1, missedInstancesResult.size)
