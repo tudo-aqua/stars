@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Add counting of possible `TSCInstances`.
 - Add `NWayFeatureCombinationsPerTSCMetric`.
 - Add `identifier` field to `MetricProvider` and allow the registration of multiple instances with the same `MetricProvider` class when the `identifiers` differ.
+- Add performant `isValid()` function to `TSCInstance` and `TSCInstanceNode`.
 
 
 ## [1.0] - 14.10.2025
