@@ -17,11 +17,13 @@
 
 package tools.aqua.stars.core.tsc.instance
 
+import tools.aqua.stars.core.evaluation.NWayPredicateCombination
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.builder.ROOT_NODE_LABEL
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.*
 
 /**
@@ -70,6 +72,22 @@ class TSCInstanceNode<
           edge.destination.getLeafNodeEdges(edge.destination, edge)
         }
       }
+
+  /** Extract all leaf node *labels* from an instance tree. */
+  fun extractLeafLabels(): List<String> = getLeafNodeEdges(this).map { it.destination.label }
+
+  /**
+   * Return all observed [NWayPredicateCombination]s for the given [n].
+   *
+   * @param n The number of `n` for the n-way combinations.
+   */
+  fun getObservedFromValidState(n: Int): Set<NWayPredicateCombination> {
+    val result = mutableSetOf<NWayPredicateCombination>()
+
+    val labels = extractLeafLabels()
+    combinations(labels, n).forEach { combo -> result += NWayPredicateCombination(combo.sorted()) }
+    return result
+  }
 
   /**
    * Returns a [List] of [TSCInstanceNode]s. Each [TSCInstanceNode] represents one traversal of the

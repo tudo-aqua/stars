@@ -18,10 +18,12 @@
 package tools.aqua.stars.core.tsc
 
 import java.math.BigInteger
+import tools.aqua.stars.core.evaluation.NWayPredicateCombination
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.*
 
 /**
@@ -89,6 +91,20 @@ class TSC<
    */
   fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, S, U, D>> =
       rootNode.buildProjections(projectionIgnoreList)
+
+  /**
+   * Returns all possible leaf-label n-combinations for the given TSC.
+   *
+   * @param n The number of `n` for the n-way combinations.
+   */
+  fun getAllPossibleNWayPredicateCombinations(n: Int): Set<NWayPredicateCombination> {
+    val all = mutableSetOf<NWayPredicateCombination>()
+    possibleTSCInstances.forEach { referenceInstance ->
+      val labels = referenceInstance.extractLeafLabels()
+      combinations(labels, n).forEach { combo -> all += NWayPredicateCombination(combo.sorted()) }
+    }
+    return all
+  }
 
   override fun toString(): String = this.rootNode.toString()
 
