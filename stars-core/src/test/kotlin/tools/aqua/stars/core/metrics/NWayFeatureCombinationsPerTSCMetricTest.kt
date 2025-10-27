@@ -26,6 +26,7 @@ import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.metrics.evaluation.NWayFeatureCombinationsPerTSCMetric
+import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.tsc
 
 typealias E = SimpleEntity
@@ -38,8 +39,17 @@ typealias U = SimpleTickDataUnit
 
 typealias D = SimpleTickDataDifference
 
+/**
+ * Test class for verifying the behavior and correctness of the
+ * [NWayFeatureCombinationsPerTSCMetric] class.
+ */
 class NWayFeatureCombinationsPerTSCMetricTest {
   // region Correct calculation of possible feature combinations
+  /**
+   * Tests the computation of possible 3-way feature combinations for a single [TSC]. Validates the
+   * scenario when the [TSC] being processed is too small to generate the required number of
+   * combinations.
+   */
   @Test
   fun `Test calculation of possible n-way feature combinations for single TSC metric with n equals 3 and too small TSC`() {
     val testTSC =
@@ -69,6 +79,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     assertEquals(0, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
   }
 
+  /** Tests the calculation of the single possible 3-way feature combinations for a single TSC. */
   @Test
   fun `Test calculation of possible n-way feature combinations for single TSC metric with n equals 3`() {
     val testTSC =
@@ -99,6 +110,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     assertEquals(1, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
   }
 
+  /** Tests the calculation of the possible 3-way feature combinations for a single TSC. */
   @Test
   fun `Test calculation of possible n-way feature combinations for single TSC metric with n equals 3 and larger TSC`() {
     val testTSC =
@@ -130,6 +142,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     assertEquals(10, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
   }
 
+  /** Tests the calculation of the possible 2-way feature combinations for a single TSC. */
   @Test
   fun `Test calculation of possible n-way feature combinations for single TSC metric with n equals 2`() {
     val testTSC =
@@ -158,6 +171,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     assertEquals(1, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
   }
 
+  /** Tests the calculation of the possible 1-way feature combinations for a single TSC. */
   @Test
   fun `Test calculation of possible n-way feature combinations for single TSC metric with n equals 1`() {
     val testTSC =
@@ -189,6 +203,8 @@ class NWayFeatureCombinationsPerTSCMetricTest {
   // endregion
 
   // region Correct calculation of observed feature combinations
+
+  /** Tests the calculation of the observed 2-way feature combinations for a single TSC. */
   @Test
   fun `Test calculation of observed n-way feature combinations for single TSC with n equals 2`() {
     val testTSC =
@@ -217,6 +233,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     assertEquals(0, nWayFeatureCombinationsPerTSCMetric.getState().first[testTSC]?.size)
   }
 
+  /** Tests the calculation of the observed 2-way feature combinations for a larger TSC. */
   @Test
   fun `Test calculation of observed n-way feature combinations for single TSC with n equals 2 with larger TSC`() {
     val testTSC =
