@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2025 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,40 +15,50 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.core.metrics.postEvaluation
+package tools.aqua.stars.core.metrics.evaluation
 
 import java.util.logging.Logger
+import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.NWayPredicateCombination
-import tools.aqua.stars.core.metrics.providers.*
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.metrics.providers.Plottable
+import tools.aqua.stars.core.metrics.providers.SerializableMetric
+import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceMetricProvider
 import tools.aqua.stars.core.serialization.SerializableNWayFeatureCombinationsResult
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
-import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.utils.combinations
-import tools.aqua.stars.core.types.*
-import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
-import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
+import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.SegmentType
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder
 import tools.aqua.stars.core.utils.getCSVString
 import tools.aqua.stars.core.utils.getPlot
 import tools.aqua.stars.core.utils.plotDataAsLineChart
 import tools.aqua.stars.core.utils.saveAsCSVFile
 
 /**
- * N-way metric over [TSC] features (i.e., [TSCLeafNode]s).
+ * N-way metric over [tools.aqua.stars.core.tsc.TSC] features (i.e.,
+ * [tools.aqua.stars.core.tsc.node.TSCLeafNode]s).
  *
- * For a given n, this metric tracks (per [TSC]) how many unique n-combinations of leaf nodes (i.e.,
- * features) have been observed **across valid instances only**. The denominator is the total number
- * of such combinations that are *possible* based on all possible TSC instances.
+ * For a given n, this metric tracks (per [tools.aqua.stars.core.tsc.TSC]) how many unique
+ * n-combinations of leaf nodes (i.e., features) have been observed **across valid instances only**.
+ * The denominator is the total number of such combinations that are *possible* based on all
+ * possible TSC instances.
  *
- * @param E [EntityType].
- * @param T [TickDataType].
- * @param S [SegmentType].
- * @param U [TickUnit].
- * @param D [TickDifference].
+ * @param E [tools.aqua.stars.core.types.EntityType].
+ * @param T [tools.aqua.stars.core.types.TickDataType].
+ * @param S [tools.aqua.stars.core.types.SegmentType].
+ * @param U [tools.aqua.stars.core.types.TickUnit].
+ * @param D [tools.aqua.stars.core.types.TickDifference].
  * @param n The n-way combination size. Must be >= 1.
+ * @property identifier identifier (name).
  * @property loggerIdentifier identifier (name) for the logger.
- * @property logger [Logger] instance.
+ * @property logger [java.util.logging.Logger] instance.
  */
 class NWayFeatureCombinationsPerTSCMetric<
     E : EntityType<E, T, S, U, D>,
@@ -58,8 +68,9 @@ class NWayFeatureCombinationsPerTSCMetric<
     D : TickDifference<D>,
 >(
     private val n: Int,
-    override val loggerIdentifier: String = "n-way-leaf-combinations-per-tsc(n=$n)",
-    override val logger: Logger = Loggable.getLogger("n-way-leaf-combinations-per-tsc(n=$n)"),
+    override val identifier: String = "$n-way-feature-combinations-per-tsc",
+    override val loggerIdentifier: String = identifier,
+    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) :
     TSCAndTSCInstanceMetricProvider<E, T, S, U, D>,
     Stateful,
@@ -89,9 +100,9 @@ class NWayFeatureCombinationsPerTSCMetric<
   // region Metric core
 
   /**
-   * Evaluates a given [TSCInstance] and updates the observed combinations, timed counts, and
-   * possible combinations for the respective TSC based on the valid state of the instance and n-way
-   * predicate combinations.
+   * Evaluates a given [tools.aqua.stars.core.tsc.instance.TSCInstance] and updates the observed
+   * combinations, timed counts, and possible combinations for the respective TSC based on the valid
+   * state of the instance and n-way predicate combinations.
    *
    * @param tsc The [TSC] graph used for evaluation.
    * @param tscInstance The specific instance of the [TSC] being evaluated, including its root node
@@ -122,7 +133,7 @@ class NWayFeatureCombinationsPerTSCMetric<
 
   override fun printState() {
     println(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT ($n)-Way Leaf Combinations Seen Per TSC \n$CONSOLE_SEPARATOR"
+        "\n${ApplicationConstantsHolder.CONSOLE_SEPARATOR}\n${ApplicationConstantsHolder.CONSOLE_INDENT} ($n)-Way Leaf Combinations Seen Per TSC \n${ApplicationConstantsHolder.CONSOLE_SEPARATOR}"
     )
     observedPerTSC.forEach { (tsc, seenSet) ->
       val allPossible =

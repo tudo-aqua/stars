@@ -147,15 +147,23 @@ class TSCEvaluation<
   /**
    * Registers all [MetricProvider]s to the list of metrics that should be called during evaluation.
    *
+   * Allows multiple providers of the **same class** only if their `identifier` values differ.
+   *
    * @param metricProviders The [MetricProvider]s that should be registered.
-   * @throws IllegalArgumentException When a given [MetricProvider] is already added.
+   * @throws IllegalArgumentException When a provider of the same class **and** identifier is
+   *   already added (either previously or within this call).
    */
   fun registerMetricProviders(vararg metricProviders: MetricProvider<E, T, S, U, D>) {
-    metricProviders.forEach {
-      require(it.javaClass !in this.metricProviders.map { t -> t.javaClass }) {
-        "The MetricProvider ${it.javaClass.simpleName} is already registered."
+    // Track (class, identifier) pairs that are already registered
+    val existing = this.metricProviders.map { it.javaClass to it.identifier }.toMutableSet()
+
+    metricProviders.forEach { mp ->
+      val key = mp.javaClass to mp.identifier
+      require(key !in existing) {
+        "The MetricProvider ${mp.javaClass.simpleName} with identifier '${mp.identifier}' is already registered."
       }
-      this.metricProviders.add(it)
+      existing += key
+      this.metricProviders.add(mp)
     }
   }
 
@@ -167,7 +175,7 @@ class TSCEvaluation<
    * - If the [PreTSCEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
    *   canceled at this point.
    * - If the [PreTSCEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
-   *   aborted, a [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
+   *   aborted, a [EvaluationHookAbort] is thrown, and no post-evaluation steps are performed.
    *
    * @param preTSCEvaluationHooks The [PreTSCEvaluationHook]s that should be registered.
    */
@@ -183,9 +191,9 @@ class TSCEvaluation<
    * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.SKIP], the evaluation
    *   proceeds with the next [SegmentType].
    * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.CANCEL], the evaluation is
-   *   canceled at this point but post evaluation steps are performed.
+   *   canceled at this point but post-evaluation steps are performed.
    * - If the [PreSegmentEvaluationHook] returns [EvaluationHookResult.ABORT], the evaluation is
-   *   aborted, an [EvaluationHookAbort] is thrown, and no post evaluation steps are performed.
+   *   aborted, an [EvaluationHookAbort] is thrown, and no post-evaluation steps are performed.
    *
    * @param preSegmentEvaluationHooks The [PreSegmentEvaluationHook]s that should be registered.
    */
@@ -201,7 +209,7 @@ class TSCEvaluation<
    * - [MinTicksPerSegmentHook] with a minimum of 1 tick per segment.
    *
    * The lists of hooks [preTSCEvaluationHooks] and [preSegmentEvaluationHooks] are NOT cleared
-   * before. [clearHooks] may be called before to clear them.
+   * before. The function [clearHooks] may be called before to clear them.
    */
   fun registerDefaultHooks() {
     preSegmentEvaluationHooks.add(MinTicksPerSegmentHook(minTicks = 1))
@@ -326,7 +334,7 @@ class TSCEvaluation<
     return true
   }
 
-  /** Runs post evaluation steps such as printing, logging and plotting. */
+  /** Runs post-evaluation steps such as printing, logging, and plotting. */
   private fun postEvaluate() {
     // Print the results of all Stateful metrics
     metricProviders.filterIsInstance<Stateful>().forEach { it.printState() }

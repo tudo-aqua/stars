@@ -25,7 +25,7 @@ import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.evaluation.TSCEvaluation
-import tools.aqua.stars.core.metrics.postEvaluation.NWayFeatureCombinationsPerTSCMetric
+import tools.aqua.stars.core.metrics.evaluation.NWayFeatureCombinationsPerTSCMetric
 import tools.aqua.stars.core.tsc.builder.tsc
 
 typealias E = SimpleEntity

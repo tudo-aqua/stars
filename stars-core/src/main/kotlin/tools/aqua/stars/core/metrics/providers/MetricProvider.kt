@@ -34,4 +34,7 @@ interface MetricProvider<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->
+> {
+  /** Holds the identifier of the metric. */
+  val identifier: String
+}

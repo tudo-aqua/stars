@@ -31,6 +31,8 @@ All notable changes to this project will be documented in this file.
 - Add `MissedPredicatesPerTSCMetric`.
 - Add `identifier` parameter to `TSCDsl`.
 - Add counting of possible `TSCInstances`.
+- Add `NWayFeatureCombinationsPerTSCMetric`.
+- Add `identifier` field to `MetricProvider` and allow the registration of multiple instances with the same `MetricProvider` class when the `identifiers` differ.
 
 
 ## [1.0] - 14.10.2025
