@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - Add `MissedPredicatesPerTSCMetric`.
 - Add `identifier` parameter to `TSCDsl`.
 - Add counting of possible `TSCInstances`.
+- Add performant `isValid()` function to `TSCInstance` and `TSCInstanceNode`.
 
 
 ## [1.0] - 14.10.2025
