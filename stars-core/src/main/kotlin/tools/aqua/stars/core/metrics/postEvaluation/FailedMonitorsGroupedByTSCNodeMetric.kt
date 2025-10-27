@@ -44,6 +44,7 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property identifier identifier (name).
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  * @param onlyLeafNodes (Default: false) Whether the monitor should only be triggered for leaf
@@ -58,7 +59,8 @@ class FailedMonitorsGroupedByTSCNodeMetric<
     D : TickDifference<D>,
 >(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val loggerIdentifier: String = "failed-monitors-grouped-by-node",
+    override val identifier: String = "failed-monitors-grouped-by-node",
+    override val loggerIdentifier: String = identifier,
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
     private val onlyLeafNodes: Boolean = false,
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, Loggable {
