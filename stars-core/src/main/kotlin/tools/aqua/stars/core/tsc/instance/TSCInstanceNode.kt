@@ -19,10 +19,10 @@ package tools.aqua.stars.core.tsc.instance
 
 import tools.aqua.stars.core.evaluation.NWayPredicateCombination
 import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.builder.ROOT_NODE_LABEL
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
-import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.*
@@ -60,26 +60,25 @@ class TSCInstanceNode<
       edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
 
   /** Returns a [List] of all [TSCInstanceNode]s that are leaf nodes in the given [currentNode]. */
-  fun getLeafNodeEdges(
+  fun getFeatureNodeEdges(
       currentNode: TSCInstanceNode<E, T, S, U, D>,
       currentNodeEdge: TSCInstanceEdge<E, T, S, U, D>? = null,
-  ): List<TSCInstanceEdge<E, T, S, U, D>> =
-      if (currentNodeEdge == null && currentNode.edges.isEmpty()) {
-        emptyList()
-      } else if (
-          currentNodeEdge != null &&
-              currentNode.edges.isEmpty() &&
-              currentNode.tscNode is TSCLeafNode<*, *, *, *, *>
-      ) {
-        listOf(currentNodeEdge)
-      } else {
+  ): List<TSCInstanceEdge<E, T, S, U, D>> {
+    val here: List<TSCInstanceEdge<E, T, S, U, D>> =
+        if (currentNodeEdge != null && currentNodeEdge.tscEdge.condition !== CONST_TRUE)
+            listOf(currentNodeEdge)
+        else emptyList()
+
+    val children: List<TSCInstanceEdge<E, T, S, U, D>> =
         currentNode.edges.flatMap { edge ->
-          edge.destination.getLeafNodeEdges(edge.destination, edge)
+          edge.destination.getFeatureNodeEdges(edge.destination, edge)
         }
-      }
+
+    return here + children
+  }
 
   /** Extract all leaf node *labels* from an instance tree. */
-  fun extractLeafLabels(): List<String> = getLeafNodeEdges(this).map { it.destination.label }
+  fun extractLeafLabels(): List<String> = getFeatureNodeEdges(this).map { it.destination.label }
 
   /**
    * Return all observed [NWayPredicateCombination]s for the given [n].

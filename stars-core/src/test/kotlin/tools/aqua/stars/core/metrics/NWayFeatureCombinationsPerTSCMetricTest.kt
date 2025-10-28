@@ -56,8 +56,8 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           all("all") {
-            leaf("leaf 1")
-            leaf("leaf 2")
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
           }
         }
     val testSegment = SimpleSegment()
@@ -86,9 +86,9 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           all("all") {
-            leaf("leaf 1")
-            leaf("leaf 2")
-            leaf("leaf 3")
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
           }
         }
     val testSegment = SimpleSegment()
@@ -117,11 +117,11 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           all("all") {
-            leaf("leaf 1")
-            leaf("leaf 2")
-            leaf("leaf 3")
-            leaf("leaf 4")
-            leaf("leaf 5")
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+            leaf("leaf 4") { condition { true } }
+            leaf("leaf 5") { condition { true } }
           }
         }
     val testSegment = SimpleSegment()
@@ -149,8 +149,8 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           all("all") {
-            leaf("leaf 1")
-            leaf("leaf 2")
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
           }
         }
     val testSegment = SimpleSegment()
@@ -178,8 +178,8 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           all("all") {
-            leaf("leaf 1")
-            leaf("leaf 2")
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
           }
         }
     val testSegment = SimpleSegment()
@@ -211,7 +211,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           optional("all") {
-            leaf("leaf 1")
+            leaf("leaf 1") { condition { true } }
             leaf("leaf 2") { condition { false } }
           }
         }
@@ -240,9 +240,9 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     val testTSC =
         tsc<E, T, S, U, D> {
           optional("all") {
-            leaf("leaf 1")
+            leaf("leaf 1") { condition { true } }
             leaf("leaf 2") { condition { false } }
-            leaf("leaf 3")
+            leaf("leaf 3") { condition { true } }
           }
         }
     val testSegment = SimpleSegment()

@@ -20,8 +20,11 @@ package tools.aqua.stars.core.tsc
 import java.math.BigInteger
 import tools.aqua.stars.core.evaluation.NWayPredicateCombination
 import tools.aqua.stars.core.evaluation.PredicateContext
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.*
@@ -93,7 +96,7 @@ class TSC<
       rootNode.buildProjections(projectionIgnoreList)
 
   /**
-   * Returns all possible leaf-label n-combinations for the given TSC.
+   * Returns all possible n-way predicate-label combinations for the given TSC.
    *
    * @param n The number of `n` for the n-way combinations.
    */
@@ -107,107 +110,123 @@ class TSC<
   }
 
   /**
-   * Counts the number of **distinct** n-way leaf-label combinations that are **feasible** in this
-   * TSC, **without enumerating** instances or materializing the combinations.
+   * Counts the number of **distinct** n-way feature combinations that are possible in this [TSC],
+   * **without listing** instances or materializing the combinations.
    *
-   * Key idea:
-   * - For each node, build a polynomial (truncated at degree n) whose coefficient [n] is the number
-   *   of distinct n-sized leaf-subsets achievable in that subtree.
-   * - For bounded nodes with upper bound U, we convolve child polynomials with a DP that tracks how
-   *   many children contribute ≥1 element, and only sum states with j ≤ U.
-   * - Lower bounds do **not** restrict subset feasibility because an instance can always include
-   *   extra children that do not contribute to the chosen n-subset.
-   *
-   * @param n size of combinations (n ≥ 1)
-   * @return number of distinct possible n-way combinations
+   * @param n the size of the feature combinations (n ≥ 1)
+   * @return number of distinct possible n-way combinations as [BigInteger]
    */
   fun countAllPossibleNWayPredicateCombinations(n: Int): BigInteger {
     require(n >= 1) { "n must be >= 1" }
 
-    // Returns coefficients a[0..n] where a[k] is the number of distinct k-sized subsets
-    // achievable in the subtree rooted at `node`.
+    val zero = BigInteger.ZERO
+    val one = BigInteger.ONE
+
+    // Multiply a polynomial by (1 + x), truncated to degree n.
+    fun mulByOnePlusX(poly: Array<BigInteger>): Array<BigInteger> {
+      val res = Array(n + 1) { zero }
+      // res[k] = poly[k] (choose node not selected) + poly[k-1] (node selected)
+      for (k in 0..n) {
+        var v = poly[k]
+        if (k >= 1) v = v.add(poly[k - 1])
+        res[k] = v
+      }
+      return res
+    }
+
+    // Returns coefficients a[0..n] where a[k] is count of distinct k-sized feature-subsets
+    // achievable in the subtree rooted at `node`. `isFeatureEdge` indicates whether the
+    // (incoming) edge to this node is a feature edge (edge.condition !== CONST_TRUE).
     fun <
         E : EntityType<E, T, S, U, D>,
         T : TickDataType<E, T, S, U, D>,
         S : SegmentType<E, T, S, U, D>,
         U : TickUnit<U, D>,
         D : TickDifference<D>,
-    > countPoly(node: TSCNode<E, T, S, U, D>): Array<BigInteger> {
-
-      val zero = BigInteger.ZERO
-      val one = BigInteger.ONE
-
-      return when (node) {
-        is tools.aqua.stars.core.tsc.node.TSCLeafNode<*, *, *, *, *> -> {
-          // For a leaf: a[0] = 1 (pick nothing), a[1] = 1 (pick this leaf), higher = 0
-          Array(n + 1) { i -> if (i == 0) one else if (i == 1) one else zero }
-        }
-
-        is tools.aqua.stars.core.tsc.node.TSCBoundedNode<*, *, *, *, *> -> {
-          // Child polynomials
-          val childPolys: List<Array<java.math.BigInteger>> =
-              node.edges.map { edge ->
-                @Suppress("UNCHECKED_CAST")
-                countPoly(edge.destination as tools.aqua.stars.core.tsc.node.TSCNode<E, T, S, U, D>)
-              }
-
-          // Upper bound U (see rationale above for ignoring the lower bound for subset feasibility)
-          val upper = node.bounds.second
-
-          // dp[j][k] = number of ways using exactly j children that contribute >= 1 element,
-          // picking total of k elements overall from processed children.
-          val dp = Array(upper + 1) { Array(n + 1) { zero } }
-          dp[0][0] = one
-
-          fun addTo(
-              dst: Array<Array<java.math.BigInteger>>,
-              j: Int,
-              k: Int,
-              value: java.math.BigInteger,
-          ) {
-            dst[j][k] = dst[j][k].add(value)
+    > countPoly(
+        node: TSCNode<E, T, S, U, D>,
+        isFeatureEdge: Boolean,
+    ): Array<BigInteger> =
+        when (node) {
+          is TSCLeafNode<*, *, *, *, *> -> {
+            // Leaf contributes 1 way to pick nothing. If its incoming edge is a feature edge,
+            // it also contributes 1 way to pick the leaf itself.
+            val base = Array(n + 1) { zero }
+            base[0] = one
+            val arr = base
+            if (isFeatureEdge) mulByOnePlusX(arr) else arr
           }
 
-          var cur = dp
-          childPolys.forEach { poly ->
-            val next = Array(upper + 1) { Array(n + 1) { zero } }
-            for (j in 0..upper) {
-              for (k in 0..n) {
-                val base = cur[j][k]
-                if (base == zero) continue
+          is TSCBoundedNode<*, *, *, *, *> -> {
+            // Compute child polynomials with proper feature-edge flags from their incoming edges.
+            val childPolys: List<Array<BigInteger>> =
+                node.edges.map { edge ->
+                  countPoly(
+                      edge.destination,
+                      // Feature edge criterion must follow the new behavior: !== CONST_TRUE
+                      edge.condition !== CONST_TRUE,
+                  )
+                }
 
-                // Take 0 from this child: j stays, k stays
-                addTo(next, j, k, base)
+            val upper = node.bounds.second
 
-                // Take t >= 1 from this child
-                for (t in 1..(n - k)) {
-                  val coeff = poly[t]
-                  if (coeff == zero) continue
-                  val j2 = if (j + 1 <= upper) j + 1 else continue
-                  addTo(next, j2, k + t, base.multiply(coeff))
+            // dp[j][k] = number of ways using exactly j children that contribute >= 1 selected
+            // feature,
+            // accumulating k selected features in total from processed children (k ≤ n).
+            var cur = Array(upper + 1) { Array(n + 1) { zero } }
+            cur[0][0] = one
+
+            fun addTo(
+                dst: Array<Array<BigInteger>>,
+                j: Int,
+                k: Int,
+                value: BigInteger,
+            ) {
+              dst[j][k] = dst[j][k].add(value)
+            }
+
+            childPolys.forEach { poly ->
+              val next = Array(upper + 1) { Array(n + 1) { zero } }
+
+              for (j in 0..upper) {
+                for (k in 0..n) {
+                  val base = cur[j][k]
+                  if (base == zero) continue
+
+                  // Case 1: Take 0 features from this child (child not contributing)
+                  addTo(next, j, k, base)
+
+                  // Case 2: Take t >= 1 features from this child (child contributing)
+                  var t = 1
+                  while (k + t <= n) {
+                    val coeff = poly[t]
+                    if (coeff != zero && j + 1 <= upper) {
+                      addTo(next, j + 1, k + t, base.multiply(coeff))
+                    }
+                    t++
+                  }
                 }
               }
+
+              cur = next
             }
-            cur = next
-          }
 
-          // Sum over j = 0..upper to get the coefficient vector a[0..n]
-          Array(n + 1) { k ->
-            var sum = zero
-            for (j in 0..upper) sum = sum.add(cur[j][k])
-            sum
+            // Sum over j = 0..upper for coefficients of the combined children
+            val childrenPoly =
+                Array(n + 1) { kk ->
+                  var sum = zero
+                  for (j in 0..upper) sum = sum.add(cur[j][kk])
+                  sum
+                }
+
+            // If THIS node is reached via a feature edge, multiply by (1 + x) to optionally select
+            // it
+            if (isFeatureEdge) mulByOnePlusX(childrenPoly) else childrenPoly
           }
         }
 
-        else -> {
-          // Should not happen with current sealed hierarchy; be safe:
-          Array(n + 1) { java.math.BigInteger.ZERO }
-        }
-      }
-    }
-
-    // Root polynomial; answer is coefficient for degree n
-    val coeffs = countPoly(this.rootNode)
+    // Root has no incoming edge -> not a feature edge.
+    val coeffs = countPoly(this.rootNode, isFeatureEdge = false)
     return coeffs[n]
   }
 
