@@ -103,13 +103,13 @@ class TSCInstanceNode<
           }
 
   /**
-   * Validates own (and recursively all children's) successor constraints imposed by the
-   * [TSCNode<E,T,S>] types the instances were built from (e.g. exactly one for 'TSCXorNode' or
-   * correct range for [TSCBoundedNode]).
+   * Validates own (and recursively for all children's) successor constraints imposed by the
+   * [TSCNode] types the instances were built from (e.g., exactly one for 'Exclusive' or correct
+   * range for [TSCBoundedNode]).
    *
    * @param label the label used to build the human-readable string.
-   * @return non-validating nodes; first element of pair is the node that failed to validate; second
-   *   element is a human-readable explanation for the failure.
+   * @return non-validating nodes; the first element of the pair is the node that failed to
+   *   validate; the second element is a human-readable explanation for the failure.
    */
   fun validate(
       label: String = ROOT_NODE_LABEL
@@ -128,9 +128,15 @@ class TSCInstanceNode<
   }
 
   /**
-   * Validates own (and recursively all children's) results of the
-   * [TSCNode<E,T,S,U,D>.monitorFunction] results and returns a [TSCFailedMonitorInstance] for each
-   * incoming edge label with results != true.
+   * Checks if this [TSCInstanceNode] is valid.
+   *
+   * @return true if valid, false otherwise.
+   */
+  fun isValid(): Boolean = validate().isEmpty()
+
+  /**
+   * Validates own (and recursively all children's) results of the [TSCNode.monitors] results and
+   * returns a [TSCFailedMonitorInstance] for each incoming edge label with results != true.
    *
    * @param segmentIdentifier Identifier of the segment.
    * @param label specifies the starting point in the TSC for the search.

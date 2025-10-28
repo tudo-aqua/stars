@@ -36,4 +36,11 @@ data class TSCInstance<
     S : SegmentType<E, T, S, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val rootNode: TSCInstanceNode<E, T, S, U, D>, val sourceSegmentIdentifier: String)
+>(val rootNode: TSCInstanceNode<E, T, S, U, D>, val sourceSegmentIdentifier: String) {
+  /**
+   * Checks if this [TSCInstance] is valid.
+   *
+   * @return true if valid, false otherwise.
+   */
+  fun isValid(): Boolean = rootNode.isValid()
+}
