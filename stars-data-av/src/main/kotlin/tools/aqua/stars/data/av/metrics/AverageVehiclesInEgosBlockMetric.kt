@@ -26,11 +26,13 @@ import tools.aqua.stars.data.av.dataclasses.*
  * This class is an implementation of [SegmentMetricProvider] which provides the metric "average
  * vehicles in ego's block".
  *
+ * @property identifier identifier (name).
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
 class AverageVehiclesInEgosBlockMetric(
-    override val loggerIdentifier: String = "average-vehicles-in-egos-block",
+    override val identifier: String = "average-vehicles-in-ego-block",
+    override val loggerIdentifier: String = identifier,
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) :
     SegmentMetricProvider<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>,

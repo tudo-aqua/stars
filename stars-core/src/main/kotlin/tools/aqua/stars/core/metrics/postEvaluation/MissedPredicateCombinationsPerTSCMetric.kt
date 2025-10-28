@@ -47,6 +47,7 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  * @param D [TickDifference].
  * @property dependsOn The instance of a [ValidTSCInstancesPerTSCMetric] on which this metric
  *   depends on and needs for its calculation.
+ * @property identifier identifier (name).
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
@@ -59,7 +60,8 @@ class MissedPredicateCombinationsPerTSCMetric<
     D : TickDifference<D>,
 >(
     override val dependsOn: ValidTSCInstancesPerTSCMetric<E, T, S, U, D>,
-    override val loggerIdentifier: String = "missed-predicate-combinations",
+    override val identifier: String = "missed-predicate-combinations",
+    override val loggerIdentifier: String = identifier,
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : PostEvaluationMetricProvider<E, T, S, U, D>, SerializableMetric, Loggable {
 
