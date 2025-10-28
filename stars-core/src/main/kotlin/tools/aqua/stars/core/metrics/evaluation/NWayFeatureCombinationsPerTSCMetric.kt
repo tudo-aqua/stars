@@ -134,6 +134,18 @@ class NWayFeatureCombinationsPerTSCMetric<
       logInfo(
           "TSC '${tsc.identifier}': ${seenSet.size}/${allPossible} unique $n-way combinations seen."
       )
+      logFine("All observed combinations:")
+      seenSet.forEach { logFine("${it.elements}") }
+      logFine()
+
+      if (allPossible <= BigInteger("1000")) {
+        logFiner("All possible combinations:")
+        val allPossibleList = tsc.getAllPossibleNWayPredicateCombinations(n)
+        allPossibleList.forEach { logFiner("${it.elements}") }
+      } else {
+        logFiner("Skip all possible combinations, as there are more than 1000 combinations.")
+      }
+      logFiner()
     }
   }
 
