@@ -22,6 +22,7 @@ import tools.aqua.stars.core.tsc.TSCFailedMonitorInstance
 import tools.aqua.stars.core.tsc.builder.ROOT_NODE_LABEL
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.*
@@ -65,7 +66,11 @@ class TSCInstanceNode<
   ): List<TSCInstanceEdge<E, T, S, U, D>> =
       if (currentNodeEdge == null && currentNode.edges.isEmpty()) {
         emptyList()
-      } else if (currentNodeEdge != null && currentNode.edges.isEmpty()) {
+      } else if (
+          currentNodeEdge != null &&
+              currentNode.edges.isEmpty() &&
+              currentNode.tscNode is TSCLeafNode<*, *, *, *, *>
+      ) {
         listOf(currentNodeEdge)
       } else {
         currentNode.edges.flatMap { edge ->

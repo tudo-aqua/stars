@@ -18,6 +18,8 @@
 package tools.aqua.stars.core.tsc.instance
 
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import tools.aqua.stars.core.SimpleEntity
@@ -106,5 +108,95 @@ class TSCInstanceNodeTest {
         )
 
     assertFalse { testInstance.isValid() }
+  }
+
+  /** Test getLeafNodeEdges() for TSCInstance with two leaf nodes. */
+  @Test
+  fun `Test getLeafNodeEdges() for TSCInstance with two leaf nodes`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("Root") {
+            leaf("Leaf 1")
+            leaf("Leaf 2")
+          }
+        }
+
+    val testInstance =
+        TSCInstance(
+            sourceSegmentIdentifier = "",
+            rootNode =
+                TSCInstanceNode(
+                        tscNode = testTSC.rootNode,
+                    )
+                    .apply {
+                      edges.add(
+                          TSCInstanceEdge(
+                              TSCInstanceNode(tscNode = testTSC.rootNode.edges[0].destination),
+                              testTSC.rootNode.edges[0],
+                          )
+                      )
+                      edges.add(
+                          TSCInstanceEdge(
+                              TSCInstanceNode(tscNode = testTSC.rootNode.edges[1].destination),
+                              testTSC.rootNode.edges[1],
+                          )
+                      )
+                    },
+        )
+
+    assertContentEquals(
+        listOf("Leaf 1", "Leaf 2"),
+        testInstance.rootNode.extractLeafLabels(),
+    )
+  }
+
+  /** Test getLeafNodeEdges() for TSCInstance with two leaf nodes. */
+  @Test
+  fun `Test getLeafNodeEdges() for TSCInstance with two leaf nodes and optional leaf`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("Root") {
+            leaf("Leaf 1")
+            leaf("Leaf 2")
+            optional("Optional 1") { leaf("Leaf 3") }
+          }
+        }
+
+    val testInstance =
+        TSCInstance(
+            sourceSegmentIdentifier = "",
+            rootNode =
+                TSCInstanceNode(
+                        tscNode = testTSC.rootNode,
+                    )
+                    .apply {
+                      // Leaf 1
+                      edges.add(
+                          TSCInstanceEdge(
+                              TSCInstanceNode(tscNode = testTSC.rootNode.edges[0].destination),
+                              testTSC.rootNode.edges[0],
+                          )
+                      )
+                      // Leaf 2
+                      edges.add(
+                          TSCInstanceEdge(
+                              TSCInstanceNode(tscNode = testTSC.rootNode.edges[1].destination),
+                              testTSC.rootNode.edges[1],
+                          )
+                      )
+                      // Optional 1
+                      edges.add(
+                          TSCInstanceEdge(
+                              TSCInstanceNode(tscNode = testTSC.rootNode.edges[2].destination),
+                              testTSC.rootNode.edges[2],
+                          )
+                      )
+                    },
+        )
+
+    assertEquals(
+        listOf("Leaf 1", "Leaf 2"),
+        testInstance.rootNode.extractLeafLabels(),
+    )
   }
 }
