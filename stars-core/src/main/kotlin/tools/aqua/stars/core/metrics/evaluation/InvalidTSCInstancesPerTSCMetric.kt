@@ -49,6 +49,7 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property identifier identifier (name).
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
@@ -60,7 +61,8 @@ class InvalidTSCInstancesPerTSCMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    override val loggerIdentifier: String = "invalid-tsc-instances-per-tsc",
+    override val identifier: String = "invalid-tsc-instances-per-tsc",
+    override val loggerIdentifier: String = identifier,
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TSCAndTSCInstanceMetricProvider<E, T, S, U, D>, Stateful, SerializableMetric, Loggable {
   /** Map the [TSC] to a map in which the occurrences of invalid [TSCInstance]s are stored. */

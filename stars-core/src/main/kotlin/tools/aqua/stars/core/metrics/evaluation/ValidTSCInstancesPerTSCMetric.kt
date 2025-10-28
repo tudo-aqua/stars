@@ -64,6 +64,7 @@ import tools.aqua.stars.core.utils.saveAsCSVFile
  * @param S [SegmentType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @property identifier identifier (name).
  * @property loggerIdentifier identifier (name) for the logger.
  * @property logger [Logger] instance.
  */
@@ -74,7 +75,8 @@ class ValidTSCInstancesPerTSCMetric<
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    override val loggerIdentifier: String = "valid-tsc-instances-per-tsc",
+    override val identifier: String = "valid-tsc-instances-per-tsc",
+    override val loggerIdentifier: String = identifier,
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) :
     TSCAndTSCInstanceMetricProvider<E, T, S, U, D>,
