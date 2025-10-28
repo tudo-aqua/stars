@@ -41,6 +41,6 @@ data class SerializableNWayFeatureCombinationsResult(
     val n: Int,
     val tsc: SerializableTSCNode,
     val seenCombinations: Int,
-    val possibleCombinations: Int,
+    val possibleCombinations: String,
     override val value: List<List<String>>,
 ) : SerializableResult()

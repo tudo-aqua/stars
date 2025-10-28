@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.metrics.evaluation
 
+import java.math.BigInteger
 import java.util.logging.Logger
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.NWayPredicateCombination
@@ -87,8 +88,7 @@ class NWayFeatureCombinationsPerTSCMetric<
   private val timedCountsPerTSC: MutableMap<TSC<E, T, S, U, D>, MutableList<Int>> = mutableMapOf()
 
   /** Cached map of all possible n-way combinations per [TSC]. */
-  private val possiblePerTSC: MutableMap<TSC<E, T, S, U, D>, Set<NWayPredicateCombination>> =
-      mutableMapOf()
+  private val possiblePerTSC: MutableMap<TSC<E, T, S, U, D>, BigInteger> = mutableMapOf()
 
   /**
    * Combined (legendEntry -> (x-values, y-values)) maps for plotting/CSV (absolute and percentage).
@@ -110,7 +110,7 @@ class NWayFeatureCombinationsPerTSCMetric<
   override fun evaluate(tsc: TSC<E, T, S, U, D>, tscInstance: TSCInstance<E, T, S, U, D>) {
     val observedSet = observedPerTSC.getOrPut(tsc) { mutableSetOf() }
     val timedCounts = timedCountsPerTSC.getOrPut(tsc) { mutableListOf() }
-    possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }
+    possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
 
     // Only consider instances that are valid, according to the same rule as the dependency metric
     if (tscInstance.isValid()) {
@@ -130,9 +130,9 @@ class NWayFeatureCombinationsPerTSCMetric<
     )
     observedPerTSC.forEach { (tsc, seenSet) ->
       val allPossible =
-          possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }
+          possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
       logInfo(
-          "TSC '${tsc.identifier}': ${seenSet.size}/${allPossible.size} unique $n-way combinations seen."
+          "TSC '${tsc.identifier}': ${seenSet.size}/${allPossible} unique $n-way combinations seen."
       )
     }
   }
@@ -145,7 +145,7 @@ class NWayFeatureCombinationsPerTSCMetric<
           observed.map { it.elements }.sortedBy { it.joinToString("\u0001") }
 
       val possible =
-          possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }.size
+          possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
       val serTsc = SerializableTSCNode(tsc.rootNode)
 
       results +=
@@ -155,7 +155,7 @@ class NWayFeatureCombinationsPerTSCMetric<
               n = n,
               tsc = serTsc,
               seenCombinations = observed.size,
-              possibleCombinations = possible,
+              possibleCombinations = possible.toString(),
               value = observedSorted,
           )
     }
@@ -182,7 +182,7 @@ class NWayFeatureCombinationsPerTSCMetric<
       if (yAbs.isEmpty()) return@forEach
 
       val possible =
-          possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }.size
+          possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
       val legend = "${tsc.identifier} (${seenSet.size}/$possible)"
       val xName = "seen instances"
       val yName = "unique n-combinations"
@@ -211,7 +211,10 @@ class NWayFeatureCombinationsPerTSCMetric<
           subFolder = tsc.identifier,
       )
 
-      val yPct = yAbs.map { if (possible == 0) 0f else (it.toFloat() / possible) * 100f }
+      val yPct =
+          yAbs.map {
+            if (possible == BigInteger.ZERO) 0f else (it.toFloat() / possible.toDouble()) * 100f
+          }
       val plotPct =
           getPlot(
               legendEntry = legend,
@@ -245,10 +248,12 @@ class NWayFeatureCombinationsPerTSCMetric<
       val yAbs = timedCountsPerTSC[tsc].orEmpty()
       if (yAbs.isEmpty()) return@forEach
       val possible =
-          possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }.size
+          possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
       val seen = observedPerTSC[tsc]?.size ?: 0
       val legend = "${tsc.identifier} ($seen/$possible)"
-      val yPct = yAbs.map { if (possible == 0) 0f else (it.toFloat() / possible) * 100f }
+      val denomF = possible.toFloat()
+      val yPct: List<Float> =
+          if (denomF == 0f) List(yAbs.size) { 0f } else yAbs.map { (it.toFloat() * 100f) / denomF }
       combinedAbsolute[legend] = List(yAbs.size) { it } to yAbs
       combinedPercentage[legend] = List(yPct.size) { it } to yPct
     }
@@ -290,7 +295,7 @@ class NWayFeatureCombinationsPerTSCMetric<
       if (yAbs.isEmpty()) return@forEach
 
       val possible =
-          possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }.size
+          possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
       val legend = "${tsc.identifier} (${seenSet.size}/$possible)"
       val baseName = "nWayLeafCombinationsProgressPerTSC_${tsc.identifier}_n$n"
 
@@ -307,7 +312,10 @@ class NWayFeatureCombinationsPerTSCMetric<
           subFolder = tsc.identifier,
       )
 
-      val yPct = yAbs.map { if (possible == 0) 0f else (it.toFloat() / possible) * 100f }
+      val yPct =
+          yAbs.map {
+            if (possible == BigInteger.ZERO) 0f else (it.toFloat() / possible.toDouble()) * 100f
+          }
       saveAsCSVFile(
           csvString = getCSVString(legend, yPct),
           folder = loggerIdentifier,
@@ -332,10 +340,12 @@ class NWayFeatureCombinationsPerTSCMetric<
       val yAbs = timedCountsPerTSC[tsc].orEmpty()
       if (yAbs.isEmpty()) return@forEach
       val possible =
-          possiblePerTSC.getOrPut(tsc) { tsc.getAllPossibleNWayPredicateCombinations(n) }.size
+          possiblePerTSC.getOrPut(tsc) { tsc.countAllPossibleNWayPredicateCombinations(n) }
       val seen = observedPerTSC[tsc]?.size ?: 0
       val legend = "${tsc.identifier} ($seen/$possible)"
-      val yPct = yAbs.map { if (possible == 0) 0f else (it.toFloat() / possible) * 100f }
+      val denomF = possible.toFloat()
+      val yPct: List<Float> =
+          if (denomF == 0f) List(yAbs.size) { 0f } else yAbs.map { (it.toFloat() * 100f) / denomF }
       combinedAbsolute[legend] = List(yAbs.size) { it } to yAbs
       combinedPercentage[legend] = List(yPct.size) { it } to yPct
     }
