@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.metrics
 
+import java.math.BigInteger
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import tools.aqua.stars.core.SimpleEntity
@@ -76,7 +77,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
 
     tscEvaluation.runEvaluation(sequenceOf(testSegment))
 
-    assertEquals(0, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
+    assertEquals(BigInteger.ZERO, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC])
   }
 
   /** Tests the calculation of the single possible 3-way feature combinations for a single TSC. */
@@ -107,7 +108,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
 
     tscEvaluation.runEvaluation(sequenceOf(testSegment))
 
-    assertEquals(1, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
+    assertEquals(BigInteger.ONE, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC])
   }
 
   /** Tests the calculation of the possible 3-way feature combinations for a single TSC. */
@@ -139,7 +140,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     tscEvaluation.registerMetricProviders(nWayFeatureCombinationsPerTSCMetric)
 
     tscEvaluation.runEvaluation(sequenceOf(testSegment))
-    assertEquals(10, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
+    assertEquals(BigInteger.TEN, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC])
   }
 
   /** Tests the calculation of the possible 2-way feature combinations for a single TSC. */
@@ -168,7 +169,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     tscEvaluation.registerMetricProviders(nWayFeatureCombinationsPerTSCMetric)
 
     tscEvaluation.runEvaluation(sequenceOf(testSegment))
-    assertEquals(1, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
+    assertEquals(BigInteger.ONE, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC])
   }
 
   /** Tests the calculation of the possible 1-way feature combinations for a single TSC. */
@@ -197,7 +198,7 @@ class NWayFeatureCombinationsPerTSCMetricTest {
     tscEvaluation.registerMetricProviders(nWayFeatureCombinationsPerTSCMetric)
 
     tscEvaluation.runEvaluation(sequenceOf(testSegment))
-    assertEquals(2, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC]?.size)
+    assertEquals(BigInteger.TWO, nWayFeatureCombinationsPerTSCMetric.getState().second[testTSC])
   }
 
   // endregion
