@@ -68,6 +68,27 @@ sealed class TSCNode<
   /** Generates all TSC instances. */
   abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, S, U, D>>
 
+  /** Returns a [List] of all [TSCNode]s that are leaf nodes in the given [currentNode]. */
+  fun getFeatureNodeEdges(
+      currentNode: TSCNode<E, T, S, U, D>,
+      currentNodeEdge: TSCEdge<E, T, S, U, D>? = null,
+  ): List<TSCEdge<E, T, S, U, D>> {
+    val here: List<TSCEdge<E, T, S, U, D>> =
+        if (currentNodeEdge != null && currentNodeEdge.condition !== CONST_TRUE)
+            listOf(currentNodeEdge)
+        else emptyList()
+
+    val children: List<TSCEdge<E, T, S, U, D>> =
+        currentNode.edges.flatMap { edge ->
+          edge.destination.getFeatureNodeEdges(edge.destination, edge)
+        }
+
+    return here + children
+  }
+
+  /** Extract all leaf node *labels* from a [TSC]. */
+  fun extractFeatureLabels(): List<String> = getFeatureNodeEdges(this).map { it.destination.label }
+
   /** Evaluates this TSC in the given context. */
   fun evaluate(
       ctx: PredicateContext<E, T, S, U, D>,

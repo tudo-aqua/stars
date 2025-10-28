@@ -119,13 +119,87 @@ class TSC<
   fun countAllPossibleNWayPredicateCombinations(n: Int): BigInteger {
     require(n >= 1) { "n must be >= 1" }
 
+    // =========================
+    // n == 1: exact + bounded
+    // =========================
+    if (n == 1) {
+      // Returns the set of DISTINCT labels that are feasible as a 1-way feature selection
+      // in the subtree, respecting the node's UPPER bound on contributing children.
+      fun <
+          E : EntityType<E, T, S, U, D>,
+          T : TickDataType<E, T, S, U, D>,
+          S : SegmentType<E, T, S, U, D>,
+          U : TickUnit<U, D>,
+          D : TickDifference<D>,
+      > feasibleLabels1(
+          node: TSCNode<E, T, S, U, D>,
+          isFeatureEdge: Boolean,
+      ): Set<String> =
+          when (node) {
+            is TSCLeafNode<*, *, *, *, *> -> {
+              // A leaf is feasible iff its incoming edge is a feature edge
+              if (isFeatureEdge) setOf(node.label) else emptySet()
+            }
+
+            is TSCBoundedNode<*, *, *, *, *> -> {
+              // Gather feasible labels from each child (as sets)
+              val childSets: List<Set<String>> =
+                  node.edges.map { edge ->
+                    feasibleLabels1(
+                        edge.destination,
+                        edge.condition !== CONST_TRUE,
+                    )
+                  }
+
+              val upper = node.bounds.second
+
+              // DP over number of contributing children j (children from which we take >=1 label).
+              // Since n==1, taking from a child means selecting exactly ONE label from that child's
+              // set.
+              // dp[j] = DISTINCT labels achievable using exactly j contributing children so far.
+              var dp = Array(upper + 1) { emptySet<String>() }
+              dp[0] = emptySet() // with 0 contributing children we currently pick no label
+
+              childSets.forEach { childLabels ->
+                val next = Array(upper + 1) { mutableSetOf<String>() }
+
+                for (j in 0..upper) {
+                  // Case A: do NOT take a label from this child → j stays
+                  next[j].addAll(dp[j])
+
+                  // Case B: take ONE label from this child → j + 1 (if within bound)
+                  if (j + 1 <= upper && childLabels.isNotEmpty()) {
+                    // We can pick ANY one label from this child; union yields all distinct
+                    // possibilities.
+                    next[j + 1].addAll(childLabels)
+                    // Note: dp[j] may already contain labels from earlier children,
+                    // but for n==1 we only keep sets of size 1, so union by label suffices.
+                  }
+                }
+
+                dp = next.map { it.toSet() }.toTypedArray()
+              }
+
+              // Combine all j ≤ upper; optionally add THIS node's label if its incoming edge is a
+              // feature.
+              val fromChildren = (0..upper).flatMapTo(mutableSetOf()) { j -> dp[j] }
+              if (isFeatureEdge) fromChildren.add(node.label)
+              fromChildren
+            }
+          }
+
+      val labels = feasibleLabels1(this.rootNode, isFeatureEdge = false)
+      return BigInteger.valueOf(labels.size.toLong())
+    }
+
+    // ==========================================================
+    // n >= 2: fast count-only DP (counts "ways", NOT deduped)
+    // ==========================================================
     val zero = BigInteger.ZERO
     val one = BigInteger.ONE
 
-    // Multiply a polynomial by (1 + x), truncated to degree n.
     fun mulByOnePlusX(poly: Array<BigInteger>): Array<BigInteger> {
       val res = Array(n + 1) { zero }
-      // res[k] = poly[k] (choose node not selected) + poly[k-1] (node selected)
       for (k in 0..n) {
         var v = poly[k]
         if (k >= 1) v = v.add(poly[k - 1])
@@ -134,9 +208,6 @@ class TSC<
       return res
     }
 
-    // Returns coefficients a[0..n] where a[k] is count of distinct k-sized feature-subsets
-    // achievable in the subtree rooted at `node`. `isFeatureEdge` indicates whether the
-    // (incoming) edge to this node is a feature edge (edge.condition !== CONST_TRUE).
     fun <
         E : EntityType<E, T, S, U, D>,
         T : TickDataType<E, T, S, U, D>,
@@ -149,86 +220,74 @@ class TSC<
     ): Array<BigInteger> =
         when (node) {
           is TSCLeafNode<*, *, *, *, *> -> {
-            // Leaf contributes 1 way to pick nothing. If its incoming edge is a feature edge,
-            // it also contributes 1 way to pick the leaf itself.
             val base = Array(n + 1) { zero }
             base[0] = one
-            val arr = base
-            if (isFeatureEdge) mulByOnePlusX(arr) else arr
+            if (isFeatureEdge) mulByOnePlusX(base) else base
           }
 
           is TSCBoundedNode<*, *, *, *, *> -> {
-            // Compute child polynomials with proper feature-edge flags from their incoming edges.
             val childPolys: List<Array<BigInteger>> =
                 node.edges.map { edge ->
                   countPoly(
                       edge.destination,
-                      // Feature edge criterion must follow the new behavior: !== CONST_TRUE
                       edge.condition !== CONST_TRUE,
                   )
                 }
 
             val upper = node.bounds.second
 
-            // dp[j][k] = number of ways using exactly j children that contribute >= 1 selected
-            // feature,
-            // accumulating k selected features in total from processed children (k ≤ n).
-            var cur = Array(upper + 1) { Array(n + 1) { zero } }
-            cur[0][0] = one
+            // dp[j][k] = number of ways using exactly j contributing children (>=1 from that
+            // child),
+            // totaling k selected features.
+            var dp = Array(upper + 1) { Array(n + 1) { zero } }
+            dp[0][0] = one
 
-            fun addTo(
-                dst: Array<Array<BigInteger>>,
-                j: Int,
-                k: Int,
-                value: BigInteger,
-            ) {
+            fun addTo(dst: Array<Array<BigInteger>>, j: Int, k: Int, value: BigInteger) {
               dst[j][k] = dst[j][k].add(value)
             }
 
             childPolys.forEach { poly ->
               val next = Array(upper + 1) { Array(n + 1) { zero } }
-
               for (j in 0..upper) {
                 for (k in 0..n) {
-                  val base = cur[j][k]
-                  if (base == zero) continue
+                  val baseWays = dp[j][k]
+                  if (baseWays == zero) continue
 
-                  // Case 1: Take 0 features from this child (child not contributing)
-                  addTo(next, j, k, base)
+                  // Child not contributing
+                  addTo(next, j, k, baseWays)
 
-                  // Case 2: Take t >= 1 features from this child (child contributing)
-                  var t = 1
-                  while (k + t <= n) {
-                    val coeff = poly[t]
-                    if (coeff != zero && j + 1 <= upper) {
-                      addTo(next, j + 1, k + t, base.multiply(coeff))
+                  // Child contributing: take t >= 1 from this child
+                  if (j + 1 <= upper) {
+                    var t = 1
+                    while (k + t <= n) {
+                      val coeff = poly[t]
+                      if (coeff != zero) addTo(next, j + 1, k + t, baseWays.multiply(coeff))
+                      t++
                     }
-                    t++
                   }
                 }
               }
-
-              cur = next
+              dp = next
             }
 
-            // Sum over j = 0..upper for coefficients of the combined children
-            val childrenPoly =
-                Array(n + 1) { kk ->
-                  var sum = zero
-                  for (j in 0..upper) sum = sum.add(cur[j][kk])
-                  sum
-                }
+            val childrenPoly = Array(n + 1) { zero }
+            for (j in 0..upper) {
+              for (k in 0..n) {
+                val v = dp[j][k]
+                if (v != zero) childrenPoly[k] = childrenPoly[k].add(v)
+              }
+            }
 
-            // If THIS node is reached via a feature edge, multiply by (1 + x) to optionally select
-            // it
             if (isFeatureEdge) mulByOnePlusX(childrenPoly) else childrenPoly
           }
         }
 
-    // Root has no incoming edge -> not a feature edge.
     val coeffs = countPoly(this.rootNode, isFeatureEdge = false)
     return coeffs[n]
   }
+
+  /** Extract all leaf node *labels* from a [TSC]. */
+  fun extractFeatureLabels() = this.rootNode.extractFeatureLabels()
 
   override fun toString(): String = this.rootNode.toString()
 

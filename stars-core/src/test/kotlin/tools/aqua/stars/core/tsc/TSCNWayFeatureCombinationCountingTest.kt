@@ -132,7 +132,7 @@ class TSCNWayFeatureCombinationCountingTest {
     assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
   }
 
-  /** Test 2-way feature combination counting for bounded node with bounds equals to 0. */
+  /** Test 1-way feature combination counting for bounded node with bounds equals to 0. */
   @Test
   fun `Test 1-way feature combination counting for bounded node with bounds equals to 0`() {
     val testTSC =
@@ -340,6 +340,24 @@ class TSCNWayFeatureCombinationCountingTest {
     assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
   }
 
+  /** Test 2-way feature combination counting for bounded node with bounds equals to 0. */
+  @Test
+  fun `Test 2-way feature combination counting for bounded node with bounds equals to 0`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          bounded("root", 0 to 0) {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(2))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
+    )
+    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+  }
+
   /** Test 2-way feature combination counting for with inner feature nodes. */
   @Test
   fun `Test 2-way feature combination counting for with inner feature nodes without condition`() {
@@ -428,6 +446,217 @@ class TSCNWayFeatureCombinationCountingTest {
 
     assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
     assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(2))
+  }
+
+  // endregion
+
+  // region n = 3
+
+  /** Test 3-way feature combination counting for all node. */
+  @Test
+  fun `Test 3-way feature combination counting for all node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting for optional node. */
+  @Test
+  fun `Test 3-way feature combination counting for optional node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          optional("root") {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting for any node. */
+  @Test
+  fun `Test 3-way feature combination counting for any node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          any("root") {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting for exclusive node. */
+  @Test
+  fun `Test 3-way feature combination counting for exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          exclusive("root") {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting for bounded node. */
+  @Test
+  fun `Test 3-way feature combination counting for bounded node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          bounded("root", 0 to 3) {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting for bounded node with bounds equals to 0. */
+  @Test
+  fun `Test 3-way feature combination counting for bounded node with bounds equals to 0`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          bounded("root", 0 to 0) {
+            leaf("leaf 1") { condition { true } }
+            leaf("leaf 2") { condition { true } }
+            leaf("leaf 3") { condition { true } }
+          }
+        }
+
+    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting for with inner feature nodes. */
+  @Test
+  fun `Test 3-way feature combination counting for with inner feature nodes without condition`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            optional("optional 1") {
+              optional("optional 2") { leaf("leaf 1") { condition { true } } }
+            }
+          }
+        }
+
+    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+  }
+
+  /** Test 3-way feature combination counting with one inner feature node with a condition. */
+  @Test
+  fun `Test 3-way feature combination counting with one inner feature node with a condition`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            optional("optional 1") {
+              condition { true }
+              optional("optional 2") {
+                leaf("leaf 1") { condition { true } }
+                leaf("leaf 2") { condition { true } }
+              }
+            }
+          }
+        }
+
+    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
+  }
+
+  /** Test 3-way feature combination counting with two inner feature nodes with a condition. */
+  @Test
+  fun `Test 3-way feature combination counting with two inner feature nodes with a condition`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            optional("optional 1") {
+              condition { true }
+              optional("optional 2") {
+                condition { true }
+                leaf("leaf 1") { condition { true } }
+              }
+            }
+          }
+        }
+
+    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    assertTrue(
+        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
+    )
+    assertEquals(BigInteger("1"), testTSC.countAllPossibleNWayPredicateCombinations(3))
+  }
+
+  /** Test 3-way feature combination counting with two inner feature nodes with a condition. */
+  @Test
+  fun `Test 3-way feature combination counting with two inner feature nodes without a condition`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            optional("optional 1") {
+              optional("optional 2") { leaf("leaf 1") { condition { true } } }
+            }
+          }
+        }
+
+    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(3))
+  }
+
+  /** Test 3-way feature combination counting with all nodes without a condition. */
+  @Test
+  fun `Test 3-way feature combination counting with all nodes without a condition`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") { optional("optional 1") { optional("optional 2") { leaf("leaf 1") } } }
+        }
+
+    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(3))
   }
 
   // endregion
