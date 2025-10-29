@@ -26,7 +26,9 @@ import tools.aqua.stars.core.SimpleSegment
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataDifference
 import tools.aqua.stars.core.SimpleTickDataUnit
+import tools.aqua.stars.core.evaluation.NWayPredicateCombination
 import tools.aqua.stars.core.tsc.builder.tsc
+import tools.aqua.stars.core.tsc.utils.combinations
 
 typealias E = SimpleEntity
 
@@ -53,11 +55,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.TWO, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 2)
   }
 
   /** Test 1-way feature combination counting for optional node. */
@@ -71,11 +69,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.TWO, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 2)
   }
 
   /** Test 1-way feature combination counting for any node. */
@@ -89,11 +83,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.TWO, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 2)
   }
 
   /** Test 1-way feature combination counting for exclusive node. */
@@ -107,11 +97,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.TWO, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 2)
   }
 
   /** Test 2-way feature combination counting for bounded node. */
@@ -125,11 +111,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.TWO, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 2)
   }
 
   /** Test 1-way feature combination counting for bounded node with bounds equals to 0. */
@@ -143,11 +125,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 0)
   }
 
   /** Test 1-way feature combination counting for with inner feature nodes. */
@@ -162,11 +140,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(1))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
+    executeTests(testTSC, 1, 1)
   }
 
   /** Test 1-way feature combination counting with one inner feature node with a condition. */
@@ -182,11 +156,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(2, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(BigInteger.TWO, testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 2)
   }
 
   /** Test 1-way feature combination counting with two inner feature nodes with a condition. */
@@ -205,11 +175,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(3, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(BigInteger("3"), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 3)
   }
 
   /** Test 1-way feature combination counting with two inner feature nodes with a condition. */
@@ -224,11 +190,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(BigInteger("1"), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 1)
   }
 
   /** Test 1-way feature combination counting with all nodes without a condition. */
@@ -239,11 +201,7 @@ class TSCNWayFeatureCombinationCountingTest {
           all("root") { optional("optional 1") { optional("optional 2") { leaf("leaf 1") } } }
         }
 
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(1).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(1).all { it.elements.size == 1 },
-    )
-    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 0)
   }
 
   // endregion
@@ -261,11 +219,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 1)
   }
 
   /** Test 2-way feature combination counting for optional node. */
@@ -279,11 +233,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 1)
   }
 
   /** Test 2-way feature combination counting for any node. */
@@ -297,11 +247,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 1)
   }
 
   /** Test 2-way feature combination counting for exclusive node. */
@@ -315,11 +261,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 0)
   }
 
   /** Test 2-way feature combination counting for bounded node. */
@@ -333,11 +275,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 1)
   }
 
   /** Test 2-way feature combination counting for bounded node with bounds equals to 0. */
@@ -351,11 +289,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 0)
   }
 
   /** Test 2-way feature combination counting for with inner feature nodes. */
@@ -370,11 +304,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 0)
   }
 
   /** Test 2-way feature combination counting with one inner feature node with a condition. */
@@ -390,11 +320,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 1)
   }
 
   /** Test 2-way feature combination counting with two inner feature nodes with a condition. */
@@ -413,11 +339,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(3, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(BigInteger("3"), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 3)
   }
 
   /** Test 2-way feature combination counting with two inner feature nodes with a condition. */
@@ -432,8 +354,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
-    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 0)
   }
 
   /** Test 2-way feature combination counting with all nodes without a condition. */
@@ -444,8 +365,7 @@ class TSCNWayFeatureCombinationCountingTest {
           all("root") { optional("optional 1") { optional("optional 2") { leaf("leaf 1") } } }
         }
 
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
-    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 0)
   }
 
   // endregion
@@ -464,11 +384,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 1)
   }
 
   /** Test 3-way feature combination counting for optional node. */
@@ -483,11 +399,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 1)
   }
 
   /** Test 3-way feature combination counting for any node. */
@@ -502,11 +414,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 1)
   }
 
   /** Test 3-way feature combination counting for exclusive node. */
@@ -521,11 +429,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test 3-way feature combination counting for bounded node. */
@@ -540,11 +444,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 1)
   }
 
   /** Test 3-way feature combination counting for bounded node with bounds equals to 0. */
@@ -559,11 +459,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test 3-way feature combination counting for with inner feature nodes. */
@@ -578,11 +474,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test 3-way feature combination counting with one inner feature node with a condition. */
@@ -601,11 +493,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(BigInteger.ONE, testTSC.countAllPossibleNWayPredicateCombinations(3))
+    executeTests(testTSC, 3, 1)
   }
 
   /** Test 3-way feature combination counting with two inner feature nodes with a condition. */
@@ -624,11 +512,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(1, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(BigInteger("1"), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    executeTests(testTSC, 3, 1)
   }
 
   /** Test 3-way feature combination counting with two inner feature nodes with a condition. */
@@ -643,8 +527,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
-    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test 3-way feature combination counting with all nodes without a condition. */
@@ -655,8 +538,7 @@ class TSCNWayFeatureCombinationCountingTest {
           all("root") { optional("optional 1") { optional("optional 2") { leaf("leaf 1") } } }
         }
 
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
-    assertEquals(BigInteger("0"), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    executeTests(testTSC, 3, 0)
   }
 
   // endregion
@@ -676,11 +558,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("6"), testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(6, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 6)
   }
 
   /** Test 2-way feature combination counting for optional node with larger TSC. */
@@ -696,11 +574,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("6"), testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(6, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 6)
   }
 
   /** Test 2-way feature combination counting for any node with larger TSC. */
@@ -716,11 +590,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("6"), testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(6, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 6)
   }
 
   /** Test 2-way feature combination counting for exclusive node with larger TSC. */
@@ -736,11 +606,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 0)
   }
 
   /** Test 2-way feature combination counting for bounded node with larger TSC. */
@@ -756,11 +622,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("6"), testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(6, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 6)
   }
 
   // endregion
@@ -786,11 +648,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("14"), testTSC.countAllPossibleNWayPredicateCombinations(2))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(2).all { it.elements.size == 2 },
-    )
-    assertEquals(14, testTSC.getAllPossibleNWayPredicateCombinations(2).size)
+    executeTests(testTSC, 2, 14)
   }
 
   // endregion
@@ -810,11 +668,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("4"), testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(4, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 4)
   }
 
   /** Test 3-way feature combination counting for optional node with larger TSC. */
@@ -830,11 +684,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("4"), testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(4, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 4)
   }
 
   /** Test 3-way feature combination counting for any node with larger TSC. */
@@ -850,11 +700,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("4"), testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(4, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 4)
   }
 
   /** Test 3-way feature combination counting for exclusive node with larger TSC. */
@@ -870,11 +716,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger.ZERO, testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(0, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test 3-way feature combination counting for bounded node with larger TSC. */
@@ -890,11 +732,7 @@ class TSCNWayFeatureCombinationCountingTest {
           }
         }
 
-    assertEquals(BigInteger("4"), testTSC.countAllPossibleNWayPredicateCombinations(3))
-    assertTrue(
-        testTSC.getAllPossibleNWayPredicateCombinations(3).all { it.elements.size == 3 },
-    )
-    assertEquals(4, testTSC.getAllPossibleNWayPredicateCombinations(3).size)
+    executeTests(testTSC, 3, 4)
   }
 
   // endregion
@@ -982,18 +820,16 @@ class TSCNWayFeatureCombinationCountingTest {
         }
 
     // 1-way
-    assertEquals(BigInteger.valueOf(4), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 4)
     val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
-    assertEquals(4, combinations1Way.size)
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 3") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 4") } }
 
     // 2-way
-    assertEquals(BigInteger.valueOf(5), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 5)
     val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
-    assertEquals(5, combinations2Way.size)
     assertTrue {
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
     }
@@ -1011,9 +847,8 @@ class TSCNWayFeatureCombinationCountingTest {
     }
 
     // 3-way
-    assertEquals(BigInteger.valueOf(2), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    executeTests(testTSC, 3, 2)
     val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
-    assertEquals(2, combinations3Way.size)
     assertTrue {
       combinations3Way.any {
         it.elements.contains("Leaf 1") &&
@@ -1045,19 +880,20 @@ class TSCNWayFeatureCombinationCountingTest {
         }
 
     // 1-way
-    assertEquals(BigInteger.valueOf(2), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 2)
     val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
-    assertEquals(2, combinations1Way.size)
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
 
     // 2-way
-    assertEquals(BigInteger.valueOf(1), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 1)
     val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
-    assertEquals(1, combinations2Way.size)
     assertTrue {
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
     }
+
+    // 3-way
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test handcrafted tested tsc with duplicate features and exclusive node. */
@@ -1084,9 +920,8 @@ class TSCNWayFeatureCombinationCountingTest {
         }
 
     // 1-way
-    assertEquals(BigInteger.valueOf(5), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 5)
     val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
-    assertEquals(5, combinations1Way.size)
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 3") } }
@@ -1094,9 +929,8 @@ class TSCNWayFeatureCombinationCountingTest {
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 5") } }
 
     // 2-way
-    assertEquals(BigInteger.valueOf(8), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 8)
     val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
-    assertEquals(8, combinations2Way.size)
     assertTrue {
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 3") }
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 4") }
@@ -1108,9 +942,8 @@ class TSCNWayFeatureCombinationCountingTest {
     }
 
     // 3-way
-    assertEquals(BigInteger.valueOf(4), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    executeTests(testTSC, 3, 4)
     val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
-    assertEquals(4, combinations3Way.size)
     assertTrue {
       combinations3Way.any {
         it.elements.contains("Leaf 1") &&
@@ -1153,26 +986,22 @@ class TSCNWayFeatureCombinationCountingTest {
         }
 
     // 1-way
-    assertEquals(BigInteger.valueOf(3), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 3)
     val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
-    assertEquals(3, combinations1Way.size)
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 3") } }
 
     // 2-way
-    assertEquals(BigInteger.valueOf(2), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 2)
     val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
-    assertEquals(2, combinations2Way.size)
     assertTrue {
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 3") }
     }
 
     // 3-way
-    assertEquals(BigInteger.valueOf(0), testTSC.countAllPossibleNWayPredicateCombinations(3))
-    val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
-    assertEquals(0, combinations3Way.size)
+    executeTests(testTSC, 3, 0)
   }
 
   /** Test handcrafted tested tsc with two equal optional nodes. */
@@ -1193,25 +1022,178 @@ class TSCNWayFeatureCombinationCountingTest {
         }
 
     // 1-way
-    assertEquals(BigInteger.valueOf(2), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    executeTests(testTSC, 1, 2)
     val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
-    assertEquals(2, combinations1Way.size)
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
     assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
 
     // 2-way
-    assertEquals(BigInteger.valueOf(1), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    executeTests(testTSC, 2, 1)
     val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
-    assertEquals(1, combinations2Way.size)
     assertTrue {
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
     }
 
     // 3-way
-    assertEquals(BigInteger.valueOf(0), testTSC.countAllPossibleNWayPredicateCombinations(3))
-    val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
-    assertEquals(0, combinations3Way.size)
+    executeTests(testTSC, 3, 0)
+  }
+
+  /** Test NFM Full TSC. */
+  @Test
+  fun `Test NFM Full TSC`() {
+    val testTSC =
+        tsc<E, T, S, U, D>("TSC Full") {
+          all("TSCRoot") {
+            exclusive("Road Type") {
+              all("Junction") {
+                condition { true }
+
+                optional("Dynamic Relation") {
+                  leaf("Pedestrian Crossed") { condition { true } }
+
+                  leaf("Must Yield") { condition { true } }
+
+                  leaf("Following Leading Vehicle") { condition { true } }
+                }
+
+                exclusive("Maneuver") {
+                  leaf("No Turn") { condition { true } }
+                  leaf("Right Turn") { condition { true } }
+                  leaf("Left Turn") { condition { true } }
+                }
+              }
+              all("Multi-Lane") {
+                condition { true }
+
+                optional("Dynamic Relation") {
+                  leaf("Oncoming traffic") { condition { true } }
+                  leaf("Overtaking") { condition { true } }
+                  leaf("Pedestrian Crossed") { condition { true } }
+                  leaf("Following Leading Vehicle") { condition { true } }
+                }
+
+                exclusive("Maneuver") {
+                  leaf("Lane Change") { condition { true } }
+                  leaf("Lane Follow") { condition { true } }
+                }
+
+                bounded("Stop Type", 0 to 1) { leaf("Has Red Light") { condition { true } } }
+              }
+              all("Single-Lane") {
+                condition { true }
+
+                optional("Dynamic Relation") {
+                  leaf("Oncoming traffic") { condition { true } }
+
+                  leaf("Pedestrian Crossed") { condition { true } }
+
+                  leaf("Following Leading Vehicle") { condition { true } }
+                }
+
+                bounded("Stop Type", 0 to 1) {
+                  leaf("Has Stop Sign") { condition { true } }
+                  leaf("Has Yield Sign") { condition { true } }
+                  leaf("Has Red Light") { condition { true } }
+                }
+              }
+            }
+
+            exclusive("Traffic Density") {
+              leaf("High Traffic") { condition { true } }
+              leaf("Middle Traffic") { condition { true } }
+              leaf("Low Traffic") { condition { true } }
+            }
+
+            exclusive("Weather") {
+              leaf("Clear") { condition { true } }
+              leaf("Rain") { condition { true } }
+            }
+
+            exclusive("Time of Day") {
+              leaf("Day") { condition { true } }
+              leaf("Night") { condition { true } }
+            }
+          }
+        }
+
+    executeTests(testTSC, 1, 23)
+    executeTests(testTSC, 2, 184)
+    executeTests(testTSC, 3, 750)
+    executeTests(testTSC, 4, 1798)
+    executeTests(testTSC, 5, 2714)
+    executeTests(testTSC, 6, 2667)
+    executeTests(testTSC, 7, 1725)
+    executeTests(testTSC, 8, 726)
+    executeTests(testTSC, 9, 188)
+    executeTests(testTSC, 10, 24)
+    executeTests(testTSC, 11, 0)
+    getCombinationsFromPossibleInstances(testTSC, 10).forEach { println(it) }
+  }
+
+  /** Test NFM Layer 4 Flat TSC. */
+  @Test
+  fun `Test NFM Layer 4 Flat TSC`() {
+    val testTSC =
+        tsc<E, T, S, U, D>("TSC Layer 4 Flat") {
+          optional("TSCRoot") {
+            leaf("Junction") { condition { true } }
+            leaf("Pedestrian Crossed") { condition { true } }
+            leaf("Must Yield") { condition { true } }
+            leaf("Following Leading Vehicle") { condition { true } }
+            leaf("Multi-Lane") { condition { true } }
+            leaf("Oncoming traffic") { condition { true } }
+            leaf("Overtaking") { condition { true } }
+            leaf("Single-Lane") { condition { true } }
+            leaf("High Traffic") { condition { true } }
+            leaf("Middle Traffic") { condition { true } }
+            leaf("Low Traffic") { condition { true } }
+          }
+        }
+
+    executeTests(testTSC, 1, 11)
+    executeTests(testTSC, 2, 55)
+    executeTests(testTSC, 3, 165)
+    executeTests(testTSC, 4, 330)
+    executeTests(testTSC, 5, 462)
+    executeTests(testTSC, 6, 462)
+    executeTests(testTSC, 7, 330)
+    executeTests(testTSC, 8, 165)
+    executeTests(testTSC, 9, 55)
+    executeTests(testTSC, 10, 11)
+    executeTests(testTSC, 11, 1)
+    executeTests(testTSC, 12, 0)
   }
 
   // endregion
+
+  private fun executeTests(tsc: TSC<*, *, *, *, *>, n: Int, resultSize: Int) {
+    val nWayCombinations = tsc.getAllPossibleNWayPredicateCombinations(n)
+    val nWayCombinationsFromPossibleTSCInstances = getCombinationsFromPossibleInstances(tsc, n)
+
+    assertEquals(
+        BigInteger.valueOf(resultSize.toLong()),
+        tsc.countAllPossibleNWayPredicateCombinations(n),
+    )
+    assertTrue(nWayCombinations.all { it.elements.size == n })
+    assertTrue(nWayCombinationsFromPossibleTSCInstances.all { it.elements.size == n })
+    assertEquals(resultSize, nWayCombinations.size)
+    assertEquals(resultSize, nWayCombinationsFromPossibleTSCInstances.size)
+    assertEquals(nWayCombinations, nWayCombinationsFromPossibleTSCInstances)
+  }
+
+  private fun getCombinationsFromPossibleInstances(
+      tsc: TSC<*, *, *, *, *>,
+      n: Int,
+  ): Set<NWayPredicateCombination> {
+    val possibleInstances = tsc.possibleTSCInstances
+    val possibleNWayCombinations: MutableSet<NWayPredicateCombination> = mutableSetOf()
+    possibleInstances.forEach { instance ->
+      val featureNodes = instance.extractLeafLabels()
+      val combinations = combinations(featureNodes, n)
+      combinations.forEach { combo ->
+        possibleNWayCombinations.add(NWayPredicateCombination(combo.sorted()))
+      }
+    }
+    return possibleNWayCombinations
+  }
 }
