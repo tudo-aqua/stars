@@ -30,15 +30,15 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test empty tsc`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          leaf("root")
-        }
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+          > {
+        leaf("root")
+      }
 
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
@@ -47,19 +47,19 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test simple tsc with only leaves and all node`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root") {
-            leaf("leaf1")
-            leaf("leaf2")
-            leaf("leaf3")
-          }
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+          > {
+        all("root") {
+          leaf("leaf1")
+          leaf("leaf2")
+          leaf("leaf3")
         }
+      }
 
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
@@ -71,19 +71,19 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test simple tsc with only leaves and optional node`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          optional("root") {
-            leaf("leaf1")
-            leaf("leaf2")
-            leaf("leaf3")
-          }
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+          > {
+        optional("root") {
+          leaf("leaf1")
+          leaf("leaf2")
+          leaf("leaf3")
         }
+      }
 
     // ()
     // (1), (2), (3)
@@ -96,19 +96,19 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test simple tsc with only leaves and bounded node`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          bounded("root", 1 to 2) {
-            leaf("leaf1")
-            leaf("leaf2")
-            leaf("leaf3")
-          }
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+          > {
+        bounded("root", 1 to 2) {
+          leaf("leaf1")
+          leaf("leaf2")
+          leaf("leaf3")
         }
+      }
 
     // (1), (2), (3)
     // (1,2), (1,3), (2,3)
@@ -119,15 +119,15 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test tsc with nested all nodes`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          all("root") { all("layer1") { all("layer2") { all("layer3") { leaf("leaf1") } } } }
-        }
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+          > {
+        all("root") { all("layer1") { all("layer2") { all("layer3") { leaf("leaf1") } } } }
+      }
 
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
@@ -136,22 +136,22 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test complex tsc`() {
     val tsc =
-        tsc<
-            SimpleEntity,
-            SimpleTickData,
-            SimpleSegment,
-            SimpleTickDataUnit,
-            SimpleTickDataDifference,
-        > {
-          bounded("root", 1 to 2) {
-            bounded("inner", 1 to 2) {
-              leaf("leaf1")
-              leaf("leaf2")
-            }
-            leaf("leaf3")
-            leaf("leaf4")
+      tsc<
+          SimpleEntity,
+          SimpleTickData,
+          SimpleSegment,
+          SimpleTickDataUnit,
+          SimpleTickDataDifference,
+          > {
+        bounded("root", 1 to 2) {
+          bounded("inner", 1 to 2) {
+            leaf("leaf1")
+            leaf("leaf2")
           }
+          leaf("leaf3")
+          leaf("leaf4")
         }
+      }
 
     // (i,1), (i,2), (i,1,2), (3), (4),
     // (i,1,3), (i,2,3), (i,1,2,3), (i,1,4), (i,2,4), (i,1,2,4), (3,4)
