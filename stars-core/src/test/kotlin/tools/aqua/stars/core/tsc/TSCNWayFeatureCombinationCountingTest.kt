@@ -968,13 +968,7 @@ class TSCNWayFeatureCombinationCountingTest {
   @Test
   fun `Test handcrafted TSC without duplicate feature nodes`() {
     val testTSC =
-        tsc<
-            E,
-            T,
-            S,
-            U,
-            D,
-        > {
+        tsc<E, T, S, U, D> {
           all("root") {
             optional("Optional 1") {
               leaf("Leaf 1") { condition { true } }
@@ -1040,13 +1034,7 @@ class TSCNWayFeatureCombinationCountingTest {
   @Test
   fun `Test handcrafted tested tsc with duplicate features`() {
     val testTSC =
-        tsc<
-            E,
-            T,
-            S,
-            U,
-            D,
-        > {
+        tsc<E, T, S, U, D> {
           exclusive("Exclusive") {
             optional("Optional") {
               leaf("Leaf 1") { condition { true } }
@@ -1070,6 +1058,159 @@ class TSCNWayFeatureCombinationCountingTest {
     assertTrue {
       combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
     }
+  }
+
+  /** Test handcrafted tested tsc with duplicate features and exclusive node. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features and exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            exclusive("Exclusive 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive 2") {
+              optional("Optional 1") {
+                leaf("Leaf 3") { condition { true } }
+                leaf("Leaf 4") { condition { true } }
+              }
+              optional("Optional 2") {
+                leaf("Leaf 3") { condition { true } }
+                leaf("Leaf 5") { condition { true } }
+              }
+            }
+          }
+        }
+
+    // 1-way
+    assertEquals(BigInteger.valueOf(5), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
+    assertEquals(5, combinations1Way.size)
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 3") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 4") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 5") } }
+
+    // 2-way
+    assertEquals(BigInteger.valueOf(8), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
+    assertEquals(8, combinations2Way.size)
+    assertTrue {
+      combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 3") }
+      combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 4") }
+      combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 5") }
+      combinations2Way.any { it.elements.contains("Leaf 2") && it.elements.contains("Leaf 3") }
+      combinations2Way.any { it.elements.contains("Leaf 2") && it.elements.contains("Leaf 4") }
+      combinations2Way.any { it.elements.contains("Leaf 2") && it.elements.contains("Leaf 5") }
+      combinations2Way.any { it.elements.contains("Leaf 3") && it.elements.contains("Leaf 5") }
+    }
+
+    // 3-way
+    assertEquals(BigInteger.valueOf(4), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
+    assertEquals(4, combinations3Way.size)
+    assertTrue {
+      combinations3Way.any {
+        it.elements.contains("Leaf 1") &&
+            it.elements.contains("Leaf 3") &&
+            it.elements.contains("Leaf 4")
+      }
+      combinations3Way.any {
+        it.elements.contains("Leaf 1") &&
+            it.elements.contains("Leaf 3") &&
+            it.elements.contains("Leaf 5")
+      }
+      combinations3Way.any {
+        it.elements.contains("Leaf 2") &&
+            it.elements.contains("Leaf 3") &&
+            it.elements.contains("Leaf 4")
+      }
+      combinations3Way.any {
+        it.elements.contains("Leaf 2") &&
+            it.elements.contains("Leaf 3") &&
+            it.elements.contains("Leaf 5")
+      }
+    }
+  }
+
+  /** Test handcrafted tested tsc with duplicate features under the same exclusive node. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features under the same exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            exclusive("Exclusive 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive 2") {
+              all("all 1") { leaf("Leaf 3") { condition { true } } }
+              all("all 2") { leaf("Leaf 3") { condition { true } } }
+            }
+          }
+        }
+
+    // 1-way
+    assertEquals(BigInteger.valueOf(3), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
+    assertEquals(3, combinations1Way.size)
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 3") } }
+
+    // 2-way
+    assertEquals(BigInteger.valueOf(2), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
+    assertEquals(2, combinations2Way.size)
+    assertTrue {
+      combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
+      combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 3") }
+    }
+
+    // 3-way
+    assertEquals(BigInteger.valueOf(0), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
+    assertEquals(0, combinations3Way.size)
+  }
+
+  /** Test handcrafted tested tsc with two equal optional nodes. */
+  @Test
+  fun `Test handcrafted tested tsc with with two equal optional nodes`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          exclusive("root") {
+            optional("optional 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("optional 2") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+          }
+        }
+
+    // 1-way
+    assertEquals(BigInteger.valueOf(2), testTSC.countAllPossibleNWayPredicateCombinations(1))
+    val combinations1Way = testTSC.getAllPossibleNWayPredicateCombinations(1)
+    assertEquals(2, combinations1Way.size)
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 1") } }
+    assertTrue { combinations1Way.any { it.elements.contains("Leaf 2") } }
+
+    // 2-way
+    assertEquals(BigInteger.valueOf(1), testTSC.countAllPossibleNWayPredicateCombinations(2))
+    val combinations2Way = testTSC.getAllPossibleNWayPredicateCombinations(2)
+    assertEquals(1, combinations2Way.size)
+    assertTrue {
+      combinations2Way.any { it.elements.contains("Leaf 1") && it.elements.contains("Leaf 2") }
+    }
+
+    // 3-way
+    assertEquals(BigInteger.valueOf(0), testTSC.countAllPossibleNWayPredicateCombinations(3))
+    val combinations3Way = testTSC.getAllPossibleNWayPredicateCombinations(3)
+    assertEquals(0, combinations3Way.size)
   }
 
   // endregion

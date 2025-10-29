@@ -30,15 +30,15 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test empty tsc`() {
     val tsc =
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-          > {
-        leaf("root")
-      }
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        > {
+          leaf("root")
+        }
 
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
@@ -47,19 +47,19 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test simple tsc with only leaves and all node`() {
     val tsc =
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-          > {
-        all("root") {
-          leaf("leaf1")
-          leaf("leaf2")
-          leaf("leaf3")
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        > {
+          all("root") {
+            leaf("leaf1")
+            leaf("leaf2")
+            leaf("leaf3")
+          }
         }
-      }
 
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
@@ -71,19 +71,19 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test simple tsc with only leaves and optional node`() {
     val tsc =
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-          > {
-        optional("root") {
-          leaf("leaf1")
-          leaf("leaf2")
-          leaf("leaf3")
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        > {
+          optional("root") {
+            leaf("leaf1")
+            leaf("leaf2")
+            leaf("leaf3")
+          }
         }
-      }
 
     // ()
     // (1), (2), (3)
@@ -96,19 +96,19 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test simple tsc with only leaves and bounded node`() {
     val tsc =
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-          > {
-        bounded("root", 1 to 2) {
-          leaf("leaf1")
-          leaf("leaf2")
-          leaf("leaf3")
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        > {
+          bounded("root", 1 to 2) {
+            leaf("leaf1")
+            leaf("leaf2")
+            leaf("leaf3")
+          }
         }
-      }
 
     // (1), (2), (3)
     // (1,2), (1,3), (2,3)
@@ -119,15 +119,15 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test tsc with nested all nodes`() {
     val tsc =
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-          > {
-        all("root") { all("layer1") { all("layer2") { all("layer3") { leaf("leaf1") } } } }
-      }
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        > {
+          all("root") { all("layer1") { all("layer2") { all("layer3") { leaf("leaf1") } } } }
+        }
 
     assertEquals(BigInteger.ONE, tsc.instanceCount)
   }
@@ -136,26 +136,113 @@ class TSCInstanceCountingTest {
   @Test
   fun `Test complex tsc`() {
     val tsc =
-      tsc<
-          SimpleEntity,
-          SimpleTickData,
-          SimpleSegment,
-          SimpleTickDataUnit,
-          SimpleTickDataDifference,
-          > {
-        bounded("root", 1 to 2) {
-          bounded("inner", 1 to 2) {
-            leaf("leaf1")
-            leaf("leaf2")
+        tsc<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleSegment,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        > {
+          bounded("root", 1 to 2) {
+            bounded("inner", 1 to 2) {
+              leaf("leaf1")
+              leaf("leaf2")
+            }
+            leaf("leaf3")
+            leaf("leaf4")
           }
-          leaf("leaf3")
-          leaf("leaf4")
         }
-      }
 
     // (i,1), (i,2), (i,1,2), (3), (4),
     // (i,1,3), (i,2,3), (i,1,2,3), (i,1,4), (i,2,4), (i,1,2,4), (3,4)
 
     assertEquals(BigInteger.valueOf(12), tsc.instanceCount)
+  }
+
+  /** Test handcrafted TSC without duplicate feature nodes. */
+  @Test
+  fun `Test handcrafted TSC without duplicate feature nodes`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            optional("Optional 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive") {
+              leaf("Leaf 3") { condition { true } }
+              leaf("Leaf 4") { condition { true } }
+            }
+          }
+        }
+
+    assertEquals(BigInteger.valueOf(8), testTSC.instanceCount)
+    assertEquals(8, testTSC.possibleTSCInstances.size)
+  }
+
+  /** Test handcrafted tested tsc with duplicate features. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          exclusive("Exclusive") {
+            optional("Optional") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            all("All") { leaf("Leaf 1") { condition { true } } }
+          }
+        }
+
+    assertEquals(BigInteger.valueOf(5), testTSC.instanceCount)
+    assertEquals(5, testTSC.possibleTSCInstances.size)
+  }
+
+  /** Test handcrafted tested tsc with duplicate features and exclusive node. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features and exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            exclusive("Exclusive 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive 2") {
+              optional("Optional 1") {
+                leaf("Leaf 3") { condition { true } }
+                leaf("Leaf 4") { condition { true } }
+              }
+              optional("Optional 2") {
+                leaf("Leaf 3") { condition { true } }
+                leaf("Leaf 5") { condition { true } }
+              }
+            }
+          }
+        }
+
+    assertEquals(BigInteger.valueOf(16), testTSC.instanceCount)
+    assertEquals(16, testTSC.possibleTSCInstances.size)
+  }
+
+  /** Test handcrafted tested tsc with duplicate features under the same exclusive node. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features under the same exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            exclusive("Exclusive 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive 2") {
+              all("all 1") { leaf("Leaf 3") { condition { true } } }
+              all("all 2") { leaf("Leaf 3") { condition { true } } }
+            }
+          }
+        }
+
+    assertEquals(4, testTSC.possibleTSCInstances.size)
+    assertEquals(BigInteger.valueOf(4), testTSC.instanceCount)
   }
 }
