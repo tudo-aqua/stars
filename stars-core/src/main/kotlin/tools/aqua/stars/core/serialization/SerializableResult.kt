@@ -26,7 +26,7 @@ import tools.aqua.stars.core.serialization.extensions.getJsonString
  * implementing classes of the [Serializable] interface.
  */
 @Serializable
-sealed class SerializableResult {
+abstract class SerializableResult {
   /** The identifier of this specific result. */
   abstract val identifier: String
   /** The source (i.e. the metric) which produced this result. */
