@@ -57,13 +57,13 @@
     "title": "Model Checking von CMFTBL-Formeln mit SMT-Solvern am Beispiel von automatisierten Fahrsystemen",
     "year": 2025,
     "type": "Bachelor's Thesis",
-    "finished": false
+    "finished": true
   },
   {
     "title": "A Proof-Logic-Based Explainable Model Checker for the Temporal Logic CMFTBL",
     "year": 2025,
     "type": "Master's Thesis",
-    "finished": false
+    "finished": true
   },
   {
     "title": "Scenario Generation based on missing feature combinations using SCENIC",
@@ -87,7 +87,7 @@
     "title": "Risikobewertung von Szenarien in STARS mittels unfallrelevanter Fahrmetriken",
     "year": 2025,
     "type": "Bachelor's Thesis",
-    "finished": false
+    "finished": true
   },
   {
     "title": "Implementation of a Traffic Data Acquisition Prototype for Scenario-Based Testing of Automated Driving Systems",
@@ -96,33 +96,9 @@
     "finished": false
   },
   {
-    "title": "Analyse der Diversität des INTERACTION-Datensatzes",
-    "year": 2025,
-    "type": "Bachelor's Thesis",
-    "finished": false
-  },
-  {
-    "title": "Scenario Generation based on missing feature combinations using SCENIC",
-    "year": 2025,
-    "type": "Bachelor's Thesis",
-    "finished": false
-  },
-  {
-    "title": "Erstellung eines Autopiloten in CARLA mit einstellbarer Fahrqualität",
-    "year": 2025,
-    "type": "Bachelor's Thesis",
-    "finished": false
-  },
-  {
     "title": "Eine Qualitative Analyse der Autonome-Fahrzeuge-Genehmigungs-und-Betriebs-Verordnung - AFGBV für Automatische Fahrsysteme",
     "year": 2025,
     "type": "Bachelor's Thesis",
-    "finished": false
-  },
-  {
-    "title": "Implementation of a Traffic Data Acquisition Prototype for Scenario-Based Testing of Automated Driving Systems",
-    "year": 2025,
-    "type": "Master's Thesis",
     "finished": false
   },
   {
