@@ -159,7 +159,7 @@ jobs:
         run: ./gradlew :${{ matrix.project }}:test
 
       - name: Upload test results
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: ${{ !cancelled() }}
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
@@ -192,7 +192,7 @@ jobs:
         run: ./gradlew :${{ matrix.project }}:test
 
       - name: Upload test results
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: ${{ !cancelled() }}
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
