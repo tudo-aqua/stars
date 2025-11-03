@@ -1,6 +1,6 @@
 [
   {
-    "title": "Extraktion von formal Analysierbaren Fahrdaten aus Computerspielen am Beispiel von GTA V",
+    "title": "Extraktion von formal Analysierbaren Fahrdaten aus Computerspielen am Beispiel von Videospielen",
     "year": 2023,
     "type": "Bachelor's Thesis",
     "finished": true
@@ -18,13 +18,13 @@
     "finished": true
   },
   {
-    "title": "Strategies for extracting static map data from GTA for formal analysis with STARS",
+    "title": "Strategies for extracting static map data from video games for formal analysis with STARS",
     "year": 2024,
     "type": "Bachelor's Thesis",
     "finished": true
   },
   {
-    "title": "Testfallerstellung für STARS Scenario Features durch effizientes Labeln von Fahrdaten in GTA V",
+    "title": "Testfallerstellung für STARS Scenario Features durch effizientes Labeln von Fahrdaten in Videospielen",
     "year": 2024,
     "type": "Bachelor's Thesis",
     "finished": true
@@ -90,9 +90,45 @@
     "finished": false
   },
   {
-    "title": "Implementation of a Traffic Data Acquisition Prototype for Scenario-Based Testing of Automated Driving Systems​",
+    "title": "Implementation of a Traffic Data Acquisition Prototype for Scenario-Based Testing of Automated Driving Systems",
     "year": 2025,
     "type": "Masters's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Analyse der Diversität des INTERACTION-Datensatzes",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Scenario Generation based on missing feature combinations using SCENIC",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Erstellung eines Autopiloten in CARLA mit einstellbarer Fahrqualität",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Eine Qualitative Analyse der Autonome-Fahrzeuge-Genehmigungs-und-Betriebs-Verordnung - AFGBV für Automatische Fahrsysteme",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Implementation of a Traffic Data Acquisition Prototype for Scenario-Based Testing of Automated Driving Systems",
+    "year": 2025,
+    "type": "Master's Thesis",
+    "finished": false
+  },
+  {
+    "title": "Evaluation einer blockgrenzenübergreifenden Segmentierung zur Analyse von Fahrdaten im STARS-Framework",
+    "year": 2025,
+    "type": "Bachelor's Thesis",
     "finished": false
   }
 ]
