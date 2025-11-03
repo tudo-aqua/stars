@@ -18,10 +18,15 @@
 package tools.aqua.stars.core.tsc
 
 import java.math.BigInteger
+import tools.aqua.stars.core.binomial
+import tools.aqua.stars.core.evaluation.NWayPredicateCombination
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
+import tools.aqua.stars.core.tsc.node.TSCBoundedNode
+import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
+import tools.aqua.stars.core.tsc.utils.combinations
 import tools.aqua.stars.core.types.*
 
 /**
@@ -89,6 +94,41 @@ class TSC<
    */
   fun buildProjections(projectionIgnoreList: List<Any> = emptyList()): List<TSC<E, T, S, U, D>> =
       rootNode.buildProjections(projectionIgnoreList)
+
+  /**
+   * Returns all possible n-way predicate-label combinations for the given TSC.
+   *
+   * @param n The number of `n` for the n-way combinations.
+   */
+  fun getAllPossibleNWayPredicateCombinations(n: Int): Set<NWayPredicateCombination> {
+    val all = mutableSetOf<NWayPredicateCombination>()
+    possibleTSCInstances.forEach { referenceInstance ->
+      val labels = referenceInstance.extractLeafLabels()
+      combinations(labels, n).forEach { combo -> all += NWayPredicateCombination(combo.sorted()) }
+    }
+    return all
+  }
+
+  /**
+   * Counts the number of **distinct** n-way feature combinations that are possible in this [TSC].
+   *
+   * @param n the size of the feature combinations (n ≥ 1)
+   * @return number of distinct possible n-way combinations as [BigInteger]
+   */
+  fun countAllPossibleNWayPredicateCombinations(n: Int): BigInteger {
+    require(n >= 1) { "n must be >= 1" }
+    if (this.rootNode.edges.all { it.destination is TSCLeafNode<*, *, *, *, *> }) {
+      val availableFeatureNodes = this.extractFeatureLabels().size
+      return if (availableFeatureNodes < n) BigInteger.ZERO
+      else if (this.rootNode is TSCBoundedNode<*, *, *, *, *> && this.rootNode.bounds.second < n)
+          BigInteger.ZERO
+      else BigInteger.valueOf(binomial(this.extractFeatureLabels().size, n))
+    }
+    return getAllPossibleNWayPredicateCombinations(n).size.toBigInteger()
+  }
+
+  /** Extract all leaf node *labels* from a [TSC]. */
+  fun extractFeatureLabels() = this.rootNode.extractFeatureLabels()
 
   override fun toString(): String = this.rootNode.toString()
 

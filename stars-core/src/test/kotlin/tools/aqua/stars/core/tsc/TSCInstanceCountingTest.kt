@@ -158,4 +158,91 @@ class TSCInstanceCountingTest {
 
     assertEquals(BigInteger.valueOf(12), tsc.instanceCount)
   }
+
+  /** Test handcrafted TSC without duplicate feature nodes. */
+  @Test
+  fun `Test handcrafted TSC without duplicate feature nodes`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            optional("Optional 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive") {
+              leaf("Leaf 3") { condition { true } }
+              leaf("Leaf 4") { condition { true } }
+            }
+          }
+        }
+
+    assertEquals(BigInteger.valueOf(8), testTSC.instanceCount)
+    assertEquals(8, testTSC.possibleTSCInstances.size)
+  }
+
+  /** Test handcrafted tested tsc with duplicate features. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          exclusive("Exclusive") {
+            optional("Optional") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            all("All") { leaf("Leaf 1") { condition { true } } }
+          }
+        }
+
+    assertEquals(BigInteger.valueOf(5), testTSC.instanceCount)
+    assertEquals(5, testTSC.possibleTSCInstances.size)
+  }
+
+  /** Test handcrafted tested tsc with duplicate features and exclusive node. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features and exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            exclusive("Exclusive 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive 2") {
+              optional("Optional 1") {
+                leaf("Leaf 3") { condition { true } }
+                leaf("Leaf 4") { condition { true } }
+              }
+              optional("Optional 2") {
+                leaf("Leaf 3") { condition { true } }
+                leaf("Leaf 5") { condition { true } }
+              }
+            }
+          }
+        }
+
+    assertEquals(BigInteger.valueOf(16), testTSC.instanceCount)
+    assertEquals(16, testTSC.possibleTSCInstances.size)
+  }
+
+  /** Test handcrafted tested tsc with duplicate features under the same exclusive node. */
+  @Test
+  fun `Test handcrafted tested tsc with duplicate features under the same exclusive node`() {
+    val testTSC =
+        tsc<E, T, S, U, D> {
+          all("root") {
+            exclusive("Exclusive 1") {
+              leaf("Leaf 1") { condition { true } }
+              leaf("Leaf 2") { condition { true } }
+            }
+            exclusive("Exclusive 2") {
+              all("all 1") { leaf("Leaf 3") { condition { true } } }
+              all("all 2") { leaf("Leaf 3") { condition { true } } }
+            }
+          }
+        }
+
+    assertEquals(4, testTSC.possibleTSCInstances.size)
+    assertEquals(BigInteger.valueOf(4), testTSC.instanceCount)
+  }
 }
