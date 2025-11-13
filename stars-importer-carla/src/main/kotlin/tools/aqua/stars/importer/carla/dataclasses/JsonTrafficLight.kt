@@ -48,7 +48,7 @@ data class JsonTrafficLight(
     @SerialName("is_active") override val isActive: Boolean,
     @SerialName("is_dormant") override val isDormant: Boolean,
     @SerialName("semantic_tags") override val semanticTags: List<Int>,
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
     @SerialName("collisions") override val collisions: List<Int>,
