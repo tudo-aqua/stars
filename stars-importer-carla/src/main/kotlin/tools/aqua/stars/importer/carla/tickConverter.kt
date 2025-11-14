@@ -49,7 +49,7 @@ fun getSeed(fileName: String): Int =
     when {
       fileName.isEmpty() -> 0
       fileName.contains("dynamic_data") ->
-          fileName.split("dynamic_data_")[1].split("_seed")[1].split(".")[0].toInt()
+          fileName.split("dynamic_data_")[1].split("_seed_")[1].split(".")[0].toInt()
       fileName.contains("static_data") ->
           error("Cannot get seed name for map data! Analyzed file: $fileName")
       else -> error("Unknown filename format")
