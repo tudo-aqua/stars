@@ -46,6 +46,7 @@ open class TSCLeafBuilder<
   fun build(): TSCEdge<E, T, U, D> =
       TSCEdge(
           condition = condition,
+          inverseCondition = inverseCondition,
           destination =
               TSCLeafNode(
                   label = label,
