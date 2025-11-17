@@ -41,7 +41,7 @@ data class TSCInstanceEdge<
 >(
     var destination: TSCInstanceNode<E, T, U, D>,
     val tscEdge: TSCEdge<E, T, U, D>,
-    val isUnknown: Boolean,
+    val isUnknown: Boolean = false,
 ) {
 
   override fun equals(other: Any?): Boolean =

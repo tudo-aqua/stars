@@ -49,7 +49,7 @@ fun getSeed(fileName: String): Int =
     when {
       fileName.isEmpty() -> 0
       fileName.contains("dynamic_data") ->
-          fileName.split("dynamic_data_")[1].split("_seed")[1].split(".")[0].toInt()
+          fileName.split("dynamic_data_")[1].split("_seed_")[1].split(".")[0].toInt()
       fileName.contains("static_data") ->
           error("Cannot get seed name for map data! Analyzed file: $fileName")
       else -> error("Unknown filename format")
@@ -61,11 +61,13 @@ fun getSeed(fileName: String): Int =
  * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  * @param tickDataSourcePath The [Path] from which the [JsonTickData] was loaded.
+ * @param egoId The optional ego id to take.
  */
 fun convertTickData(
     world: World,
     jsonSimulationRun: List<JsonTickData>,
     tickDataSourcePath: Path,
+    egoId: Int? = null,
 ): List<TickData> {
   cleanJsonData(world, jsonSimulationRun)
 
@@ -84,24 +86,35 @@ fun convertTickData(
     }
   }
 
-  // Get the ego vehicle id from the first tick
-  val egoId = jsonVehicles.first().first { it.egoVehicle }
+  // There is no specified ego. Use the ego flag in the json data and check consistency
+  if (egoId == null) {
+    // Get the ego vehicle id from the first tick
+    val egoIdFromJson =
+        jsonVehicles.first().firstOrNull { it.egoVehicle }
+            ?: error("No ego vehicle found in the Json data at the first tick")
 
-  // Check that the ego vehicle is present in every tick and there is only one ego vehicle
-  jsonVehicles.forEachIndexed { index, vehicles ->
-    val egos = vehicles.filter { it.egoVehicle }
-    // Check that there is only one ego vehicle in the current tick
-    check(egos.size == 1) {
-      "There must be exactly one ego vehicle in the Json data at tick $index. Found ${egos.size} in tick $index: \n${
-        egos.joinToString(
-          separator = "\n"
-        ) { "JsonVehicle(id=${it.id}, type=${it.typeId}, ...)" }
-      }."
+    // Check that the ego vehicle is present in every tick and there is only one ego vehicle
+    jsonVehicles.forEachIndexed { index, vehicles ->
+      val egos = vehicles.filter { it.egoVehicle }
+      // Check that there is only one ego vehicle in the current tick
+      check(egos.size == 1) {
+        "There must be exactly one ego vehicle in the Json data at tick $index. Found ${egos.size} in tick $index: \n${
+          egos.joinToString(
+            separator = "\n"
+          ) { "JsonVehicle(id=${it.id}, type=${it.typeId}, ...)" }
+        }."
+      }
+
+      // Check that the ego vehicle is the same as in the first tick
+      check(egos.first().id == egoIdFromJson.id) {
+        "The ego vehicle id in tick $index is different from the first tick. Expected: ${egoIdFromJson.id}, found: ${egos.first().id}."
+      }
     }
-
-    // Check that the ego vehicle is the same as in the first tick
-    check(egos.first().id == egoId.id) {
-      "The ego vehicle id in tick $index is different from the first tick. Expected: ${egoId.id}, found: ${egos.first().id}."
+  }
+  // An ego id is specified. Override the ego flag in the json data
+  else {
+    jsonVehicles.forEachIndexed { index, vehicles ->
+      vehicles.forEach { it.egoVehicle = it.id == egoId }
     }
   }
 

@@ -40,8 +40,6 @@ import kotlinx.serialization.Serializable
  * @property velocity The current velocity.
  * @property acceleration The current acceleration.
  * @property angularVelocity The current angular velocity.
- * @property lane The [JsonLane] the vehicle is currently on.
- * @property positionOnLane The position from the start of the [JsonLane] in meters.
  * @property collisions The list of actor IDs, this [JsonVehicle] is colliding with.
  */
 @Serializable
@@ -63,8 +61,6 @@ data class JsonVehicle(
     @SerialName("velocity") val velocity: JsonVector3D,
     @SerialName("acceleration") val acceleration: JsonVector3D,
     @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
-    @SerialName("lane") val lane: JsonLane,
-    @SerialName("position_on_lane") val positionOnLane: Double,
     @SerialName("collisions") override val collisions: List<Int>,
 ) : JsonActor() {
 
