@@ -98,7 +98,7 @@ sealed class TSCNode<
                   // Create TSCInstanceEdge if condition is true. Flag as unknown if condition is
                   // false (inverseCondition must be false too at this point)
                   TSCInstanceEdge(
-                          edge.destination.evaluate(tick, depth + 1),
+                          edge.destination.evaluate(tick, depth + 1).apply { isUnknown = !condition },
                           edge,
                           isUnknown = !condition,
                       )

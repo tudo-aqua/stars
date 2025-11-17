@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.instance
 
 import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.TSCInstanceIterator
 import tools.aqua.stars.core.types.*
 
 /**
@@ -37,4 +38,6 @@ data class TSCInstance<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val rootNode: TSCInstanceNode<E, T, U, D>, val sourceIdentifier: String)
+>(val rootNode: TSCInstanceNode<E, T, U, D>, val sourceIdentifier: String) : Iterable<TSCInstanceNode<E,T,U,D>> {
+  override fun iterator(): Iterator<TSCInstanceNode<E, T, U, D>> = TSCInstanceIterator(rootNode)
+}

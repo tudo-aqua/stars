@@ -35,6 +35,8 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property tscNode Associated [TSCNode].
  * @property label Label of this node.
+ * @property isUnknown Whether this node is unknown, i.e. [TSCEdge.condition] and
+ *   [TSCEdge.inverseCondition] returned `true`.
  * @property monitorResults Monitor results of this node.
  * @property value Value of this node.
  */
@@ -44,10 +46,11 @@ open class TSCInstanceNode<
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    val tscNode: TSCNode<E, T, U, D>,
-    val label: String = tscNode.label,
-    val monitorResults: Map<String, Boolean> = emptyMap(),
-    val value: Any = Unit,
+  val tscNode: TSCNode<E, T, U, D>,
+  val label: String = tscNode.label,
+  var isUnknown: Boolean = false,
+  val monitorResults: Map<String, Boolean> = emptyMap(),
+  val value: Any = Unit,
 ) {
   /** Edges of this [TSCInstanceNode]. */
   val edges: MutableList<TSCInstanceEdge<E, T, U, D>> = mutableListOf()
