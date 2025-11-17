@@ -80,20 +80,20 @@ open class TSCInstanceNode<
   fun traverse(currentNode: TSCInstanceNode<E, T, U, D> = this): List<TSCInstanceNode<E, T, U, D>> =
       listOf(
           TSCInstanceNode(
-              currentNode.tscNode,
-              currentNode.label,
-              currentNode.monitorResults,
-              currentNode.value,
+              tscNode = currentNode.tscNode,
+              label = currentNode.label,
+              monitorResults = currentNode.monitorResults,
+              value = currentNode.value,
           )
       ) +
           if (currentNode.edges.isNotEmpty()) {
             currentNode.edges.flatMap { edge ->
               traverse(edge.destination).map { child ->
                 TSCInstanceNode(
-                        currentNode.tscNode,
-                        currentNode.label,
-                        currentNode.monitorResults,
-                        currentNode.value,
+                        tscNode = currentNode.tscNode,
+                        label = currentNode.label,
+                        monitorResults = currentNode.monitorResults,
+                        value = currentNode.value,
                     )
                     .apply {
                       this.edges +=

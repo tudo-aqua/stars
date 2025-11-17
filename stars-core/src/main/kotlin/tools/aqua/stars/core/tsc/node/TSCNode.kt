@@ -65,10 +65,10 @@ sealed class TSCNode<
       depth: Int = 0,
   ): TSCInstanceNode<E, T, U, D> =
       TSCInstanceNode(
-              this,
-              this.label,
-              this.monitors.mapValues { (_, monitor) -> monitor(tick) },
-              this.valueFunction(tick),
+              tscNode = this,
+              label = this.label,
+              monitorResults = this.monitors.mapValues { (_, monitor) -> monitor(tick) },
+              value = this.valueFunction(tick),
           )
           .also {
             it.edges +=
