@@ -52,12 +52,6 @@ object ApplicationConstantsHolder {
   /** Indent for console output. */
   const val CONSOLE_INDENT: String = "                         "
 
-  /** Log folder directory for analysis result logs. */
-  private const val ANALYSIS_LOG_FOLDER: String = "analysis-result-logs"
-
-  /** Log folder directory for result logs produced in test runs. */
-  private const val TEST_LOG_FOLDER: String = "test-result-logs"
-
   /** Folder directory for serialized metric results produced in evaluation. */
   private const val SERIALIZED_RESULTS_FOLDER: String = "serialized-results"
 
@@ -87,7 +81,7 @@ object ApplicationConstantsHolder {
         }
 
   /** Holds the folder name for the logs. */
-  val logFolder: String = if (isTestRun) TEST_LOG_FOLDER else ANALYSIS_LOG_FOLDER
+  var logFolder: String = "analysis-result-logs"
 
   /** Holds the [MutableList] of all currently registered [Logger]s. */
   val activeLoggers: MutableList<Logger> = mutableListOf()
@@ -104,23 +98,6 @@ object ApplicationConstantsHolder {
   val jsonConfiguration: Json = Json {
     prettyPrint = true
     isLenient = true
-  }
-
-  init {
-    Runtime.getRuntime()
-        .addShutdownHook(
-            Thread {
-              // Close loggers
-              LogManager.getLogManager().reset()
-              activeLoggers.forEach { it.handlers.forEach { handler -> handler.close() } }
-
-              // Delete test log folders
-              File(TEST_LOG_FOLDER).deleteRecursively()
-              File("test-$SERIALIZED_RESULTS_FOLDER").deleteRecursively()
-              File("test-$COMPARED_RESULTS_FOLDER").deleteRecursively()
-              File("test-$baselineDirectory").deleteRecursively()
-            }
-        )
   }
 
   /**
