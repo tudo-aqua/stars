@@ -137,7 +137,9 @@ class MissedPredicateCombinationsPerTSCMetric<
       // Get all traversals that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
       // as they do not represent a predicate
       val predicateTraversals =
-          t.filter { it.getLeafNodeEdges(it).any { t -> t.tscEdge.condition != CONST_TRUE } }
+          t.rootNode
+              .traverse()
+              .filter { it.getLeafNodeEdges(it).any { t -> t.tscEdge.condition != CONST_TRUE } }
               .map { it.toString() }
       // Combine all TSCEdges with each other
       predicateTraversals.forEach { predicatePath1 ->
