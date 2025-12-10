@@ -32,9 +32,23 @@ import tools.aqua.stars.core.types.*
  * @property rootNode The root [TSCInstanceNode].
  * @property sourceIdentifier Source identifier.
  */
-data class TSCInstance<
+class TSCInstance<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val rootNode: TSCInstanceNode<E, T, U, D>, val sourceIdentifier: String)
+>(val rootNode: TSCInstanceNode<E, T, U, D>, val sourceIdentifier: String = "") :
+    Iterable<TSCInstanceNode<E, T, U, D>> {
+
+  override fun toString(): String = this.rootNode.toString()
+
+  override fun iterator(): Iterator<TSCInstanceNode<E, T, U, D>> = TSCInstanceIterator(rootNode)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is TSCInstance<*, *, *, *>) return false
+    return rootNode == other.rootNode
+  }
+
+  override fun hashCode(): Int = rootNode.hashCode()
+}

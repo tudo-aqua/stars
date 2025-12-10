@@ -57,7 +57,7 @@ class TSCInstanceNode<
       edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
 
   /**
-   * Returns a [List] of all [TSCInstanceNode]s that are [TSCLeafNode] in the given [currentNode].
+   * Returns a [List] of all [TSCInstanceEdge]s that are [TSCLeafNode] in the given [currentNode].
    */
   fun getLeafNodeEdges(
       currentNode: TSCInstanceNode<E, T, U, D>,

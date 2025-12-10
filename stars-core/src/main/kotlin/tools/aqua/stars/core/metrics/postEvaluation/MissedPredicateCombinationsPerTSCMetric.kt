@@ -27,6 +27,7 @@ import tools.aqua.stars.core.serialization.SerializablePredicateCombinationResul
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
@@ -114,7 +115,8 @@ class MissedPredicateCombinationsPerTSCMetric<
     // Get all possible predicate combinations
     val possiblePredicateCombinations = getAllPredicateCombinations(tsc.possibleTSCInstances)
     // Get all occurred predicate combinations
-    val occurredPredicateCombinations = getAllPredicateCombinations(tscInstances)
+    val occurredPredicateCombinations =
+        getAllPredicateCombinations(tscInstances.map { TSCInstance(it) })
     // Return predicate combinations that have not occurred
     return possiblePredicateCombinations.minus(occurredPredicateCombinations)
   }
@@ -127,7 +129,7 @@ class MissedPredicateCombinationsPerTSCMetric<
    * @return the [Set] of [PredicateCombination]s based on the [tscInstances].
    */
   private fun getAllPredicateCombinations(
-      tscInstances: List<TSCInstanceNode<E, T, U, D>>
+      tscInstances: List<TSCInstance<E, T, U, D>>
   ): Set<PredicateCombination> {
     // Create set for storage of all combinations
     val predicateCombinations = mutableSetOf<PredicateCombination>()
@@ -135,7 +137,8 @@ class MissedPredicateCombinationsPerTSCMetric<
       // Get all traversals that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
       // as they do not represent a predicate
       val predicateTraversals =
-          t.traverse()
+          t.rootNode
+              .traverse()
               .filter { it.getLeafNodeEdges(it).any { t -> t.tscEdge.condition != CONST_TRUE } }
               .map { it.toString() }
       // Combine all TSCEdges with each other
