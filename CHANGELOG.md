@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Add `IterationOrder` parameter to `TickSequence`.
+- Add `TSCInstanceIterator`. 
 
 ## [2.0] - 24.10.2025
 
