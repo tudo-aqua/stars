@@ -50,7 +50,5 @@ class TSCInstance<
     return rootNode == other.rootNode
   }
 
-  override fun hashCode(): Int {
-    return rootNode.hashCode()
-  }
+  override fun hashCode(): Int = rootNode.hashCode()
 }
