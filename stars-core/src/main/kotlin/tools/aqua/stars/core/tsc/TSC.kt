@@ -19,7 +19,6 @@ package tools.aqua.stars.core.tsc
 
 import java.math.BigInteger
 import tools.aqua.stars.core.tsc.instance.TSCInstance
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -61,8 +60,8 @@ class TSC<
   private var possibleTSCInstancesBuffer: List<TSCInstance<E, T, U, D>>? = null
 
   /**
-   * Returns the [List] of all possible [TSCInstance]s. The generation is performed on-demand
-   * upon first access and is then buffered.
+   * Returns the [List] of all possible [TSCInstance]s. The generation is performed on-demand upon
+   * first access and is then buffered.
    */
   val possibleTSCInstances: List<TSCInstance<E, T, U, D>>
     get() =
