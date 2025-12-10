@@ -20,7 +20,7 @@ package tools.aqua.stars.core.tsc.instance
 import tools.aqua.stars.core.types.*
 
 /**
- * Iterator for the [TSCInstance]. Iterates over all edges of the [TSCInstance].
+ * Iterator for the [TSCInstance]. Iterates over all nodes of the [TSCInstance].
  *
  * The following [TSCInstance] will be traversed in the order
  * ["root", "exclusive", "leaf_exclusive_1", "leaf_exclusive_2", "any", "leaf_any_1", "leaf_any_2"].

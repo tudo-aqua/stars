@@ -104,7 +104,7 @@ class MissedPredicateCombinationsPerTSCMetric<
    * Calculate the [Set] of [PredicateCombination]s that are missing.
    *
    * @param tsc The [TSC] for which the missing [PredicateCombination]s should be calculated.
-   * @param tscInstances The occurred [List] of [TSCInstance]s.
+   * @param tscInstances The occurred [List] of [TSCInstanceNode]s.
    * @return A [Set] of [PredicateCombination]s that can occur based on the given [tsc] but are not
    *   present in the given [tscInstances].
    */

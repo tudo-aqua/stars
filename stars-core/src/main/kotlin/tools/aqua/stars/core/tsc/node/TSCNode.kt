@@ -57,7 +57,7 @@ sealed class TSCNode<
   /** Counts all [TSC] instances. */
   abstract fun countAllInstances(): BigInteger
 
-  /** Generates all [TSC] instances. */
+  /** Generates all [TSCInstance]s. */
   abstract fun generateAllInstances(): List<TSCInstance<E, T, U, D>>
 
   /** Evaluates this [TSC] in the given context. */
