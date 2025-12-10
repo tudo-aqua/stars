@@ -21,6 +21,7 @@ import java.math.BigInteger
 import tools.aqua.stars.core.binomial
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -97,17 +98,17 @@ open class TSCBoundedNode<
     }
   }
 
-  override fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>> {
+  override fun generateAllInstances(): List<TSCInstance<E, T, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, U, D>>>>()
     edges.forEach { edge ->
       val successorList = mutableListOf<List<TSCInstanceEdge<E, T, U, D>>>()
       edge.destination.generateAllInstances().forEach { generatedChild ->
-        successorList += listOf(TSCInstanceEdge(generatedChild, edge))
+        successorList += listOf(TSCInstanceEdge(generatedChild.rootNode, edge))
       }
       allSuccessorsList += successorList
     }
 
-    val returnList = mutableListOf<TSCInstanceNode<E, T, U, D>>()
+    val returnList = mutableListOf<TSCInstance<E, T, U, D>>()
 
     // build all subsets of allSuccessorsList and filter to subsets.size in
     // (bounds.first...bounds.second)
@@ -119,18 +120,18 @@ open class TSCBoundedNode<
 
     boundedSuccessors.forEach { subset ->
       when (subset.size) {
-        0 -> returnList += TSCInstanceNode(this)
+        0 -> returnList += TSCInstance(TSCInstanceNode(this))
         1 ->
             subset.first().forEach { successors ->
               val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
-              returnList += generatedNode
+              returnList += TSCInstance(generatedNode)
             }
         else ->
             subset.crossProduct().forEach { successors ->
               val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
-              returnList += generatedNode
+              returnList += TSCInstance(generatedNode)
             }
       }
     }

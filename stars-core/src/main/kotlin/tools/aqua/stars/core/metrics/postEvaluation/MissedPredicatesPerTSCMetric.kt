@@ -26,6 +26,7 @@ import tools.aqua.stars.core.serialization.SerializablePredicateResult
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
@@ -92,7 +93,7 @@ class MissedPredicatesPerTSCMetric<
    * Calculate the [Set] of predicates that are missing.
    *
    * @param tsc The [TSC] for which the missing predicates should be calculated.
-   * @param tscInstances The occurred [List] of [TSCInstanceNode]s.
+   * @param tscInstances The occurred [List] of [TSCInstance]s.
    * @return A [Set] of predicates that can occur based on the given [tsc] but are not present in
    *   the given [tscInstances].
    */
@@ -103,7 +104,7 @@ class MissedPredicatesPerTSCMetric<
     // Get all possible predicates
     val possiblePredicates = getAllPredicates(tsc.possibleTSCInstances)
     // Get all occurred predicates
-    val occurredPredicates = getAllPredicates(tscInstances)
+    val occurredPredicates = getAllPredicates(tscInstances.map { TSCInstance(it) })
     // Return predicates that have not occurred
     return possiblePredicates.minus(occurredPredicates)
   }
@@ -115,15 +116,14 @@ class MissedPredicatesPerTSCMetric<
    *   calculated.
    * @return the [Set] of predicates based on the [tscInstances].
    */
-  private fun getAllPredicates(tscInstances: List<TSCInstanceNode<E, T, U, D>>): Set<String> {
+  private fun getAllPredicates(tscInstances: List<TSCInstance<E, T, U, D>>): Set<String> {
     // Create a set for storage of all predicates
     val predicates = mutableSetOf<String>()
     tscInstances.forEach { t ->
       // Get all traversals that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
       // as they do not represent a predicate
       val predicateTraversals =
-          t.traverse()
-              .filter { instance ->
+          t.filter { instance ->
                 instance.getLeafNodeEdges(instance).any { leafNode ->
                   leafNode.tscEdge.condition != CONST_TRUE
                 }

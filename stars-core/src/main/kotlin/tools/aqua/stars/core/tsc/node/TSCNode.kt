@@ -21,6 +21,7 @@ import java.math.BigInteger
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -57,7 +58,7 @@ sealed class TSCNode<
   abstract fun countAllInstances(): BigInteger
 
   /** Generates all [TSC] instances. */
-  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
+  abstract fun generateAllInstances(): List<TSCInstance<E, T, U, D>>
 
   /** Evaluates this [TSC] in the given context. */
   fun evaluate(

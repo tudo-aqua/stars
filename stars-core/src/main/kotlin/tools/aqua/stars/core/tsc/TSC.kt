@@ -58,13 +58,13 @@ class TSC<
     get() = instanceCountBuffer ?: rootNode.countAllInstances().also { instanceCountBuffer = it }
 
   /** Buffer for the possible [TSCInstanceNode]s. */
-  private var possibleTSCInstancesBuffer: List<TSCInstanceNode<E, T, U, D>>? = null
+  private var possibleTSCInstancesBuffer: List<TSCInstance<E, T, U, D>>? = null
 
   /**
    * Returns the [List] of all possible [TSCInstanceNode]s. The generation is performed on-demand
    * upon first access and is then buffered.
    */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, U, D>>
+  val possibleTSCInstances: List<TSCInstance<E, T, U, D>>
     get() =
         possibleTSCInstancesBuffer
             ?: rootNode.generateAllInstances().also { possibleTSCInstancesBuffer = it }
