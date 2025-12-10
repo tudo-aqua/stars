@@ -48,7 +48,7 @@ class TickSequenceTest {
       // Always return first tick
       assertEquals(0, tick.currentTickUnit.tickValue)
 
-      // Predecessors increase with index
+      // Successors increase with index
       assertEquals(index, tick.numSuccessors)
 
       // No predecessors in FORWARD iteration
@@ -66,7 +66,7 @@ class TickSequenceTest {
         }
 
     sequence.forEachIndexed { index, tick ->
-      // Always return last tick
+      // Always return newest tick
       assertEquals(index.toLong(), tick.currentTickUnit.tickValue)
 
       // No successors in BACKWARD iteration
