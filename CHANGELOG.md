@@ -26,6 +26,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1] - To be released
+
+### Added
+- Add `TSCInstanceIterator`. 
+
 ## [2.0] - 24.10.2025
 
 ### Added
