@@ -33,5 +33,11 @@
 }
 
 .wrapper {
-  @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8; /* Maximale Breite und dynamisches Padding */
+  @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8; /* maximum width and dynamic padding */
+}
+
+.abstract {
+  /* applies the left border and padding to abstracts */
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1rem;
 }

@@ -6,7 +6,8 @@
     "in": "Electronic Communications of the EASST (ECEASST 2023)",
     "doi": "https://doi.org/10.14279/tuj.eceasst.82.1222",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2023ValidatingBehavioralRequirements_-_Validating_Behavioral_Requirements__Conditions__and_Rules_of_Autonomous_Systems_with_Scenario_Based_Testing.pdf",
-    "comment": ""
+    "comment": "",
+    "abstract": "Assuring the safety of autonomous vehicles is more and more approached by using scenario-based testing. Relevant driving situations are utilized here to fuel the argument that an autonomous vehicle behaves correctly. Many recent works focus on the specification, variation, generation, and execution of individual scenarios. However, it is still an open question if operational design domains, which describe the environmental conditions under which the system under test has to function, can be assessed with scenario-based testing. In this paper, we present open challenges and resulting research questions in the field of assuring the safety of autonomous vehicles. We have developed a toolchain that enables us to conduct scenario-based testing experiments based on scenario classification with temporal logic and driving data obtained from the CARLA simulator. We discuss the toolchain and present first results using analysis metrics like class coverage or distribution."
   },
 
   {
@@ -16,7 +17,8 @@
     "in": "Dependable Computing - EDCC 2024 Workshops (EDCC 2024)",
     "doi": "https://doi.org/10.1007/978-3-031-56776-6_6",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2024StarsToolFor_measuring_-_STARS__a_Tool_For_Measuring_Scenario_Coverage_When_Testing_Autonomous_Robotic_Systems_01.pdf",
-    "comment": ""
+    "comment": "",
+    "abstract": "Extensive testing and simulation in different environments has been suggested as one piece of evidence for the safety of autonomous systems, e.g., in the automotive domain. To enable statements on the absolute number or fractions of tested scenarios, methods and tools for computing their coverage are needed. In this paper, we present STARS, a tool for specifying semantic environment features and measuring scenario coverage when testing autonomous systems."
   },
   {
     "title": "Tree-Based Scenario Classification",
@@ -25,7 +27,8 @@
     "in": "NASA Formal Methods (NFM 2024)",
     "doi": "https://doi.org/10.1007/978-3-031-60698-4_15",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2024TreeBasedScenarioa_-_Tree_Based_Scenario_Classification.pdf",
-    "comment": ""
+    "comment": "",
+    "abstract": "Scenario-based testing is envisioned as a key approach for the safety assurance of automated driving systems. In scenario-based testing, relevant (driving) scenarios are the basis of tests. Many recent works focus on specification, variation, generation, and execution of individual scenarios. In this work, we address the open challenges of classifying sets of recorded test drives into such scenarios and measuring scenario coverage in these test drives. Technically, we specify features in logic formulas over complex data streams and construct tree-based classifiers for scenarios from these feature specifications. For such specifications, we introduce CMFTBL, a new logic that extends existing linear-time temporal logics with aspects that are essential for concise specifications that work on field-recorded data. We demonstrate the expressiveness and effectiveness of our approach by defining a family of related scenario classifiers for different aspects of urban driving."
   },
   {
     "title": "Extended Abstract of Poster: STARS: Tree-Based Classification and Testing of Feature Combinations in the Automated Robotic Domain",
@@ -34,7 +37,8 @@
     "in": "ICST Workshops (IWCT 2025)",
     "doi": "https://doi.org/10.1109/ICSTW64639.2025.10962523",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2025STARSTreeBasedClassification.pdf",
-    "comment": ""
+    "comment": "",
+    "abstract": "Testing complex systems is crucial for ensuring safety, especially in automated driving, where diverse data sources and variable environments pose challenges. Here, robust safety validation is critical but exhaustive n-way combinatorial testing is impractical due to the vast number of test cases. The STARS framework uses tree-based scenario classifiers to limit feature combinations in a given domain."
   },
   {
     "title": "Post-hoc Scenario-based Testing of Automated Driving Systems: Classification of Driving Scenarios and Checking of Functional Requirements in Recorded Data",
@@ -43,7 +47,8 @@
     "in": "Intelligent Vehicles (IV 2025)",
     "doi": "https://doi.org/10.1109/IV64158.2025.11097740",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schallau2025_Post-hoc_Scenario-based_Testing_of_Automated_Driving_Systems.pdf",
-    "comment": ""
+    "comment": "",
+    "abstract": "We present a post-hoc approach for scenario-based testing of automated driving systems, enabling the analysis of safety and correctness for (cooperative) automated driving systems in many scenarios without conducting tests for individual scenarios. The system under test is operated in its physical environment’ and data is recorded during operation. Then, driving scenarios are identified in this data and functional requirements are checked, yielding pass or fail verdicts for individual scenarios. We validate the envisioned post-hoc approach in a single-case mechanism experiment by the example of a platooning controller, identifying a previously unknown bug in the tested system, as well as a functional insufficiency concerning the intended operational design domain."
   },
   {
     "title": "A Qualitative Analysis of the German Road Traffic Regulations (StVO) for Automated Driving",
@@ -52,6 +57,7 @@
     "in": "IEEE International Automated Vehicle Validation Conference (IAVVC 2025)",
     "doi": "https://doi.org/10.1109/IAVVC61942.2025.11219635",
     "preprintUrl": "https://aqua.cs.tu-dortmund.de/storages/aqua-cs/r/Publications/Schmid2025QualitativeAnalysisGermana_-_A_Qualitative_Analysis_of_the_German_Road_Traffic_Regulations__stvo__for_Automated_Driving.pdf",
-    "comment": ""
+    "comment": "",
+    "abstract": "An Automated Driving Systems (ADS) must comply with traffic regulations that are still primarily written for human drivers, such as the German Road Traffic Regulations (StVO). Automatically assessing legal compliance remains a key challenge, as existing formalization approaches typically cover only limited rule subsets. In this paper, we present a comprehensive qualitative analysis of the StVO, focusing on regulations relevant to passenger vehicles. Using inductive coding, we categorize legal concepts, quantify the relevant share of the regulation that apply to ADSs, and identify recurring sentence structures. The analysis highlights structural limitations such as vague formulations, implicit assumptions, and missing quantification that hinder formalization and verification of ADSs. Based on our results, we motivate recommendations for future legislation that is better suited for automated interpretation and monitoring."
   }
 ]

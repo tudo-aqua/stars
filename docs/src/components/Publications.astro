@@ -35,6 +35,12 @@ const sortedPublicationsDesc = publicationsWithIndex.sort((a, b) => {
                                 <a href={publication.preprintUrl} target="_blank" rel="noopener noreferrer" class="text-tudo hover:underline">Download</a>
                             </p>
                         )}
+                        {publication.abstract && (
+                            <details class="">
+                                <summary class="cursor-pointer text-tudo hover:underline">Abstract</summary>
+                                <p class="mt-1 text-gray-700 abstract">{publication.abstract}</p>
+                            </details>
+                        )}
                     </div>
                 ))}
         </div>
