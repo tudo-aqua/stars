@@ -13,14 +13,14 @@ slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.17"}
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version = "2.0.17"}
 
 # Lets-Plot
-letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.12.0" }
-letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.8.1" }
+letsplot-kotlinjvm = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-jvm", version = "4.12.1" }
+letsplot-imageexport = { group = "org.jetbrains.lets-plot", name = "lets-plot-image-export", version = "4.8.2" }
 
 # Tests
 kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
 
 # Gradle Plugins
-gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.2.20" }
+gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.3.0" }
 gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "1.9.20" }
 gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.8" }
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.53.0" }
