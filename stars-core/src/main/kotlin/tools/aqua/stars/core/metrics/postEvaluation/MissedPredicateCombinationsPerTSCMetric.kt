@@ -141,7 +141,7 @@ class MissedPredicateCombinationsPerTSCMetric<
       val predicateTraversals =
           t.traverse()
               .filter { instance ->
-                instance.getLeafNodeEdges(instance).any { leafNode ->
+                instance.getFeatureNodeEdges(instance).any { leafNode ->
                   leafNode.tscEdge.condition != CONST_TRUE
                 }
               }

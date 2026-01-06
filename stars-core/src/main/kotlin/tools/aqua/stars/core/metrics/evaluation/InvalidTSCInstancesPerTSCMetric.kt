@@ -113,7 +113,7 @@ class InvalidTSCInstancesPerTSCMetric<
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->
       logInfo(
           "Count of unique invalid instances for tsc '${tsc.identifier}': ${invalidInstancesMap.size} (of " +
-              "${tsc.possibleTSCInstances.size} possible instances)."
+              "${tsc.instanceCount} possible instances)."
       )
 
       logFine(
