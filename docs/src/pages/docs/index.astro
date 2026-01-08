@@ -1,9 +1,21 @@
 ---
-import DocsLayout from '../../layouts/DocsLayout.astro';
+import { getCollection } from "astro:content";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import { buildSidebarTree, findEntryByRouteSlug } from "../../lib/docs";
 
+const entries = await getCollection("docs");
+const entry = findEntryByRouteSlug(entries);
+
+if (!entry) {
+  return new Response("Docs index not found. Create src/content/docs/index.md.", {
+    status: 404,
+  });
+}
+
+const { Content } = await entry.render();
+const sidebar = buildSidebarTree(entries);
 ---
 
-<DocsLayout>
-  <h1>Documentation Home</h1>
-  <p>Welcome to the documentation!</p>
+<DocsLayout sidebar={sidebar} currentSlug="index">
+  <Content />
 </DocsLayout>

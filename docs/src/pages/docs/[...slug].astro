@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import {
+  buildSidebarTree,
+  findEntryByRouteSlug,
+  routeSlugFromParams,
+  entryToRouteSlug,
+} from "../../lib/docs";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("docs");
+  
+  return entries
+    .filter((entry) => entry.slug !== "index")
+    .map((entry) => {
+      const routeSlug = entryToRouteSlug(entry);
+      const slugParts = routeSlug.split("/");
+      
+      return {
+        params: { slug: slugParts.join("/") },
+      };
+    });
+}
+
+const entries = await getCollection("docs");
+const routeSlug = routeSlugFromParams(Astro.params.slug);
+const entry = findEntryByRouteSlug(entries, Astro.params.slug);
+
+if (!entry) {
+  return new Response("Not found", { status: 404 });
+}
+
+const { Content } = await entry.render();
+const sidebar = buildSidebarTree(entries);
+---
+<DocsLayout sidebar={sidebar} currentSlug={routeSlug}>
+  <Content />
+</DocsLayout>

@@ -1,11 +1,141 @@
 ---
 import Layout from "./Layout.astro";
 import "../styles/markdown.css";
+import type { SidebarItem } from "../lib/docs";
+import { hrefFromSlug } from "../lib/docs";
+
+interface Props {
+  sidebar?: SidebarItem[];
+  currentSlug?: string;
+}
+
+const { sidebar = [], currentSlug } = Astro.props as Props;
+const base = import.meta.env.BASE_URL || "/";
 
 ---
 
 <Layout>
-  <div class="wrapper markdown-content my-10">
-    <slot />
+  <div class="docs-grid">
+    <aside class="docs-sidebar">
+      <div class="sidebar-inner">
+        <h2 class="sidebar-title">Docs</h2>
+        <nav>
+          <ul class="nav-list">
+            {sidebar.map((item) => (
+              <li class:list={["nav-item", { active: item.slug === currentSlug }]}>
+                <a href={hrefFromSlug(item.slug, base)} aria-current={item.slug === currentSlug ? "page" : undefined}>
+                  {item.title}
+                </a>
+                {item.children?.length > 0 && (
+                  <ul class="nav-children">
+                    {item.children.map((child) => (
+                      <li class:list={["nav-item", { active: child.slug === currentSlug }]}>
+                        <a href={hrefFromSlug(child.slug, base)} aria-current={child.slug === currentSlug ? "page" : undefined}>
+                          {child.title}
+                        </a>
+                        {child.children?.length > 0 && (
+                          <ul class="nav-children">
+                            {child.children.map((grandchild) => (
+                              <li class:list={["nav-item", { active: grandchild.slug === currentSlug }]}>
+                                <a href={hrefFromSlug(grandchild.slug, base)} aria-current={grandchild.slug === currentSlug ? "page" : undefined}>
+                                  {grandchild.title}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </aside>
+    <main class="docs-content markdown-content my-10">
+      <slot />
+    </main>
   </div>
 </Layout>
+
+<style>
+.docs-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) 1fr;
+  gap: 2rem;
+  padding: 0 1.5rem;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+}
+
+.sidebar-inner {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #f8fafc;
+}
+
+.sidebar-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #334155;
+}
+
+.nav-list,
+.nav-children {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.nav-children {
+  padding-left: 0.9rem;
+  border-left: 1px dashed #cbd5e1;
+  margin-top: 0.25rem;
+}
+
+.nav-item {
+  margin: 0.2rem 0;
+}
+
+.nav-item > a {
+  display: block;
+  padding: 0.35rem 0.55rem;
+  border-radius: 8px;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-item > a:hover {
+  background: #e2e8f0;
+}
+
+.nav-item.active > a {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.docs-content {
+  min-width: 0;
+}
+
+@media (max-width: 960px) {
+  .docs-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+
+  .docs-sidebar {
+    position: static;
+  }
+}
+</style>
