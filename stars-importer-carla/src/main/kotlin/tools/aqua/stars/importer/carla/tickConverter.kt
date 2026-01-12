@@ -65,10 +65,11 @@ fun getSeed(fileName: String): Int =
  * @param useEveryVehicleAsEgo If true, every vehicle is used as ego vehicle.
  * @param useFirstVehicleAsEgo If true, the first vehicle found in the first tick that is present in
  *   every tick is used as ego vehicle.
- * @return A list of tick sequences (outer list), one sequence per selected ego vehicle (inner list).
- *   When [useEveryVehicleAsEgo] is true, each inner list contains only the ticks in which that
- *   specific vehicle is present, so different vehicles can have tick sequences of different lengths.
- *   This means the result is filtered by vehicle presence, not just by changing the ego flag.
+ * @return A list of tick sequences (outer list), one sequence per selected ego vehicle (inner
+ *   list). When [useEveryVehicleAsEgo] is true, each inner list contains only the ticks in which
+ *   that specific vehicle is present, so different vehicles can have tick sequences of different
+ *   lengths. This means the result is filtered by vehicle presence, not just by changing the ego
+ *   flag.
  */
 fun convertTickData(
     world: World,
@@ -158,7 +159,8 @@ fun convertTickData(
               val vehiclesInRun =
                   tick.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
 
-              // Snapshot original egoVehicle flags to avoid persistent mutation across ego iterations.
+              // Snapshot original egoVehicle flags to avoid persistent mutation across ego
+              // iterations.
               val originalEgoFlags = vehiclesInRun.map { it to it.egoVehicle }
 
               vehiclesInRun.forEach { v -> v.egoVehicle = (v.id == egoId) }
