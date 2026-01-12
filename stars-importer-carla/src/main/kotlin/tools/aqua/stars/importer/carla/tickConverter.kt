@@ -75,6 +75,7 @@ fun convertTickData(
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
 ): List<List<TickData>> {
+
   cleanJsonData(world, jsonSimulationRun)
   // Vehicles per tick
   val vehiclesPerTick: List<List<JsonVehicle>> =
@@ -89,6 +90,20 @@ fun convertTickData(
   // Ego-flagged IDs seen anywhere in the run
   val egoFlaggedIds: Set<Int> =
       vehiclesPerTick.flatten().filter { it.egoVehicle }.map { it.id }.toSet()
+
+  val enabledModes =
+      listOf(
+              useFirstVehicleAsEgo,
+              useEveryVehicleAsEgo,
+              egoIds.isNotEmpty(),
+              egoFlaggedIds.isNotEmpty(),
+          )
+          .count { it }
+
+  require(enabledModes == 1) {
+    "Exactly one of useEveryVehicleAsEgo, useFirstVehicleAsEgo, egoIds, or ego-flagged IDs must be used " +
+        "to select ego vehicles. Found $enabledModes. Source: $tickDataSourcePath"
+  }
 
   vehiclesPerTick.forEachIndexed { idx, vehicles ->
     check(vehicles.count { it.egoVehicle } <= 1) {
