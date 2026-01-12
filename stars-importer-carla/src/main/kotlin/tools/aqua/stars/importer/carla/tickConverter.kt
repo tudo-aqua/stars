@@ -155,10 +155,24 @@ fun convertTickData(
               val vehiclesInRun =
                   tick.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
 
+              // Snapshot original egoVehicle flags to avoid persistent mutation across ego iterations.
+              val originalEgoFlags = vehiclesInRun.map { it to it.egoVehicle }
+
               vehiclesInRun.forEach { v -> v.egoVehicle = (v.id == egoId) }
 
-              if (vehiclesInRun.none { it.egoVehicle }) null
-              else tick.toTickData(world, tickDataSourcePath.fileName.name)
+              val result =
+                  if (vehiclesInRun.none { it.egoVehicle }) {
+                    null
+                  } else {
+                    tick.toTickData(world, tickDataSourcePath.fileName.name)
+                  }
+
+              // Restore original egoVehicle flags so JsonVehicle instances are left unchanged.
+              originalEgoFlags.forEach { (vehicle, originalFlag) ->
+                vehicle.egoVehicle = originalFlag
+              }
+
+              result
             }
             .also { updateActorVelocityForSimulationRun(it) }
 
