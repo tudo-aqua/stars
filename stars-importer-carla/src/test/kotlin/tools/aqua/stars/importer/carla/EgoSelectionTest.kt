@@ -23,6 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
 
+/** Tests for ego selection in convertTickData. */
 class EgoSelectionTest {
 
   /** Test convertTickData with no parameter set and multiple ego are set in same tick. */
@@ -382,7 +383,7 @@ class EgoSelectionTest {
 
   /** Test convertTickData with egoIds, useFirstVehicleAsEgo and ego-flagged JSON. */
   @Test
-  fun `Test convertTickData with egoIds useFirstVehicleAsEgo and ego-flagged JSON`() {
+  fun `Test convertTickData with egoIds, useFirstVehicleAsEgo and ego-flagged JSON`() {
     val jsonTicksWithEgo =
         getTickDataWithOneLaneWithNVehicles(
             numberOfVehicles = 2,
@@ -469,7 +470,7 @@ class EgoSelectionTest {
    * JSON.
    */
   @Test
-  fun `Test convertTickData with useEveryVehicleAsEgo useFirstVehicleAsEgo egoIds and ego-flagged JSON`() {
+  fun `Test convertTickData with useEveryVehicleAsEgo, useFirstVehicleAsEgo, egoIds and ego-flagged JSON`() {
     val jsonTicksWithEgo =
         getTickDataWithOneLaneWithNVehicles(
             numberOfVehicles = 2,
