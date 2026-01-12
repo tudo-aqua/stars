@@ -221,7 +221,9 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
- * @param egoIds List of ego vehicle IDs to consider. If empty, no specific ego vehicles are set.
+ * @param egoIds List of ego vehicle IDs to consider. If empty, this parameter does not restrict ego
+ *   selection; ego vehicles are then determined by [useEveryVehicleAsEgo], [useFirstVehicleAsEgo],
+ *   or ego markings in the input data.
  * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
  *   ego vehicle.
  * @param useFirstVehicleAsEgo If true, only the first vehicle in each simulation run will be
