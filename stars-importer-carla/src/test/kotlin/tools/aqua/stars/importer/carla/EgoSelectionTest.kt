@@ -444,7 +444,7 @@ class EgoSelectionTest {
 
   /** Test convertTickData with useFirstVehicleAsEgo, useEveryVehicleAsEgo and ego-flagged JSON. */
   @Test
-  fun `Test convertTickData with useFirstVehicleAsEgo useEveryVehicleAsEgo and ego-flagged JSON`() {
+  fun `Test convertTickData with useFirstVehicleAsEgo, useEveryVehicleAsEgo and ego-flagged JSON`() {
     val jsonTicksWithEgo =
         getTickDataWithOneLaneWithNVehicles(
             numberOfVehicles = 2,
