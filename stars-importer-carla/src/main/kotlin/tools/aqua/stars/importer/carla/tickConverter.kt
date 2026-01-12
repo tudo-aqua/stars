@@ -62,10 +62,13 @@ fun getSeed(fileName: String): Int =
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  * @param tickDataSourcePath The [Path] from which the [JsonTickData] was loaded.
  * @param egoIds The list of ego ids to use. If empty, the ego flag in the Json data is used.
- * @param useEveryVehicleAsEgo If true, every vehicle is used as ego vehicle
+ * @param useEveryVehicleAsEgo If true, every vehicle is used as ego vehicle.
  * @param useFirstVehicleAsEgo If true, the first vehicle found in the first tick that is present in
- *   every tick is used as ego vehicle
- * @return A list of list of [TickData], one for each ego vehicle.
+ *   every tick is used as ego vehicle.
+ * @return A list of tick sequences (outer list), one sequence per selected ego vehicle (inner list).
+ *   When [useEveryVehicleAsEgo] is true, each inner list contains only the ticks in which that
+ *   specific vehicle is present, so different vehicles can have tick sequences of different lengths.
+ *   This means the result is filtered by vehicle presence, not just by changing the ego flag.
  */
 fun convertTickData(
     world: World,
