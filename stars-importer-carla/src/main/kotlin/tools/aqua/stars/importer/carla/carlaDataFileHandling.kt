@@ -112,8 +112,9 @@ fun loadWorld(staticDataFile: Path): World =
  * @param egoIds List of ego vehicle IDs to consider. If empty, no specific ego vehicles are set.
  * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
  *   ego vehicle.
- * @param useFirstVehicleAsEgo If true, only the first vehicle in each simulation run will be
- *   treated as the ego vehicle.
+ * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
+ *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
+ *   all ticks).
  * @return A [Sequence] of [TickSequence]s based on the given [simulationRunsWrappers].
  */
 fun loadTicks(
