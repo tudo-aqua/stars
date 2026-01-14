@@ -51,7 +51,7 @@ sealed class TSCBuilder<
       field = value
     }
 
-  /** Condition predicate of the [TSCEdge]. (Default: [TruePredicate]) */
+  /** Condition predicate of the [TSCEdge]. (Default: [CONST_TRUE]) */
   protected var condition: Predicate<E, T, U, D> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE)
     set(value) {
       check(!isConditionSet) { "Condition already set." }
