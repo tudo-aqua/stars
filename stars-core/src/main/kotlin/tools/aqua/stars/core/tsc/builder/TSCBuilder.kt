@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
+import tools.aqua.stars.core.evaluation.TruePredicate
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
@@ -50,8 +52,8 @@ sealed class TSCBuilder<
       field = value
     }
 
-  /** Condition predicate of the [TSCEdge]. (Default: [CONST_TRUE]) */
-  protected var condition: ((T) -> Boolean) = CONST_TRUE
+  /** Condition predicate of the [TSCEdge]. (Default: [TruePredicate]) */
+  protected var condition: Predicate<E, T, U, D> = TruePredicate()
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true

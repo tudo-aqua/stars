@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
 import tools.aqua.stars.core.tsc.node.TSCNode
@@ -68,8 +69,26 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
+  > TSCLeafBuilder<E, T, U, D>.condition(condition: Predicate<E, T, U, D>) {
     this.condition = condition
+  }
+
+  /**
+   * DSL function for [TSCEdge] conditions.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param condition The [TSCEdge] condition.
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, U, D>.condition(name: String = "", condition: (T) -> Boolean) {
+    this.condition = Predicate(name, condition)
   }
 
   /**

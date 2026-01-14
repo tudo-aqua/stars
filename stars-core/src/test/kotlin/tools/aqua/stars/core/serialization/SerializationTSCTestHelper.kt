@@ -238,10 +238,12 @@ val simpleTSC3: TSC<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTick
     tsc {
       optional("root") {
         leaf("leaf1") {
-          condition { true } // Condition necessary, as automatic 'always true'-edges are filtered
+          // Condition necessary, as automatic 'always true'-edges are filtered
+          condition { true }
         }
         leaf("leaf2") {
-          condition { true } // Condition necessary, as automatic 'always true'-edges are filtered
+          // Condition necessary, as automatic 'always true'-edges are filtered
+          condition { true }
         }
       }
     }
@@ -358,13 +360,16 @@ val simpleTSC4: TSC<SimpleEntity, SimpleTickData, SimpleTickDataUnit, SimpleTick
     tsc {
       optional("root") {
         leaf("leaf1") {
-          condition { true } // Condition necessary, as automatic 'always true'-edges are filtered
+          // Condition necessary, as automatic 'always true'-edges are filtered
+          condition { true }
         }
         leaf("leaf2") {
-          condition { true } // Condition necessary, as automatic 'always true'-edges are filtered
+          // Condition necessary, as automatic 'always true'-edges are filtered
+          condition { true }
         }
         leaf("leaf3") {
-          condition { true } // Condition necessary, as automatic 'always true'-edges are filtered
+          // Condition necessary, as automatic 'always true'-edges are filtered
+          condition { true }
         }
       }
     }
