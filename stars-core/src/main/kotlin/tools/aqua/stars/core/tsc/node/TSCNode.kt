@@ -18,8 +18,8 @@
 package tools.aqua.stars.core.tsc.node
 
 import java.math.BigInteger
-import tools.aqua.stars.core.evaluation.TruePredicate
 import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
@@ -122,7 +122,7 @@ sealed class TSCNode<
             edges.forEach { instanceEdge ->
               append("\n")
               append("  ".repeat(depth))
-              append(if (instanceEdge.condition is TruePredicate) "-T-> " else "---> ")
+              append(if (instanceEdge.condition.eval == CONST_TRUE) "-T-> " else "---> ")
               append(instanceEdge.destination.toString(depth + 1))
             }
           }

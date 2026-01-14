@@ -29,7 +29,7 @@ import tools.aqua.stars.core.types.*
  * @property name The name of the predicate.
  * @property eval The evaluation function on the context.
  */
-open class Predicate<
+data class Predicate<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,

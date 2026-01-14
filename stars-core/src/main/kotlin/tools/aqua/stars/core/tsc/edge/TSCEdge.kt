@@ -18,8 +18,8 @@
 package tools.aqua.stars.core.tsc.edge
 
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.evaluation.TruePredicate
 import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -39,7 +39,7 @@ open class TSCEdge<
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    val condition: Predicate<E, T, U, D> = TruePredicate(),
+    val condition: Predicate<E, T, U, D> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE),
     val destination: TSCNode<E, T, U, D>,
 ) {
 

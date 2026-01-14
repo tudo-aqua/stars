@@ -17,11 +17,13 @@
 
 package tools.aqua.stars.core.tsc.builder
 
-import tools.aqua.stars.core.evaluation.TruePredicate
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
+
+/** Constant predicate for always true [TSCEdge]s. */
+val CONST_TRUE: ((Any) -> Boolean) = { true }
 
 /** Label of the [TSCNode] built by the [tsc] function. */
 const val ROOT_NODE_LABEL: String = "root"
@@ -58,7 +60,7 @@ fun <
 
   check(rootEdge.destination.edges.isNotEmpty()) { "Init must add exactly one element to root." }
 
-  check(rootEdge.destination.edges[0].condition is TruePredicate) {
+  check(rootEdge.destination.edges[0].condition.eval == CONST_TRUE) {
     "Root node must not have a condition. Consider adding a fitting bounded parent node."
   }
 

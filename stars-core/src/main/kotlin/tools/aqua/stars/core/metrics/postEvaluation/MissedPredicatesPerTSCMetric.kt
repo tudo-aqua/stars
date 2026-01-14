@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.metrics.postEvaluation
 
 import java.util.logging.Logger
-import tools.aqua.stars.core.evaluation.TruePredicate
 import tools.aqua.stars.core.metrics.evaluation.ValidTSCInstancesPerTSCMetric
 import tools.aqua.stars.core.metrics.providers.Loggable
 import tools.aqua.stars.core.metrics.providers.PostEvaluationMetricProvider
@@ -26,6 +25,7 @@ import tools.aqua.stars.core.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.serialization.SerializablePredicateResult
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
+import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -125,7 +125,7 @@ class MissedPredicatesPerTSCMetric<
       val predicateTraversals =
           t.filter { instance ->
                 instance.getLeafNodeEdges(instance).any { leafNode ->
-                  leafNode.tscEdge.condition !is TruePredicate
+                  leafNode.tscEdge.condition.eval != CONST_TRUE
                 }
               }
               .map { it.toString() }
