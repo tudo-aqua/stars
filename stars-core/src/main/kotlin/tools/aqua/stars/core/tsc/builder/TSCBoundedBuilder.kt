@@ -70,7 +70,7 @@ open class TSCBoundedBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param predicate The edge condition defined by a [Predicate].
+   * @param predicate The [TSCEdge] condition defined by a [Predicate].
    */
   fun <
       E : EntityType<E, T, U, D>,
@@ -82,14 +82,14 @@ open class TSCBoundedBuilder<
   }
 
   /**
-   * DSL function for inline definition of edge conditions. Creates a [Predicate] internally.
+   * DSL function for inline definition of [TSCEdge] conditions. Creates a [Predicate] internally.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param name The name of the condition.
-   * @param condition The edge condition.
+   * @param name The name of the [TSCEdge] condition.
+   * @param condition The [TSCEdge] condition.
    */
   fun <
       E : EntityType<E, T, U, D>,

@@ -22,7 +22,7 @@ import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
-/** Constant predicate for always true [TSCEdge]s. */
+/** Constant evaluation function for predicates on always true [TSCEdge]s. */
 val CONST_TRUE: ((Any) -> Boolean) = { true }
 
 /** Label of the [TSCNode] built by the [tsc] function. */
