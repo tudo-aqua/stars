@@ -78,8 +78,8 @@ open class TSCMonitorsBuilder<
       U : TickUnit<U, D>,
       D : TickDifference<D>,
   > TSCMonitorsBuilder<E, T, U, D>.monitor(
-      label: String = "",
       predicate: Predicate<E, T, U, D>,
+      label: String = "",
   ) {
     val monitorLabel = label.ifEmpty { predicate.name }
     check(!monitorMap.containsKey(monitorLabel)) { "Monitor $monitorLabel already exists" }
