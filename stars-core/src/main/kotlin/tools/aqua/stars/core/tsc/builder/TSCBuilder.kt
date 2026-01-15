@@ -41,11 +41,11 @@ sealed class TSCBuilder<
   /** Holds all [TSCEdge]s of the [TSCNode]. */
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
-  /** Holds all monitors of the [TSCNode]. */
-  protected val monitorMap: MutableMap<String, (T) -> Boolean> = mutableMapOf()
+  /** Holds all monitors of the [TSCNode] as [Predicate]s. */
+  protected val monitorMap: MutableMap<String, Predicate<E, T, U, D>> = mutableMapOf()
 
-  /** Holds the optional monitors [TSCEdge]. */
-  protected var monitors: Map<String, (T) -> Boolean>? = null
+  /** Holds the optional monitors [TSCEdge] as [Predicate]s. */
+  protected var monitors: Map<String, Predicate<E, T, U, D>>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value

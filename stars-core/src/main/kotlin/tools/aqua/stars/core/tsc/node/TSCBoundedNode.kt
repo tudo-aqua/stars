@@ -19,6 +19,7 @@ package tools.aqua.stars.core.tsc.node
 
 import java.math.BigInteger
 import tools.aqua.stars.core.binomial
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstance
@@ -49,7 +50,7 @@ open class TSCBoundedNode<
 >(
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
-    monitorsMap: Map<String, (T) -> Boolean>?,
+    monitorsMap: Map<String, Predicate<E, T, U, D>>?,
     valueFunction: (T) -> Any = {},
     val bounds: Pair<Int, Int>,
 ) :

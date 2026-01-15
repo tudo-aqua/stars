@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.node
 
 import java.math.BigInteger
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
@@ -35,7 +36,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property label Label of the [TSCNode].
  * @property edges Outgoing [TSCEdge]s of the [TSCNode].
- * @param monitorsMap Map of monitor labels to their predicates of the [TSCNode].
+ * @param monitorsMap Map of monitor labels to their [Predicate]s of the [TSCNode].
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
@@ -46,12 +47,12 @@ sealed class TSCNode<
 >(
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
-    private val monitorsMap: Map<String, (T) -> Boolean>?,
+    private val monitorsMap: Map<String, Predicate<E, T, U, D>>?,
     val valueFunction: (T) -> Any,
 ) {
 
-  /** Map of monitor labels to their predicates. */
-  val monitors: Map<String, (T) -> Boolean>
+  /** Map of monitor labels to their [Predicate]s. */
+  val monitors: Map<String, Predicate<E, T, U, D>>
     get() = monitorsMap.orEmpty()
 
   /** Counts all [TSC] instances. */
@@ -68,7 +69,7 @@ sealed class TSCNode<
       TSCInstanceNode(
               this,
               this.label,
-              this.monitors.mapValues { (_, monitor) -> monitor(tick) },
+              this.monitors.mapValues { (_, monitor) -> monitor.eval(tick) },
               this.valueFunction(tick),
           )
           .also {

@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.types.*
 
 /**
@@ -35,10 +36,11 @@ open class TSCMonitorsBuilder<
 > : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
-  fun build(): Map<String, (T) -> Boolean> = monitorMap
+  fun build(): Map<String, Predicate<E, T, U, D>> = monitorMap
 
   /**
-   * DSL function for a monitor.
+   * DSL function for a monitor. Creates a [Predicate] internally with the given [condition] and
+   * [label] name.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -57,6 +59,29 @@ open class TSCMonitorsBuilder<
       condition: (T) -> Boolean,
   ) {
     check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
-    monitorMap[label] = condition
+    monitorMap[label] = Predicate(name = label, eval = condition)
+  }
+
+  /**
+   * DSL function for a monitor.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param label Name of the edge.
+   * @param predicate The monitor condition [Predicate].
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCMonitorsBuilder<E, T, U, D>.monitor(
+      label: String,
+      predicate: Predicate<E, T, U, D>,
+  ) {
+    check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
+    monitorMap[label] = predicate
   }
 }
