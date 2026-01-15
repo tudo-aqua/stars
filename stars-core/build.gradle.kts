@@ -36,12 +36,14 @@ dependencies {
   testFixturesImplementation(libs.junit.jupiter)
 }
 
-// Ensure the testFixtures component is published
+// Ensure the testFixtures component is published via a dedicated publication
 publishing {
-  publications.withType<MavenPublication>().configureEach {
-    val testFixturesComponent = components.findByName("testFixtures")
-    if (testFixturesComponent != null) {
-      this.from(testFixturesComponent)
+  publications {
+    create<MavenPublication>("testFixtures") {
+      val testFixturesComponent = components.findByName("testFixtures")
+      if (testFixturesComponent != null) {
+        from(testFixturesComponent)
+      }
     }
   }
 }
