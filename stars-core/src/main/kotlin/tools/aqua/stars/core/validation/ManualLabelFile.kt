@@ -19,7 +19,6 @@ package tools.aqua.stars.core.validation
 
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
@@ -40,7 +39,7 @@ class ManualLabelFile<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val ticksToTest: Sequence<TickSequence<T>>) {
+>(val ticksToTest: List<T>) {
   internal val predicatesToHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
   internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
 

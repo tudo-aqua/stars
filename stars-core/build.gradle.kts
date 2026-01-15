@@ -18,6 +18,7 @@
 plugins {
   id("tools.aqua.stars.library-conventions")
   kotlin("plugin.serialization") version "2.3.0"
+  `java-test-fixtures`
 }
 
 mavenMetadata {
@@ -31,4 +32,16 @@ dependencies {
   implementation(libs.slf4j.api)
   implementation(libs.slf4j.simple)
   implementation(libs.kotlinx.serialization.json)
+  testFixturesImplementation(libs.kotlin.test)
+  testFixturesImplementation(libs.junit.jupiter)
+}
+
+// Ensure the testFixtures component is published
+publishing {
+  publications.withType<MavenPublication>().configureEach {
+    val testFixturesComponent = components.findByName("testFixtures")
+    if (testFixturesComponent != null) {
+      this.from(testFixturesComponent)
+    }
+  }
 }

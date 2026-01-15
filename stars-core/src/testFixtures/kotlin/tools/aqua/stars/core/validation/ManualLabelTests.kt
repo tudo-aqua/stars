@@ -59,26 +59,23 @@ abstract class ManualLabelTests<
   @TestFactory
   fun testManualLabeledTestFiles(): List<DynamicTest> =
       manualLabelTestFiles.flatMap { manualLabelTestFile ->
-        val tickSequences = manualLabelTestFile.ticksToTest.toList()
-        tickSequences.flatMap { tickSequence ->
-          val allTicks = tickSequence.toList()
-          val dynamicTests = mutableListOf<DynamicTest>()
-          dynamicTests.addAll(
-              manualLabelTestFile.predicatesToHold.flatMap { manualLabelPredicate ->
-                manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
-                  createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, true)
-                }
+        val allTicks = manualLabelTestFile.ticksToTest
+        val dynamicTests = mutableListOf<DynamicTest>()
+        dynamicTests.addAll(
+            manualLabelTestFile.predicatesToHold.flatMap { manualLabelPredicate ->
+              manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
+                createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, true)
               }
-          )
-          dynamicTests.addAll(
-              manualLabelTestFile.predicatesToNotHold.flatMap { manualLabelPredicate ->
-                manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
-                  createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, false)
-                }
+            }
+        )
+        dynamicTests.addAll(
+            manualLabelTestFile.predicatesToNotHold.flatMap { manualLabelPredicate ->
+              manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
+                createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, false)
               }
-          )
-          return dynamicTests
-        }
+            }
+        )
+        return dynamicTests
       }
 
   /**
@@ -102,7 +99,7 @@ abstract class ManualLabelTests<
   ): DynamicTest {
     val matchingTicks = allTicks.getTicksInInterval(from, to)
     return DynamicTest.dynamicTest(
-        "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[$from,$to]s'"
+        "Predicate '${'$'}{predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[${'$'}from,${'$'}to]s'"
     ) {
       val predicate = predicate
       if (shouldHold) {

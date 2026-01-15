@@ -113,8 +113,6 @@ mavenPublishing {
   publishToMavenCentral()
   signAllPublications()
 
-  publishing { publications.withType<MavenPublication>().configureEach { artifact(testJar.get()) } }
-
   pom {
     name.set(mavenMetadata.name)
     description.set(mavenMetadata.description)
