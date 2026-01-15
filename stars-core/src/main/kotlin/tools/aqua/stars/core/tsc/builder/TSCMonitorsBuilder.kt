@@ -69,8 +69,8 @@ open class TSCMonitorsBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param label Optional name of the edge. If empty, the name of the [predicate] is used.
    * @param predicate The monitor condition [Predicate].
+   * @param label Optional name of the edge. If empty, the name of the [predicate] is used.
    */
   fun <
       E : EntityType<E, T, U, D>,
