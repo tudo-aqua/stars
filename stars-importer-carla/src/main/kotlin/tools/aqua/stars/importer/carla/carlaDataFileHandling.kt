@@ -103,18 +103,25 @@ fun loadWorld(staticDataFile: Path): World =
  * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
  * data, each as [Path]s.
  *
+ * Exactly one of [useEveryVehicleAsEgo], [useFirstVehicleAsEgo], [egoIds], or ego-flagged IDs in
+ * the loaded data must be used to select ego vehicles.
+ *
  * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
  *   to its dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
- * @param egoIds List of ego vehicle IDs to consider. If empty, no specific ego vehicles are set.
+ * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
+ *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
+ *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
  * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
- *   ego vehicle.
+ *   ego vehicle. When empty, ego vehicles are determined by [egoIds], [useFirstVehicleAsEgo], or
+ *   ego flags in the JSON input.
  * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
  *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
- *   all ticks).
+ *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
+ *   flags in the JSON input.
  * @return A [Sequence] of [TickSequence]s based on the given [simulationRunsWrappers].
  */
 fun loadTicks(
@@ -183,12 +190,16 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
- * @param egoIds List of ego vehicle IDs to consider. If empty, no specific ego vehicles are set.
+ * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
+ *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
+ *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
  * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
- *   ego vehicle.
- * @param useFirstVehicleAsEgo If true, the first vehicle found in the first non-empty tick of each
- *   simulation run will be treated as the ego vehicle (this vehicle might not be present in all
- *   ticks).
+ *   ego vehicle. When empty, ego vehicles are determined by [egoIds], [useFirstVehicleAsEgo], or
+ *   ego flags in the JSON input.
+ * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
+ *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
+ *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
+ *   flags in the JSON input.
  * @return A [Sequence] of [TickSequence]s based on the given [mapDataFile] and [dynamicDataFile].
  */
 fun loadTicks(
@@ -256,11 +267,16 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
- * @param egoIds List of ego vehicle IDs to consider. If empty, no specific ego vehicles are set.
+ * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
+ *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
+ *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
  * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
- *   ego vehicle.
- * @param useFirstVehicleAsEgo If true, only the first vehicle in each simulation run will be
- *   treated as the ego vehicle.
+ *   ego vehicle. When empty, ego vehicles are determined by [egoIds], [useFirstVehicleAsEgo], or
+ *   ego flags in the JSON input.
+ * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
+ *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
+ *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
+ *   flags in the JSON input.
  * @return A [Sequence] of [TickSequence]s based on the given [World] of static data to dynamic
  *   data.
  */

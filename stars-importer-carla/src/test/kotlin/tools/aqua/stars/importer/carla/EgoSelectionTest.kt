@@ -124,7 +124,7 @@ class EgoSelectionTest {
     }
   }
 
-  /** Test convertTickData with one egoId. */
+  /** Test convertTickData with five egoIds. */
   @Test
   fun `Test convertTickData with five egoIds`() {
     val jsonTicksWithoutEgo =
@@ -405,7 +405,7 @@ class EgoSelectionTest {
 
   /** Test convertTickData with egoIds, useEveryVehicleAsEgo and ego-flagged JSON. */
   @Test
-  fun `Test convertTickData with egoIds useEveryVehicleAsEgo and ego-flagged JSON`() {
+  fun `Test convertTickData with egoIds, useEveryVehicleAsEgo and ego-flagged JSON`() {
     val jsonTicksWithEgo =
         getTickDataWithOneLaneWithNVehicles(
             numberOfVehicles = 2,
@@ -427,7 +427,7 @@ class EgoSelectionTest {
 
   /** Test convertTickData with useEveryVehicleAsEgo, useFirstVehicleAsEgo and egoIds. */
   @Test
-  fun `Test convertTickData with useEveryVehicleAsEgo useFirstVehicleAsEgo and egoIds`() {
+  fun `Test convertTickData with useEveryVehicleAsEgo, useFirstVehicleAsEgo and egoIds`() {
     val jsonTicksWithoutEgo =
         getTickDataWithOneLaneWithNVehicles(numberOfVehicles = 2, numberOfTicks = 2)
 

@@ -78,7 +78,7 @@ fun getTickDataWithOneLaneWithNVehicles(
       }
       actorPositions +=
           JsonActorPosition(
-              positionOnLane = 0 * 10.0,
+              positionOnLane = vehicleIndex * 10.0,
               laneId = simpleLane.laneId,
               roadId = simpleRoad.id,
               actor = vehicle,
