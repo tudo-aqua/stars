@@ -57,10 +57,7 @@ open class TSCMonitorsBuilder<
   > TSCMonitorsBuilder<E, T, U, D>.monitor(
       label: String,
       condition: (T) -> Boolean,
-  ) {
-    check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
-    monitorMap[label] = Predicate(name = label, eval = condition)
-  }
+  ) = monitor(label, Predicate(name = label, eval = condition))
 
   /**
    * DSL function for a monitor.
@@ -69,8 +66,8 @@ open class TSCMonitorsBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
+   * @param label Name of the edge. If empty, the name of the [predicate] is used.
    * @param predicate The monitor condition [Predicate].
-   * @param label Optional name of the edge. If empty, the name of the [predicate] is used.
    */
   fun <
       E : EntityType<E, T, U, D>,
@@ -78,8 +75,8 @@ open class TSCMonitorsBuilder<
       U : TickUnit<U, D>,
       D : TickDifference<D>,
   > TSCMonitorsBuilder<E, T, U, D>.monitor(
-      predicate: Predicate<E, T, U, D>,
       label: String = "",
+      predicate: Predicate<E, T, U, D>,
   ) {
     val monitorLabel = label.ifEmpty { predicate.name }
     check(!monitorMap.containsKey(monitorLabel)) { "Monitor $monitorLabel already exists" }

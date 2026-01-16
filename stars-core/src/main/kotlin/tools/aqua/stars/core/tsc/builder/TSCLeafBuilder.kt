@@ -88,9 +88,8 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, U, D>.condition(name: String = "", condition: (T) -> Boolean) {
-    this.condition = Predicate(name, condition)
-  }
+  > TSCLeafBuilder<E, T, U, D>.condition(name: String = "", condition: (T) -> Boolean) =
+      condition(Predicate(name, condition))
 
   /**
    * DSL function for a value function.
