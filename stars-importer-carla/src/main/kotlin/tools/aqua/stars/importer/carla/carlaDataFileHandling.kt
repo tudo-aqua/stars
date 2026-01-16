@@ -103,18 +103,34 @@ fun loadWorld(staticDataFile: Path): World =
  * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
  * data, each as [Path]s.
  *
+ * Exactly one of [useEveryVehicleAsEgo], [useFirstVehicleAsEgo], [egoIds], or ego-flagged IDs in
+ * the loaded data must be used to select ego vehicles.
+ *
  * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
  *   to its dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
+ * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
+ *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
+ *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
+ * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
+ *   ego vehicle. When empty, ego vehicles are determined by [egoIds], [useFirstVehicleAsEgo], or
+ *   ego flags in the JSON input.
+ * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
+ *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
+ *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
+ *   flags in the JSON input.
  * @return A [Sequence] of [TickSequence]s based on the given [simulationRunsWrappers].
  */
 fun loadTicks(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
     bufferSize: Int = 100,
     orderFilesBySeed: Boolean = false,
+    egoIds: List<Int> = emptyList(),
+    useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
 ): Sequence<TickSequence<TickData>> {
   // Check that the simulationRunsWrappers are not empty
   check(simulationRunsWrappers.isNotEmpty()) {
@@ -131,7 +147,7 @@ fun loadTicks(
   var currentSimulationRunsWrapper = simulationRunsWrapperIterator.next()
   var currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
 
-  return generateSequence {
+  return sequence {
     if (!currentDynamicDataPathIterator.hasNext() && simulationRunsWrapperIterator.hasNext()) {
       currentSimulationRunsWrapper = simulationRunsWrapperIterator.next()
       currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
@@ -145,21 +161,21 @@ fun loadTicks(
       val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
 
       // Calculate TickData objects from JSON
-      val ticks =
+      val ticksPerEgo =
           convertTickData(
               world = currentSimulationRunsWrapper.world,
               jsonSimulationRun = simulationRun,
               tickDataSourcePath = currentDynamicDataPath,
+              egoIds = egoIds,
+              useEveryVehicleAsEgo = useEveryVehicleAsEgo,
+              useFirstVehicleAsEgo = useFirstVehicleAsEgo,
           )
 
-      val iterator = ticks.iterator()
-      return@generateSequence TickSequence(bufferSize) {
-        if (iterator.hasNext()) iterator.next() else null
+      for (ticks in ticksPerEgo) {
+        val it = ticks.iterator()
+        yield(TickSequence(bufferSize) { if (it.hasNext()) it.next() else null })
       }
     }
-
-    // No more dynamic data files left to process. Terminate the sequence.
-    return@generateSequence null
   }
 }
 
@@ -174,6 +190,16 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
+ * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
+ *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
+ *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
+ * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
+ *   ego vehicle. When empty, ego vehicles are determined by [egoIds], [useFirstVehicleAsEgo], or
+ *   ego flags in the JSON input.
+ * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
+ *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
+ *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
+ *   flags in the JSON input.
  * @return A [Sequence] of [TickSequence]s based on the given [mapDataFile] and [dynamicDataFile].
  */
 fun loadTicks(
@@ -181,12 +207,18 @@ fun loadTicks(
     dynamicDataFile: Path,
     bufferSize: Int = 100,
     orderFilesBySeed: Boolean = false,
+    egoIds: List<Int> = emptyList(),
+    useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =
             listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
         bufferSize = bufferSize,
         orderFilesBySeed = orderFilesBySeed,
+        egoIds = egoIds,
+        useEveryVehicleAsEgo = useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo = useFirstVehicleAsEgo,
     )
 
 /**
@@ -200,6 +232,13 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
+ * @param egoIds List of ego vehicle IDs to consider. If empty, this parameter does not restrict ego
+ *   selection; ego vehicles are then determined by [useEveryVehicleAsEgo], [useFirstVehicleAsEgo],
+ *   or ego markings in the input data.
+ * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
+ *   ego vehicle.
+ * @param useFirstVehicleAsEgo If true, only the first vehicle in each simulation run will be
+ *   treated as the ego vehicle.
  * @return A [Sequence] of [TickSequence]s based on the given [mapDataFile] and [dynamicDataFiles].
  */
 fun loadTicks(
@@ -207,11 +246,17 @@ fun loadTicks(
     dynamicDataFiles: List<Path>,
     bufferSize: Int = 100,
     orderFilesBySeed: Boolean = false,
+    egoIds: List<Int> = emptyList(),
+    useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers = listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
         bufferSize = bufferSize,
         orderFilesBySeed = orderFilesBySeed,
+        egoIds = egoIds,
+        useEveryVehicleAsEgo = useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo = useFirstVehicleAsEgo,
     )
 
 /**
@@ -222,6 +267,16 @@ fun loadTicks(
  *   that gets supplied to the TSCEvaluation.
  * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
+ * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
+ *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
+ *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
+ * @param useEveryVehicleAsEgo If true, every vehicle in the simulation runs will be treated as an
+ *   ego vehicle. When empty, ego vehicles are determined by [egoIds], [useFirstVehicleAsEgo], or
+ *   ego flags in the JSON input.
+ * @param useFirstVehicleAsEgo If true, the vehicle that appears first in the first non-empty tick
+ *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
+ *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
+ *   flags in the JSON input.
  * @return A [Sequence] of [TickSequence]s based on the given [World] of static data to dynamic
  *   data.
  */
@@ -229,10 +284,16 @@ fun loadTicks(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
     bufferSize: Int = 100,
     orderFilesBySeed: Boolean = false,
+    egoIds: List<Int> = emptyList(),
+    useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =
             mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
         bufferSize = bufferSize,
         orderFilesBySeed = orderFilesBySeed,
+        egoIds = egoIds,
+        useEveryVehicleAsEgo = useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo = useFirstVehicleAsEgo,
     )

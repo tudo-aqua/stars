@@ -61,53 +61,132 @@ fun getSeed(fileName: String): Int =
  * @param world The [World].
  * @param jsonSimulationRun The list of [JsonTickData] in current observation.
  * @param tickDataSourcePath The [Path] from which the [JsonTickData] was loaded.
+ * @param egoIds The list of ego ids to use. If empty, the ego flag in the Json data is used.
+ * @param useEveryVehicleAsEgo If true, every vehicle is used as ego vehicle.
+ * @param useFirstVehicleAsEgo If true, the first vehicle found in the first tick that is present in
+ *   every tick is used as ego vehicle.
+ * @return A list of tick sequences (outer list), one sequence per selected ego vehicle (inner
+ *   list). When [useEveryVehicleAsEgo] is true, each inner list contains only the ticks in which
+ *   that specific vehicle is present, so different vehicles can have tick sequences of different
+ *   lengths. This means the result is filtered by vehicle presence, not just by changing the ego
+ *   flag.
  */
 fun convertTickData(
     world: World,
     jsonSimulationRun: List<JsonTickData>,
     tickDataSourcePath: Path,
-): List<TickData> {
-  cleanJsonData(world, jsonSimulationRun)
+    egoIds: List<Int> = emptyList(),
+    useEveryVehicleAsEgo: Boolean = false,
+    useFirstVehicleAsEgo: Boolean = false,
+): List<List<TickData>> {
 
-  // Extract vehicles from the JSON file
-  val jsonVehicles: List<List<JsonVehicle>> =
-      jsonSimulationRun.map { v ->
-        v.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+  cleanJsonData(world, jsonSimulationRun)
+  // Vehicles per tick
+  val vehiclesPerTick: List<List<JsonVehicle>> =
+      jsonSimulationRun.map { tick ->
+        tick.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
       }
 
-  // Check that no two actors have the same id in every tick
-  jsonVehicles.forEachIndexed { index, vehicles ->
-    check(vehicles.map { it.id }.distinct().size == vehicles.size) {
-      "There are vehicles with the same id in the Json data at tick $index: \n${vehicles.joinToString(
-        separator = "\n"
-      ) { "JsonVehicle(id=${it.id}, type=${it.typeId}, ...)" }}."
+  // Union of all vehicle IDs across the whole run
+  val allVehicleIds: Set<Int> = vehiclesPerTick.flatten().map { it.id }.toSet()
+  check(allVehicleIds.isNotEmpty()) { "No vehicles found in Json data: $tickDataSourcePath" }
+
+  // Ego-flagged IDs seen anywhere in the run
+  val egoFlaggedIds: Set<Int> =
+      vehiclesPerTick.flatten().filter { it.egoVehicle }.map { it.id }.toSet()
+
+  val enabledModes =
+      listOf(
+              useFirstVehicleAsEgo,
+              useEveryVehicleAsEgo,
+              egoIds.isNotEmpty(),
+              egoFlaggedIds.isNotEmpty(),
+          )
+          .count { it }
+
+  require(enabledModes == 1) {
+    "Exactly one of useEveryVehicleAsEgo, useFirstVehicleAsEgo, egoIds, or ego-flagged IDs must be used " +
+        "to select ego vehicles. Found $enabledModes. Source: $tickDataSourcePath"
+  }
+
+  vehiclesPerTick.forEachIndexed { idx, vehicles ->
+    check(vehicles.count { it.egoVehicle } <= 1) {
+      "More than one ego vehicle flagged in tick index=$idx. Source: $tickDataSourcePath"
     }
   }
 
-  // Get the ego vehicle id from the first tick
-  val egoId = jsonVehicles.first().first { it.egoVehicle }
+  val egoIdsDistinct = egoIds.distinct()
+  check(egoIdsDistinct.size == egoIds.size) { "egoIds contains duplicates: $egoIds" }
 
-  // Check that the ego vehicle is present in every tick and there is only one ego vehicle
-  jsonVehicles.forEachIndexed { index, vehicles ->
-    val egos = vehicles.filter { it.egoVehicle }
-    // Check that there is only one ego vehicle in the current tick
-    check(egos.size == 1) {
-      "There must be exactly one ego vehicle in the Json data at tick $index. Found ${egos.size} in tick $index: \n${
-        egos.joinToString(
-          separator = "\n"
-        ) { "JsonVehicle(id=${it.id}, type=${it.typeId}, ...)" }
-      }."
-    }
+  val egosToUse: List<Int> =
+      when {
+        useEveryVehicleAsEgo -> allVehicleIds.toList()
 
-    // Check that the ego vehicle is the same as in the first tick
-    check(egos.first().id == egoId.id) {
-      "The ego vehicle id in tick $index is different from the first tick. Expected: ${egoId.id}, found: ${egos.first().id}."
-    }
+        egoIdsDistinct.isNotEmpty() -> {
+          val missing = egoIdsDistinct.filterNot { it in allVehicleIds }
+          check(missing.isEmpty()) {
+            "Some egoIds were not found anywhere in the Json data: missing=$missing. Source: $tickDataSourcePath"
+          }
+          egoIdsDistinct
+        }
+
+        egoFlaggedIds.isNotEmpty() -> {
+          check(egoFlaggedIds.size == 1) {
+            "Expected exactly one ego vehicle id across the run, found ${egoFlaggedIds.size}: $egoFlaggedIds. Source: $tickDataSourcePath"
+          }
+          listOf(egoFlaggedIds.single())
+        }
+
+        useFirstVehicleAsEgo -> {
+          val firstVehicleId = vehiclesPerTick.firstOrNull { it.isNotEmpty() }?.first()?.id
+          check(firstVehicleId != null) {
+            "useFirstVehicleAsEgo=true but no vehicle was found in any tick. Source: $tickDataSourcePath"
+          }
+          listOf(firstVehicleId)
+        }
+
+        else -> emptyList()
+      }
+
+  check(egosToUse.isNotEmpty()) {
+    "No ego vehicle selected (egosToUse is empty). Check egoIds / flags / useFirstVehicleAsEgo. Source: $tickDataSourcePath"
   }
 
-  return jsonSimulationRun
-      .map { it.toTickData(world, tickDataSourcePath.fileName.name) }
-      .also { updateActorVelocityForSimulationRun(it) }
+  return egosToUse.map { egoId ->
+    val tickDataForEgo =
+        jsonSimulationRun
+            .mapNotNull { tick ->
+              val vehiclesInRun =
+                  tick.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+
+              // Snapshot original egoVehicle flags to avoid persistent mutation across ego
+              // iterations.
+              val originalEgoFlags = vehiclesInRun.map { it to it.egoVehicle }
+
+              vehiclesInRun.forEach { v -> v.egoVehicle = (v.id == egoId) }
+
+              val result =
+                  if (vehiclesInRun.none { it.egoVehicle }) {
+                    null
+                  } else {
+                    tick.toTickData(world, tickDataSourcePath.fileName.name)
+                  }
+
+              // Restore original egoVehicle flags so JsonVehicle instances are left unchanged.
+              originalEgoFlags.forEach { (vehicle, originalFlag) ->
+                vehicle.egoVehicle = originalFlag
+              }
+
+              result
+            }
+            .also { updateActorVelocityForSimulationRun(it) }
+
+    check(tickDataForEgo.isNotEmpty()) {
+      "Ego vehicle id=$egoId never appeared in any tick (or produced no TickData). Source: $tickDataSourcePath"
+    }
+
+    tickDataForEgo
+  }
 }
 
 /**
