@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.validation
 
-import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
@@ -45,6 +44,6 @@ fun <
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 > manuallyLabelledFile(
-    ticksToTest: Sequence<TickSequence<T>>,
+    ticksToTest: List<T>,
     manualLabelFile: ManualLabelFile<E, T, U, D>.() -> Unit,
 ): ManualLabelFile<E, T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)
