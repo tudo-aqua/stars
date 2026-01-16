@@ -33,6 +33,17 @@ implementation("tools.aqua:stars-core:2.0")
 </dependency>
 ``` 
 
+#### Manual Labeling Framework
+If you want to use the manual labeling framework, add the following dependencies:
+```kotlin
+dependencies {
+  testImplementation(kotlin("test-junit5"))
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+  testImplementation(group = "tools.aqua", name = "stars-core", version = "2.1", classifier = "test-fixtures")
+}
+```
+
 #### (Optional) Git Hooks
 If you want to use our proposed Git Hooks you can execute the following command:
 ```shell
