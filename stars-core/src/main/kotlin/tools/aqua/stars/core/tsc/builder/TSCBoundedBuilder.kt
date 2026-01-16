@@ -19,6 +19,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
@@ -69,16 +70,34 @@ open class TSCBoundedBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param condition The edge condition.
+   * @param predicate The [TSCEdge] condition defined by a [Predicate].
    */
   fun <
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCBoundedBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
-    this.condition = condition
+  > TSCBoundedBuilder<E, T, U, D>.condition(predicate: Predicate<E, T, U, D>) {
+    this.condition = predicate
   }
+
+  /**
+   * DSL function for inline definition of [TSCEdge] conditions. Creates a [Predicate] internally.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param name The name of the [TSCEdge] condition.
+   * @param condition The [TSCEdge] condition.
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.condition(name: String = "", condition: (T) -> Boolean) =
+      condition(Predicate(name, condition))
 
   /**
    * DSL function for a value function.
