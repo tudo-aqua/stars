@@ -31,7 +31,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Add `IterationOrder` parameter to `TickSequence`.
 - Add `TSCInstanceIterator`. 
-- Add `TSC DSL` `condition` now also takes `predicates` as parameter instead of lambda.
+- Add `TSC DSL` `condition` and `monitor` now also take `predicates` as parameter instead of lambda.
 - Add `ManualLabelTests` for manual verification of predicates and monitors.
 
 ## [2.0] - 24.10.2025
