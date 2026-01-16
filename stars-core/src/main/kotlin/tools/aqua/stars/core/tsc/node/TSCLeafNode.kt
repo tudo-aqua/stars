@@ -18,6 +18,7 @@
 package tools.aqua.stars.core.tsc.node
 
 import java.math.BigInteger
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.types.*
 
 /**
@@ -28,7 +29,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param label Label of the [TSCLeafNode].
- * @param monitorsMap Map of monitor labels to their predicates of the [TSCLeafNode].
+ * @param monitorsMap Map of monitor labels to their [Predicate]s of the [TSCLeafNode].
  * @param valueFunction Value function predicate of the [TSCLeafNode].
  */
 open class TSCLeafNode<
@@ -38,7 +39,7 @@ open class TSCLeafNode<
     D : TickDifference<D>,
 >(
     label: String,
-    monitorsMap: Map<String, (T) -> Boolean>?,
+    monitorsMap: Map<String, Predicate<E, T, U, D>>?,
     valueFunction: (T) -> Any = {},
 ) :
     TSCBoundedNode<E, T, U, D>(
