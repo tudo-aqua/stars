@@ -54,7 +54,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
 
     return object : Iterator<T> {
       var firstItem: T? = null
-      var currentItem: T? = null
+      var lastItem: T? = null
       var nextItem: T? = null
       var size: Int = 0
       var finished: Boolean = false
@@ -64,7 +64,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         if (!hasNext()) throw NoSuchElementException("No more elements in the sequence")
 
         val first = checkNotNull(firstItem)
-        val current = checkNotNull(currentItem)
+        val last = checkNotNull(lastItem)
         val next = checkNotNull(nextItem)
 
         // Update current buffer size
@@ -72,8 +72,8 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
 
         // Link new tick to the doubly linked list
         if (size > 1) {
-          current.nextTick = next
-          next.previousTick = current
+          last.nextTick = next
+          next.previousTick = last
         }
 
         // If the buffer size exceeds the limit, remove the oldest tick
@@ -86,11 +86,11 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         }
 
         return (when (iterationOrder) {
-              IterationOrder.FORWARD -> first
+              IterationOrder.FORWARD -> checkNotNull(firstItem)
               IterationOrder.BACKWARD -> next
             })
             .also {
-              currentItem = next
+              lastItem = next
               nextItem = null
             }
       }
@@ -114,7 +114,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         // If this is the first item, initialize firstItem and currentItem
         if (firstItem == null) {
           firstItem = nextItem
-          currentItem = nextItem
+          lastItem = nextItem
         }
 
         return true
