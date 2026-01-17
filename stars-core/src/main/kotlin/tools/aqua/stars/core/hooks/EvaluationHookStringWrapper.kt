@@ -17,17 +17,23 @@
 
 package tools.aqua.stars.core.hooks
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metrics.providers.Loggable
+
 /**
  * Custom String wrapper indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP].
  */
-object EvaluationHookStringWrapper {
+object EvaluationHookStringWrapper : Loggable {
+  override val loggerIdentifier: String = "evaluation-hooks-results"
+  override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+
   /**
    * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP] to
    * the console.
    */
   fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
-    println(createMsg(EvaluationHookResult.SKIP, obj, hooks))
+    logFine(createMsg(EvaluationHookResult.SKIP, obj, hooks))
   }
 
   /**
@@ -36,7 +42,7 @@ object EvaluationHookStringWrapper {
    */
   fun cancel(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
-    println(createMsg(EvaluationHookResult.CANCEL, obj, hooks))
+    logInfo(createMsg(EvaluationHookResult.CANCEL, obj, hooks))
   }
 
   /**
