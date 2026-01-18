@@ -67,7 +67,6 @@ interface Loggable {
    */
   fun logInfo(message: Any? = "") {
     logger.info(message.toString())
-    println(message)
   }
 
   /**

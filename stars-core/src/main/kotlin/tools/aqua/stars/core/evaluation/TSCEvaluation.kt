@@ -248,7 +248,7 @@ class TSCEvaluation<
             }
           }
         }
-        logInfo("The evaluation of all TSCs took: $tscEvaluationTime")
+        logFine("The evaluation of all TSCs took: $tscEvaluationTime")
 
         // Evaluate all ticks
         val evaluationTime = measureTime {
@@ -258,7 +258,7 @@ class TSCEvaluation<
             }
           }
         }
-        logInfo("The evaluation of all ticks took: $evaluationTime")
+        logFine("The evaluation of all ticks took: $evaluationTime")
       } else {
         logWarning("No TSCs to evaluate. Skipping evaluation.")
       }
