@@ -81,7 +81,7 @@ class MissedPredicatesPerTSCMetric<
    */
   override fun printPostEvaluationResult() {
     val evaluationResult = postEvaluate()
-    println("\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missing Predicates Per TSC \n$CONSOLE_SEPARATOR")
+    logInfo("\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missing Predicates Per TSC \n$CONSOLE_SEPARATOR")
     evaluationResult.forEach { (tsc, missedPredicates) ->
       logInfo("Count of missing predicates for tsc '${tsc.identifier}': ${missedPredicates.size}.")
       missedPredicates.sorted().forEach { logFine(it) }

@@ -94,7 +94,7 @@ class FailedMonitorsGroupedByTSCInstanceMetric<
 
   /** Prints the count of failed monitors for each [TSC]. */
   override fun printPostEvaluationResult() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Failed Monitors Grouped By TSC \n$CONSOLE_SEPARATOR"
     )
     failedMonitors.forEach { (tsc, failedMonitors) ->

@@ -164,7 +164,7 @@ class ValidTSCInstancesPerTSCMetric<
 
   /** Prints the number of valid [TSCInstance] for each [TSC] using [println]. */
   override fun printState() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Valid TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
     )
     validInstancesMap.forEach { (tsc, validInstancesMap) ->

@@ -90,7 +90,7 @@ class MissedTSCInstancesPerTSCMetric<
 
   /** Prints the count of missed [TSCInstance]s for each [TSC] using [println]. */
   override fun printState() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missed TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
     )
     getState().forEach { (tsc, missedInstances) ->
