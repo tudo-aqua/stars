@@ -36,7 +36,8 @@ data class VariablePredicate<
 ) {
 
   /**
-   * Checks if this variable predicate holds (i.e., is true) at the given [tick] and parameter [other].
+   * Checks if this variable predicate holds (i.e., is true) at the given [tick] and parameter
+   * [other].
    *
    * @param tick The tick to evaluate this predicate for.
    * @param other The variable parameter to evaluate this predicate with.
@@ -52,7 +53,8 @@ data class VariablePredicate<
      * @param T [TickDataType].
      * @param K The type of the variable parameter.
      * @param name The name of the predicate.
-     * @param eval The evaluation function on the [TickDataType] with a variable parameter of type [K].
+     * @param eval The evaluation function on the [TickDataType] with a variable parameter of type
+     *   [K].
      * @return The created [VariablePredicate] with the given [eval] function.
      */
     fun <
