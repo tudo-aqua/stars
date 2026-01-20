@@ -37,13 +37,13 @@ import kotlin.math.sqrt
  * @param rotation The [Rotation] of the [Vehicle].
  * @param collisions The [List] of all colliding [Actor] IDs of the [Vehicle]. Default: empty
  *   [List].
+ * @param lane The [Vehicle]'s [Lane].
+ * @param positionOnLane The [Vehicle]'s position in the [Lane].
  * @property isEgo Whether this is the own [Vehicle].
  * @property forwardVector The current forward vector of the [Vehicle].
  * @property velocity The current velocity in m/s of the [Vehicle].
  * @property acceleration The current acceleration m/s² of the [Vehicle].
  * @property angularVelocity The current angular velocity of the [Vehicle].
- * @property lane The [Vehicle]'s [Lane].
- * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property vehicleType The [VehicleType] of the [Vehicle].
  */
 class Vehicle(
