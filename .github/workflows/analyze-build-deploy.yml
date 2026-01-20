@@ -16,18 +16,6 @@ env:
   JDK_VERSION: 17
 
 jobs:
-  remind:
-    name: Changelog Reminder
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Changelog Reminder
-        uses: peterjgrainger/action-changelog-reminder@v1.3.0
-        with:
-          changelog_regex: 'CHANGELOG\\.md'
-          customPrMessage: 'Your change does not contain a changelog entry. Please add one in `CHANGELOG.md`.'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   safety-check:
     name: Check for modified Gradle
     runs-on: ubuntu-latest
