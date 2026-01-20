@@ -103,7 +103,11 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         if (nextItem != null) return true
 
         // Retrieve next item from the provided function
-        nextItem = getNextValue()
+        nextItem =
+            getNextValue()?.also {
+              it.previousTick = null
+              it.nextTick = null
+            }
 
         // If no next item is available, mark as finished and return false
         if (nextItem == null) {

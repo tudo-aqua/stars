@@ -38,9 +38,10 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Change check for count of vertices in Crosswalk from `== 4` to `>= 3` as the number of vertices is not fixed. 
+- Simplified generic types of `Predicate` to `<T>`.
 
-### Changed
-- Simplified generic types of `Predicate` to `<T>`
+### Fixed
+- Fix linking of ticks in `TickSequence` not properly reset.
 
 ## [2.0] - 24.10.2025
 
