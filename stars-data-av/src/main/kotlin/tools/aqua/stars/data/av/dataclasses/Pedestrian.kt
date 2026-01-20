@@ -44,6 +44,8 @@ class Pedestrian(
     location: Location = Location(),
     rotation: Rotation = Rotation(),
     collisions: List<Int> = emptyList(),
+    lane: Lane = Lane(),
+    positionOnLane: Double = 0.0,
 ) :
     Actor(
         id = id,
@@ -57,6 +59,8 @@ class Pedestrian(
         location = location,
         rotation = rotation,
         collisions = collisions,
+        lane = lane,
+        positionOnLane = positionOnLane,
     ) {
 
   override fun clone(newTickData: TickData): Actor =
@@ -72,5 +76,7 @@ class Pedestrian(
           location = location,
           rotation = rotation,
           collisions = collisions,
+          lane = lane,
+          positionOnLane = positionOnLane,
       )
 }

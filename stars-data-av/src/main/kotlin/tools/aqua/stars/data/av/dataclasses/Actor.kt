@@ -46,6 +46,8 @@ sealed class Actor(
     val location: Location = Location(),
     val rotation: Rotation = Rotation(),
     val collisions: List<Int> = emptyList(),
+    val lane: Lane = Lane(),
+    var positionOnLane: Double = 0.0,
 ) : EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {
   /**
    * Clones the actor.

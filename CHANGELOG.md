@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Add `TSCInstanceIterator`. 
 - Add `TSC DSL` `condition` and `monitor` now also take `predicates` as parameter instead of lambda.
 - Add `ManualLabelTests` for manual verification of predicates and monitors.
+- Re-added `lane` and `positionOnLane` to `Pedestrian`.
 
 ### Changed
 - Change check for count of vertices in Crosswalk from `== 4` to `>= 3` as the number of vertices is not fixed. 
