@@ -24,7 +24,7 @@ import tools.aqua.stars.core.types.*
  *
  * @param T [TickDataType].
  * @property name The name of the predicate.
- * @property eval The evaluation function on the context.
+ * @property eval The evaluation function on the [TickDataType].
  */
 data class Predicate<
     T : TickDataType<*, T, *, *>,
@@ -34,21 +34,21 @@ data class Predicate<
 ) {
 
   /**
-   * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
+   * Checks if this predicate holds (i.e., is true) at the given [tick].
    *
    * @param tick The tick to evaluate this predicate for.
-   * @return Whether the predicate holds in the given context and at the given [tick].
+   * @return Whether the predicate holds at the given [tick].
    */
   fun holds(tick: T): Boolean = this.eval(tick)
 
   /** Companion object containing utility methods for working with [Predicate]. */
   companion object {
     /**
-     * Creates a Predicate.
+     * Creates a [Predicate].
      *
      * @param T [TickDataType].
      * @param name The name of the predicate.
-     * @param eval The evaluation function on the [List] of [TickDataType]s.
+     * @param eval The evaluation function on the [TickDataType].
      * @return The created [Predicate] with the given [eval] function.
      */
     fun <T : TickDataType<*, T, *, *>> predicate(name: String, eval: (T) -> Boolean): Predicate<T> =

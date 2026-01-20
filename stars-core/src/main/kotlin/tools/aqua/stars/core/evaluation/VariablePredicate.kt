@@ -25,7 +25,7 @@ import tools.aqua.stars.core.types.*
  * @param T [TickDataType].
  * @param K The type of the variable parameter.
  * @property name The name of the predicate.
- * @property eval The evaluation function on the context.
+ * @property eval The evaluation function on the [TickDataType].
  */
 data class VariablePredicate<
     T : TickDataType<*, T, *, *>,
@@ -36,23 +36,23 @@ data class VariablePredicate<
 ) {
 
   /**
-   * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
+   * Checks if this variable predicate holds (i.e., is true) at the given [tick] and parameter [other].
    *
    * @param tick The tick to evaluate this predicate for.
    * @param other The variable parameter to evaluate this predicate with.
-   * @return Whether the predicate holds in the given context and at the given [tick].
+   * @return Whether the predicate holds at the given [tick] and parameter [other].
    */
   fun holds(tick: T, other: K): Boolean = this.eval(tick, other)
 
   /** Companion object containing utility methods for working with [VariablePredicate]. */
   companion object {
     /**
-     * Creates a Predicate.
+     * Creates a [VariablePredicate].
      *
      * @param T [TickDataType].
      * @param K The type of the variable parameter.
      * @param name The name of the predicate.
-     * @param eval The evaluation function on the [List] of [TickDataType]s.
+     * @param eval The evaluation function on the [TickDataType] with a variable parameter of type [K].
      * @return The created [VariablePredicate] with the given [eval] function.
      */
     fun <
