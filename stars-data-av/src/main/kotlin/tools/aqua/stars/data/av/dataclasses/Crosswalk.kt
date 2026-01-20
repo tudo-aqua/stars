@@ -25,7 +25,7 @@ package tools.aqua.stars.data.av.dataclasses
  */
 data class Crosswalk(val id: Int, val vertices: List<Location>) {
   init {
-    check(vertices.size == 4) { "Crosswalk must have exactly four vertices" }
+    check(vertices.size > 2) { "Crosswalk must have more than two vertices" }
   }
 
   override fun toString(): String = "Crosswalk $id"
