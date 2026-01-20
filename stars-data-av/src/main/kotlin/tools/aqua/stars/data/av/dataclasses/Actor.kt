@@ -33,6 +33,8 @@ import tools.aqua.stars.core.types.EntityType
  * @property location The [Location] of the [Actor]. Default: origin.
  * @property rotation The [Rotation] of the [Actor]. Default: no rotation.
  * @property collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ * @property lane The [Actor]'s [Lane].
+ * @property positionOnLane The [Actor]'s position in the [Lane].
  */
 sealed class Actor(
     val id: Int,
