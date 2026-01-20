@@ -32,11 +32,15 @@ All notable changes to this project will be documented in this file.
 - Add `IterationOrder` parameter to `TickSequence`.
 - Add `TSCInstanceIterator`. 
 - Add `TSC DSL` `condition` and `monitor` now also take `predicates` as parameter instead of lambda.
+- Add `VariablePredicate<T, K>` for predicates with a generic parameter `K`.
 - Add `ManualLabelTests` for manual verification of predicates and monitors.
 - Re-added `lane` and `positionOnLane` to `Pedestrian`.
 
 ### Changed
 - Change check for count of vertices in Crosswalk from `== 4` to `>= 3` as the number of vertices is not fixed. 
+
+### Changed
+- Simplified generic types of `Predicate` to `<T>`
 
 ## [2.0] - 24.10.2025
 

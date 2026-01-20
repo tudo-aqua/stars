@@ -39,7 +39,7 @@ open class TSCLeafNode<
     D : TickDifference<D>,
 >(
     label: String,
-    monitorsMap: Map<String, Predicate<E, T, U, D>>?,
+    monitorsMap: Map<String, Predicate<T>>?,
     valueFunction: (T) -> Any = {},
 ) :
     TSCBoundedNode<E, T, U, D>(
