@@ -26,18 +26,16 @@ import tools.aqua.stars.core.types.TickUnit
 /**
  * The DSL builder for manual label predicates.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property predicate The abstract predicate to be tested.
  */
 class ManualLabelPredicate<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+    T : TickDataType<*, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val predicate: Predicate<E, T, U, D>) {
+>(val predicate: Predicate<T>) {
   internal val manualLabelIntervals = mutableListOf<ManualLabelInterval<U, D>>()
 
   /** The name of the current predicate, derived from the associated abstract predicate. */

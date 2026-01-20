@@ -36,7 +36,7 @@ open class TSCMonitorsBuilder<
 > : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
-  fun build(): Map<String, Predicate<E, T, U, D>> = monitorMap
+  fun build(): Map<String, Predicate<T>> = monitorMap
 
   /**
    * DSL function for a monitor. Creates a [Predicate] internally with the given [condition] and
@@ -76,7 +76,7 @@ open class TSCMonitorsBuilder<
       D : TickDifference<D>,
   > TSCMonitorsBuilder<E, T, U, D>.monitor(
       label: String = "",
-      predicate: Predicate<E, T, U, D>,
+      predicate: Predicate<T>,
   ) {
     val monitorLabel = label.ifEmpty { predicate.name }
     check(!monitorMap.containsKey(monitorLabel)) { "Monitor $monitorLabel already exists" }

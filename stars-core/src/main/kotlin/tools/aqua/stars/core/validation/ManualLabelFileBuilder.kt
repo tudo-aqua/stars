@@ -29,7 +29,6 @@ import tools.aqua.stars.core.types.TickUnit
  * This function initializes a [ManualLabelFile] with a sequence of tick data and applies a
  * user-defined configuration function to it.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -39,11 +38,10 @@ import tools.aqua.stars.core.types.TickUnit
  * @return The configured [ManualLabelFile].
  */
 fun <
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+    T : TickDataType<*, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 > manuallyLabelledFile(
     ticksToTest: List<T>,
-    manualLabelFile: ManualLabelFile<E, T, U, D>.() -> Unit,
-): ManualLabelFile<E, T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)
+    manualLabelFile: ManualLabelFile<T, U, D>.() -> Unit,
+): ManualLabelFile<T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)

@@ -39,7 +39,7 @@ open class TSCEdge<
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    val condition: Predicate<E, T, U, D> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE),
+    val condition: Predicate<T> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE),
     val destination: TSCNode<E, T, U, D>,
 ) {
 
