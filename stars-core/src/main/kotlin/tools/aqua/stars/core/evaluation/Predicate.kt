@@ -51,6 +51,7 @@ data class Predicate<
      * @param eval The evaluation function on the [List] of [TickDataType]s.
      * @return The created [Predicate] with the given [eval] function.
      */
-    fun <T : TickDataType<*, T, *, *>> predicate(name: String, eval: (T) -> Boolean): Predicate<T> = Predicate(name, eval)
+    fun <T : TickDataType<*, T, *, *>> predicate(name: String, eval: (T) -> Boolean): Predicate<T> =
+        Predicate(name, eval)
   }
 }

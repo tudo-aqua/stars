@@ -20,8 +20,7 @@ package tools.aqua.stars.core.evaluation
 import tools.aqua.stars.core.types.*
 
 /**
- * Variable predicate.
- * Can only be used as sub-predicate inside other [Predicate]s.
+ * Variable predicate. Can only be used as sub-predicate inside other [Predicate]s.
  *
  * @param T [TickDataType].
  * @param K The type of the variable parameter.
@@ -59,6 +58,7 @@ data class VariablePredicate<
     fun <
         T : TickDataType<*, T, *, *>,
         K,
-    > predicate(name: String, eval: (T, K) -> Boolean): VariablePredicate<T, K> = VariablePredicate(name, eval)
+    > predicate(name: String, eval: (T, K) -> Boolean): VariablePredicate<T, K> =
+        VariablePredicate(name, eval)
   }
 }

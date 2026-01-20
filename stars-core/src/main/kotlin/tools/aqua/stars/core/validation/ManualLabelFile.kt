@@ -19,7 +19,6 @@ package tools.aqua.stars.core.validation
 
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
