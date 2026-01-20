@@ -58,13 +58,13 @@ class Vehicle(
     location: Location = Location(),
     rotation: Rotation = Rotation(),
     collisions: List<Int> = emptyList(),
+    lane: Lane = Lane(),
+    positionOnLane: Double = 0.0,
     var isEgo: Boolean = false,
     val forwardVector: Vector3D = Vector3D(),
     var velocity: Vector3D = Vector3D(),
     var acceleration: Vector3D = Vector3D(),
     val angularVelocity: Vector3D = Vector3D(),
-    val lane: Lane = Lane(),
-    var positionOnLane: Double = 0.0,
     val vehicleType: VehicleType = VehicleType.CAR,
 ) :
     Actor(
@@ -79,6 +79,8 @@ class Vehicle(
         location = location,
         rotation = rotation,
         collisions = collisions,
+        lane = lane,
+        positionOnLane = positionOnLane,
     ) {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
@@ -121,13 +123,13 @@ class Vehicle(
           location = location,
           rotation = rotation,
           collisions = collisions,
+          lane = lane,
+          positionOnLane = positionOnLane,
           isEgo = isEgo,
           forwardVector = forwardVector,
           velocity = velocity,
           acceleration = acceleration,
           angularVelocity = angularVelocity,
-          lane = lane,
-          positionOnLane = positionOnLane,
           vehicleType = vehicleType,
       )
 
