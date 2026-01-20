@@ -77,7 +77,7 @@ open class TSCBoundedBuilder<
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCBoundedBuilder<E, T, U, D>.condition(predicate: Predicate<E, T, U, D>) {
+  > TSCBoundedBuilder<E, T, U, D>.condition(predicate: Predicate<T>) {
     this.condition = predicate
   }
 

@@ -20,38 +20,47 @@ package tools.aqua.stars.core.evaluation
 import tools.aqua.stars.core.types.*
 
 /**
- * Predicate.
+ * Variable predicate. Can only be used as sub-predicate inside other [Predicate]s.
  *
  * @param T [TickDataType].
+ * @param K The type of the variable parameter.
  * @property name The name of the predicate.
  * @property eval The evaluation function on the [TickDataType].
  */
-data class Predicate<
+data class VariablePredicate<
     T : TickDataType<*, T, *, *>,
+    K,
 >(
     val name: String,
-    val eval: (T) -> Boolean,
+    val eval: (T, K) -> Boolean,
 ) {
 
   /**
-   * Checks if this predicate holds (i.e., is true) at the given [tick].
+   * Checks if this variable predicate holds (i.e., is true) at the given [tick] and parameter
+   * [other].
    *
    * @param tick The tick to evaluate this predicate for.
-   * @return Whether the predicate holds at the given [tick].
+   * @param other The variable parameter to evaluate this predicate with.
+   * @return Whether the predicate holds at the given [tick] and parameter [other].
    */
-  fun holds(tick: T): Boolean = this.eval(tick)
+  fun holds(tick: T, other: K): Boolean = this.eval(tick, other)
 
-  /** Companion object containing utility methods for working with [Predicate]. */
+  /** Companion object containing utility methods for working with [VariablePredicate]. */
   companion object {
     /**
-     * Creates a [Predicate].
+     * Creates a [VariablePredicate].
      *
      * @param T [TickDataType].
+     * @param K The type of the variable parameter.
      * @param name The name of the predicate.
-     * @param eval The evaluation function on the [TickDataType].
-     * @return The created [Predicate] with the given [eval] function.
+     * @param eval The evaluation function on the [TickDataType] with a variable parameter of type
+     *   [K].
+     * @return The created [VariablePredicate] with the given [eval] function.
      */
-    fun <T : TickDataType<*, T, *, *>> predicate(name: String, eval: (T) -> Boolean): Predicate<T> =
-        Predicate(name, eval)
+    fun <
+        T : TickDataType<*, T, *, *>,
+        K,
+    > predicate(name: String, eval: (T, K) -> Boolean): VariablePredicate<T, K> =
+        VariablePredicate(name, eval)
   }
 }
