@@ -36,7 +36,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fix linking of ticks in `TickSequence` not properly reset.
-- Fix `Crosswalk` now accepting more than 4 vertices.
 
 ## [2.0] - 24.10.2025
 
