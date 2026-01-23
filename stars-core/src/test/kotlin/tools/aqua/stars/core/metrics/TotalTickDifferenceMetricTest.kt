@@ -28,7 +28,7 @@ import tools.aqua.stars.core.metrics.evaluation.TotalTickDifferenceMetric
 /** Test for [TotalTickDifferenceMetric]. */
 class TotalTickDifferenceMetricTest {
 
-  /** Test only one tick */
+  /** Test only one tick. */
   @Test
   fun `Test only one tick`() {
     val simpleTick = SimpleTickData()
