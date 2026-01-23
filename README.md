@@ -24,7 +24,7 @@ Start by adding the latest version of STARS as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:stars-core:1.0")
+implementation("tools.aqua:stars-core:1.1")
 ```
 
 #### Maven
