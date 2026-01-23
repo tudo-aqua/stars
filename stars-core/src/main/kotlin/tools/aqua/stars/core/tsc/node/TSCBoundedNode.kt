@@ -105,7 +105,13 @@ open class TSCBoundedNode<
       val successorList = mutableListOf<List<TSCInstanceEdge<E, T, U, D>>>()
       edge.destination.generateAllInstances().forEach { generatedChild ->
         successorList +=
-            listOf(TSCInstanceEdge(destination = generatedChild.rootNode, tscEdge = edge, isUnknown = false))
+            listOf(
+                TSCInstanceEdge(
+                    destination = generatedChild.rootNode,
+                    tscEdge = edge,
+                    isUnknown = false,
+                )
+            )
       }
       allSuccessorsList += successorList
     }

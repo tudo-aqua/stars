@@ -76,7 +76,7 @@ sealed class TSCNode<
             it.edges +=
                 this.edges.mapNotNull { edge ->
                   val condition = edge.condition.eval(tick)
-                  val inverseCondition = edge.inverseCondition?.invoke(tick)
+                  val inverseCondition = edge.inverseCondition?.eval(tick)
 
                   /*
                    * Decisions based on the condition and inverseCondition:

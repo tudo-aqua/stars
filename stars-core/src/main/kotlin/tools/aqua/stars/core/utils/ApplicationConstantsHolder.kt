@@ -20,7 +20,6 @@ package tools.aqua.stars.core.utils
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.logging.LogManager
 import java.util.logging.Logger
 import kotlin.time.Duration
 import kotlinx.serialization.json.Json

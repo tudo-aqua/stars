@@ -62,7 +62,7 @@ sealed class TSCBuilder<
   private var isConditionSet = false
 
   /** Inverse condition predicate of the edge. (Default: `null`) */
-  protected var inverseCondition: ((T) -> Boolean)? = null
+  protected var inverseCondition: Predicate<T>? = null
     set(value) {
       check(field == null) { "Inverse condition already set." }
       checkNotNull(value) { "Inverse condition cannot be set to null." }

@@ -99,16 +99,35 @@ open class TSCLeafBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param inverseCondition The inverse edge condition.
+   * @param inverseCondition The inverse [TSCEdge] condition.
    */
   fun <
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, U, D>.inverseCondition(inverseCondition: (T) -> Boolean) {
+  > TSCLeafBuilder<E, T, U, D>.inverseCondition(inverseCondition: Predicate<T>) {
     this.inverseCondition = inverseCondition
   }
+
+  /**
+   * DSL function for inline definition of [TSCEdge] inverse conditions. Creates a [Predicate]
+   * internally.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param name The name of the inverse [TSCEdge] condition.
+   * @param condition The inverse [TSCEdge] condition.
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCLeafBuilder<E, T, U, D>.inverseCondition(name: String = "", condition: (T) -> Boolean) =
+      inverseCondition(Predicate(name, condition))
 
   /**
    * DSL function for a value function.

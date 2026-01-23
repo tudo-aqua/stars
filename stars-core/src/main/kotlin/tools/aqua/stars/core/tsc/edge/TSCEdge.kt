@@ -31,6 +31,7 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property condition Predicate for the edge condition.
+ * @property inverseCondition Optional inverse predicate for the edge condition.
  * @property destination Destination [TSCNode].
  */
 open class TSCEdge<
@@ -40,7 +41,7 @@ open class TSCEdge<
     D : TickDifference<D>,
 >(
     val condition: Predicate<T> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE),
-    val inverseCondition: Predicate<T> = null,
+    val inverseCondition: Predicate<T>? = null,
     val destination: TSCNode<E, T, U, D>,
 ) {
 

@@ -107,14 +107,14 @@ open class TSCBoundedBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param predicate The inverse edge condition.
+   * @param predicate The inverse [TSCEdge] condition.
    */
   fun <
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-      > TSCBoundedBuilder<E, T, U, D>.inverseCondition(predicate: Predicate<T>) {
+  > TSCBoundedBuilder<E, T, U, D>.inverseCondition(predicate: Predicate<T>) {
     this.inverseCondition = predicate
   }
 
@@ -125,15 +125,19 @@ open class TSCBoundedBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param inverseCondition The inverse edge condition.
+   * @param name The name of the inverse [TSCEdge] condition.
+   * @param inverseCondition The inverse [TSCEdge] condition.
    */
   fun <
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-      > TSCBoundedBuilder<E, T, U, D>.inverseCondition(name: String = "", inverseCondition: (T) -> Boolean) {
-      inverseCondition(Predicte(name, inverseCondition))
+  > TSCBoundedBuilder<E, T, U, D>.inverseCondition(
+      name: String = "",
+      inverseCondition: (T) -> Boolean,
+  ) {
+    inverseCondition(Predicate(name, inverseCondition))
   }
 
   /**
