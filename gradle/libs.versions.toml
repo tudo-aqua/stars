@@ -33,7 +33,7 @@ gradle-mavenPublish = { group = "com.vanniktech.maven.publish", name = "com.vann
 dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "2.1.0" }
 
 # JUnit
-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "5.9.0" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "6.0.2" }
 
 [bundles]
 gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin"]
