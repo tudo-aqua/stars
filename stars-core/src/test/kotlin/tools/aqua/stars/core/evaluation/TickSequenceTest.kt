@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataUnit
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 
 /** Test for [TickSequence]. */
 class TickSequenceTest {
@@ -139,6 +140,39 @@ class TickSequenceTest {
     assertEquals(tick.previousTick, tick.previousTick?.previousTick?.nextTick)
     assertNull(tick.nextTick)
     assertNull(tick.previousTick?.previousTick?.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test correct reset of linking. */
+  @Test
+  fun `Test correct reset of linking`() {
+    val ticks = List(3) { SimpleTickData(SimpleTickDataUnit(it.toLong())) }
+    ticks[0].nextTick = ticks[1]
+    ticks[1].previousTick = ticks[0]
+
+    ticks[1].nextTick = ticks[2]
+    ticks[2].previousTick = ticks[1]
+
+    val sequence = ticks.asTickSequence(bufferSize = 2)
+
+    val iterator = sequence.iterator()
+    var tick = iterator.next()
+
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(tick, tick.nextTick?.previousTick)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(tick, tick.nextTick?.previousTick)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
 
     assertFalse(iterator.hasNext())
   }

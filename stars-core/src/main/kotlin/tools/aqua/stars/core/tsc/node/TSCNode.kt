@@ -47,12 +47,12 @@ sealed class TSCNode<
 >(
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
-    private val monitorsMap: Map<String, Predicate<E, T, U, D>>?,
+    private val monitorsMap: Map<String, Predicate<T>>?,
     val valueFunction: (T) -> Any,
 ) {
 
   /** Map of monitor labels to their [Predicate]s. */
-  val monitors: Map<String, Predicate<E, T, U, D>>
+  val monitors: Map<String, Predicate<T>>
     get() = monitorsMap.orEmpty()
 
   /** Counts all [TSC] instances. */
