@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The STARS Project Authors
+ * Copyright 2025-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataUnit
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 
 /** Test for [TickSequence]. */
 class TickSequenceTest {
@@ -35,22 +36,89 @@ class TickSequenceTest {
     assertTrue(sequence.toList().isEmpty())
   }
 
-  /** Test correct iteration order. */
+  /** Test correct iteration order FORWARD. */
   @Test
-  fun `Test correct iteration order`() {
+  fun `Test correct iteration order FORWARD`() {
     var i = 0L
-    val sequence = TickSequence { if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null }
+    val sequence =
+        TickSequence(iterationOrder = TickSequence.IterationOrder.FORWARD) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
 
     sequence.forEachIndexed { index, tick ->
-      assertEquals(index.toLong(), tick.currentTickUnit.tickValue)
+      // Always return first tick
+      assertEquals(0, tick.currentTickUnit.tickValue)
+
+      // Successors increase with index
+      assertEquals(index, tick.numSuccessors)
+
+      // No predecessors in FORWARD iteration
+      assertEquals(0, tick.numPredecessors)
     }
   }
 
-  /** Test correct linking. */
+  /** Test correct iteration order BACKWARD. */
   @Test
-  fun `Test correct linking`() {
+  fun `Test correct iteration order BACKWARD`() {
     var i = 0L
-    val sequence = TickSequence { if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null }
+    val sequence =
+        TickSequence(iterationOrder = TickSequence.IterationOrder.BACKWARD) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    sequence.forEachIndexed { index, tick ->
+      // Always return newest tick
+      assertEquals(index.toLong(), tick.currentTickUnit.tickValue)
+
+      // No successors in BACKWARD iteration
+      assertEquals(0, tick.numSuccessors)
+
+      // Predecessors increase with index
+      assertEquals(index, tick.numPredecessors)
+    }
+  }
+
+  /** Test correct linking FORWARD. */
+  @Test
+  fun `Test correct linking FORWARD`() {
+    var i = 0L
+    val sequence =
+        TickSequence(iterationOrder = TickSequence.IterationOrder.FORWARD) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+    var tick = iterator.next()
+
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(tick, tick.nextTick?.previousTick)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(tick, tick.nextTick?.previousTick)
+    assertEquals(tick, tick.nextTick?.nextTick?.previousTick?.previousTick)
+    assertEquals(tick.nextTick, tick.nextTick?.nextTick?.previousTick)
+    assertNull(tick.previousTick)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test correct linking BACKWARD. */
+  @Test
+  fun `Test correct linking BACKWARD`() {
+    var i = 0L
+    val sequence =
+        TickSequence(iterationOrder = TickSequence.IterationOrder.BACKWARD) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
 
     val iterator = sequence.iterator()
     var tick = iterator.next()
@@ -72,6 +140,39 @@ class TickSequenceTest {
     assertEquals(tick.previousTick, tick.previousTick?.previousTick?.nextTick)
     assertNull(tick.nextTick)
     assertNull(tick.previousTick?.previousTick?.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test correct reset of linking. */
+  @Test
+  fun `Test correct reset of linking`() {
+    val ticks = List(3) { SimpleTickData(SimpleTickDataUnit(it.toLong())) }
+    ticks[0].nextTick = ticks[1]
+    ticks[1].previousTick = ticks[0]
+
+    ticks[1].nextTick = ticks[2]
+    ticks[2].previousTick = ticks[1]
+
+    val sequence = ticks.asTickSequence(bufferSize = 2)
+
+    val iterator = sequence.iterator()
+    var tick = iterator.next()
+
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(tick, tick.nextTick?.previousTick)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(tick, tick.nextTick?.previousTick)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
 
     assertFalse(iterator.hasNext())
   }

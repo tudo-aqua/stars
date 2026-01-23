@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,6 @@ package tools.aqua.stars.core.tsc
 
 import java.math.BigInteger
 import tools.aqua.stars.core.tsc.instance.TSCInstance
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
 
@@ -57,14 +56,14 @@ class TSC<
   val instanceCount: BigInteger
     get() = instanceCountBuffer ?: rootNode.countAllInstances().also { instanceCountBuffer = it }
 
-  /** Buffer for the possible [TSCInstanceNode]s. */
-  private var possibleTSCInstancesBuffer: List<TSCInstanceNode<E, T, U, D>>? = null
+  /** Buffer for the possible [TSCInstance]s. */
+  private var possibleTSCInstancesBuffer: List<TSCInstance<E, T, U, D>>? = null
 
   /**
-   * Returns the [List] of all possible [TSCInstanceNode]s. The generation is performed on-demand
-   * upon first access and is then buffered.
+   * Returns the [List] of all possible [TSCInstance]s. The generation is performed on-demand upon
+   * first access and is then buffered.
    */
-  val possibleTSCInstances: List<TSCInstanceNode<E, T, U, D>>
+  val possibleTSCInstances: List<TSCInstance<E, T, U, D>>
     get() =
         possibleTSCInstancesBuffer
             ?: rootNode.generateAllInstances().also { possibleTSCInstancesBuffer = it }

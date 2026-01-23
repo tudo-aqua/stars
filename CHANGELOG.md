@@ -1,19 +1,13 @@
+[2.1]: https://github.com/tudo-aqua/stars/releases/tag/v2.1
 [2.0]: https://github.com/tudo-aqua/stars/releases/tag/v2.0
-
+[1.1]: https://github.com/tudo-aqua/stars/releases/tag/v1.1
 [1.0]: https://github.com/tudo-aqua/stars/releases/tag/v1.0
-
 [0.5]: https://github.com/tudo-aqua/stars/releases/tag/v0.5
-
 [0.4]: https://github.com/tudo-aqua/stars/releases/tag/v0.4
-
 [0.3]: https://github.com/tudo-aqua/stars/releases/tag/v0.3
-
 [0.2.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.2
-
 [0.2.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.1
-
 [0.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2
-
 [0.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.1
 <!-- ### Added -->
 <!-- ### Changed -->
@@ -25,6 +19,24 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+## [2.1] - 23.01.2026
+
+### Added
+- Add `IterationOrder` parameter to `TickSequence`.
+- Add `TSCInstanceIterator`. 
+- Add `TSC DSL` `condition` and `monitor` now also take `predicates` as parameter instead of lambda.
+- Add `VariablePredicate<T, K>` for predicates with a generic parameter `K`.
+- Add `ManualLabelTests` for manual verification of predicates and monitors.
+- Re-added `lane` and `positionOnLane` to `Pedestrian`.
+- Re-added `useEveryVehicleAsEgo`, `useFirstVehicleAsEgo`, and `egoIds` to `convertTickData`.
+
+### Changed
+- Change check for count of vertices in Crosswalk from `== 4` to `>= 3` as the number of vertices is not fixed. 
+- Simplified generic types of `Predicate` to `<T>`.
+
+### Fixed
+- Fix linking of ticks in `TickSequence` not properly reset.
 
 ## [2.0] - 24.10.2025
 
@@ -46,12 +58,15 @@ All notable changes to this project will be documented in this file.
 - Remove `Block` from `DataAV`.
 - Remove `buildProjections` and `projections` node from `TSC` DSL.
 
-## [1.1] - To be released
+## [1.1] - 23.01.2026
 
 ### Added
 
 - Add `MissedPredicatesPerTSCMetric`.
+- Add counting of possible `TSCInstances`.
+- Add performant `isValid()` function to `TSCInstance` and `TSCInstanceNode`.
 - Add `identifier` parameter to `TSCDsl`.
+- Add `identifier` field to `MetricProvider` and allow the registration of multiple instances with the same `MetricProvider` class when the `identifiers` differ.
 
 ## [1.0] - 14.10.2025
 

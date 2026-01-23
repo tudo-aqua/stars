@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.edge.*
 import tools.aqua.stars.core.tsc.node.TSCBoundedNode
 import tools.aqua.stars.core.tsc.node.TSCLeafNode
@@ -70,19 +71,55 @@ open class TSCBoundedBuilder<
    * @param T [TickDataType].
    * @param U [TickUnit].
    * @param D [TickDifference].
-   * @param condition The edge condition.
+   * @param predicate The [TSCEdge] condition defined by a [Predicate].
    */
   fun <
       E : EntityType<E, T, U, D>,
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCBoundedBuilder<E, T, U, D>.condition(condition: (T) -> Boolean) {
-    this.condition = condition
+  > TSCBoundedBuilder<E, T, U, D>.condition(predicate: Predicate<T>) {
+    this.condition = predicate
   }
 
   /**
+   * DSL function for inline definition of [TSCEdge] conditions. Creates a [Predicate] internally.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param name The name of the [TSCEdge] condition.
+   * @param condition The [TSCEdge] condition.
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCBoundedBuilder<E, T, U, D>.condition(name: String = "", condition: (T) -> Boolean) =
+      condition(Predicate(name, condition))
+
+  /**
    * DSL function for inverse edge conditions.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param predicate The inverse edge condition.
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+      > TSCBoundedBuilder<E, T, U, D>.inverseCondition(predicate: Predicate<T>) {
+    this.inverseCondition = predicate
+  }
+
+  /**
+   * DSL function for inverse edge conditions. Creates a [Predicate] internally.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -95,8 +132,8 @@ open class TSCBoundedBuilder<
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCBoundedBuilder<E, T, U, D>.inverseCondition(inverseCondition: (T) -> Boolean) {
-    this.inverseCondition = inverseCondition
+      > TSCBoundedBuilder<E, T, U, D>.inverseCondition(name: String = "", inverseCondition: (T) -> Boolean) {
+      inverseCondition(Predicte(name, inverseCondition))
   }
 
   /**

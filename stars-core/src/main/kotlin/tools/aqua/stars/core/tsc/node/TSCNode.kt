@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,11 @@
 package tools.aqua.stars.core.tsc.node
 
 import java.math.BigInteger
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -34,7 +36,7 @@ import tools.aqua.stars.core.types.*
  * @param D [TickDifference].
  * @property label Label of the [TSCNode].
  * @property edges Outgoing [TSCEdge]s of the [TSCNode].
- * @param monitorsMap Map of monitor labels to their predicates of the [TSCNode].
+ * @param monitorsMap Map of monitor labels to their [Predicate]s of the [TSCNode].
  * @property valueFunction Value function predicate of the [TSCNode].
  */
 sealed class TSCNode<
@@ -45,19 +47,19 @@ sealed class TSCNode<
 >(
     val label: String,
     open val edges: List<TSCEdge<E, T, U, D>>,
-    private val monitorsMap: Map<String, (T) -> Boolean>?,
+    private val monitorsMap: Map<String, Predicate<T>>?,
     val valueFunction: (T) -> Any,
 ) {
 
-  /** Map of monitor labels to their predicates. */
-  val monitors: Map<String, (T) -> Boolean>
+  /** Map of monitor labels to their [Predicate]s. */
+  val monitors: Map<String, Predicate<T>>
     get() = monitorsMap.orEmpty()
 
   /** Counts all [TSC] instances. */
   abstract fun countAllInstances(): BigInteger
 
-  /** Generates all [TSC] instances. */
-  abstract fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>>
+  /** Generates all [TSCInstance]s. */
+  abstract fun generateAllInstances(): List<TSCInstance<E, T, U, D>>
 
   /** Evaluates this [TSC] in the given context. */
   fun evaluate(
@@ -67,13 +69,13 @@ sealed class TSCNode<
       TSCInstanceNode(
               tscNode = this,
               label = this.label,
-              monitorResults = this.monitors.mapValues { (_, monitor) -> monitor(tick) },
+              monitorResults = this.monitors.mapValues { (_, monitor) -> monitor.eval(tick) },
               value = this.valueFunction(tick),
           )
           .also {
             it.edges +=
                 this.edges.mapNotNull { edge ->
-                  val condition = edge.condition.invoke(tick)
+                  val condition = edge.condition.eval(tick)
                   val inverseCondition = edge.inverseCondition?.invoke(tick)
 
                   /*
@@ -152,7 +154,7 @@ sealed class TSCNode<
             edges.forEach { instanceEdge ->
               append("\n")
               append("  ".repeat(depth))
-              append(if (instanceEdge.condition == CONST_TRUE) "-T-> " else "---> ")
+              append(if (instanceEdge.condition.eval == CONST_TRUE) "-T-> " else "---> ")
               append(instanceEdge.destination.toString(depth + 1))
             }
           }

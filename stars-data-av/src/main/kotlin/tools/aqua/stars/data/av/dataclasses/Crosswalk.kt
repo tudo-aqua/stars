@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ package tools.aqua.stars.data.av.dataclasses
  */
 data class Crosswalk(val id: Int, val vertices: List<Location>) {
   init {
-    check(vertices.size == 4) { "Crosswalk must have exactly four vertices" }
+    check(vertices.size >= 3) { "Crosswalk must have at least three vertices" }
   }
 
   override fun toString(): String = "Crosswalk $id"

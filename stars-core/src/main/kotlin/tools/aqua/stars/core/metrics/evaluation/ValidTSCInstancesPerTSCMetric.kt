@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -134,7 +134,7 @@ class ValidTSCInstancesPerTSCMetric<
     val validInstancesCount = uniqueTimedInstances.getOrPut(tsc) { mutableListOf() }
 
     // Check if given tscInstance is valid
-    if (!tsc.possibleTSCInstances.contains(tscInstance.rootNode)) {
+    if (!tsc.possibleTSCInstances.contains(tscInstance)) {
       // Add current count of observed instances to list of timed instance counts
       validInstancesCount.add(validInstances.size)
       return

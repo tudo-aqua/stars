@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,10 @@ package tools.aqua.stars.core.tsc.node
 
 import java.math.BigInteger
 import tools.aqua.stars.core.binomial
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.edge.TSCEdge
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceEdge
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
@@ -48,7 +50,7 @@ open class TSCBoundedNode<
 >(
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
-    monitorsMap: Map<String, (T) -> Boolean>?,
+    monitorsMap: Map<String, Predicate<T>>?,
     valueFunction: (T) -> Any = {},
     val bounds: Pair<Int, Int>,
 ) :
@@ -97,18 +99,18 @@ open class TSCBoundedNode<
     }
   }
 
-  override fun generateAllInstances(): List<TSCInstanceNode<E, T, U, D>> {
+  override fun generateAllInstances(): List<TSCInstance<E, T, U, D>> {
     val allSuccessorsList = mutableListOf<List<List<TSCInstanceEdge<E, T, U, D>>>>()
     edges.forEach { edge ->
       val successorList = mutableListOf<List<TSCInstanceEdge<E, T, U, D>>>()
       edge.destination.generateAllInstances().forEach { generatedChild ->
         successorList +=
-            listOf(TSCInstanceEdge(destination = generatedChild, tscEdge = edge, isUnknown = false))
+            listOf(TSCInstanceEdge(destination = generatedChild.rootNode, tscEdge = edge, isUnknown = false))
       }
       allSuccessorsList += successorList
     }
 
-    val returnList = mutableListOf<TSCInstanceNode<E, T, U, D>>()
+    val returnList = mutableListOf<TSCInstance<E, T, U, D>>()
 
     // build all subsets of allSuccessorsList and filter to subsets.size in
     // (bounds.first...bounds.second)
@@ -120,18 +122,18 @@ open class TSCBoundedNode<
 
     boundedSuccessors.forEach { subset ->
       when (subset.size) {
-        0 -> returnList += TSCInstanceNode(this)
+        0 -> returnList += TSCInstance(TSCInstanceNode(this))
         1 ->
             subset.first().forEach { successors ->
               val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
-              returnList += generatedNode
+              returnList += TSCInstance(generatedNode)
             }
         else ->
             subset.crossProduct().forEach { successors ->
               val generatedNode = TSCInstanceNode(this)
               successors.forEach { successor -> generatedNode.edges += successor }
-              returnList += generatedNode
+              returnList += TSCInstance(generatedNode)
             }
       }
     }

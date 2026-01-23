@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +60,7 @@ open class TSCInstanceNode<
       edges.map { it.tscEdge } + edges.flatMap { it.destination.getAllEdges() }
 
   /**
-   * Returns a [List] of all [TSCInstanceNode]s that are [TSCLeafNode] in the given [currentNode].
+   * Returns a [List] of all [TSCInstanceEdge]s that are [TSCLeafNode] in the given [currentNode].
    */
   fun getLeafNodeEdges(
       currentNode: TSCInstanceNode<E, T, U, D>,

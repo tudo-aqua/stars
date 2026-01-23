@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,7 +63,7 @@ fun JsonActorPosition.toActorOrNull(world: World): Actor? =
     actor.let {
       val lane = checkNotNull(world.getLane(roadId, laneId))
       when (it) {
-        is JsonPedestrian -> it.toPedestrian()
+        is JsonPedestrian -> it.toPedestrian(positionOnLane = positionOnLane, lane = lane)
         is JsonVehicle -> it.toVehicle(positionOnLane = positionOnLane, lane = lane)
         is JsonTrafficLight -> null
         is JsonTrafficSign -> null
@@ -104,7 +104,7 @@ fun JsonVehicle.toVehicle(positionOnLane: Double, lane: Lane): Vehicle =
     )
 
 /** Converts [JsonPedestrian] to [Pedestrian]. */
-fun JsonPedestrian.toPedestrian(): Pedestrian =
+fun JsonPedestrian.toPedestrian(positionOnLane: Double, lane: Lane): Pedestrian =
     Pedestrian(
         id = id,
         typeId = typeId,
@@ -117,6 +117,8 @@ fun JsonPedestrian.toPedestrian(): Pedestrian =
         location = location.toLocation(),
         rotation = rotation.toRotation(),
         collisions = collisions,
+        lane = lane,
+        positionOnLane = positionOnLane,
     )
 
 /** Converts [JsonWorld] to [Map]. */

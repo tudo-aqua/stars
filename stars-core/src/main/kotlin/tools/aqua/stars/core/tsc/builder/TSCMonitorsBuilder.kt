@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.types.*
 
 /**
@@ -35,10 +36,11 @@ open class TSCMonitorsBuilder<
 > : TSCBuilder<E, T, U, D>() {
 
   /** Creates the monitors map. */
-  fun build(): Map<String, (T) -> Boolean> = monitorMap
+  fun build(): Map<String, Predicate<T>> = monitorMap
 
   /**
-   * DSL function for a monitor.
+   * DSL function for a monitor. Creates a [Predicate] internally with the given [condition] and
+   * [label] name.
    *
    * @param E [EntityType].
    * @param T [TickDataType].
@@ -55,8 +57,29 @@ open class TSCMonitorsBuilder<
   > TSCMonitorsBuilder<E, T, U, D>.monitor(
       label: String,
       condition: (T) -> Boolean,
+  ) = monitor(label, Predicate(name = label, eval = condition))
+
+  /**
+   * DSL function for a monitor.
+   *
+   * @param E [EntityType].
+   * @param T [TickDataType].
+   * @param U [TickUnit].
+   * @param D [TickDifference].
+   * @param label Name of the edge. If empty, the name of the [predicate] is used.
+   * @param predicate The monitor condition [Predicate].
+   */
+  fun <
+      E : EntityType<E, T, U, D>,
+      T : TickDataType<E, T, U, D>,
+      U : TickUnit<U, D>,
+      D : TickDifference<D>,
+  > TSCMonitorsBuilder<E, T, U, D>.monitor(
+      label: String = "",
+      predicate: Predicate<T>,
   ) {
-    check(!monitorMap.containsKey(label)) { "Monitor $label already exists" }
-    monitorMap[label] = condition
+    val monitorLabel = label.ifEmpty { predicate.name }
+    check(!monitorMap.containsKey(monitorLabel)) { "Monitor $monitorLabel already exists" }
+    monitorMap[monitorLabel] = predicate
   }
 }

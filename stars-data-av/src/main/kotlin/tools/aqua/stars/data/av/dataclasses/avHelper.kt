@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,11 +27,3 @@ fun World.getLane(roadId: Int, laneId: Int): Lane? =
 /** Generates UID from [Lane]. */
 val Lane.uid: String
   get() = "${road.id}_${laneId}"
-
-/** Returns [Lane] of [Actor] iff [Actor] is [Vehicle] or [Pedestrian]. */
-val Actor.lane: Lane
-  get() =
-      when (this) {
-        is Pedestrian -> lane
-        is Vehicle -> lane
-      }

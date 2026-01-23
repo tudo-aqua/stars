@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The STARS Project Authors
+ * Copyright 2025-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@
 
 package tools.aqua.stars.core.validation
 
-import tools.aqua.stars.core.evaluation.TickSequence
-import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
@@ -30,7 +28,6 @@ import tools.aqua.stars.core.types.TickUnit
  * This function initializes a [ManualLabelFile] with a sequence of tick data and applies a
  * user-defined configuration function to it.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
@@ -40,11 +37,10 @@ import tools.aqua.stars.core.types.TickUnit
  * @return The configured [ManualLabelFile].
  */
 fun <
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+    T : TickDataType<*, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 > manuallyLabelledFile(
-    ticksToTest: Sequence<TickSequence<T>>,
-    manualLabelFile: ManualLabelFile<E, T, U, D>.() -> Unit,
-): ManualLabelFile<E, T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)
+    ticksToTest: List<T>,
+    manualLabelFile: ManualLabelFile<T, U, D>.() -> Unit,
+): ManualLabelFile<T, U, D> = ManualLabelFile(ticksToTest).apply(manualLabelFile)

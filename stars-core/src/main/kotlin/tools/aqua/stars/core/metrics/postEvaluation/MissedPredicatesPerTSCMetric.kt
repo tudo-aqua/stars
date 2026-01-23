@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import tools.aqua.stars.core.serialization.SerializablePredicateResult
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
+import tools.aqua.stars.core.tsc.instance.TSCInstance
 import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
@@ -103,7 +104,7 @@ class MissedPredicatesPerTSCMetric<
     // Get all possible predicates
     val possiblePredicates = getAllPredicates(tsc.possibleTSCInstances)
     // Get all occurred predicates
-    val occurredPredicates = getAllPredicates(tscInstances)
+    val occurredPredicates = getAllPredicates(tscInstances.map { TSCInstance(it) })
     // Return predicates that have not occurred
     return possiblePredicates.minus(occurredPredicates)
   }
@@ -115,17 +116,16 @@ class MissedPredicatesPerTSCMetric<
    *   calculated.
    * @return the [Set] of predicates based on the [tscInstances].
    */
-  private fun getAllPredicates(tscInstances: List<TSCInstanceNode<E, T, U, D>>): Set<String> {
+  private fun getAllPredicates(tscInstances: List<TSCInstance<E, T, U, D>>): Set<String> {
     // Create a set for storage of all predicates
     val predicates = mutableSetOf<String>()
     tscInstances.forEach { t ->
       // Get all traversals that are possible for the current TSCInstance, excluding TSCAlwaysEdges,
       // as they do not represent a predicate
       val predicateTraversals =
-          t.traverse()
-              .filter { instance ->
+          t.filter { instance ->
                 instance.getLeafNodeEdges(instance).any { leafNode ->
-                  leafNode.tscEdge.condition != CONST_TRUE
+                  leafNode.tscEdge.condition.eval != CONST_TRUE
                 }
               }
               .map { it.toString() }

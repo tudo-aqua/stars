@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.builder
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.edge.TSCEdge
 import tools.aqua.stars.core.tsc.node.TSCNode
 import tools.aqua.stars.core.types.*
@@ -40,18 +41,18 @@ sealed class TSCBuilder<
   /** Holds all [TSCEdge]s of the [TSCNode]. */
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
-  /** Holds all monitors of the [TSCNode]. */
-  protected val monitorMap: MutableMap<String, (T) -> Boolean> = mutableMapOf()
+  /** Holds all monitors of the [TSCNode] as [Predicate]s. */
+  protected val monitorMap: MutableMap<String, Predicate<T>> = mutableMapOf()
 
-  /** Holds the optional monitors [TSCEdge]. */
-  protected var monitors: Map<String, (T) -> Boolean>? = null
+  /** Holds the optional monitors [TSCEdge] as [Predicate]s. */
+  protected var monitors: Map<String, Predicate<T>>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
     }
 
   /** Condition predicate of the [TSCEdge]. (Default: [CONST_TRUE]) */
-  protected var condition: ((T) -> Boolean) = CONST_TRUE
+  protected var condition: Predicate<T> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE)
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true

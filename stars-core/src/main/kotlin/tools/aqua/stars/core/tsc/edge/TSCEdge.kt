@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.tsc.edge
 
+import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.builder.CONST_TRUE
 import tools.aqua.stars.core.tsc.node.TSCNode
@@ -38,8 +39,8 @@ open class TSCEdge<
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    val condition: (T) -> Boolean = CONST_TRUE,
-    val inverseCondition: ((T) -> Boolean)? = null,
+    val condition: Predicate<T> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE),
+    val inverseCondition: Predicate<T> = null,
     val destination: TSCNode<E, T, U, D>,
 ) {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The STARS Project Authors
+ * Copyright 2025-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,6 @@ package tools.aqua.stars.core.validation
 
 import kotlin.collections.plusAssign
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.evaluation.TickSequence
-import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
@@ -29,20 +27,18 @@ import tools.aqua.stars.core.types.TickUnit
  * Represents a manually labeled file that stores predicates to be tested against sequences of ticks
  * which manually labeled results for the predicates.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property ticksToTest A sequence of tick data sequences that the predicates will be tested on.
  */
 class ManualLabelFile<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+    T : TickDataType<*, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val ticksToTest: Sequence<TickSequence<T>>) {
-  internal val predicatesToHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
-  internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<E, T, U, D>>()
+>(val ticksToTest: List<T>) {
+  internal val predicatesToHold = mutableListOf<ManualLabelPredicate<T, U, D>>()
+  internal val predicatesToNotHold = mutableListOf<ManualLabelPredicate<T, U, D>>()
 
   /**
    * Adds a manually labeled predicate to the list of predicates that are expected to hold true for
@@ -53,8 +49,8 @@ class ManualLabelFile<
    *   including defining the intervals where the predicate is expected to hold true.
    */
   fun predicateHolds(
-      predicate: Predicate<E, T, U, D>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit,
+      predicate: Predicate<T>,
+      manualLabelPredicateInvocation: ManualLabelPredicate<T, U, D>.() -> Unit,
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)
@@ -70,8 +66,8 @@ class ManualLabelFile<
    *   including defining the intervals where the predicate is expected not to hold true.
    */
   fun predicateDoesNotHold(
-      predicate: Predicate<E, T, U, D>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<E, T, U, D>.() -> Unit,
+      predicate: Predicate<T>,
+      manualLabelPredicateInvocation: ManualLabelPredicate<T, U, D>.() -> Unit,
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)

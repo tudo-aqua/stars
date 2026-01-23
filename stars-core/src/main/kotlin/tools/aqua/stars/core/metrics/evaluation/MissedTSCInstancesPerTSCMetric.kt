@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import tools.aqua.stars.core.serialization.SerializableTSCResult
 import tools.aqua.stars.core.serialization.tsc.SerializableTSCNode
 import tools.aqua.stars.core.tsc.TSC
 import tools.aqua.stars.core.tsc.instance.TSCInstance
-import tools.aqua.stars.core.tsc.instance.TSCInstanceNode
 import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
@@ -63,50 +62,31 @@ class MissedTSCInstancesPerTSCMetric<
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
 ) : TSCAndTSCInstanceMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /**
-   * Map a [TSC] to a map in which the missed valid [TSCInstanceNode]s are stored:
-   * Map<tsc,Map<referenceInstance,missed>>.
+   * Map a [TSC] to a map in which the missed valid [TSCInstance]s are stored:
+   * Map<tsc,List<referenceInstance>>.
    */
-  private val missedInstancesMap:
-      MutableMap<TSC<E, T, U, D>, MutableMap<TSCInstanceNode<E, T, U, D>, Boolean>> =
+  private val missedInstances: MutableMap<TSC<E, T, U, D>, MutableList<TSCInstance<E, T, U, D>>> =
       mutableMapOf()
 
   /**
-   * Track the missed [TSCInstance]s for each [TSC] in the [missedInstancesMap]. If the current
+   * Track the missed [TSCInstance]s for each [TSC] in the [missedInstances]. If the current
    * [tscInstance] is invalid it is skipped.
    *
    * @param tsc The current [TSC] for which the [TSCInstance] should be set to false (not missed).
-   * @param tscInstance The current [TSCInstance] which is removed from the [missedInstancesMap]
-   *   list.
+   * @param tscInstance The current [TSCInstance] which is removed from the [missedInstances] list.
    */
   override fun evaluate(tsc: TSC<E, T, U, D>, tscInstance: TSCInstance<E, T, U, D>) {
-    missedInstancesMap.putIfAbsent(tsc, createDefaultMissedInstanceFlagMap(tsc))
+    missedInstances.putIfAbsent(tsc, tsc.possibleTSCInstances.toMutableList())
+
     // Check if the given tscInstance is invalid. If so, skip
-    if (!tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
+    if (!tsc.possibleTSCInstances.contains(tscInstance)) return
 
     // Get the valid instances map for the current tsc and set state to "not missed"
-    missedInstancesMap.getValue(tsc)[tscInstance.rootNode] = false
+    missedInstances.getValue(tsc).remove(tscInstance)
   }
 
-  /**
-   * Creates a [MutableMap] where each [TSC.possibleTSCInstances] is mapped to true (missed).
-   *
-   * @return the filled [MutableMap] mapping all [TSC.possibleTSCInstances] to true (missed).
-   * @throws IllegalStateException when the resulting size of the [MutableMap] is not equals to the
-   *   amount of [TSCInstanceNode]s in [TSC.possibleTSCInstances].
-   */
-  private fun createDefaultMissedInstanceFlagMap(
-      tsc: TSC<E, T, U, D>
-  ): MutableMap<TSCInstanceNode<E, T, U, D>, Boolean> =
-      mutableMapOf<TSCInstanceNode<E, T, U, D>, Boolean>().apply {
-        tsc.possibleTSCInstances.forEach { putIfAbsent(it, true) }
-        check(size == tsc.possibleTSCInstances.size)
-      }
-
-  /** Returns a [Map] containing the list of missed [TSCInstanceNode]s for each [TSC]. */
-  override fun getState(): Map<TSC<E, T, U, D>, List<TSCInstanceNode<E, T, U, D>>> =
-      missedInstancesMap.mapValues { (_, nodes) ->
-        nodes.filter { instance -> instance.value }.map { instance -> instance.key }
-      }
+  /** Returns a [Map] containing the list of missed [TSCInstance]s for each [TSC]. */
+  override fun getState(): Map<TSC<E, T, U, D>, List<TSCInstance<E, T, U, D>>> = missedInstances
 
   /** Prints the count of missed [TSCInstance]s for each [TSC] using [println]. */
   override fun printState() {
@@ -123,11 +103,8 @@ class MissedTSCInstancesPerTSCMetric<
   }
 
   override fun getSerializableResults(): List<SerializableTSCResult> =
-      missedInstancesMap.map { (tsc, missedInstances) ->
-        val resultList =
-            missedInstances
-                .filter { it.value }
-                .map { (tscInstanceNode, _) -> SerializableTSCNode(tscInstanceNode) }
+      missedInstances.map { (tsc, missedInstances) ->
+        val resultList = missedInstances.map { SerializableTSCNode(it.rootNode) }
         SerializableTSCResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,

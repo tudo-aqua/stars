@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,7 +79,7 @@ class InvalidTSCInstancesPerTSCMetric<
   override fun evaluate(tsc: TSC<E, T, U, D>, tscInstance: TSCInstance<E, T, U, D>) {
     invalidInstancesMap.putIfAbsent(tsc, mutableMapOf())
     // Check if the given tscInstance is valid. If so, skip
-    if (tsc.possibleTSCInstances.contains(tscInstance.rootNode)) return
+    if (tsc.possibleTSCInstances.contains(tscInstance)) return
 
     // Get already observed invalid instances for current tsc and add current instance
     invalidInstancesMap

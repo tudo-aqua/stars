@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,8 @@
 
 plugins {
   id("tools.aqua.stars.library-conventions")
-  kotlin("plugin.serialization") version "2.2.0"
+  kotlin("plugin.serialization") version "2.3.0"
+  `java-test-fixtures`
 }
 
 mavenMetadata {
@@ -31,4 +32,18 @@ dependencies {
   implementation(libs.slf4j.api)
   implementation(libs.slf4j.simple)
   implementation(libs.kotlinx.serialization.json)
+  testFixturesImplementation(libs.kotlin.test)
+  testFixturesImplementation(libs.junit.jupiter)
+}
+
+// Ensure the testFixtures component is published via a dedicated publication
+publishing {
+  publications {
+    create<MavenPublication>("testFixtures") {
+      val testFixturesComponent = components.findByName("testFixtures")
+      if (testFixturesComponent != null) {
+        from(testFixturesComponent)
+      }
+    }
+  }
 }

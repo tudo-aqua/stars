@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The STARS Project Authors
+ * Copyright 2023-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,49 +22,36 @@ import tools.aqua.stars.core.types.*
 /**
  * Predicate.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
- * @param U [TickUnit].
- * @param D [TickDifference].
  * @property name The name of the predicate.
- * @property eval The evaluation function on the context.
+ * @property eval The evaluation function on the [TickDataType].
  */
 data class Predicate<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
-    U : TickUnit<U, D>,
-    D : TickDifference<D>,
+    T : TickDataType<*, T, *, *>,
 >(
     val name: String,
     val eval: (T) -> Boolean,
 ) {
 
   /**
-   * Checks if this predicate holds (i.e., is true) in the given context and tick identifier.
+   * Checks if this predicate holds (i.e., is true) at the given [tick].
    *
    * @param tick The tick to evaluate this predicate for.
-   * @return Whether the predicate holds in the given context and at the given [tick].
+   * @return Whether the predicate holds at the given [tick].
    */
   fun holds(tick: T): Boolean = this.eval(tick)
 
   /** Companion object containing utility methods for working with [Predicate]. */
   companion object {
     /**
-     * Creates a Predicate.
+     * Creates a [Predicate].
      *
-     * @param E [EntityType].
      * @param T [TickDataType].
-     * @param U [TickUnit].
-     * @param D [TickDifference].
      * @param name The name of the predicate.
-     * @param eval The evaluation function on the [List] of [TickDataType]s.
+     * @param eval The evaluation function on the [TickDataType].
      * @return The created [Predicate] with the given [eval] function.
      */
-    fun <
-        E : EntityType<E, T, U, D>,
-        T : TickDataType<E, T, U, D>,
-        U : TickUnit<U, D>,
-        D : TickDifference<D>,
-    > predicate(name: String, eval: (T) -> Boolean): Predicate<E, T, U, D> = Predicate(name, eval)
+    fun <T : TickDataType<*, T, *, *>> predicate(name: String, eval: (T) -> Boolean): Predicate<T> =
+        Predicate(name, eval)
   }
 }

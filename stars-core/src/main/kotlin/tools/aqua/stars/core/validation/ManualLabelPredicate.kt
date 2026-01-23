@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The STARS Project Authors
+ * Copyright 2025-2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@
 package tools.aqua.stars.core.validation
 
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
@@ -26,18 +25,16 @@ import tools.aqua.stars.core.types.TickUnit
 /**
  * The DSL builder for manual label predicates.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @property predicate The abstract predicate to be tested.
  */
 class ManualLabelPredicate<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+    T : TickDataType<*, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(val predicate: Predicate<E, T, U, D>) {
+>(val predicate: Predicate<T>) {
   internal val manualLabelIntervals = mutableListOf<ManualLabelInterval<U, D>>()
 
   /** The name of the current predicate, derived from the associated abstract predicate. */
