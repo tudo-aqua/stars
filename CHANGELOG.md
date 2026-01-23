@@ -1,19 +1,12 @@
+[2.1]: https://github.com/tudo-aqua/stars/releases/tag/v2.1
 [2.0]: https://github.com/tudo-aqua/stars/releases/tag/v2.0
-
 [1.0]: https://github.com/tudo-aqua/stars/releases/tag/v1.0
-
 [0.5]: https://github.com/tudo-aqua/stars/releases/tag/v0.5
-
 [0.4]: https://github.com/tudo-aqua/stars/releases/tag/v0.4
-
 [0.3]: https://github.com/tudo-aqua/stars/releases/tag/v0.3
-
 [0.2.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.2
-
 [0.2.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.2.1
-
 [0.2]: https://github.com/tudo-aqua/stars/releases/tag/v0.2
-
 [0.1]: https://github.com/tudo-aqua/stars/releases/tag/v0.1
 <!-- ### Added -->
 <!-- ### Changed -->
@@ -26,7 +19,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.1] - To be released
+## [2.1] - 23.01.2026
 
 ### Added
 - Add `IterationOrder` parameter to `TickSequence`.
@@ -35,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Add `VariablePredicate<T, K>` for predicates with a generic parameter `K`.
 - Add `ManualLabelTests` for manual verification of predicates and monitors.
 - Re-added `lane` and `positionOnLane` to `Pedestrian`.
+- Re-added `useEveryVehicleAsEgo`, `useFirstVehicleAsEgo`, and `egoIds` to `convertTickData`.
 
 ### Changed
 - Change check for count of vertices in Crosswalk from `== 4` to `>= 3` as the number of vertices is not fixed. 
@@ -42,6 +36,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fix linking of ticks in `TickSequence` not properly reset.
+- Fix `Crosswalk` now accepting more than 4 vertices.
 
 ## [2.0] - 24.10.2025
 
