@@ -1,7 +1,7 @@
 # STARS
 [![Build](https://github.com/tudo-aqua/stars/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/stars/actions)
 
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
 
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-core?logo=apache-maven&label=MavenCentral%20stars-core)](https://central.sonatype.com/artifact/tools.aqua/stars-core)\
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/stars-logic-kcmftbl?logo=apache-maven&label=MavenCentral%20stars-logic-kcmftbl)](https://central.sonatype.com/artifact/tools.aqua/stars-logic-kcmftbl)\
@@ -14,6 +14,9 @@ See [stars-carla-experiments](https://github.com/tudo-aqua/stars-carla-experimen
 framework.
 
 ## Getting Started
+
+### Important note
+This is a legacy version of STARS. The latest version of STARS can be found on the main branch of this repository.
 
 ### Setup
 
@@ -29,7 +32,7 @@ implementation("tools.aqua:stars-core:1.0")
 <dependency>
   <groupId>tools.aqua</groupId>
   <artifactId>stars-core</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ``` 
 
