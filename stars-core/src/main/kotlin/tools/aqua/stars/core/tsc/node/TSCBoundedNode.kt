@@ -50,7 +50,7 @@ open class TSCBoundedNode<
 >(
     label: String,
     edges: List<TSCEdge<E, T, U, D>>,
-    monitorsMap: Map<String, Predicate<E, T, U, D>>?,
+    monitorsMap: Map<String, Predicate<T>>?,
     valueFunction: (T) -> Any = {},
     val bounds: Pair<Int, Int>,
 ) :

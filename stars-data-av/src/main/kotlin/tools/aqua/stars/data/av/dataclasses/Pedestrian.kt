@@ -31,6 +31,8 @@ package tools.aqua.stars.data.av.dataclasses
  * @param location The [Location] of the [Pedestrian].
  * @param rotation The [Rotation] of the [Pedestrian].
  * @param collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ * @param lane The [Pedestrian]'s [Lane].
+ * @param positionOnLane The [Pedestrian]'s position in the [Lane].
  */
 class Pedestrian(
     id: Int = 0,
@@ -44,6 +46,8 @@ class Pedestrian(
     location: Location = Location(),
     rotation: Rotation = Rotation(),
     collisions: List<Int> = emptyList(),
+    lane: Lane = Lane(),
+    positionOnLane: Double = 0.0,
 ) :
     Actor(
         id = id,
@@ -57,6 +61,8 @@ class Pedestrian(
         location = location,
         rotation = rotation,
         collisions = collisions,
+        lane = lane,
+        positionOnLane = positionOnLane,
     ) {
 
   override fun clone(newTickData: TickData): Actor =
@@ -72,5 +78,7 @@ class Pedestrian(
           location = location,
           rotation = rotation,
           collisions = collisions,
+          lane = lane,
+          positionOnLane = positionOnLane,
       )
 }

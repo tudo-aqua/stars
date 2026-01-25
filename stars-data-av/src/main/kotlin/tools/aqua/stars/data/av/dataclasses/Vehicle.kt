@@ -37,13 +37,13 @@ import kotlin.math.sqrt
  * @param rotation The [Rotation] of the [Vehicle].
  * @param collisions The [List] of all colliding [Actor] IDs of the [Vehicle]. Default: empty
  *   [List].
+ * @param lane The [Vehicle]'s [Lane].
+ * @param positionOnLane The [Vehicle]'s position in the [Lane].
  * @property isEgo Whether this is the own [Vehicle].
  * @property forwardVector The current forward vector of the [Vehicle].
  * @property velocity The current velocity in m/s of the [Vehicle].
  * @property acceleration The current acceleration m/s² of the [Vehicle].
  * @property angularVelocity The current angular velocity of the [Vehicle].
- * @property lane The [Vehicle]'s [Lane].
- * @property positionOnLane The [Vehicle]'s position in the [Lane].
  * @property vehicleType The [VehicleType] of the [Vehicle].
  */
 class Vehicle(
@@ -58,13 +58,13 @@ class Vehicle(
     location: Location = Location(),
     rotation: Rotation = Rotation(),
     collisions: List<Int> = emptyList(),
+    lane: Lane = Lane(),
+    positionOnLane: Double = 0.0,
     var isEgo: Boolean = false,
     val forwardVector: Vector3D = Vector3D(),
     var velocity: Vector3D = Vector3D(),
     var acceleration: Vector3D = Vector3D(),
     val angularVelocity: Vector3D = Vector3D(),
-    val lane: Lane = Lane(),
-    var positionOnLane: Double = 0.0,
     val vehicleType: VehicleType = VehicleType.CAR,
 ) :
     Actor(
@@ -79,6 +79,8 @@ class Vehicle(
         location = location,
         rotation = rotation,
         collisions = collisions,
+        lane = lane,
+        positionOnLane = positionOnLane,
     ) {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
@@ -121,13 +123,13 @@ class Vehicle(
           location = location,
           rotation = rotation,
           collisions = collisions,
+          lane = lane,
+          positionOnLane = positionOnLane,
           isEgo = isEgo,
           forwardVector = forwardVector,
           velocity = velocity,
           acceleration = acceleration,
           angularVelocity = angularVelocity,
-          lane = lane,
-          positionOnLane = positionOnLane,
           vehicleType = vehicleType,
       )
 

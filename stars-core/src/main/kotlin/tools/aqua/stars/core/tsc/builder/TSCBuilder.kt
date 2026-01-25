@@ -42,17 +42,17 @@ sealed class TSCBuilder<
   protected val edges: MutableList<TSCEdge<E, T, U, D>> = mutableListOf()
 
   /** Holds all monitors of the [TSCNode] as [Predicate]s. */
-  protected val monitorMap: MutableMap<String, Predicate<E, T, U, D>> = mutableMapOf()
+  protected val monitorMap: MutableMap<String, Predicate<T>> = mutableMapOf()
 
   /** Holds the optional monitors [TSCEdge] as [Predicate]s. */
-  protected var monitors: Map<String, Predicate<E, T, U, D>>? = null
+  protected var monitors: Map<String, Predicate<T>>? = null
     set(value) {
       check(monitors == null) { "Monitors node already set." }
       field = value
     }
 
   /** Condition predicate of the [TSCEdge]. (Default: [CONST_TRUE]) */
-  protected var condition: Predicate<E, T, U, D> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE)
+  protected var condition: Predicate<T> = Predicate(name = "CONST_TRUE", eval = CONST_TRUE)
     set(value) {
       check(!isConditionSet) { "Condition already set." }
       isConditionSet = true
