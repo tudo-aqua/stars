@@ -17,15 +17,10 @@
 
 package tools.aqua.stars.core.hooks
 
-import java.util.logging.Logger
-import tools.aqua.stars.core.metrics.providers.Loggable
-
 /**
  * Custom String wrapper indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP].
  */
-object EvaluationHookStringWrapper : Loggable {
-  override val loggerIdentifier: String = "evaluation-hooks-results"
-  override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+object EvaluationHookStringWrapper {
 
   /**
    * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP] to
@@ -33,7 +28,6 @@ object EvaluationHookStringWrapper : Loggable {
    */
   fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
-    logFine(createMsg(EvaluationHookResult.SKIP, obj, hooks))
   }
 
   /**
@@ -42,7 +36,6 @@ object EvaluationHookStringWrapper : Loggable {
    */
   fun cancel(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
-    logInfo(createMsg(EvaluationHookResult.CANCEL, obj, hooks))
   }
 
   /**

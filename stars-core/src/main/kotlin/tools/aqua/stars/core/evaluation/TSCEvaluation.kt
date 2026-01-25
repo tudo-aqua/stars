@@ -83,9 +83,7 @@ class TSCEvaluation<
     val writePlotDataCSV: Boolean = false,
     val writeSerializedResults: Boolean = true,
     val compareToPreviousRun: Boolean = false,
-    override val loggerIdentifier: String = "evaluation-time",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : Loggable {
+) {
 
   /** Mutex. */
   private val mutex: Any = Any()
@@ -142,16 +140,12 @@ class TSCEvaluation<
       writePlotDataCSV: Boolean = false,
       writeSerializedResults: Boolean = true,
       compareToPreviousRun: Boolean = false,
-      loggerIdentifier: String = "evaluation-time",
-      logger: Logger = Loggable.getLogger(loggerIdentifier),
   ) : this(
       tscList = listOf(tsc),
       writePlots = writePlots,
       writePlotDataCSV = writePlotDataCSV,
       writeSerializedResults = writeSerializedResults,
       compareToPreviousRun = compareToPreviousRun,
-      loggerIdentifier = loggerIdentifier,
-      logger = logger,
   )
 
   /**
@@ -248,7 +242,6 @@ class TSCEvaluation<
             }
           }
         }
-        logFine("The evaluation of all TSCs took: $tscEvaluationTime")
 
         // Evaluate all ticks
         val evaluationTime = measureTime {
@@ -258,12 +251,8 @@ class TSCEvaluation<
             }
           }
         }
-        logFine("The evaluation of all ticks took: $evaluationTime")
-      } else {
-        logWarning("No TSCs to evaluate. Skipping evaluation.")
       }
     }
-    logInfo("The whole evaluation took: $totalEvaluationTime")
     ApplicationConstantsHolder.totalEvaluationTime += totalEvaluationTime
     ApplicationConstantsHolder.experimentEndTime = LocalDateTime.now()
 
@@ -334,12 +323,8 @@ class TSCEvaluation<
             it.evaluate(tsc = tsc, tscInstance = tscInstance, tick = tick)
           }
         }
-        logFine(
-            "The evaluation of tsc with root node '${tsc.rootNode.label}' for tick '$tick' took: $tscEvaluationTime"
-        )
       }
     }
-    logFine("The evaluation of tick '$tick' took: $tickEvaluationTime")
     ApplicationConstantsHolder.totalTickEvaluationTime += tickEvaluationTime
 
     return true
@@ -351,7 +336,6 @@ class TSCEvaluation<
     metricProviders.forEachInstance<Stateful> { it.printState() }
 
     // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-    logInfo("Running post evaluation metrics")
     metricProviders.forEachInstance<PostEvaluationMetricProvider<E, T, U, D>> {
       it.postEvaluate()
       it.printPostEvaluationResult()
@@ -359,13 +343,11 @@ class TSCEvaluation<
 
     // Plot the results of all Plottable metrics
     if (writePlots) {
-      logInfo("Creating Plots")
       metricProviders.forEachInstance<Plottable> { it.writePlots() }
     }
 
     // Write CSV of the results of all Plottable metrics
     if (writePlotDataCSV) {
-      logInfo("Writing CSVs")
       metricProviders.forEachInstance<Plottable> { it.writePlotDataCSV() }
     }
 
@@ -375,7 +357,6 @@ class TSCEvaluation<
 
       // Write JSON files of all Serializable metrics
       if (writeSerializedResults) {
-        logInfo("Writing serialized results")
         ApplicationConstantsHolder.writeMetaInfo(
             "$serializedResultsFolder/$applicationStartTimeString/"
         )
@@ -384,7 +365,6 @@ class TSCEvaluation<
 
       // Compare the results to the latest run
       if (compareToPreviousRun) {
-        logInfo("Comparing to previous run")
         ApplicationConstantsHolder.writeMetaInfo(
             "$comparedResultsFolder/$applicationStartTimeString/"
         )
