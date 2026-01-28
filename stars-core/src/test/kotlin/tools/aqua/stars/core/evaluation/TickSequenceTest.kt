@@ -17,11 +17,12 @@
 
 package tools.aqua.stars.core.evaluation
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import kotlin.test.assertTrue
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
@@ -41,11 +42,20 @@ class TickSequenceTest {
   fun `Test correct iteration order FORWARD`() {
     var i = 0L
     val sequence =
-        TickSequence(iterationOrder = TickSequence.IterationOrder.FORWARD) {
+        TickSequence(
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
           if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
         }
 
-    sequence.forEachIndexed { index, tick ->
+    val iterator = sequence.iterator()
+
+    for (index in 0 until 5) {
+      assertTrue(iterator.hasNext())
+
+      val tick = iterator.next()
+
       // Always return first tick
       assertEquals(0, tick.currentTickUnit.tickValue)
 
@@ -55,6 +65,8 @@ class TickSequenceTest {
       // No predecessors in FORWARD iteration
       assertEquals(0, tick.numPredecessors)
     }
+
+    assertFalse(iterator.hasNext())
   }
 
   /** Test correct iteration order BACKWARD. */
@@ -62,7 +74,10 @@ class TickSequenceTest {
   fun `Test correct iteration order BACKWARD`() {
     var i = 0L
     val sequence =
-        TickSequence(iterationOrder = TickSequence.IterationOrder.BACKWARD) {
+        TickSequence(
+            iterationOrder = TickSequence.IterationOrder.BACKWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
           if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
         }
 
@@ -83,13 +98,17 @@ class TickSequenceTest {
   fun `Test correct linking FORWARD`() {
     var i = 0L
     val sequence =
-        TickSequence(iterationOrder = TickSequence.IterationOrder.FORWARD) {
+        TickSequence(
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
           if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
         }
 
     val iterator = sequence.iterator()
     var tick = iterator.next()
 
+    assertEquals(0L, tick.currentTickUnit.tickValue)
     assertNull(tick.nextTick)
     assertNull(tick.previousTick)
 
@@ -116,7 +135,10 @@ class TickSequenceTest {
   fun `Test correct linking BACKWARD`() {
     var i = 0L
     val sequence =
-        TickSequence(iterationOrder = TickSequence.IterationOrder.BACKWARD) {
+        TickSequence(
+            iterationOrder = TickSequence.IterationOrder.BACKWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
           if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
         }
 
@@ -154,7 +176,8 @@ class TickSequenceTest {
     ticks[1].nextTick = ticks[2]
     ticks[2].previousTick = ticks[1]
 
-    val sequence = ticks.asTickSequence(bufferSize = 2)
+    val sequence =
+        ticks.asTickSequence(bufferSize = 2, iterationMode = TickSequence.IterationMode.END_FILLED)
 
     val iterator = sequence.iterator()
     var tick = iterator.next()
@@ -172,6 +195,222 @@ class TickSequenceTest {
     assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
     assertEquals(tick, tick.nextTick?.previousTick)
     assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test multiple calls to hasNext. */
+  @Test
+  fun `Test multiple calls to hasNext`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    assertTrue(iterator.hasNext())
+    assertTrue(iterator.hasNext())
+    assertTrue(iterator.hasNext())
+
+    val tick = iterator.next()
+
+    // Always return first tick
+    assertEquals(0, tick.currentTickUnit.tickValue)
+
+    // Successors increase with index
+    assertEquals(0, tick.numSuccessors)
+
+    // No predecessors in FORWARD iteration
+    assertEquals(0, tick.numPredecessors)
+  }
+
+  /** Test [asTickSequence] extension function. */
+  @Test
+  fun `Test asTickSequence extension function`() {
+    val ticks = List(5) { SimpleTickData(SimpleTickDataUnit(it.toLong())) }
+    val sequence =
+        ticks.asTickSequence(bufferSize = 5, iterationMode = TickSequence.IterationMode.END_FILLED)
+
+    val iterator = sequence.iterator()
+
+    for (index in 0 until 5) {
+      assertTrue(iterator.hasNext())
+
+      val tick = iterator.next()
+
+      // Always return first tick
+      assertEquals(0, tick.currentTickUnit.tickValue)
+
+      // Successors increase with index
+      assertEquals(index, tick.numSuccessors)
+
+      // No predecessors in FORWARD iteration
+      assertEquals(0, tick.numPredecessors)
+    }
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test [asTickSequence] extension function on empty [List]. */
+  @Test
+  fun `Test asTickSequence extension function on empty List`() {
+    val ticks = emptyList<SimpleTickData>()
+    val sequence = ticks.asTickSequence()
+
+    val iterator = sequence.iterator()
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test once constraint. */
+  @Test
+  fun `Test once constraint`() {
+    val sequence = TickSequence { null }
+    sequence.iterator()
+
+    assertFailsWith<IllegalStateException> { sequence.iterator() }
+  }
+
+  /** Test iterationMode END_FILLED on iterationOrder FORWARD. */
+  @Test
+  fun `Test iterationMode END_FILLED on iterationOrder FORWARD`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 3,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.currentTickUnit.tickValue)
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(3L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.currentTickUnit.tickValue)
+    assertEquals(3L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(4L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test iterationMode FULL_FRAME on iterationOrder FORWARD. */
+  @Test
+  fun `Test iterationMode FULL_FRAME on iterationOrder FORWARD`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 3,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.FULL_FRAME,
+        ) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.currentTickUnit.tickValue)
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(3L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.currentTickUnit.tickValue)
+    assertEquals(3L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(4L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test iterationMode START_FILLED on iterationOrder FORWARD. */
+  @Test
+  fun `Test iterationMode START_FILLED on iterationOrder FORWARD`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 3,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.START_FILLED,
+        ) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.currentTickUnit.tickValue)
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(3L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.currentTickUnit.tickValue)
+    assertEquals(3L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(4L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(3L, tick.currentTickUnit.tickValue)
+    assertEquals(4L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(4L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
     assertNull(tick.previousTick)
 
     assertFalse(iterator.hasNext())

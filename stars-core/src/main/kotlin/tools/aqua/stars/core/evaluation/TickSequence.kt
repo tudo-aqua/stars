@@ -35,11 +35,14 @@ import tools.aqua.stars.core.utils.nextOrNull
  * @property bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
  *   tick is removed.
  * @property iterationOrder The order in which ticks are returned.
+ * @property iterationMode The mode in which the iteration is performed. See [IterationMode] for
+ *   details.
  * @param getNextValue The generator function that lazily returns the next tick.
  */
 class TickSequence<T : TickDataType<*, T, *, *>>(
     val bufferSize: Int = 100,
     val iterationOrder: IterationOrder = IterationOrder.FORWARD,
+    val iterationMode: IterationMode = IterationMode.FULL_FRAME,
     private val getNextValue: () -> T?,
 ) : Sequence<T> {
   /** Constrains the sequence to be consumed only once. */
@@ -53,73 +56,113 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
     check(onceConstraint.getAndSet(false)) { "This TickSequence can only be consumed once." }
 
     return object : Iterator<T> {
-      var firstItem: T? = null
-      var lastItem: T? = null
+      lateinit var firstItem: T
+      lateinit var lastItem: T
       var nextItem: T? = null
       var size: Int = 0
+      var initialized: Boolean = false
       var finished: Boolean = false
 
       override fun next(): T {
         // Call hasNext() to ensure we have a next item
         if (!hasNext()) throw NoSuchElementException("No more elements in the sequence")
 
-        val first = checkNotNull(firstItem)
-        val last = checkNotNull(lastItem)
-        val next = checkNotNull(nextItem)
+        val next = nextItem
 
-        // Update current buffer size
-        size++
+        // We have a new item
+        if (next != null) {
+          // Sequence needs initialization
+          if (size == 0) {
+            firstItem = next
+            lastItem = next
+            nextItem = null
+            size = 1
+            // The sequence is already initialized, link it into the doubly linked list
+          } else {
+            // Link new tick to the doubly linked list
+            lastItem.nextTick = next
+            next.previousTick = lastItem
 
-        // Link new tick to the doubly linked list
-        if (size > 1) {
-          last.nextTick = next
-          next.previousTick = last
+            // Update last item
+            lastItem = next
+            nextItem = null
+
+            // Increase size
+            size++
+          }
         }
 
-        // If the buffer size exceeds the limit, remove the oldest tick
-        if (size > bufferSize) {
-          firstItem = first.nextTick
-          firstItem?.previousTick = null
-          first.nextTick =
-              null // Clear the next reference of the last item to avoid strange behavior
+        // If the buffer size exceeds the limit or the iteration is already at the end and
+        // unrolling, remove the oldest tick
+        if (size > bufferSize || finished) {
+          val currentFirst = firstItem
+
+          // Move first pointer to the next item
+          firstItem = checkNotNull(firstItem.nextTick)
+          firstItem.previousTick = null
+
+          // Clear the next reference of the last item to avoid strange behavior
+          currentFirst.nextTick = null
+
+          // Decrease size
           size--
         }
 
-        return (when (iterationOrder) {
-              IterationOrder.FORWARD -> checkNotNull(firstItem)
-              IterationOrder.BACKWARD -> next
-            })
-            .also {
-              lastItem = next
-              nextItem = null
+        return checkNotNull(
+            when (iterationOrder) {
+              IterationOrder.FORWARD -> firstItem
+              IterationOrder.BACKWARD -> lastItem
             }
+        )
       }
 
       override fun hasNext(): Boolean {
-        // If the sequence is finished, return false
-        if (finished) return false
-
         // If we already have a next item, return true
         if (nextItem != null) return true
 
+        // If the sequence is finished
+        if (finished)
+        // Return true only if we are unrolling in START_FILLED mode and there are still items left.
+        return iterationMode == IterationMode.START_FILLED && size > 0
+
+        // Initialize on first call
+        if (!initialized) return initialize()
+
+        // Retrieve next item from the provided function
+        retrieveNext()
+        if (nextItem != null) return true
+
+        // No new item available. Set finished to `true` to avoid calling retrieve function again.
+        finished = true
+
+        // Only return true if we are now in unrolling mode
+        return iterationMode == IterationMode.START_FILLED && size > 0
+      }
+
+      /** Initially fills the buffer depending on the [iterationMode]. */
+      private fun initialize(): Boolean {
+        initialized = true
+
+        // Retrieve first item. If no item is available, return false
+        if (!retrieveNext()) return false
+
+        // TODO: Fill frame in modes FULL_FRAME and START_FILLED
+
+        return true
+      }
+
+      /**
+       * Retrieves the next item from the provided function and sets [nextItem].
+       *
+       * @return `false` if no next item is available, `true` otherwise.
+       */
+      private fun retrieveNext(): Boolean {
         // Retrieve next item from the provided function
         nextItem =
-            getNextValue()?.also {
-              it.previousTick = null
-              it.nextTick = null
-            }
-
-        // If no next item is available, mark as finished and return false
-        if (nextItem == null) {
-          finished = true
-          return false
-        }
-
-        // If this is the first item, initialize firstItem and currentItem
-        if (firstItem == null) {
-          firstItem = nextItem
-          lastItem = nextItem
-        }
+            getNextValue()?.apply {
+              previousTick = null
+              nextTick = null
+            } ?: return false
 
         return true
       }
@@ -140,10 +183,12 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
     fun <T : TickDataType<*, T, *, *>> Iterable<T>.asTickSequence(
         bufferSize: Int = 100,
         iterationOrder: IterationOrder = IterationOrder.FORWARD,
+        iterationMode: IterationMode = IterationMode.FULL_FRAME,
     ): TickSequence<T> =
         TickSequence(
             bufferSize = bufferSize,
             iterationOrder = iterationOrder,
+            iterationMode = iterationMode,
             getNextValue = iterator()::nextOrNull,
         )
   }
@@ -155,5 +200,37 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
 
     /** Backward iteration order. Always returns the newest tick in the sequence. */
     BACKWARD,
+  }
+
+  /** Enumeration for the iteration mode of the [TickSequence]. */
+  enum class IterationMode {
+    /**
+     * Full frame iteration mode. The buffer gets filled completely before the first tick is
+     * returned and the iteration stops when no new tick can be appended to the [TickSequence]. This
+     * results in a stable frame size buf the last (buffersize - 1) ticks (or first in case of
+     * [IterationOrder] ``FORWARD``) are not returned directly and only observable via temporal
+     * operators.
+     */
+    FULL_FRAME,
+
+    /**
+     * Start filled iteration mode. The buffer gets filled completely before the first tick is
+     * returned. The iteration continues as long as new ticks can be appended to the [TickSequence].
+     * When no new tick is available, the frame size decreases until the buffer is empty. This
+     * results in a stable frame size at the beginning of the iteration and then presents the
+     * remaining ticks until the buffer is empty. Useful in case of [IterationOrder] ``FORWARD``.
+     * Here, all ticks get presented to the evaluation. A minimum remaining buffer size can be
+     * controlled via [tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickSequenceHook].
+     */
+    START_FILLED,
+
+    /**
+     * End filled iteration mode. The iteration starts immediately and presents all available ticks.
+     * The iteration continues as long as new ticks can be appended to the [TickSequence]. When no
+     * new tick is available, the iteration ends. Useful in case of [IterationOrder] ``BACKWARD``.
+     * Here, all ticks get presented to the evaluation. A minimum initial buffer size can be
+     * controlled via [tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickSequenceHook].
+     */
+    END_FILLED,
   }
 }
