@@ -21,16 +21,13 @@ kotlin-test = { group = "org.jetbrains.kotlin", name="kotlin-test" }
 
 # Gradle Plugins
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.2.20" }
-gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "1.9.20" }
+gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "2.1.0" }
 gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.8" }
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.53.0" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.4.4" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "4.0.1" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "8.2.0" }
 gradle-mavenPublish = { group = "com.vanniktech.maven.publish", name = "com.vanniktech.maven.publish.gradle.plugin", version = "0.35.0" }
-
-# Other
-dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version = "2.1.0" }
 
 # JUnit
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "6.0.2" }
