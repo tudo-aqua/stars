@@ -110,7 +110,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
       /**
        * Initially fills the buffer depending on the [iterationMode].
        *
-       * @return `true` if initialization was successful and enoug h items were available, `false`
+       * @return `true` if initialization was successful and enough items were available, `false`
        *   otherwise.
        */
       private fun initialize(): Boolean {
@@ -243,7 +243,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
     /**
      * Full frame iteration mode. The buffer gets filled completely before the first tick is
      * returned and the iteration stops when no new tick can be appended to the [TickSequence]. This
-     * results in a stable frame size buf the last (buffersize - 1) ticks (or first in case of
+     * results in a stable frame size but the last (bufferSize - 1) ticks (or first in case of
      * [IterationOrder] ``FORWARD``) are not returned directly and only observable via temporal
      * operators.
      */

@@ -91,7 +91,7 @@ class TickSequenceTest {
     val tick = iterator.next()
 
     // Always return first tick
-    assertEquals(0, tick.currentTickUnit.tickValue)
+    assertEquals(0L, tick.currentTickUnit.tickValue)
 
     // Successors increase with index
     assertEquals(0, tick.numSuccessors)
@@ -115,7 +115,7 @@ class TickSequenceTest {
       val tick = iterator.next()
 
       // Always return first tick
-      assertEquals(0, tick.currentTickUnit.tickValue)
+      assertEquals(0L, tick.currentTickUnit.tickValue)
 
       // Successors increase with index
       assertEquals(index, tick.numSuccessors)
@@ -150,7 +150,7 @@ class TickSequenceTest {
     assertTrue(iterator.hasNext())
 
     val tick = iterator.next()
-    assertEquals(0, tick.currentTickUnit.tickValue)
+    assertEquals(0L, tick.currentTickUnit.tickValue)
     assertNull(tick.nextTick)
     assertNull(tick.previousTick)
 
