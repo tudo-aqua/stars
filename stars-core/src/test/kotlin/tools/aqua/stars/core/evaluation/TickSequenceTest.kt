@@ -415,4 +415,65 @@ class TickSequenceTest {
 
     assertFalse(iterator.hasNext())
   }
+
+  /** Test iterationMode FULL on iterationOrder FORWARD. */
+  @Test
+  fun `Test iterationMode FULL on iterationOrder FORWARD`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 3,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.FULL,
+        ) {
+          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.currentTickUnit.tickValue)
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(3L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.currentTickUnit.tickValue)
+    assertEquals(3L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(4L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(3L, tick.currentTickUnit.tickValue)
+    assertEquals(4L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(4L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
 }

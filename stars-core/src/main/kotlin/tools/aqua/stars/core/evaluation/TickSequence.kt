@@ -120,10 +120,11 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         // If we already have a next item, return true
         if (nextItem != null) return true
 
-        // If the sequence is finished
+        // If the sequence is finished. Return true only if we are unrolling in START_FILLED mode
+        // and there are still items left.
         if (finished)
-        // Return true only if we are unrolling in START_FILLED mode and there are still items left.
-        return iterationMode == IterationMode.START_FILLED && size > 0
+            return (iterationMode == IterationMode.START_FILLED ||
+                iterationMode == IterationMode.FULL) && size > 1
 
         // Initialize on first call
         if (!initialized) return initialize()
@@ -136,7 +137,8 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         finished = true
 
         // Only return true if we are now in unrolling mode
-        return iterationMode == IterationMode.START_FILLED && size > 0
+        return (iterationMode == IterationMode.START_FILLED ||
+            iterationMode == IterationMode.FULL) && size > 1
       }
 
       /** Initially fills the buffer depending on the [iterationMode]. */
@@ -232,5 +234,13 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
      * controlled via [tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickSequenceHook].
      */
     END_FILLED,
+
+    /**
+     * Full iteration mode. The iteration starts immediately and presents all available ticks. The
+     * iteration continues as long as new ticks can be appended to the [TickSequence]. When no new
+     * tick is available, the frame size decreases until the buffer is empty. A minimum buffer size
+     * can be controlled via [tools.aqua.stars.core.hooks.defaulthooks.MinTicksPerTickSequenceHook].
+     */
+    FULL,
   }
 }
