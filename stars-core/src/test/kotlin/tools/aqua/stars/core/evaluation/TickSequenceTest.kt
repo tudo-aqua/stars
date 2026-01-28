@@ -141,9 +141,18 @@ class TickSequenceTest {
   /** Test [asTickSequence] extension function on [List] with one element. */
   @Test
   fun `Test asTickSequence extension function on List with one element`() {
-    val sequence = listOf(SimpleTickData(0)).asTickSequence()
+    val sequence =
+        listOf(SimpleTickData(0))
+            .asTickSequence(bufferSize = 1, iterationMode = TickSequence.IterationMode.FULL_FRAME)
 
     val iterator = sequence.iterator()
+
+    assertTrue(iterator.hasNext())
+
+    val tick = iterator.next()
+    assertEquals(0, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
 
     assertFalse(iterator.hasNext())
   }
