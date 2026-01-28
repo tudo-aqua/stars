@@ -23,7 +23,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import tools.aqua.stars.core.SimpleTickData
-import tools.aqua.stars.core.SimpleTickDataUnit
 
 /** Test for [TickSequence] in [TickSequence.IterationOrder.FORWARD]. */
 class TickSequenceTestForward {
@@ -36,7 +35,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
-          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 5) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -68,7 +67,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -106,7 +105,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
-          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 5) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -156,7 +155,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL_FRAME,
         ) {
-          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 5) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -195,7 +194,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.START_FILLED,
         ) {
-          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 5) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -245,7 +244,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL,
         ) {
-          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 5) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -310,7 +309,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -349,7 +348,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL_FRAME,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -369,7 +368,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL_FRAME,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -399,7 +398,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.START_FILLED,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -419,7 +418,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.START_FILLED,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -459,7 +458,7 @@ class TickSequenceTestForward {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL,
         ) {
-          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 3) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()

@@ -24,7 +24,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import tools.aqua.stars.core.SimpleTickData
-import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 
 /** Test for [TickSequence]. */
@@ -40,7 +39,7 @@ class TickSequenceTest {
   /** Test correct reset of linking. */
   @Test
   fun `Test correct reset of linking`() {
-    val ticks = List(3) { SimpleTickData(SimpleTickDataUnit(it.toLong())) }
+    val ticks = List(3) { SimpleTickData(it.toLong()) }
     ticks[0].nextTick = ticks[1]
     ticks[1].previousTick = ticks[0]
 
@@ -80,7 +79,7 @@ class TickSequenceTest {
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
-          if (i < 5) SimpleTickData(SimpleTickDataUnit(i++)) else null
+          if (i < 5) SimpleTickData(i++) else null
         }
 
     val iterator = sequence.iterator()
@@ -104,7 +103,7 @@ class TickSequenceTest {
   /** Test [asTickSequence] extension function. */
   @Test
   fun `Test asTickSequence extension function`() {
-    val ticks = List(5) { SimpleTickData(SimpleTickDataUnit(it.toLong())) }
+    val ticks = List(5) { SimpleTickData(it.toLong()) }
     val sequence =
         ticks.asTickSequence(bufferSize = 5, iterationMode = TickSequence.IterationMode.END_FILLED)
 
@@ -133,6 +132,16 @@ class TickSequenceTest {
   fun `Test asTickSequence extension function on empty List`() {
     val ticks = emptyList<SimpleTickData>()
     val sequence = ticks.asTickSequence()
+
+    val iterator = sequence.iterator()
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /** Test [asTickSequence] extension function on [List] with one element. */
+  @Test
+  fun `Test asTickSequence extension function on List with one element`() {
+    val sequence = listOf(SimpleTickData(0)).asTickSequence()
 
     val iterator = sequence.iterator()
 
