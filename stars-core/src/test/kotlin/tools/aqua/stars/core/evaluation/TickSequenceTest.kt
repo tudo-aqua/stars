@@ -476,4 +476,204 @@ class TickSequenceTest {
 
     assertFalse(iterator.hasNext())
   }
+
+  /**
+   * Test iterationMode END_FILLED on iterationOrder FORWARD with too few elements. The iteration
+   * does not require a minimum number of elements to fill the buffer, so the iteration must
+   * succeed.
+   */
+  @Test
+  fun `Test iterationMode END_FILLED on iterationOrder FORWARD with too few elements`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 5,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.END_FILLED,
+        ) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /**
+   * Test iterationMode FULL_FRAME on iterationOrder FORWARD with too few elements. The iteration
+   * requires a filled frame of size bufferSize, so hasNext must return false on the first call.
+   */
+  @Test
+  fun `Test iterationMode FULL_FRAME on iterationOrder FORWARD with too few elements`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 5,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.FULL_FRAME,
+        ) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+    assertFalse(iterator.hasNext())
+  }
+
+  /**
+   * Test iterationMode FULL_FRAME on iterationOrder FORWARD with the exact number of elements. The
+   * iteration requires a filled frame of size bufferSize, so it must return only one frame.
+   */
+  @Test
+  fun `Test iterationMode FULL_FRAME on iterationOrder FORWARD with the exact number of elements`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 3,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.FULL_FRAME,
+        ) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+    assertTrue(iterator.hasNext())
+    assertTrue(iterator.hasNext())
+
+    val tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /**
+   * Test iterationMode START_FILLED on iterationOrder FORWARD with too few elements. The iteration
+   * requires a filled frame of size bufferSize, so hasNext must return false on the first call.
+   */
+  @Test
+  fun `Test iterationMode START_FILLED on iterationOrder FORWARD with too few elements`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 5,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.START_FILLED,
+        ) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+    assertFalse(iterator.hasNext())
+  }
+
+  /**
+   * Test iterationMode START_FILLED on iterationOrder FORWARD with the exact number of elements.
+   * The iteration requires a filled frame of size bufferSize, so it must return only one frame.
+   */
+  @Test
+  fun `Test iterationMode START_FILLED on iterationOrder FORWARD with the exact number of elements`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 3,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.START_FILLED,
+        ) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+    assertTrue(iterator.hasNext())
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.currentTickUnit.tickValue)
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
+
+  /**
+   * Test iterationMode FULL on iterationOrder FORWARD with too few elements. The iteration does not
+   * require a minimum number of elements to fill the buffer, so the iteration must succeed.
+   */
+  @Test
+  fun `Test iterationMode FULL on iterationOrder FORWARD with too few elements`() {
+    var i = 0L
+    val sequence =
+        TickSequence(
+            bufferSize = 5,
+            iterationOrder = TickSequence.IterationOrder.FORWARD,
+            iterationMode = TickSequence.IterationMode.FULL,
+        ) {
+          if (i < 3) SimpleTickData(SimpleTickDataUnit(i++)) else null
+        }
+
+    val iterator = sequence.iterator()
+
+    var tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(0L, tick.currentTickUnit.tickValue)
+    assertEquals(1L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertEquals(2L, tick.nextTick?.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(1L, tick.currentTickUnit.tickValue)
+    assertEquals(2L, tick.nextTick?.currentTickUnit?.tickValue)
+    assertNull(tick.nextTick?.nextTick)
+    assertNull(tick.previousTick)
+
+    tick = iterator.next()
+    assertEquals(2L, tick.currentTickUnit.tickValue)
+    assertNull(tick.nextTick)
+    assertNull(tick.previousTick)
+
+    assertFalse(iterator.hasNext())
+  }
 }
