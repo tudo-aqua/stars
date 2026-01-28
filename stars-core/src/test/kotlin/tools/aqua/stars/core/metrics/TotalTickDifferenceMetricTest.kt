@@ -47,8 +47,8 @@ class TotalTickDifferenceMetricTest {
   /** Test two different ticks with increasing [TickDataUnit]s. */
   @Test
   fun `Test two different ticks with increasing TickDataUnits`() {
-    val simpleTick1 = SimpleTickData(SimpleTickDataUnit(1))
-    val simpleTick2 = SimpleTickData(SimpleTickDataUnit(2))
+    val simpleTick1 = SimpleTickData(1)
+    val simpleTick2 = SimpleTickData(2)
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -69,8 +69,8 @@ class TotalTickDifferenceMetricTest {
   /** Test two different ticks with decreasing [TickDataUnit]s. */
   @Test
   fun `Test two different ticks with decreasing TickDataUnits`() {
-    val simpleTick1 = SimpleTickData(SimpleTickDataUnit(2))
-    val simpleTick2 = SimpleTickData(SimpleTickDataUnit(1))
+    val simpleTick1 = SimpleTickData(2)
+    val simpleTick2 = SimpleTickData(1)
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -87,8 +87,8 @@ class TotalTickDifferenceMetricTest {
   /** Test two different ticks with the same [TickDataUnit]. */
   @Test
   fun `Test two different ticks with the same TickDataUnit`() {
-    val simpleTick1 = SimpleTickData(SimpleTickDataUnit(1))
-    val simpleTick2 = SimpleTickData(SimpleTickDataUnit(1))
+    val simpleTick1 = SimpleTickData(1)
+    val simpleTick2 = SimpleTickData(1)
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
