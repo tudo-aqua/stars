@@ -129,13 +129,13 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
           size = 1
 
           // Try to fill buffer completely
-          while (size < bufferSize) {
+          while (size < bufferSize - 1) {
             if (!retrieveNext()) return false
 
             linkNext()
           }
 
-          size = bufferSize
+          if (!retrieveNext()) return false
         }
 
         return true
