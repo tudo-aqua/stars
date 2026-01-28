@@ -97,7 +97,7 @@ class TickSequenceTestForward {
 
   /** Test iterationMode END_FILLED on iterationOrder FORWARD. */
   @Test
-  fun `Test iterationMode END_FILLED on iterationOrder FORWARD`() {
+  fun `Test iterationMode END FILLED on iterationOrder FORWARD`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -147,7 +147,7 @@ class TickSequenceTestForward {
 
   /** Test iterationMode FULL_FRAME on iterationOrder FORWARD. */
   @Test
-  fun `Test iterationMode FULL_FRAME on iterationOrder FORWARD`() {
+  fun `Test iterationMode FULL FRAME on iterationOrder FORWARD`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -186,7 +186,7 @@ class TickSequenceTestForward {
 
   /** Test iterationMode START_FILLED on iterationOrder FORWARD. */
   @Test
-  fun `Test iterationMode START_FILLED on iterationOrder FORWARD`() {
+  fun `Test iterationMode START FILLED on iterationOrder FORWARD`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -301,7 +301,7 @@ class TickSequenceTestForward {
    * succeed.
    */
   @Test
-  fun `Test iterationMode END_FILLED on iterationOrder FORWARD with too few elements`() {
+  fun `Test iterationMode END FILLED on iterationOrder FORWARD with too few elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -340,7 +340,7 @@ class TickSequenceTestForward {
    * requires a filled frame of size bufferSize, so hasNext must return false on the first call.
    */
   @Test
-  fun `Test iterationMode FULL_FRAME on iterationOrder FORWARD with too few elements`() {
+  fun `Test iterationMode FULL FRAME on iterationOrder FORWARD with too few elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -360,7 +360,7 @@ class TickSequenceTestForward {
    * iteration requires a filled frame of size bufferSize, so it must return only one frame.
    */
   @Test
-  fun `Test iterationMode FULL_FRAME on iterationOrder FORWARD with the exact number of elements`() {
+  fun `Test iterationMode FULL FRAME on iterationOrder FORWARD with the exact number of elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -390,7 +390,7 @@ class TickSequenceTestForward {
    * requires a filled frame of size bufferSize, so hasNext must return false on the first call.
    */
   @Test
-  fun `Test iterationMode START_FILLED on iterationOrder FORWARD with too few elements`() {
+  fun `Test iterationMode START FILLED on iterationOrder FORWARD with too few elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -410,7 +410,7 @@ class TickSequenceTestForward {
    * The iteration requires a filled frame of size bufferSize, so it must return only one frame.
    */
   @Test
-  fun `Test iterationMode START_FILLED on iterationOrder FORWARD with the exact number of elements`() {
+  fun `Test iterationMode START FILLED on iterationOrder FORWARD with the exact number of elements`() {
     var i = 0L
     val sequence =
         TickSequence(

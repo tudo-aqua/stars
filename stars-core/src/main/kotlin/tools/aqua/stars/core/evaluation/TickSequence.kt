@@ -212,6 +212,8 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
      * @param bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
      *   tick is removed.
      * @param iterationOrder The order in which ticks are returned.
+     * @param iterationMode The mode in which the iteration is performed. See [IterationMode] for
+     *   details.
      * @return A [TickSequence] that iterates over the elements of the given [Iterable].
      */
     fun <T : TickDataType<*, T, *, *>> Iterable<T>.asTickSequence(

@@ -88,7 +88,7 @@ class TickSequenceTestBackward {
 
   /** Test iterationMode END_FILLED on iterationOrder BACKWARD. */
   @Test
-  fun `Test iterationMode END_FILLED on iterationOrder BACKWARD`() {
+  fun `Test iterationMode END FILLED on iterationOrder BACKWARD`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -138,7 +138,7 @@ class TickSequenceTestBackward {
 
   /** Test iterationMode FULL_FRAME on iterationOrder BACKWARD. */
   @Test
-  fun `Test iterationMode FULL_FRAME on iterationOrder BACKWARD`() {
+  fun `Test iterationMode FULL FRAME on iterationOrder BACKWARD`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -177,7 +177,7 @@ class TickSequenceTestBackward {
 
   /** Test iterationMode START_FILLED on iterationOrder BACKWARD. */
   @Test
-  fun `Test iterationMode START_FILLED on iterationOrder BACKWARD`() {
+  fun `Test iterationMode START FILLED on iterationOrder BACKWARD`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -292,7 +292,7 @@ class TickSequenceTestBackward {
    * succeed.
    */
   @Test
-  fun `Test iterationMode END_FILLED on iterationOrder BACKWARD with too few elements`() {
+  fun `Test iterationMode END FILLED on iterationOrder BACKWARD with too few elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -331,7 +331,7 @@ class TickSequenceTestBackward {
    * requires a filled frame of size bufferSize, so hasNext must return false on the first call.
    */
   @Test
-  fun `Test iterationMode FULL_FRAME on iterationOrder BACKWARD with too few elements`() {
+  fun `Test iterationMode FULL FRAME on iterationOrder BACKWARD with too few elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -351,7 +351,7 @@ class TickSequenceTestBackward {
    * iteration requires a filled frame of size bufferSize, so it must return only one frame.
    */
   @Test
-  fun `Test iterationMode FULL_FRAME on iterationOrder BACKWARD with the exact number of elements`() {
+  fun `Test iterationMode FULL FRAME on iterationOrder BACKWARD with the exact number of elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -381,7 +381,7 @@ class TickSequenceTestBackward {
    * requires a filled frame of size bufferSize, so hasNext must return false on the first call.
    */
   @Test
-  fun `Test iterationMode START_FILLED on iterationOrder BACKWARD with too few elements`() {
+  fun `Test iterationMode START FILLED on iterationOrder BACKWARD with too few elements`() {
     var i = 0L
     val sequence =
         TickSequence(
@@ -401,7 +401,7 @@ class TickSequenceTestBackward {
    * The iteration requires a filled frame of size bufferSize, so it must return only one frame.
    */
   @Test
-  fun `Test iterationMode START_FILLED on iterationOrder BACKWARD with the exact number of elements`() {
+  fun `Test iterationMode START FILLED on iterationOrder BACKWARD with the exact number of elements`() {
     var i = 0L
     val sequence =
         TickSequence(

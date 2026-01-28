@@ -48,14 +48,14 @@ class SimpleTickData(
         identifier,
     ) {
 
+  override val ego: SimpleEntity
+    get() = throw UnsupportedOperationException("Ego not defined for SimpleTickData")
+
   constructor(
       tickValue: Long = 0L,
       entities: Set<SimpleEntity> = LinkedHashSet(),
       identifier: String = "SimpleTickData",
   ) : this(SimpleTickDataUnit(tickValue), entities, identifier)
-
-  override val ego: SimpleEntity
-    get() = throw UnsupportedOperationException("Ego not defined for SimpleTickData")
 
   override fun toString(): String = "$currentTickUnit"
 }
