@@ -19,7 +19,7 @@ package tools.aqua.stars.core.tsc
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertFailsWith
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.tsc.builder.tsc
 
@@ -29,7 +29,7 @@ class TSCToStringTest {
   /** Given an empty [TSC], the println should also be empty. */
   @Test
   fun `Test empty TSC`() {
-    assertThrows<IllegalStateException> {
+    assertFailsWith<IllegalStateException> {
       tsc<
           SimpleEntity,
           SimpleTickData,

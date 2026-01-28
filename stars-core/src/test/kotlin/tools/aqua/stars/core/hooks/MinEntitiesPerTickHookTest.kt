@@ -20,7 +20,6 @@ package tools.aqua.stars.core.hooks
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import org.junit.jupiter.api.assertThrows
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.evaluation.TSCEvaluation
 import tools.aqua.stars.core.hooks.defaulthooks.MinEntitiesPerTickHook
@@ -95,7 +94,7 @@ class MinEntitiesPerTickHookTest {
           MinEntitiesPerTickHook(minEntities = 2, failPolicy = EvaluationHookResult.ABORT)
       )
 
-      assertThrows<EvaluationHookAbort> { runEvaluation(ticks = generateTicks()) }
+      assertFailsWith<EvaluationHookAbort> { runEvaluation(ticks = generateTicks()) }
     }
   }
 
