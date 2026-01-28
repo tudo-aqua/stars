@@ -125,10 +125,12 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
           val next = checkNotNull(nextItem)
           firstItem = next
           lastItem = next
+          nextItem = null
+          size = 1
 
           // Try to fill buffer completely
           while (size < bufferSize) {
-            if (!hasNext()) return false
+            if (!retrieveNext()) return false
 
             linkNext()
           }
