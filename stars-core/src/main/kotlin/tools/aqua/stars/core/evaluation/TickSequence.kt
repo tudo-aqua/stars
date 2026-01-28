@@ -67,46 +67,12 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
         // Call hasNext() to ensure we have a next item
         if (!hasNext()) throw NoSuchElementException("No more elements in the sequence")
 
-        val next = nextItem
-
         // We have a new item
-        if (next != null) {
-          // Sequence needs initialization
-          if (size == 0) {
-            firstItem = next
-            lastItem = next
-            nextItem = null
-            size = 1
-            // The sequence is already initialized, link it into the doubly linked list
-          } else {
-            // Link new tick to the doubly linked list
-            lastItem.nextTick = next
-            next.previousTick = lastItem
-
-            // Update last item
-            lastItem = next
-            nextItem = null
-
-            // Increase size
-            size++
-          }
-        }
+        if (nextItem != null) linkNext()
 
         // If the buffer size exceeds the limit or the iteration is already at the end and
         // unrolling, remove the oldest tick
-        if (size > bufferSize || finished) {
-          val currentFirst = firstItem
-
-          // Move first pointer to the next item
-          firstItem = checkNotNull(firstItem.nextTick)
-          firstItem.previousTick = null
-
-          // Clear the next reference of the last item to avoid strange behavior
-          currentFirst.nextTick = null
-
-          // Decrease size
-          size--
-        }
+        if (size > bufferSize || finished) removeOldest()
 
         return checkNotNull(
             when (iterationOrder) {
@@ -141,14 +107,34 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
             iterationMode == IterationMode.FULL) && size > 1
       }
 
-      /** Initially fills the buffer depending on the [iterationMode]. */
+      /**
+       * Initially fills the buffer depending on the [iterationMode].
+       *
+       * @return `true` if initialization was successful and enoug h items were available, `false`
+       *   otherwise.
+       */
       private fun initialize(): Boolean {
         initialized = true
 
         // Retrieve first item. If no item is available, return false
         if (!retrieveNext()) return false
 
-        // TODO: Fill frame in modes FULL_FRAME and START_FILLED
+        if (
+            iterationMode == IterationMode.START_FILLED || iterationMode == IterationMode.FULL_FRAME
+        ) {
+          val next = checkNotNull(nextItem)
+          firstItem = next
+          lastItem = next
+
+          // Try to fill buffer completely
+          while (size < bufferSize) {
+            if (!hasNext()) return false
+
+            linkNext()
+          }
+
+          size = bufferSize
+        }
 
         return true
       }
@@ -167,6 +153,49 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
             } ?: return false
 
         return true
+      }
+
+      /**
+       * Links the next item in [nextItem] to the doubly linked list, sets it to null and increases
+       * [size] by one.
+       */
+      private fun linkNext() {
+        val next = checkNotNull(nextItem)
+
+        // Sequence needs initialization
+        if (size == 0) {
+          firstItem = next
+          lastItem = next
+          nextItem = null
+          size = 1
+          return
+        }
+
+        // Link new tick to the doubly linked list
+        lastItem.nextTick = next
+        next.previousTick = lastItem
+
+        // Update last item
+        lastItem = next
+        nextItem = null
+
+        // Increase size
+        size++
+      }
+
+      /** Removes the oldest tick from the doubly linked list. Decreases [size] by one. */
+      private fun removeOldest() {
+        val currentFirst = firstItem
+
+        // Move first pointer to the next item
+        firstItem = checkNotNull(firstItem.nextTick)
+        firstItem.previousTick = null
+
+        // Clear the next reference of the last item to avoid strange behavior
+        currentFirst.nextTick = null
+
+        // Decrease size
+        size--
       }
     }
   }
