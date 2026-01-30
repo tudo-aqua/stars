@@ -63,7 +63,7 @@ detekt {
 val kdocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
       archiveClassifier.set("kdoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+      from(tasks.dokkaGenerateHtml)
     }
 
 val kdoc: Configuration by
@@ -85,17 +85,10 @@ artifacts {
   add(tests.name, testJar.get())
 }
 
-val javadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    }
-
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-  dokkaGfmPlugin(libs.dokka.javadoc)
   testImplementation(libs.kotlin.test)
   detektPlugins(libs.detekt.rules.libraries)
 }
