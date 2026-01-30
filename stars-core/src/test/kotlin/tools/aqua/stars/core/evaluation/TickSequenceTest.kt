@@ -17,11 +17,11 @@
 
 package tools.aqua.stars.core.evaluation
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import kotlin.test.assertTrue
 import tools.aqua.stars.core.SimpleTickData
 import tools.aqua.stars.core.SimpleTickDataUnit
 import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
