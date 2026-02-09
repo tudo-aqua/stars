@@ -79,7 +79,7 @@ class TickSequenceTestStartFilled {
   }
 
   /**
-   * Tests the [START_FILLED] iteration mode where a list of ticks ist given, but the desired buffer
+   * Tests the [START_FILLED] iteration mode where a list of ticks is given, but the desired buffer
    * size is equal to 0.
    */
   @Test

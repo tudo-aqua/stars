@@ -74,7 +74,7 @@ class TickSequenceTestFullFrame {
   }
 
   /**
-   * Tests the [FULL_FRAME] iteration mode where a list of ticks ist given, but the desired buffer
+   * Tests the [FULL_FRAME] iteration mode where a list of ticks is given, but the desired buffer
    * size is equal to 0.
    */
   @Test

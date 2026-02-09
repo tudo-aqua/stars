@@ -98,7 +98,7 @@ class TickSequenceTestFull {
   }
 
   /**
-   * Tests the [FULL] iteration mode where a list of ticks ist given, but the desired buffer size is
+   * Tests the [FULL] iteration mode where a list of ticks is given, but the desired buffer size is
    * equal to 0.
    */
   @Test
