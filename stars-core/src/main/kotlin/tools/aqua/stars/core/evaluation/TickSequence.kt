@@ -49,7 +49,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
   private val onceConstraint = java.util.concurrent.atomic.AtomicBoolean(true)
 
   init {
-    check(bufferSize > 0) { "Buffer size must be greater than 0" }
+    require(bufferSize > 0) { "Buffer size must be greater than 0" }
   }
 
   override fun iterator(): Iterator<T> {
