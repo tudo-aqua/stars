@@ -39,6 +39,7 @@ import tools.aqua.stars.core.metrics.providers.TSCAndTSCInstanceMetricProvider
 import tools.aqua.stars.core.metrics.providers.TSCInstanceAndTickMetricProvider
 import tools.aqua.stars.core.metrics.providers.TSCInstanceMetricProvider
 import tools.aqua.stars.core.metrics.providers.TSCMetricProvider
+import tools.aqua.stars.core.metrics.providers.TickAndTickSequenceMetricProvider
 import tools.aqua.stars.core.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.serialization.SerializableResultComparison.Companion.noMismatch
 import tools.aqua.stars.core.serialization.extensions.compareToPreviousResults
@@ -254,7 +255,7 @@ class TSCEvaluation<
         val evaluationTime = measureTime {
           ticks.forEach { tickSequence ->
             tickSequence.computeWhile { tick ->
-              evaluateTick(tick = tick, tscList = tscListToEvaluate)
+              evaluateTick(tick = tick, tscList = tscListToEvaluate, tickSequence = tickSequence)
             }
           }
         }
@@ -294,9 +295,14 @@ class TSCEvaluation<
    *
    * @param tick The [TickDataType] to evaluate.
    * @param tscList The list of [TSC]s to evaluate.
+   * @param tickSequence The [TickSequence] of ticks that the tick belongs to.
    * @return Whether the evaluation should continue.
    */
-  private fun evaluateTick(tick: T, tscList: List<TSC<E, T, U, D>>): Boolean {
+  private fun evaluateTick(
+      tick: T,
+      tscList: List<TSC<E, T, U, D>>,
+      tickSequence: TickSequence<T>,
+  ): Boolean {
     // Evaluate PreTickEvaluationHooks
     preTickEvaluationHooks.evaluate(tick).let { (verdict, results) ->
       if (verdict != null) {
@@ -311,6 +317,10 @@ class TSCEvaluation<
     val tickEvaluationTime = measureTime {
       // Run the "evaluate" function for all TickMetricProviders on the current tick
       metricProviders.forEachInstance<TickMetricProvider<E, T, U, D>> { it.evaluate(tick) }
+
+      metricProviders.forEachInstance<TickAndTickSequenceMetricProvider<E, T, U, D>> {
+        it.evaluate(tick, tickSequence)
+      }
 
       // Run the evaluation for all TSCs
       tscList.forEach { tsc ->
