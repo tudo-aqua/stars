@@ -53,8 +53,8 @@ class TotalTickDifferenceMetric<
   /** Holds the current [TickDifference] for all already analyzed [TickDataType]s. */
   private var totalTickDifference: D? = null
 
-  /** Holds the last processed [TickUnit]. */
-  private var lastTickUnit: U? = null
+  /** Holds the last processed [TickDataType]. */
+  private var lastTick: T? = null
 
   /**
    * Add the given [tick] to the total [TickDifference].
@@ -65,12 +65,14 @@ class TotalTickDifferenceMetric<
    *   [TickDataType] is not positive.
    */
   override fun evaluate(tick: T): Optional<D> {
-    lastTickUnit?.let { previousTickUnit ->
+    if (tick == lastTick) return Optional.ofNullable(totalTickDifference)
+
+    lastTick?.let { previousTick ->
 
       // Calculate the TickDifference between the previous and the current tick.
-      val currentTickDifference = tick.currentTickUnit - previousTickUnit
+      val currentTickDifference = tick.currentTickUnit - previousTick.currentTickUnit
 
-      check(tick.currentTickUnit > previousTickUnit) {
+      check(tick.currentTickUnit > previousTick.currentTickUnit) {
         "The difference between the previous and the current tick should be positive! " +
             "Actual difference: $currentTickDifference."
       }
@@ -81,7 +83,7 @@ class TotalTickDifferenceMetric<
       totalTickDifference = newTotal
     }
 
-    lastTickUnit = tick.currentTickUnit
+    lastTick = tick
 
     return Optional.ofNullable(totalTickDifference)
   }
