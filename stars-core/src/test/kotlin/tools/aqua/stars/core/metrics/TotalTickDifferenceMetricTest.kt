@@ -116,6 +116,24 @@ class TotalTickDifferenceMetricTest {
         >()
 
     assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick1) }
+    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
+  }
+
+  /** Test two different ticks with the same value. */
+  @Test
+  fun `Test two different ticks with the same value`() {
+    val simpleTick1 = SimpleTickData()
+    val simpleTick2 = SimpleTickData()
+
+    val totalTickDifferenceMetric =
+        TotalTickDifferenceMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
+
+    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
+    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
   }
 }
