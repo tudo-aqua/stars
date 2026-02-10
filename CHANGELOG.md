@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Add `IterationMode` parameter to `TickSequence`.
+- Add `name` property to `TickSequence`.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
