@@ -32,6 +32,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
@@ -64,6 +65,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
@@ -101,6 +103,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 3,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
@@ -151,6 +154,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 3,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL_FRAME,
@@ -190,6 +194,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 3,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.START_FILLED,
@@ -240,6 +245,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 3,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL,
@@ -305,6 +311,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 5,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
@@ -344,6 +351,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 5,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL_FRAME,
@@ -364,6 +372,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 3,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL_FRAME,
@@ -394,6 +403,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 5,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.START_FILLED,
@@ -414,6 +424,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 3,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.START_FILLED,
@@ -454,6 +465,7 @@ class TickSequenceTestForward {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             bufferSize = 5,
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.FULL,

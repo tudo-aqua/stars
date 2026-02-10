@@ -32,6 +32,7 @@ import tools.aqua.stars.core.utils.nextOrNull
  * The sequence can only be consumed once.
  *
  * @param T [TickDataType].
+ * @property name The name/origin of the sequence.
  * @property bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
  *   tick is removed.
  * @property iterationOrder The order in which ticks are returned.
@@ -40,6 +41,7 @@ import tools.aqua.stars.core.utils.nextOrNull
  * @param getNextValue The generator function that lazily returns the next tick.
  */
 class TickSequence<T : TickDataType<*, T, *, *>>(
+    val name: String,
     val bufferSize: Int = 100,
     val iterationOrder: IterationOrder = IterationOrder.FORWARD,
     val iterationMode: IterationMode = IterationMode.FULL_FRAME,
@@ -209,6 +211,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
      * Creates a [TickSequence] from an [Iterable] of [TickDataType]s.
      *
      * @param T [TickDataType].
+     * @param name The name/origin of the sequence.
      * @param bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
      *   tick is removed.
      * @param iterationOrder The order in which ticks are returned.
@@ -217,11 +220,13 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
      * @return A [TickSequence] that iterates over the elements of the given [Iterable].
      */
     fun <T : TickDataType<*, T, *, *>> Iterable<T>.asTickSequence(
+        name: String = "",
         bufferSize: Int = 100,
         iterationOrder: IterationOrder = IterationOrder.FORWARD,
         iterationMode: IterationMode = IterationMode.FULL_FRAME,
     ): TickSequence<T> =
         TickSequence(
+            name = name,
             bufferSize = bufferSize,
             iterationOrder = iterationOrder,
             iterationMode = iterationMode,
