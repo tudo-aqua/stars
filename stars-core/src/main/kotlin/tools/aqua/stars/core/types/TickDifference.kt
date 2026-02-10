@@ -42,7 +42,16 @@ abstract class TickDifference<D : TickDifference<D>> : Comparable<D>, Serializab
 
   /** Holder of extension functions for [TickDifference] objects. */
   companion object {
-    /** Sums all [TickDifference] objects in the given [Iterable]. */
-    fun <T : TickDifference<T>> Iterable<T>.sum(): T = this.reduce { acc, d -> acc + d }
+    /** Sums all [TickDifference] objects in the given [Iterable], or returns `null` if empty. */
+    fun <T : TickDifference<T>> Iterable<T>.sumOrNull(): T? =
+        this.reduceOrNull { acc, d -> acc + d }
+
+    /**
+     * Sums all [TickDifference] objects in the given [Iterable].
+     *
+     * @throws IllegalArgumentException if the [Iterable] is empty.
+     */
+    fun <T : TickDifference<T>> Iterable<T>.sum(): T =
+        checkNotNull(sumOrNull()) { "Cannot sum an empty Iterable of TickDifference." }
   }
 }
