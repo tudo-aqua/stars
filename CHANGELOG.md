@@ -20,6 +20,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2] - TBA
+
+### Added
+- Add `IterationMode` parameter to `TickSequence`.
+
 ## [2.1] - 23.01.2026
 
 ### Added

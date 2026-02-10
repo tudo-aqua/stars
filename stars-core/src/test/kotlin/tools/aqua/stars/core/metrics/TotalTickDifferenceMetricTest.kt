@@ -19,9 +19,9 @@ package tools.aqua.stars.core.metrics
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import tools.aqua.stars.core.*
 import tools.aqua.stars.core.metrics.evaluation.TotalTickDifferenceMetric
 
@@ -47,8 +47,8 @@ class TotalTickDifferenceMetricTest {
   /** Test two different ticks with increasing [TickDataUnit]s. */
   @Test
   fun `Test two different ticks with increasing TickDataUnits`() {
-    val simpleTick1 = SimpleTickData(SimpleTickDataUnit(1))
-    val simpleTick2 = SimpleTickData(SimpleTickDataUnit(2))
+    val simpleTick1 = SimpleTickData(1)
+    val simpleTick2 = SimpleTickData(2)
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -69,8 +69,8 @@ class TotalTickDifferenceMetricTest {
   /** Test two different ticks with decreasing [TickDataUnit]s. */
   @Test
   fun `Test two different ticks with decreasing TickDataUnits`() {
-    val simpleTick1 = SimpleTickData(SimpleTickDataUnit(2))
-    val simpleTick2 = SimpleTickData(SimpleTickDataUnit(1))
+    val simpleTick1 = SimpleTickData(2)
+    val simpleTick2 = SimpleTickData(1)
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -81,14 +81,14 @@ class TotalTickDifferenceMetricTest {
         >()
 
     assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertThrows<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
+    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
   }
 
   /** Test two different ticks with the same [TickDataUnit]. */
   @Test
   fun `Test two different ticks with the same TickDataUnit`() {
-    val simpleTick1 = SimpleTickData(SimpleTickDataUnit(1))
-    val simpleTick2 = SimpleTickData(SimpleTickDataUnit(1))
+    val simpleTick1 = SimpleTickData(1)
+    val simpleTick2 = SimpleTickData(1)
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -99,7 +99,7 @@ class TotalTickDifferenceMetricTest {
         >()
 
     assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertThrows<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
+    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
   }
 
   /** Test two identical ticks. */
@@ -116,6 +116,6 @@ class TotalTickDifferenceMetricTest {
         >()
 
     assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertThrows<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick1) }
+    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick1) }
   }
 }
