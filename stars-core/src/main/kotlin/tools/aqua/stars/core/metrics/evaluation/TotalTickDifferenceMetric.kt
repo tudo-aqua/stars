@@ -126,12 +126,24 @@ class TotalTickDifferenceMetric<
     logInfo()
   }
 
-  override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
-      totalTickDifference.map { (tickSequenceIdentifier, tickSequenceTickDifference) ->
+  override fun getSerializableResults(): List<SerializableTickDifferenceResult> {
+    val result = mutableListOf<SerializableTickDifferenceResult>()
+    result.addAll(
+        totalTickDifference.map { (tickSequenceIdentifier, tickSequenceTickDifference) ->
+          SerializableTickDifferenceResult(
+              identifier = loggerIdentifier,
+              source = tickSequenceIdentifier,
+              value = tickSequenceTickDifference.toString(),
+          )
+        }
+    )
+    result.add(
         SerializableTickDifferenceResult(
             identifier = loggerIdentifier,
-            source = tickSequenceIdentifier,
-            value = tickSequenceTickDifference.toString(),
+            source = "Total tick difference over all sequences",
+            value = totalTickDifference.mapNotNull { it.second }.sum().toString(),
         )
-      }
+    )
+    return result
+  }
 }
