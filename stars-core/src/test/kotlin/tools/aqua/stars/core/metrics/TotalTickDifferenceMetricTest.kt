@@ -69,7 +69,6 @@ class TotalTickDifferenceMetricTest {
     assertEquals(tickSequence2.name, result1.first().first)
     assertEquals(null, result1.first().second)
 
-    totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence2)
     val result2 = totalTickDifferenceMetric.evaluate(simpleTick2, tickSequence2)
     assertEquals(1, result2.size)
     assertEquals(tickSequence2.name, result2.first().first)
