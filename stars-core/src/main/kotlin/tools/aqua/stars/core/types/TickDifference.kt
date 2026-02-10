@@ -39,4 +39,10 @@ abstract class TickDifference<D : TickDifference<D>> : Comparable<D>, Serializab
    * @return A new [TickDifference] object.
    */
   abstract operator fun minus(other: D): D
+
+  /** Holder of extension functions for [TickDifference] objects. */
+  companion object {
+    /** Sums all [TickDifference] objects in the given [Iterable]. */
+    fun <T : TickDifference<T>> Iterable<T>.sum(): T = this.reduce { acc, d -> acc + d }
+  }
 }

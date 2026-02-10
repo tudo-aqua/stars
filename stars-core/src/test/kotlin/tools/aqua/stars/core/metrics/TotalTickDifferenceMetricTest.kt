@@ -20,10 +20,10 @@ package tools.aqua.stars.core.metrics
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import tools.aqua.stars.core.*
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.core.metrics.evaluation.TotalTickDifferenceMetric
+import tools.aqua.stars.core.types.TickUnit
 
 /** Test for [TotalTickDifferenceMetric]. */
 class TotalTickDifferenceMetricTest {
@@ -32,6 +32,7 @@ class TotalTickDifferenceMetricTest {
   @Test
   fun `Test only one tick`() {
     val simpleTick = SimpleTickData()
+    val tickSequence = listOf(simpleTick).asTickSequence(name = "Simple Tick Sequence")
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -41,14 +42,19 @@ class TotalTickDifferenceMetricTest {
             SimpleTickDataDifference,
         >()
 
-    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick).isEmpty)
+    val evaluationResult = totalTickDifferenceMetric.evaluate(simpleTick, tickSequence)
+    assertEquals(1, evaluationResult.size)
+    assertEquals(tickSequence.name, evaluationResult.first().first)
+    assertEquals(null, evaluationResult.first().second)
   }
 
-  /** Test two different ticks with increasing [TickDataUnit]s. */
+  /** Test two different ticks with increasing [TickUnit]s. */
   @Test
   fun `Test two different ticks with increasing TickDataUnits`() {
     val simpleTick1 = SimpleTickData(1)
     val simpleTick2 = SimpleTickData(2)
+    val tickSequence2 =
+        listOf(simpleTick1, simpleTick2).asTickSequence(name = "Simple Tick Sequence")
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -58,19 +64,25 @@ class TotalTickDifferenceMetricTest {
             SimpleTickDataDifference,
         >()
 
-    val result1 = totalTickDifferenceMetric.evaluate(simpleTick1)
-    assertTrue(result1.isEmpty)
+    val result1 = totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence2)
+    assertEquals(1, result1.size)
+    assertEquals(tickSequence2.name, result1.first().first)
+    assertEquals(null, result1.first().second)
 
-    val result2 = totalTickDifferenceMetric.evaluate(simpleTick2)
-    assertFalse(result2.isEmpty)
-    assertEquals(1L, result2.get().tickDifference)
+    totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence2)
+    val result2 = totalTickDifferenceMetric.evaluate(simpleTick2, tickSequence2)
+    assertEquals(1, result2.size)
+    assertEquals(tickSequence2.name, result2.first().first)
+    assertEquals(1L, result2.first().second?.tickDifference)
   }
 
-  /** Test two different ticks with decreasing [TickDataUnit]s. */
+  /** Test two different ticks with decreasing [TickUnit]s. */
   @Test
   fun `Test two different ticks with decreasing TickDataUnits`() {
     val simpleTick1 = SimpleTickData(2)
     val simpleTick2 = SimpleTickData(1)
+    val tickSequence =
+        listOf(simpleTick1, simpleTick2).asTickSequence(name = "Simple Tick Sequence")
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -80,15 +92,23 @@ class TotalTickDifferenceMetricTest {
             SimpleTickDataDifference,
         >()
 
-    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
+    val result1 = totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence)
+    assertEquals(1, result1.size)
+    assertEquals(tickSequence.name, result1.first().first)
+    assertEquals(null, result1.first().second)
+
+    assertFailsWith<IllegalStateException> {
+      totalTickDifferenceMetric.evaluate(simpleTick2, tickSequence)
+    }
   }
 
-  /** Test two different ticks with the same [TickDataUnit]. */
+  /** Test two different ticks with the same [TickUnit]. */
   @Test
   fun `Test two different ticks with the same TickDataUnit`() {
     val simpleTick1 = SimpleTickData(1)
     val simpleTick2 = SimpleTickData(1)
+    val tickSequence =
+        listOf(simpleTick1, simpleTick2).asTickSequence(name = "Simple Tick Sequence")
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -98,14 +118,21 @@ class TotalTickDifferenceMetricTest {
             SimpleTickDataDifference,
         >()
 
-    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
+    val result = totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence)
+    assertEquals(1, result.size)
+    assertEquals(tickSequence.name, result.first().first)
+    assertEquals(null, result.first().second)
+
+    assertFailsWith<IllegalStateException> {
+      totalTickDifferenceMetric.evaluate(simpleTick2, tickSequence)
+    }
   }
 
   /** Test two identical ticks. */
   @Test
   fun `Test two identical ticks`() {
     val simpleTick1 = SimpleTickData()
+    val tickSequence = listOf(simpleTick1).asTickSequence(name = "Simple Tick Sequence")
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -115,8 +142,8 @@ class TotalTickDifferenceMetricTest {
             SimpleTickDataDifference,
         >()
 
-    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
+    assertEquals(null, totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence).first().second)
+    assertEquals(null, totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence).first().second)
   }
 
   /** Test two different ticks with the same value. */
@@ -124,6 +151,8 @@ class TotalTickDifferenceMetricTest {
   fun `Test two different ticks with the same value`() {
     val simpleTick1 = SimpleTickData()
     val simpleTick2 = SimpleTickData()
+    val tickSequence =
+        listOf(simpleTick1, simpleTick2).asTickSequence(name = "Simple Tick Sequence")
 
     val totalTickDifferenceMetric =
         TotalTickDifferenceMetric<
@@ -133,7 +162,13 @@ class TotalTickDifferenceMetricTest {
             SimpleTickDataDifference,
         >()
 
-    assertTrue(totalTickDifferenceMetric.evaluate(simpleTick1).isEmpty)
-    assertFailsWith<IllegalStateException> { totalTickDifferenceMetric.evaluate(simpleTick2) }
+    val result = totalTickDifferenceMetric.evaluate(simpleTick1, tickSequence)
+    assertEquals(1, result.size)
+    assertEquals(tickSequence.name, result.first().first)
+    assertEquals(null, result.first().second)
+
+    assertFailsWith<IllegalStateException> {
+      totalTickDifferenceMetric.evaluate(simpleTick2, tickSequence)
+    }
   }
 }
