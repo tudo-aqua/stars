@@ -27,7 +27,7 @@ import tools.aqua.stars.core.metrics.providers.TickAndTickSequenceMetricProvider
 import tools.aqua.stars.core.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
-import tools.aqua.stars.core.types.TickDifference.Companion.sum
+import tools.aqua.stars.core.types.TickDifference.Companion.sumOrNull
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 
@@ -121,7 +121,7 @@ class TotalTickDifferenceMetric<
     }
     logFine()
     logInfo(
-        "The analyzed ticks yielded a total tick difference of ${totalTickDifference.mapNotNull { it.second }.sum()}."
+        "The analyzed ticks yielded a total tick difference of ${totalTickDifference.mapNotNull { it.second }.sumOrNull()}."
     )
     logInfo()
   }
@@ -141,7 +141,7 @@ class TotalTickDifferenceMetric<
         SerializableTickDifferenceResult(
             identifier = loggerIdentifier,
             source = "Total tick difference over all sequences",
-            value = totalTickDifference.mapNotNull { it.second }.sum().toString(),
+            value = totalTickDifference.mapNotNull { it.second }.sumOrNull().toString(),
         )
     )
     return result
