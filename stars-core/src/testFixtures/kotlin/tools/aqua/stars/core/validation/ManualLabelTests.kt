@@ -22,7 +22,6 @@ import kotlin.test.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import tools.aqua.stars.core.evaluation.Predicate
-import tools.aqua.stars.core.types.EntityType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
@@ -33,18 +32,16 @@ import tools.aqua.stars.core.utils.getTicksInInterval
  * associated with ticks and intervals. This class provides a test factory for generating dynamic
  * tests which can be used in actual testing classes.
  *
- * @param E [EntityType].
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
  */
 abstract class ManualLabelTests<
-    E : EntityType<E, T, U, D>,
-    T : TickDataType<E, T, U, D>,
+    T : TickDataType<*, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 > {
-  protected abstract val manualLabelTestFiles: List<ManualLabelFile<E, T, U, D>>
+  protected abstract val manualLabelTestFiles: List<ManualLabelFile<T, U, D>>
 
   /**
    * Generates dynamic tests for manually labeled test files by validating predicates on specified
@@ -91,7 +88,7 @@ abstract class ManualLabelTests<
    * @return A dynamically generated test case for the specified predicate and interval.
    */
   private fun createDynamicTest(
-      predicate: Predicate<E, T, U, D>,
+      predicate: Predicate<T>,
       from: U,
       to: U,
       allTicks: List<T>,

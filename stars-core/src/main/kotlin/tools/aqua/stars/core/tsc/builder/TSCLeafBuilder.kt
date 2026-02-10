@@ -69,7 +69,7 @@ open class TSCLeafBuilder<
       T : TickDataType<E, T, U, D>,
       U : TickUnit<U, D>,
       D : TickDifference<D>,
-  > TSCLeafBuilder<E, T, U, D>.condition(condition: Predicate<E, T, U, D>) {
+  > TSCLeafBuilder<E, T, U, D>.condition(condition: Predicate<T>) {
     this.condition = condition
   }
 
