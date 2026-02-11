@@ -173,7 +173,14 @@ fun loadTicks(
 
       for (ticks in ticksPerEgo) {
         val it = ticks.iterator()
-        yield(TickSequence(bufferSize) { if (it.hasNext()) it.next() else null })
+        yield(
+            TickSequence(
+                "TickSequence with ego: ${ticks.first().ego.id}",
+                bufferSize,
+            ) {
+              if (it.hasNext()) it.next() else null
+            }
+        )
       }
     }
   }

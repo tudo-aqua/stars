@@ -32,7 +32,7 @@ class TickSequenceTest {
   /** Test empty [TickSequence]. */
   @Test
   fun `Test empty TickSequence`() {
-    val sequence = TickSequence { null }
+    val sequence = TickSequence("") { null }
     assertTrue(sequence.toList().isEmpty())
   }
 
@@ -76,6 +76,7 @@ class TickSequenceTest {
     var i = 0L
     val sequence =
         TickSequence(
+            name = "",
             iterationOrder = TickSequence.IterationOrder.FORWARD,
             iterationMode = TickSequence.IterationMode.END_FILLED,
         ) {
@@ -160,7 +161,7 @@ class TickSequenceTest {
   /** Test once constraint. */
   @Test
   fun `Test once constraint`() {
-    val sequence = TickSequence { null }
+    val sequence = TickSequence("") { null }
     sequence.iterator()
 
     assertFailsWith<IllegalStateException> { sequence.iterator() }
