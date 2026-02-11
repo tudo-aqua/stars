@@ -35,6 +35,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 
+### Changed
+- Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
+
 ## [2.1] - 23.01.2026
 
 ### Added
