@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.metrics.evaluation
 
-import java.util.Optional
 import java.util.logging.Logger
 import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.metrics.providers.Loggable
@@ -102,8 +101,9 @@ class TotalTickDifferenceMetric<
   }
 
   /**
-   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no
-   * [TickDataType]s have been analyzed yet.
+   * Returns the current [totalTickDifference]. Returns an empty [List] if no [TickDataType]s have
+   * been analyzed yet. If for any [TickSequence] only one [TickDataType] has been analyzed, the
+   * [TickDifference] for this [TickSequence] is null.
    *
    * @return The current [totalTickDifference] for all already analyzed [TickDataType]s.
    */

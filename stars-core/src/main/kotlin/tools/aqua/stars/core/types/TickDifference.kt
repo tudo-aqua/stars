@@ -49,7 +49,7 @@ abstract class TickDifference<D : TickDifference<D>> : Comparable<D>, Serializab
     /**
      * Sums all [TickDifference] objects in the given [Iterable].
      *
-     * @throws IllegalArgumentException if the [Iterable] is empty.
+     * @throws IllegalStateException if the [Iterable] is empty.
      */
     fun <T : TickDifference<T>> Iterable<T>.sum(): T =
         checkNotNull(sumOrNull()) { "Cannot sum an empty Iterable of TickDifference." }
