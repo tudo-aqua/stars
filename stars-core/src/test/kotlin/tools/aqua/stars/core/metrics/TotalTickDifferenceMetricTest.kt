@@ -170,4 +170,117 @@ class TotalTickDifferenceMetricTest {
       totalTickDifferenceMetric.evaluate(simpleTick2, tickSequence)
     }
   }
+
+  /** Test two different tick sequences with distinct names and combined total. */
+  @Test
+  fun `Test two distinct TickSequences per-sequence and combined totals`() {
+    val simpleTick1a = SimpleTickData(0)
+    val simpleTick2a = SimpleTickData(5)
+    val simpleTick3a = SimpleTickData(10)
+    val sequenceA = listOf(simpleTick1a, simpleTick2a, simpleTick3a).asTickSequence(name = "seq-A")
+
+    val simpleTickData1b = SimpleTickData(2)
+    val simpleTickData2b = SimpleTickData(4)
+    val sequenceB = listOf(simpleTickData1b, simpleTickData2b).asTickSequence(name = "seq-B")
+
+    val metric =
+        TotalTickDifferenceMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
+
+    // Evaluate all ticks of sequence A
+    metric.evaluate(simpleTick1a, sequenceA)
+    metric.evaluate(simpleTick2a, sequenceA)
+    metric.evaluate(simpleTick3a, sequenceA)
+
+    // Evaluate all ticks of sequence B
+    metric.evaluate(simpleTickData1b, sequenceB)
+    metric.evaluate(simpleTickData2b, sequenceB)
+
+    val state = metric.getState()
+    // Expect one entry per sequence instance
+    assertEquals(2, state.size)
+
+    assertEquals("seq-A", state[0].first)
+    assertEquals(10L, state[0].second?.tickDifference)
+
+    assertEquals("seq-B", state[1].first)
+    assertEquals(2L, state[1].second?.tickDifference)
+
+    val combined = state.mapNotNull { it.second?.tickDifference }.sum()
+    assertEquals(12L, combined)
+  }
+
+  /** Test two different TickSequences that share the same (duplicate/default) name. */
+  @Test
+  fun `Test two different TickSequences that share the same name`() {
+    val simpleTickData1a = SimpleTickData(1)
+    val simpleTickDat2a = SimpleTickData(3)
+
+    val sequenceA = listOf(simpleTickData1a, simpleTickDat2a).asTickSequence(name = "")
+
+    val simpleTickData1b = SimpleTickData(2)
+    val simpleTickData2b = SimpleTickData(5)
+    val sequenceB = listOf(simpleTickData1b, simpleTickData2b).asTickSequence(name = "")
+
+    val metric =
+        TotalTickDifferenceMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
+
+    metric.evaluate(simpleTickData1a, sequenceA)
+    metric.evaluate(simpleTickDat2a, sequenceA)
+
+    metric.evaluate(simpleTickData1b, sequenceB)
+    metric.evaluate(simpleTickData2b, sequenceB)
+
+    val state = metric.getState()
+    assertEquals(2, state.size)
+
+    assertEquals("", state[0].first)
+    assertEquals(2L, state[0].second?.tickDifference)
+
+    assertEquals("", state[1].first)
+    assertEquals(3L, state[1].second?.tickDifference)
+
+    val combined = state.mapNotNull { it.second?.tickDifference }.sum()
+    assertEquals(5L, combined)
+  }
+
+  /** Test two different TickSequences with only one item. */
+  @Test
+  fun `Test two different TickSequences with only one item`() {
+    val simpleTickDataA = SimpleTickData(0)
+    val sequenceA = listOf(simpleTickDataA).asTickSequence(name = "seq-A")
+
+    val simpleTickDataB = SimpleTickData(0)
+    val sequenceB = listOf(simpleTickDataB).asTickSequence(name = "seq-B")
+
+    val metric =
+        TotalTickDifferenceMetric<
+            SimpleEntity,
+            SimpleTickData,
+            SimpleTickDataUnit,
+            SimpleTickDataDifference,
+        >()
+
+    metric.evaluate(simpleTickDataA, sequenceA)
+
+    metric.evaluate(simpleTickDataB, sequenceB)
+
+    val state = metric.getState()
+    assertEquals(2, state.size)
+
+    assertEquals("seq-A", state[0].first)
+    assertEquals(null, state[0].second?.tickDifference)
+
+    assertEquals("seq-B", state[1].first)
+    assertEquals(null, state[1].second?.tickDifference)
+  }
 }
