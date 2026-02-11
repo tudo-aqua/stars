@@ -48,12 +48,12 @@ import kotlinx.serialization.Serializable
 data class JsonVehicle(
     @SerialName("id") override val id: Int,
     @SerialName("type_id") override val typeId: String,
-    @SerialName("attributes") override val attributes: Map<String, String>,
-    @SerialName("is_alive") override val isAlive: Boolean,
-    @SerialName("is_active") override val isActive: Boolean,
-    @SerialName("is_dormant") override val isDormant: Boolean,
-    @SerialName("semantic_tags") override val semanticTags: List<Int>,
-    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox,
+    @SerialName("attributes") override val attributes: Map<String, String> = mapOf(),
+    @SerialName("is_alive") override val isAlive: Boolean = true,
+    @SerialName("is_active") override val isActive: Boolean = true,
+    @SerialName("is_dormant") override val isDormant: Boolean = true,
+    @SerialName("semantic_tags") override val semanticTags: List<Int> = listOf(),
+    @SerialName("bounding_box") override val boundingBox: JsonBoundingBox? = null,
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
     @SerialName("ego_vehicle") var egoVehicle: Boolean,
@@ -61,7 +61,7 @@ data class JsonVehicle(
     @SerialName("velocity") val velocity: JsonVector3D,
     @SerialName("acceleration") val acceleration: JsonVector3D,
     @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
-    @SerialName("collisions") override val collisions: List<Int>,
+    @SerialName("collisions") override val collisions: List<Int> = listOf(),
 ) : JsonActor() {
 
   /** The effective velocity. */
