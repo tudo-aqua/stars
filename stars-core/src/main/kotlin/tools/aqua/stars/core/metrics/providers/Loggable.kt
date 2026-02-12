@@ -38,7 +38,7 @@ interface Loggable {
    */
   fun logSevere(message: Any? = "") {
     logger.severe(message.toString())
-    println("\u001B[31m$message\u001B[0m")
+    if (isLoggable(Level.SEVERE)) println("\u001B[31m$message\u001B[0m")
   }
 
   /**
@@ -57,7 +57,7 @@ interface Loggable {
    */
   fun logWarning(message: Any? = "") {
     logger.warning(message.toString())
-    println("\u001B[33m$message\u001B[0m")
+    if (isLoggable(Level.WARNING)) println("\u001B[33m$message\u001B[0m")
   }
 
   /**
@@ -67,7 +67,7 @@ interface Loggable {
    */
   fun logInfo(message: Any? = "") {
     logger.info(message.toString())
-    println(message)
+    if (isLoggable(Level.INFO)) println(message)
   }
 
   /**
@@ -77,6 +77,7 @@ interface Loggable {
    */
   fun logFine(message: Any? = "") {
     logger.fine(message.toString())
+    if (isLoggable(Level.FINE)) println(message)
   }
 
   /**
@@ -86,6 +87,7 @@ interface Loggable {
    */
   fun logFiner(message: Any? = "") {
     logger.finer(message.toString())
+    if (isLoggable(Level.FINER)) println(message)
   }
 
   /**
@@ -95,12 +97,17 @@ interface Loggable {
    */
   fun logFinest(message: Any? = "") {
     logger.finest(message.toString())
+    if (isLoggable(Level.FINEST)) println(message)
   }
 
   /** Close all [logger] [Handler]s to prevent ".lck" files to remain. */
   fun closeLogger() {
     logger.handlers.forEach { it.close() }
   }
+
+  private fun isLoggable(level: Level): Boolean =
+      level != Level.OFF &&
+          level.intValue() >= ApplicationConstantsHolder.consoleLogLevel.intValue()
 
   /** Provides static function for the creation of [Logger]s. */
   companion object {

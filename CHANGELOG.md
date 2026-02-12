@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Add `name` property to `TickSequence`.
 - Add `TickAndTickSequenceMetricProvider`.
 - Add `sum` and `sumOrNull` extension functions to `Iterable<TickDifference<*>>`.
+- Add adjustable log levels for loggers and evaluation hooks.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
