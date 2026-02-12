@@ -96,8 +96,9 @@ object ApplicationConstantsHolder {
 
   /**
    * Controls the log level for all registered [Logger]s. Messages with a lower severity than the
-   * specified level will not be logged. Default: [Level.ALL]. Available levels are: [Level.SEVERE],
-   * [Level.WARNING], [Level.INFO], [Level.FINE], [Level.FINER], [Level.FINEST] and [Level.ALL].
+   * specified level will not be logged. Default: [Level.ALL]. Available levels are: [Level.OFF],
+   * [Level.SEVERE], [Level.WARNING], [Level.INFO], [Level.FINE], [Level.FINER], [Level.FINEST] and
+   * [Level.ALL].
    */
   var logLevel: Level = Level.ALL
     set(value) {
@@ -110,8 +111,8 @@ object ApplicationConstantsHolder {
   /**
    * Controls the log level for console output. Messages with a lower severity than the specified
    * level will not be printed to the console. Default: [Level.WARNING]. Available levels are:
-   * [Level.SEVERE], [Level.WARNING], [Level.INFO], [Level.FINE], [Level.FINER], [Level.FINEST] and
-   * [Level.ALL].
+   * [Level.OFF], [Level.SEVERE], [Level.WARNING], [Level.INFO], [Level.FINE], [Level.FINER],
+   * [Level.FINEST] and [Level.ALL].
    */
   var consoleLogLevel: Level = Level.WARNING
 
