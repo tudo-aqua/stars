@@ -24,8 +24,8 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder
  */
 object EvaluationHookStringWrapper {
   /**
-   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK] to
-   * the console.
+   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK] to the
+   * console.
    */
   fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
