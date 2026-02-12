@@ -20,10 +20,12 @@ package tools.aqua.stars.core.utils
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.logging.Level
 import java.util.logging.LogManager
 import java.util.logging.Logger
 import kotlin.time.Duration
 import kotlinx.serialization.json.Json
+import tools.aqua.stars.core.hooks.EvaluationHookResult
 
 /**
  * This singleton holds the current date and time at the start of the application and the log
@@ -91,6 +93,35 @@ object ApplicationConstantsHolder {
 
   /** Holds the [MutableList] of all currently registered [Logger]s. */
   val activeLoggers: MutableList<Logger> = mutableListOf()
+
+  /**
+   * Controls the log level for all registered [Logger]s. Messages with a lower severity than the
+   * specified level will not be logged. Default: [Level.ALL]. Available levels are: [Level.SEVERE],
+   * [Level.WARNING], [Level.INFO], [Level.FINE], [Level.FINER], [Level.FINEST] and [Level.ALL].
+   */
+  var logLevel: Level = Level.ALL
+    set(value) {
+      if (field != value) {
+        field = value
+        activeLoggers.forEach { it.level = value }
+      }
+    }
+
+  /**
+   * Controls the log level for console output. Messages with a lower severity than the specified
+   * level will not be printed to the console. Default: [Level.WARNING]. Available levels are:
+   * [Level.SEVERE], [Level.WARNING], [Level.INFO], [Level.FINE], [Level.FINER], [Level.FINEST] and
+   * [Level.ALL].
+   */
+  var consoleLogLevel: Level = Level.WARNING
+
+  /**
+   * Controls the log level for evaluation hooks. Hooks that return a result with a lower severity
+   * than the specified level will not be logged. Default: [EvaluationHookResult.CANCEL]. Available
+   * levels are: [EvaluationHookResult.OK], [EvaluationHookResult.SKIP],
+   * [EvaluationHookResult.CANCEL] and [EvaluationHookResult.ABORT].
+   */
+  var evaluationHookLogLevel: EvaluationHookResult = EvaluationHookResult.CANCEL
 
   /** Holds the folder name for the logs. */
   val serializedResultsFolder: String =
