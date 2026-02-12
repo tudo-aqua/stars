@@ -174,7 +174,6 @@ fun loadTicks(
             )
 
         ticksPerEgo.forEach {
-          println("TickSequence with ego: ${it.first().ego.id}")
           yield(it.asTickSequence("TickSequence with ego: ${it.first().ego.id}", bufferSize))
         }
       }
