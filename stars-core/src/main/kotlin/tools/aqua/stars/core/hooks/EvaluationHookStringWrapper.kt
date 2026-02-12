@@ -17,17 +17,29 @@
 
 package tools.aqua.stars.core.hooks
 
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder
+
 /**
  * Custom String wrapper indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP].
  */
 object EvaluationHookStringWrapper {
+  /**
+   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK] to the
+   * console.
+   */
+  fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
+    require(hooks.isNotEmpty()) { "No hooks provided." }
+    if (isLoggable(EvaluationHookResult.OK)) println(createMsg(EvaluationHookResult.OK, obj, hooks))
+  }
+
   /**
    * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP] to
    * the console.
    */
   fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
-    println(createMsg(EvaluationHookResult.SKIP, obj, hooks))
+    if (isLoggable(EvaluationHookResult.SKIP))
+        println("Skipping evaluation since ${createMsg(EvaluationHookResult.SKIP, obj, hooks)}")
   }
 
   /**
@@ -36,7 +48,8 @@ object EvaluationHookStringWrapper {
    */
   fun cancel(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
-    println(createMsg(EvaluationHookResult.CANCEL, obj, hooks))
+    if (isLoggable(EvaluationHookResult.CANCEL))
+        println("Cancelling evaluation since ${createMsg(EvaluationHookResult.CANCEL, obj, hooks)}")
   }
 
   /**
@@ -44,7 +57,9 @@ object EvaluationHookStringWrapper {
    * [EvaluationHookResult.ABORT].
    */
   fun abort(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    throw EvaluationHookAbort(createMsg(EvaluationHookResult.ABORT, obj, hooks))
+    throw EvaluationHookAbort(
+        "Aborting evaluation since ${createMsg(EvaluationHookResult.ABORT, obj, hooks)}"
+    )
   }
 
   private fun createMsg(
@@ -52,11 +67,13 @@ object EvaluationHookStringWrapper {
       obj: Any,
       hooks: Collection<EvaluationHook<*>>,
   ) =
-      "$hookResult evaluation since ${
-      hooks.joinToString(
+      "${hooks.joinToString(
         separator = ", ",
         prefix = "[",
         postfix = "]",
       ) { "${it.javaClass.name} ${it.identifier}" }
     } returned $hookResult for ${obj.javaClass.name} \n ${obj}."
+
+  private fun isLoggable(result: EvaluationHookResult): Boolean =
+      result.ordinal >= ApplicationConstantsHolder.evaluationHookLogLevel.ordinal
 }
