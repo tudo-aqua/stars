@@ -23,6 +23,10 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder
  * Custom String wrapper indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP].
  */
 object EvaluationHookStringWrapper {
+  /**
+   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK] to
+   * the console.
+   */
   fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     require(hooks.isNotEmpty()) { "No hooks provided." }
     if (isLoggable(EvaluationHookResult.OK)) println(createMsg(EvaluationHookResult.OK, obj, hooks))
