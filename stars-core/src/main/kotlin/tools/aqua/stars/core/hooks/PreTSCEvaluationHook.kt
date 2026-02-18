@@ -30,18 +30,23 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param identifier The identifier to be used in the error message.
- * @param evaluationFunction The function to be executed before the evaluation of the [TSC].
  */
-open class PreTSCEvaluationHook<
+abstract class PreTSCEvaluationHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(identifier: String, evaluationFunction: (TSC<E, T, U, D>) -> EvaluationHookResult) :
+>(identifier: String) :
     EvaluationHook<TSC<E, T, U, D>>(
         identifier = identifier,
-        evaluationFunction = evaluationFunction,
     ) {
+
+  /**
+   * Evaluates the [TSC] and returns an [EvaluationHookResult] that determines how the evaluation
+   * should proceed.
+   */
+  abstract fun evaluate(tsc: TSC<E, T, U, D>): EvaluationHookResult
+
   /** Companion object containing utility methods for working with [PreTSCEvaluationHook]. */
   companion object {
     /**
@@ -65,8 +70,7 @@ open class PreTSCEvaluationHook<
         Map<TSC<E, T, U, D>, Map<PreTSCEvaluationHook<E, T, U, D>, EvaluationHookResult>>,
     > {
       // Evaluate PreEvaluationHooks
-      val hookResults =
-          tscList.associateWith { tsc -> this.associateWith { it.evaluationFunction.invoke(tsc) } }
+      val hookResults = tscList.associateWith { tsc -> this.associateWith { it.evaluate(tsc) } }
 
       // Filter out all TSCs that have not returned OK. Do not optimize by using
       // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.

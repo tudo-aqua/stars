@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.core.hooks.defaulthooks
 
+import kotlin.compareTo
 import tools.aqua.stars.core.hooks.EvaluationHookResult
 import tools.aqua.stars.core.hooks.PreTickEvaluationHook
 import tools.aqua.stars.core.types.*
@@ -29,27 +30,24 @@ import tools.aqua.stars.core.types.*
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minEntities The minimum number of [EntityType]s each [TickDataType] must contain. Must not
- *   be negative.
- * @param failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s is
- *   not reached.
+ * @property minEntities The minimum number of [EntityType]s each [TickDataType] must contain. Must
+ *   not be negative.
+ * @property failPolicy The [EvaluationHookResult] to return if the minimum number of [EntityType]s
+ *   is not reached.
  */
-open class MinEntitiesPerTickHook<
+class MinEntitiesPerTickHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    minEntities: Int,
-    failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
-) :
-    PreTickEvaluationHook<E, T, U, D>(
-        identifier = "MinEntitiesPerTickHook",
-        evaluationFunction = { tick ->
-          if (tick.entities.size >= minEntities) EvaluationHookResult.OK else failPolicy
-        },
-    ) {
+    val minEntities: Int,
+    val failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
+) : PreTickEvaluationHook<E, T, U, D>(identifier = "MinEntitiesPerTickHook") {
   init {
     require(minEntities >= 0) { "minEntities must be >= 0" }
   }
+
+  override fun evaluate(tick: T): EvaluationHookResult =
+      if (tick.entities.size >= minEntities) EvaluationHookResult.OK else failPolicy
 }

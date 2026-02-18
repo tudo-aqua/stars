@@ -23,14 +23,12 @@ import tools.aqua.stars.core.evaluation.TSCEvaluation
  * Base class for evaluation hooks that can be registered to a [TSCEvaluation] to be executed before
  * the evaluation.
  *
- * @param T The type of the parameter to the [evaluationFunction].
+ * @param T The type of the evaluation hook, used for type safety when registering hooks to a
+ *   [TSCEvaluation].
  * @property identifier The identifier to be used in the error message.
- * @property evaluationFunction The function to be executed before the evaluation.
  */
-sealed class EvaluationHook<T>(
-    val identifier: String,
-    val evaluationFunction: (T) -> EvaluationHookResult,
-) {
+sealed class EvaluationHook<T>(val identifier: String) {
+
   /** Companion object containing utility methods for working with [EvaluationHook]. */
   companion object {
     /**
