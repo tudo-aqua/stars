@@ -29,16 +29,15 @@ import tools.aqua.stars.core.types.*
  * @param U [TickUnit].
  * @param D [TickDifference].
  * @param identifier The identifier to be used in the error message.
- * @param evaluationFunction The function to be executed before the evaluation of the
- *   [TickDataType].
  */
-open class PreTickEvaluationHook<
+abstract class PreTickEvaluationHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(identifier: String, evaluationFunction: (T) -> EvaluationHookResult) :
-    EvaluationHook<T>(identifier = identifier, evaluationFunction = evaluationFunction) {
+>(identifier: String) : EvaluationHook<T>(identifier = identifier) {
+
+  abstract fun evaluate(tick: T): EvaluationHookResult
 
   /** Companion object containing utility methods for working with [PreTickEvaluationHook]. */
   companion object {
@@ -60,7 +59,7 @@ open class PreTickEvaluationHook<
     > MutableList<PreTickEvaluationHook<E, T, U, D>>.evaluate(
         tick: T
     ): Pair<Boolean?, Map<PreTickEvaluationHook<E, T, U, D>, EvaluationHookResult>> {
-      val hookResults = this.associateWith { it.evaluationFunction.invoke(tick) }
+      val hookResults = this.associateWith { it.evaluate(tick) }
 
       val (result, hooks) = hookResults.evaluate()
       return when (result) {
