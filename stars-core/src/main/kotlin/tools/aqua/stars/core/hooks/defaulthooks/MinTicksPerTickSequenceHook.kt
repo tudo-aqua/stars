@@ -29,26 +29,26 @@ import tools.aqua.stars.core.types.*
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minTicks The minimum number of [TickDataType]s a tick must contain.
- * @param failPolicy The [EvaluationHookResult] to return if the [TickDataType] contains less than
- *   [minTicks] [TickDataType]s.
+ * @property minTicks The minimum number of [TickDataType]s a tick must contain.
+ * @property failPolicy The [EvaluationHookResult] to return if the [TickDataType] contains less
+ *   than [minTicks] [TickDataType]s.
  */
-open class MinTicksPerTickSequenceHook<
+class MinTicksPerTickSequenceHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    minTicks: Int,
-    failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
+    val minTicks: Int,
+    val failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
 ) :
     PreTickEvaluationHook<E, T, U, D>(
         identifier = "MinTicksPerTickSequenceHook",
-        evaluationFunction = { tick ->
-          if (tick.sequenceLength >= minTicks) EvaluationHookResult.OK else failPolicy
-        },
     ) {
   init {
     require(minTicks >= 0) { "minTicks must be >= 0" }
   }
+
+  override fun evaluate(tick: T): EvaluationHookResult =
+      if (tick.sequenceLength >= minTicks) EvaluationHookResult.OK else failPolicy
 }
