@@ -41,6 +41,10 @@ abstract class PreTSCEvaluationHook<
         identifier = identifier,
     ) {
 
+  /**
+   * Evaluates the [TSC] and returns an [EvaluationHookResult] that determines how the evaluation
+   * should proceed.
+   */
   abstract fun evaluate(tsc: TSC<E, T, U, D>): EvaluationHookResult
 
   /** Companion object containing utility methods for working with [PreTSCEvaluationHook]. */

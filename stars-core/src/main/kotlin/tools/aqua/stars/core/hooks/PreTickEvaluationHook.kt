@@ -37,6 +37,10 @@ abstract class PreTickEvaluationHook<
     D : TickDifference<D>,
 >(identifier: String) : EvaluationHook<T>(identifier = identifier) {
 
+  /**
+   * Evaluates the [TickDataType] and returns an [EvaluationHookResult] that determines how the
+   * evaluation should proceed.
+   */
   abstract fun evaluate(tick: T): EvaluationHookResult
 
   /** Companion object containing utility methods for working with [PreTickEvaluationHook]. */
