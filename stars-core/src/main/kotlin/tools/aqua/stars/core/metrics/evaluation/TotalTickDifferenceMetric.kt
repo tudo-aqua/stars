@@ -17,9 +17,7 @@
 
 package tools.aqua.stars.core.metrics.evaluation
 
-import java.util.logging.Logger
 import tools.aqua.stars.core.evaluation.TickSequence
-import tools.aqua.stars.core.metrics.providers.Loggable
 import tools.aqua.stars.core.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metrics.providers.Stateful
 import tools.aqua.stars.core.metrics.providers.TickAndTickSequenceMetricProvider
@@ -27,8 +25,6 @@ import tools.aqua.stars.core.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
 import tools.aqua.stars.core.types.TickDifference.Companion.sumOrNull
-import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
-import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 
 /**
  * This class implements the [TickMetricProvider] and tracks the total [TickDifference] of all
@@ -41,8 +37,6 @@ import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @property loggerIdentifier identifier (name) for the logger.
- * @property logger [Logger] instance.
  */
 @Suppress("unused")
 class TotalTickDifferenceMetric<
@@ -50,10 +44,7 @@ class TotalTickDifferenceMetric<
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
->(
-    override val loggerIdentifier: String = "total-tick-difference",
-    override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TickAndTickSequenceMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
+> : TickAndTickSequenceMetricProvider<E, T, U, D>, Stateful, SerializableMetric {
   /** Holds the current [TickDifference] for all already analyzed [TickDataType]s. */
   private var totalTickDifference: MutableList<Pair<String, D?>> = mutableListOf()
 
@@ -109,29 +100,14 @@ class TotalTickDifferenceMetric<
    */
   override fun getState(): List<Pair<String, D?>> = totalTickDifference
 
-  /** Prints the current [totalTickDifference]. */
-  override fun printState() {
-    logInfo(
-        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Total Tick Difference per Tick Sequence \n$CONSOLE_SEPARATOR"
-    )
-    totalTickDifference.forEach { (tickSequenceName, tickDifference) ->
-      logFine(
-          "The analyzed ticks from $tickSequenceName yielded a total tick difference of $tickDifference."
-      )
-    }
-    logFine()
-    logInfo(
-        "The analyzed ticks yielded a total tick difference of ${totalTickDifference.mapNotNull { it.second }.sumOrNull()}."
-    )
-    logInfo()
-  }
+  override fun printState() {}
 
   override fun getSerializableResults(): List<SerializableTickDifferenceResult> {
     val result = mutableListOf<SerializableTickDifferenceResult>()
     result.addAll(
         totalTickDifference.map { (tickSequenceIdentifier, tickSequenceTickDifference) ->
           SerializableTickDifferenceResult(
-              identifier = loggerIdentifier,
+              identifier = "total-tick-difference-metric",
               source = tickSequenceIdentifier,
               value = tickSequenceTickDifference.toString(),
           )
@@ -139,7 +115,7 @@ class TotalTickDifferenceMetric<
     )
     result.add(
         SerializableTickDifferenceResult(
-            identifier = loggerIdentifier,
+            identifier = "total-tick-difference-metric",
             source = "Total tick difference over all sequences",
             value = totalTickDifference.mapNotNull { it.second }.sumOrNull().toString(),
         )
