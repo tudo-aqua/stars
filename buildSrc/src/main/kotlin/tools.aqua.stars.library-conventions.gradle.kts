@@ -34,6 +34,7 @@ plugins {
   id("com.vanniktech.maven.publish")
 
   `java-library`
+  `java-test-fixtures`
   signing
 
   kotlin("jvm")
@@ -72,18 +73,7 @@ val kdoc: Configuration by
       isCanBeResolved = false
     }
 
-val tests by configurations.creating
-
-val testJar by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("tests")
-      from(sourceSets["test"].output)
-    }
-
-artifacts {
-  add(kdoc.name, kdocJar)
-  add(tests.name, testJar.get())
-}
+artifacts { add(kdoc.name, kdocJar) }
 
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
