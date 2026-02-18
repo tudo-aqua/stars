@@ -23,6 +23,8 @@ import tools.aqua.stars.core.evaluation.TSCEvaluation
  * Base class for evaluation hooks that can be registered to a [TSCEvaluation] to be executed before
  * the evaluation.
  *
+ * @param T The type of the evaluation hook, used for type safety when registering hooks to a
+ *   [TSCEvaluation].
  * @property identifier The identifier to be used in the error message.
  */
 sealed class EvaluationHook<T>(val identifier: String) {
