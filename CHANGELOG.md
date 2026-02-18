@@ -20,6 +20,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2] - TBA
+
+### Added
+- Add `IterationMode` parameter to `TickSequence`.
+- Add `name` property to `TickSequence`.
+- Add `TickAndTickSequenceMetricProvider`.
+- Add `sum` and `sumOrNull` extension functions to `Iterable<TickDifference<*>>`.
+
+### Fixed
+- Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
+- Fix yield calculation for specific CARLA maps.
+
+### Changed
+- Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
+
 ## [2.1] - 23.01.2026
 
 ### Added

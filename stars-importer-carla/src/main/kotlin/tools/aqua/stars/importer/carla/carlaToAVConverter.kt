@@ -482,20 +482,29 @@ private fun Lane.update() {
                 // both lanes are straight -> use angle of points at contact area
                 // for "left before right" calculation
                 this.isStraight && otherLane.isStraight -> {
-                  val thisYaw =
-                      this.laneMidpoints
-                          .first {
-                            checkNotNull(this.contactPointPos(otherLane)) > it.distanceToStart
+                  val thisContactPoint = checkNotNull(this.contactPointPos(otherLane))
+                  val otherContactPoint = checkNotNull(otherLane.contactPointPos(this))
+
+                  val thisMid =
+                      this.laneMidpoints.firstOrNull { thisContactPoint > it.distanceToStart }
+                          ?: this.laneMidpoints.firstOrNull {
+                            thisContactPoint >= it.distanceToStart
                           }
-                          .rotation
-                          .yaw
-                  val otherYaw =
-                      otherLane.laneMidpoints
-                          .first {
-                            checkNotNull(otherLane.contactPointPos(this)) > it.distanceToStart
+                          ?: error(
+                              "No midpoint found for this lane: cp=$thisContactPoint, midpoints=${this.laneMidpoints.size}"
+                          )
+
+                  val otherMid =
+                      otherLane.laneMidpoints.firstOrNull { otherContactPoint > it.distanceToStart }
+                          ?: otherLane.laneMidpoints.firstOrNull {
+                            otherContactPoint >= it.distanceToStart
                           }
-                          .rotation
-                          .yaw
+                          ?: error(
+                              "No midpoint found for other lane: cp=$otherContactPoint, midpoints=${otherLane.laneMidpoints.size}"
+                          )
+
+                  val thisYaw = thisMid.rotation.yaw
+                  val otherYaw = otherMid.rotation.yaw
 
                   thisYaw > otherYaw
                   /*

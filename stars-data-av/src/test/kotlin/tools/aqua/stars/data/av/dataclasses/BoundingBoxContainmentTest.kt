@@ -18,8 +18,8 @@
 package tools.aqua.stars.data.av.dataclasses
 
 import kotlin.test.Test
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import org.junit.jupiter.api.Assertions.assertFalse
 
 /** Tests for [BoundingBox2D.containsPoint]. */
 class BoundingBoxContainmentTest {

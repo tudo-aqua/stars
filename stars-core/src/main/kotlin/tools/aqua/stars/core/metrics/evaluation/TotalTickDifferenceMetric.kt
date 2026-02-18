@@ -17,14 +17,18 @@
 
 package tools.aqua.stars.core.metrics.evaluation
 
-import java.util.Optional
 import java.util.logging.Logger
+import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.metrics.providers.Loggable
 import tools.aqua.stars.core.metrics.providers.SerializableMetric
 import tools.aqua.stars.core.metrics.providers.Stateful
+import tools.aqua.stars.core.metrics.providers.TickAndTickSequenceMetricProvider
 import tools.aqua.stars.core.metrics.providers.TickMetricProvider
 import tools.aqua.stars.core.serialization.SerializableTickDifferenceResult
 import tools.aqua.stars.core.types.*
+import tools.aqua.stars.core.types.TickDifference.Companion.sumOrNull
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_INDENT
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder.CONSOLE_SEPARATOR
 
 /**
  * This class implements the [TickMetricProvider] and tracks the total [TickDifference] of all
@@ -49,66 +53,97 @@ class TotalTickDifferenceMetric<
 >(
     override val loggerIdentifier: String = "total-tick-difference",
     override val logger: Logger = Loggable.getLogger(loggerIdentifier),
-) : TickMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
+) : TickAndTickSequenceMetricProvider<E, T, U, D>, Stateful, SerializableMetric, Loggable {
   /** Holds the current [TickDifference] for all already analyzed [TickDataType]s. */
-  private var totalTickDifference: D? = null
+  private var totalTickDifference: MutableList<Pair<String, D?>> = mutableListOf()
 
-  /** Holds the last processed [TickUnit]. */
-  private var lastTickUnit: U? = null
+  /** Holds the last processed [TickDataType]. */
+  private var lastTick: T? = null
+  private var lastTickSequence: TickSequence<T>? = null
 
   /**
    * Add the given [tick] to the total [TickDifference].
    *
    * @param tick The [TickDataType] for which the total [TickDifference] should be tracked.
+   * @param tickSequence The [TickSequence] of ticks that the tick belongs to.
    * @return The current total [TickDifference] of all analyzed ticks.
    * @throws IllegalStateException If the [TickDifference] between the previous and the current
    *   [TickDataType] is not positive.
    */
-  override fun evaluate(tick: T): Optional<D> {
-    lastTickUnit?.let { previousTickUnit ->
+  override fun evaluate(tick: T, tickSequence: TickSequence<T>): List<Pair<String, D?>> {
+    if (tick == lastTick) return totalTickDifference
+
+    if (lastTickSequence != tickSequence) {
+      lastTick = null
+      lastTickSequence = tickSequence
+      totalTickDifference.add(tickSequence.name to null)
+    }
+
+    lastTick?.let { previousTick ->
 
       // Calculate the TickDifference between the previous and the current tick.
-      val currentTickDifference = tick.currentTickUnit - previousTickUnit
+      val currentTickDifference = tick.currentTickUnit - previousTick.currentTickUnit
 
-      check(tick.currentTickUnit > previousTickUnit) {
+      check(tick.currentTickUnit > previousTick.currentTickUnit) {
         "The difference between the previous and the current tick should be positive! " +
             "Actual difference: $currentTickDifference."
       }
 
       // Update total
       var newTotal = currentTickDifference
-      totalTickDifference?.let { newTotal = it + currentTickDifference }
-      totalTickDifference = newTotal
+      totalTickDifference.removeLast().second?.let { newTotal = it + currentTickDifference }
+      totalTickDifference.add(tickSequence.name to newTotal)
     }
 
-    lastTickUnit = tick.currentTickUnit
+    lastTick = tick
 
-    return Optional.ofNullable(totalTickDifference)
+    return totalTickDifference
   }
 
   /**
-   * Returns the current [totalTickDifference] as Optional. Returns [Optional.empty] if no
-   * [TickDataType]s have been analyzed yet.
+   * Returns the current [totalTickDifference]. Returns an empty [List] if no [TickDataType]s have
+   * been analyzed yet. If for any [TickSequence] only one [TickDataType] has been analyzed, the
+   * [TickDifference] for this [TickSequence] is null.
    *
    * @return The current [totalTickDifference] for all already analyzed [TickDataType]s.
    */
-  override fun getState(): Optional<D> = Optional.ofNullable(totalTickDifference)
+  override fun getState(): List<Pair<String, D?>> = totalTickDifference
 
   /** Prints the current [totalTickDifference]. */
   override fun printState() {
-    logInfo("The analyzed ticks yielded a total tick difference of $totalTickDifference.")
+    println(
+        "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Total Tick Difference per Tick Sequence \n$CONSOLE_SEPARATOR"
+    )
+    totalTickDifference.forEach { (tickSequenceName, tickDifference) ->
+      logFine(
+          "The analyzed ticks from $tickSequenceName yielded a total tick difference of $tickDifference."
+      )
+    }
+    logFine()
+    logInfo(
+        "The analyzed ticks yielded a total tick difference of ${totalTickDifference.mapNotNull { it.second }.sumOrNull()}."
+    )
+    logInfo()
   }
 
-  override fun getSerializableResults(): List<SerializableTickDifferenceResult> =
-      totalTickDifference
-          ?.let {
-            listOf(
-                SerializableTickDifferenceResult(
-                    identifier = loggerIdentifier,
-                    source = loggerIdentifier,
-                    value = it.serialize(),
-                )
-            )
-          }
-          .orEmpty()
+  override fun getSerializableResults(): List<SerializableTickDifferenceResult> {
+    val result = mutableListOf<SerializableTickDifferenceResult>()
+    result.addAll(
+        totalTickDifference.map { (tickSequenceIdentifier, tickSequenceTickDifference) ->
+          SerializableTickDifferenceResult(
+              identifier = loggerIdentifier,
+              source = tickSequenceIdentifier,
+              value = tickSequenceTickDifference.toString(),
+          )
+        }
+    )
+    result.add(
+        SerializableTickDifferenceResult(
+            identifier = loggerIdentifier,
+            source = "Total tick difference over all sequences",
+            value = totalTickDifference.mapNotNull { it.second }.sumOrNull().toString(),
+        )
+    )
+    return result
+  }
 }
