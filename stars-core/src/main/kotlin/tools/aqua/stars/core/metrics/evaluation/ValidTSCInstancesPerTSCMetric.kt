@@ -204,8 +204,9 @@ class ValidTSCInstancesPerTSCMetric<
       val legendEntry = "${tsc.identifier} ($lastYValue/$possibleTscInstancesForTSC)"
 
       // Calculate the percentage of the occurred instances against the count of possible instances
-      val yValuesPercentage: List<Float> =
-          instances.map { (it.toFloat() / possibleTscInstancesForTSC) * 100 }
+      val yValuesPercentage: List<Float> = instances.map {
+        (it.toFloat() / possibleTscInstancesForTSC) * 100
+      }
 
       // Save values of current tsc to combined map
       combinedTSCToOccurredInstancesMap[legendEntry] = List(instances.size) { it } to instances
@@ -227,13 +228,12 @@ class ValidTSCInstancesPerTSCMetric<
 
   override fun getSerializableResults(): List<SerializableTSCOccurrenceResult> =
       validInstancesMap.map { (tsc, validInstances) ->
-        val resultList =
-            validInstances.map { (tscInstanceNode, tscInstances) ->
-              SerializableTSCOccurrence(
-                  tscInstance = SerializableTSCNode(tscInstanceNode),
-                  identifiers = tscInstances.map { it.sourceIdentifier },
-              )
-            }
+        val resultList = validInstances.map { (tscInstanceNode, tscInstances) ->
+          SerializableTSCOccurrence(
+              tscInstance = SerializableTSCNode(tscInstanceNode),
+              identifiers = tscInstances.map { it.sourceIdentifier },
+          )
+        }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
             source = this@ValidTSCInstancesPerTSCMetric.loggerIdentifier,
@@ -307,8 +307,9 @@ class ValidTSCInstancesPerTSCMetric<
       )
 
       // Calculate the percentage of the occurred instances against the count of possible instances
-      val yValuesPercentage: List<Float> =
-          instances.map { (it.toFloat() / possibleTscInstancesForTSC) * 100 }
+      val yValuesPercentage: List<Float> = instances.map {
+        (it.toFloat() / possibleTscInstancesForTSC) * 100
+      }
 
       val percentagePlot =
           getPlot(
@@ -478,8 +479,9 @@ class ValidTSCInstancesPerTSCMetric<
       )
 
       // Calculate the percentage of the occurred instances against the count of possible instances
-      val yValuesPercentage: List<Float> =
-          instances.map { (it.toFloat() / possibleTscInstancesForTSC) * 100 }
+      val yValuesPercentage: List<Float> = instances.map {
+        (it.toFloat() / possibleTscInstancesForTSC) * 100
+      }
 
       // Save the timed percentage count of unique TSC instances data as CSV file
       saveAsCSVFile(
