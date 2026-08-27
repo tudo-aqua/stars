@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Validate Gradle artifacts
-        uses: gradle/actions/wrapper-validation@v5
+        uses: gradle/actions/wrapper-validation@v6
 
   compile:
     name: Compile Kotlin code
@@ -43,7 +43,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Compile Kotlin
         run: ./gradlew assemble
@@ -67,7 +67,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Discover Projects and save into matrix
         run: |
@@ -98,7 +98,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Run Detekt
         run: ./gradlew :${{ matrix.project }}:detekt
@@ -153,7 +153,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Run tests
         run: ./gradlew :${{ matrix.project }}:test
@@ -186,7 +186,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Run tests
         run: ./gradlew :${{ matrix.project }}:test
@@ -217,7 +217,7 @@ jobs:
           java-version: ${{ env.JDK_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Run Spotless checks
         id: spotlessCheck
