@@ -65,8 +65,9 @@ open class PreTSCEvaluationHook<
         Map<TSC<E, T, U, D>, Map<PreTSCEvaluationHook<E, T, U, D>, EvaluationHookResult>>,
     > {
       // Evaluate PreEvaluationHooks
-      val hookResults =
-          tscList.associateWith { tsc -> this.associateWith { it.evaluationFunction.invoke(tsc) } }
+      val hookResults = tscList.associateWith { tsc ->
+        this.associateWith { it.evaluationFunction.invoke(tsc) }
+      }
 
       // Filter out all TSCs that have not returned OK. Do not optimize by using
       // preTSCEvaluationHookResults, since runEvaluation may be called multiple times.
