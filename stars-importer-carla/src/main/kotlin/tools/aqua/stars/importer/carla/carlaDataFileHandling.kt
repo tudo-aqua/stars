@@ -33,6 +33,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.core.evaluation.TickSequence
+import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
 import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.importer.carla.dataclasses.*
@@ -148,39 +149,33 @@ fun loadTicks(
   var currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
 
   return sequence {
-    if (!currentDynamicDataPathIterator.hasNext() && simulationRunsWrapperIterator.hasNext()) {
-      currentSimulationRunsWrapper = simulationRunsWrapperIterator.next()
-      currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
-    }
+    while (currentDynamicDataPathIterator.hasNext() || simulationRunsWrapperIterator.hasNext()) {
+      if (!currentDynamicDataPathIterator.hasNext() && simulationRunsWrapperIterator.hasNext()) {
+        currentSimulationRunsWrapper = simulationRunsWrapperIterator.next()
+        currentDynamicDataPathIterator = currentSimulationRunsWrapper.dynamicDataFiles.iterator()
+      }
 
-    if (currentDynamicDataPathIterator.hasNext()) {
-      val currentDynamicDataPath = currentDynamicDataPathIterator.next()
-      println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
+      if (currentDynamicDataPathIterator.hasNext()) {
+        val currentDynamicDataPath = currentDynamicDataPathIterator.next()
+        println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
 
-      // Holds the current simulationRun object
-      val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
+        // Holds the current simulationRun object
+        val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)
 
-      // Calculate TickData objects from JSON
-      val ticksPerEgo =
-          convertTickData(
-              world = currentSimulationRunsWrapper.world,
-              jsonSimulationRun = simulationRun,
-              tickDataSourcePath = currentDynamicDataPath,
-              egoIds = egoIds,
-              useEveryVehicleAsEgo = useEveryVehicleAsEgo,
-              useFirstVehicleAsEgo = useFirstVehicleAsEgo,
-          )
+        // Calculate TickData objects from JSON
+        val ticksPerEgo =
+            convertTickData(
+                world = currentSimulationRunsWrapper.world,
+                jsonSimulationRun = simulationRun,
+                tickDataSourcePath = currentDynamicDataPath,
+                egoIds = egoIds,
+                useEveryVehicleAsEgo = useEveryVehicleAsEgo,
+                useFirstVehicleAsEgo = useFirstVehicleAsEgo,
+            )
 
-      for (ticks in ticksPerEgo) {
-        val it = ticks.iterator()
-        yield(
-            TickSequence(
-                "TickSequence with ego: ${ticks.first().ego.id}",
-                bufferSize,
-            ) {
-              if (it.hasNext()) it.next() else null
-            }
-        )
+        ticksPerEgo.forEach {
+          yield(it.asTickSequence("TickSequence with ego: ${it.first().ego.id}", bufferSize))
+        }
       }
     }
   }
