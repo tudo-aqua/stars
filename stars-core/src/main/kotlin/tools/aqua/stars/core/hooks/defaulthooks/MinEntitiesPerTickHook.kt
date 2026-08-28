@@ -17,7 +17,6 @@
 
 package tools.aqua.stars.core.hooks.defaulthooks
 
-import kotlin.compareTo
 import tools.aqua.stars.core.hooks.EvaluationHookResult
 import tools.aqua.stars.core.hooks.PreTickEvaluationHook
 import tools.aqua.stars.core.types.*

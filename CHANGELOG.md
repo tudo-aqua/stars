@@ -35,7 +35,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 - Remove `evaluate()` from `EvaluationHook`.
-- Change `PreTickEvaluationHook` and `PreTSCEvlauationHook` to be `abstract` classes. 
+- Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 
 - Move `evaluationFunction()` from constructor to `evaluate()` function in `PreTickEvaluationHook` and `PreTSCEvaluationHook`.
 
 ## [2.1] - 23.01.2026
