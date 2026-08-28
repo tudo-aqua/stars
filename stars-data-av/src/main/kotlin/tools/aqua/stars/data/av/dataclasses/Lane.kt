@@ -107,20 +107,19 @@ data class Lane(
    */
   fun contactPointPos(otherLane: Lane): Double? {
     // collect all positions where this lane crosses other lane; should yield 0 or 1 results
-    val positions =
-        contactAreas.mapNotNull {
-          // I am lane 1, check if (and where) lane 2 contacts
-          if (this == it.lane1 && otherLane == it.lane2) {
-            it.lane1StartPos
-          }
-          // I am lane 2, check if (and where) lane 1 contacts
-          else if (this == it.lane2 && otherLane == it.lane1) {
-            it.lane2StartPos
-          } else {
-            // the two lanes have no contact; do not include in mapping
-            null
-          }
-        }
+    val positions = contactAreas.mapNotNull {
+      // I am lane 1, check if (and where) lane 2 contacts
+      if (this == it.lane1 && otherLane == it.lane2) {
+        it.lane1StartPos
+      }
+      // I am lane 2, check if (and where) lane 1 contacts
+      else if (this == it.lane2 && otherLane == it.lane1) {
+        it.lane2StartPos
+      } else {
+        // the two lanes have no contact; do not include in mapping
+        null
+      }
+    }
     return if (positions.isNotEmpty()) positions[0] else null
   }
 

@@ -60,28 +60,27 @@ detekt {
   config.setFrom(files(rootProject.file("contrib/detekt-rules.yml")))
 }
 
-val kdocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("kdoc")
-      from(tasks.dokkaGenerateHtml)
-    }
+val kdocJar = tasks.register<Jar>("kdocJar") {
+  description = "Assembles a jar archive containing the generated KDoc API documentation."
+  archiveClassifier.set("kdoc")
+  from(tasks.dokkaGenerateHtml)
+}
 
-val kdoc: Configuration by
-    configurations.creating {
-      isCanBeConsumed = true
-      isCanBeResolved = false
-    }
+val kdoc = configurations.create("kdoc") {
+  isCanBeConsumed = true
+  isCanBeResolved = false
+}
 
-val tests by configurations.creating
+val tests = configurations.create("tests")
 
-val testJar by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("tests")
-      from(sourceSets["test"].output)
-    }
+val testJar = tasks.register<Jar>("testJar") {
+  description = "Assembles a jar archive containing the compiled test classes."
+  archiveClassifier.set("tests")
+  from(sourceSets["test"].output)
+}
 
 artifacts {
-  add(kdoc.name, kdocJar)
+  add(kdoc.name, kdocJar.get())
   add(tests.name, testJar.get())
 }
 
