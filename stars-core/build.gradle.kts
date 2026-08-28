@@ -15,15 +15,18 @@
  * limitations under the License.
  */
 
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+
 plugins {
-  id("tools.aqua.stars.library-conventions")
-  kotlin("plugin.serialization") version "2.3.0"
   `java-test-fixtures`
+  kotlin("plugin.serialization")
 }
 
-mavenMetadata {
-  name.set("STARS Core Library")
-  description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Core Library")
+extensions.configure<MavenPublishBaseExtension> {
+  pom {
+    name.set("STARS Core Library")
+    description.set("STARS - Scenario-Based Testing of Autonomous Robotic Systems - Core Library")
+  }
 }
 
 dependencies {
