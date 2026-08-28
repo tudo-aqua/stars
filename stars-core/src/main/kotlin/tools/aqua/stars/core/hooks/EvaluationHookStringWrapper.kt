@@ -28,7 +28,7 @@ object EvaluationHookStringWrapper {
    * console.
    */
   fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    require(hooks.isNotEmpty()) { "No hooks provided." }
+    requireNotEmpty(hooks)
     if (isLoggable(EvaluationHookResult.OK)) println(createMsg(EvaluationHookResult.OK, obj, hooks))
   }
 
@@ -37,7 +37,7 @@ object EvaluationHookStringWrapper {
    * the console.
    */
   fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    require(hooks.isNotEmpty()) { "No hooks provided." }
+    requireNotEmpty(hooks)
     if (isLoggable(EvaluationHookResult.SKIP))
         println("Skipping evaluation since ${createMsg(EvaluationHookResult.SKIP, obj, hooks)}")
   }
@@ -47,7 +47,7 @@ object EvaluationHookStringWrapper {
    * the console.
    */
   fun cancel(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    require(hooks.isNotEmpty()) { "No hooks provided." }
+    requireNotEmpty(hooks)
     if (isLoggable(EvaluationHookResult.CANCEL))
         println("Cancelling evaluation since ${createMsg(EvaluationHookResult.CANCEL, obj, hooks)}")
   }
@@ -76,4 +76,8 @@ object EvaluationHookStringWrapper {
 
   private fun isLoggable(result: EvaluationHookResult): Boolean =
       result.ordinal >= ApplicationConstantsHolder.evaluationHookLogLevel.ordinal
+
+  private fun requireNotEmpty(hooks: Collection<EvaluationHook<*>>) {
+    require(hooks.isNotEmpty()) { "No hooks provided." }
+  }
 }
