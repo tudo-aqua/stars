@@ -276,6 +276,29 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
             iterationMode = iterationMode,
             getNextValue = iterator()::nextOrNull,
         )
+
+    /**
+     * Creates a [TickSequence] from an [Iterable] of [TickDataType]s that loads all ticks into a
+     * single, unlimited, doubly linked list and yields only its first tick. All other ticks remain
+     * reachable from that first tick via [TickDataType.nextTick]. This is equivalent to calling
+     * [asTickSequence] with an unlimited [bufferSize][TickSequence.bufferSize] of `-1`,
+     * [IterationOrder.FORWARD] iteration order and [IterationMode.FULL_FRAME] iteration mode.
+     *
+     * @param T [TickDataType].
+     * @param name The name/origin of the sequence.
+     * @return A [TickSequence] that yields the first tick of the given [Iterable], fully linked to
+     *   all subsequent ticks.
+     */
+    fun <T : TickDataType<*, T, *, *>> Iterable<T>.asSegment(
+        name: String = "",
+    ): TickSequence<T> =
+        TickSequence(
+            name = name,
+            bufferSize = -1,
+            iterationOrder = IterationOrder.FORWARD,
+            iterationMode = IterationMode.FULL_FRAME,
+            getNextValue = iterator()::nextOrNull,
+        )
   }
 
   /** Enumeration for the iteration order of the [TickSequence]. */
