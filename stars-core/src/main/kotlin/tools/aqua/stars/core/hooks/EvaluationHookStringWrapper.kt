@@ -28,6 +28,9 @@ object EvaluationHookStringWrapper {
    * console.
    */
   fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
+    if (hooks.isEmpty())
+      return
+
     requireNotEmpty(hooks)
     if (isLoggable(EvaluationHookResult.OK)) println(createMsg(EvaluationHookResult.OK, obj, hooks))
   }
