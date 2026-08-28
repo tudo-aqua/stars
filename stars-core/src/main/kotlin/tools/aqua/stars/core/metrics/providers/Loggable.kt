@@ -131,7 +131,7 @@ interface Loggable {
       return@run Logger.getAnonymousLogger()
           .apply {
             useParentHandlers = false
-            level = Level.FINEST
+            level = ApplicationConstantsHolder.logLevel
 
             addHandler(getLoggerHandler(file, Level.SEVERE))
             addHandler(getLoggerHandler(file, Level.WARNING))
