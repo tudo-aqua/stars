@@ -31,4 +31,4 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 dokka = { id = "org.jetbrains.dokka", version = "2.2.0" }
 maven-publish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.4.10" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.3.0" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.4.10" }
