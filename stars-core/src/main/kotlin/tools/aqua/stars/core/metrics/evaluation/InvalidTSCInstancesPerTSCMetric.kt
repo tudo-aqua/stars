@@ -139,13 +139,12 @@ class InvalidTSCInstancesPerTSCMetric<
 
   override fun getSerializableResults(): List<SerializableTSCOccurrenceResult> =
       invalidInstancesMap.map { (tsc, invalidInstances) ->
-        val resultList =
-            invalidInstances.map { (tscInstanceNode, tscInstances) ->
-              SerializableTSCOccurrence(
-                  tscInstance = SerializableTSCNode(tscInstanceNode),
-                  identifiers = tscInstances.map { it.sourceIdentifier },
-              )
-            }
+        val resultList = invalidInstances.map { (tscInstanceNode, tscInstances) ->
+          SerializableTSCOccurrence(
+              tscInstance = SerializableTSCNode(tscInstanceNode),
+              identifiers = tscInstances.map { it.sourceIdentifier },
+          )
+        }
         SerializableTSCOccurrenceResult(
             identifier = tsc.identifier,
             source = loggerIdentifier,

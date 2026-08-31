@@ -29,25 +29,22 @@ import tools.aqua.stars.core.types.*
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
- * @param minNodes The minimum number of nodes the [TSC] must have.
- * @param failPolicy The [EvaluationHookResult] to return if the [TSC] has less [minNodes] nodes.
+ * @property minNodes The minimum number of nodes the [TSC] must have.
+ * @property failPolicy The [EvaluationHookResult] to return if the [TSC] has less [minNodes] nodes.
  */
-open class MinNodesInTSCHook<
+class MinNodesInTSCHook<
     E : EntityType<E, T, U, D>,
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
 >(
-    minNodes: Int,
-    failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
-) :
-    PreTSCEvaluationHook<E, T, U, D>(
-        identifier = "MinNodesInTSCHook",
-        evaluationFunction = { tsc ->
-          if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy
-        },
-    ) {
+    val minNodes: Int,
+    val failPolicy: EvaluationHookResult = EvaluationHookResult.SKIP,
+) : PreTSCEvaluationHook<E, T, U, D>(identifier = "MinNodesInTSCHook") {
   init {
     require(minNodes >= 0) { "minNodes must be >= 0" }
   }
+
+  override fun evaluate(tsc: TSC<E, T, U, D>): EvaluationHookResult =
+      if (tsc.count() >= minNodes) EvaluationHookResult.OK else failPolicy
 }
