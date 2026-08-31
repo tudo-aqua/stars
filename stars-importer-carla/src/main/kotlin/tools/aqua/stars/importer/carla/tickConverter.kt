@@ -82,10 +82,9 @@ fun convertTickData(
 
   cleanJsonData(world, jsonSimulationRun)
   // Vehicles per tick
-  val vehiclesPerTick: List<List<JsonVehicle>> =
-      jsonSimulationRun.map { tick ->
-        tick.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
-      }
+  val vehiclesPerTick: List<List<JsonVehicle>> = jsonSimulationRun.map { tick ->
+    tick.actorPositions.map { it.actor }.filterIsInstance<JsonVehicle>()
+  }
 
   // Union of all vehicle IDs across the whole run
   val allVehicleIds: Set<Int> = vehiclesPerTick.flatten().map { it.id }.toSet()
@@ -213,8 +212,9 @@ private fun getLaneProgressionForVehicle(
       return@forEach
     }
 
-    val vehicleLane =
-        lanes.first { it.laneId == vehiclePosition.laneId && it.road.id == vehiclePosition.roadId }
+    val vehicleLane = lanes.first {
+      it.laneId == vehiclePosition.laneId && it.road.id == vehiclePosition.roadId
+    }
     val vehicleRoad = roads.first { it.id == vehiclePosition.roadId }
     laneProgression.add(vehicleLane to vehicleRoad.isJunction)
   }

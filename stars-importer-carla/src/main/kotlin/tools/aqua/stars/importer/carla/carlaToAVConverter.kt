@@ -59,16 +59,15 @@ fun JsonTickData.toTickData(world: World, source: String): TickData =
  *
  * @param world The [World].
  */
-fun JsonActorPosition.toActorOrNull(world: World): Actor? =
-    actor.let {
-      val lane = checkNotNull(world.getLane(roadId, laneId))
-      when (it) {
-        is JsonPedestrian -> it.toPedestrian(positionOnLane = positionOnLane, lane = lane)
-        is JsonVehicle -> it.toVehicle(positionOnLane = positionOnLane, lane = lane)
-        is JsonTrafficLight -> null
-        is JsonTrafficSign -> null
-      }
-    }
+fun JsonActorPosition.toActorOrNull(world: World): Actor? = actor.let {
+  val lane = checkNotNull(world.getLane(roadId, laneId))
+  when (it) {
+    is JsonPedestrian -> it.toPedestrian(positionOnLane = positionOnLane, lane = lane)
+    is JsonVehicle -> it.toVehicle(positionOnLane = positionOnLane, lane = lane)
+    is JsonTrafficLight -> null
+    is JsonTrafficSign -> null
+  }
+}
 
 /** Converts [JsonActorPosition] to [TrafficLight]. */
 fun JsonActorPosition.toTrafficLightOrNull(): TrafficLight? =
@@ -398,26 +397,23 @@ private fun JsonLane.update(lanes: List<Lane>) {
   }
   lane.predecessorLanes =
       this.predecessorLanes.map { contactLaneInfo ->
-        val contactLane =
-            lanes.first {
-              it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId
-            }
+        val contactLane = lanes.first {
+          it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId
+        }
         ContactLaneInfo(lane = contactLane)
       }
   lane.successorLanes =
       this.successorLanes.map { contactLaneInfo ->
-        val contactLane =
-            lanes.first {
-              it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId
-            }
+        val contactLane = lanes.first {
+          it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId
+        }
         ContactLaneInfo(lane = contactLane)
       }
   lane.intersectingLanes =
       this.intersectingLanes.mapNotNull { contactLaneInfo ->
-        val contactLane =
-            lanes.first {
-              it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId
-            }
+        val contactLane = lanes.first {
+          it.laneId == contactLaneInfo.laneId && it.road.id == contactLaneInfo.roadId
+        }
         if (lane.laneId == contactLane.laneId && lane.road.id == contactLane.road.id) {
           check(true) { "The same lane is intersecting with itself" }
           null
@@ -426,14 +422,12 @@ private fun JsonLane.update(lanes: List<Lane>) {
 
   lane.contactAreas =
       this.contactAreas.map { jsonContactArea ->
-        val contactLane1 =
-            lanes.first {
-              it.laneId == jsonContactArea.lane1Id && it.road.id == jsonContactArea.lane1RoadId
-            }
-        val contactLane2 =
-            lanes.first {
-              it.laneId == jsonContactArea.lane2Id && it.road.id == jsonContactArea.lane2RoadId
-            }
+        val contactLane1 = lanes.first {
+          it.laneId == jsonContactArea.lane1Id && it.road.id == jsonContactArea.lane1RoadId
+        }
+        val contactLane2 = lanes.first {
+          it.laneId == jsonContactArea.lane2Id && it.road.id == jsonContactArea.lane2RoadId
+        }
         jsonContactArea.toContactArea(contactLane1, contactLane2)
       }
 }

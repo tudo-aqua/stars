@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.stars.library-conventions") }
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 
-mavenMetadata {
-  name.set("STARS Data AV")
-  description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles"
-  )
+extensions.configure<MavenPublishBaseExtension> {
+  pom {
+    name.set("STARS Data AV")
+    description.set(
+        "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Data Model for Autonomous Vehicles"
+    )
+  }
 }
 
 dependencies {

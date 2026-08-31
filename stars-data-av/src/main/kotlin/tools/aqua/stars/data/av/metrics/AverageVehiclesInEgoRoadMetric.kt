@@ -69,8 +69,7 @@ class AverageVehiclesInEgoRoadMetric(
     logInfo("Average vehicles in ego's road: ${getState()}")
   }
 
-  override fun getSerializableResults(): List<SerializableIntResult> =
-      vehicleCounts.map {
-        SerializableIntResult(identifier = loggerIdentifier, source = loggerIdentifier, value = it)
-      }
+  override fun getSerializableResults(): List<SerializableIntResult> = vehicleCounts.map {
+    SerializableIntResult(identifier = loggerIdentifier, source = loggerIdentifier, value = it)
+  }
 }

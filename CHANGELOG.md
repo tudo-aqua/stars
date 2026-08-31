@@ -27,6 +27,8 @@ All notable changes to this project will be documented in this file.
 - Add `name` property to `TickSequence`.
 - Add `TickAndTickSequenceMetricProvider`.
 - Add `sum` and `sumOrNull` extension functions to `Iterable<TickDifference<*>>`.
+- Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
+- Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
@@ -34,6 +36,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
+- Remove `evaluate()` from `EvaluationHook`.
+- Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 
+- Move `evaluationFunction()` from constructor to `evaluate()` function in `PreTickEvaluationHook` and `PreTSCEvaluationHook`.
 
 ## [2.1] - 23.01.2026
 

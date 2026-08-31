@@ -62,13 +62,15 @@ class SerializableLongResultTest {
 
     assertEquals(tickCountMetric.evaluate(simpleTick), 1)
     val serializedResultBaseline = tickCountMetric.getSerializableResults()
-    val deserializedResultBaseline =
-        serializedResultBaseline.map { getJsonContentFromString(it.getJsonString()) }
+    val deserializedResultBaseline = serializedResultBaseline.map {
+      getJsonContentFromString(it.getJsonString())
+    }
 
     assertEquals(tickCountMetric.evaluate(simpleTick), 2)
     val serializedResultCompare = tickCountMetric.getSerializableResults()
-    val deserializedResultCompare =
-        serializedResultCompare.map { getJsonContentFromString(it.getJsonString()) }
+    val deserializedResultCompare = serializedResultCompare.map {
+      getJsonContentFromString(it.getJsonString())
+    }
 
     assertNotEquals(deserializedResultBaseline, deserializedResultCompare)
   }
