@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-plugins {
-  id("tools.aqua.stars.library-conventions")
-  kotlin("plugin.serialization") version "2.3.0"
-}
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 
-mavenMetadata {
-  name.set("STARS Carla Importer")
-  description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter"
-  )
+plugins { kotlin("plugin.serialization") }
+
+extensions.configure<MavenPublishBaseExtension> {
+  pom {
+    name.set("STARS Carla Importer")
+    description.set(
+        "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Importer and Data Format for STARS Carla Exporter"
+    )
+  }
 }
 
 dependencies {

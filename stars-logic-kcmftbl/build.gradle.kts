@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.stars.library-conventions") }
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 
-mavenMetadata {
-  name.set("STARS Kotlin CMFTBL")
-  description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of CMFTBL"
-  )
+extensions.configure<MavenPublishBaseExtension> {
+  pom {
+    name.set("STARS Kotlin CMFTBL")
+    description.set(
+        "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of CMFTBL"
+    )
+  }
 }
 
 dependencies { implementation(project(":stars-core")) }
