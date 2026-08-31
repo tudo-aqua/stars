@@ -27,8 +27,8 @@ import tools.aqua.stars.core.utils.nextOrNull
  * [bufferSize], meaning that the oldest ticks are removed when the size exceeds this limit and
  * their predecessors are set to `null`. Depending on the [iterationOrder], the iterator returns
  * either the oldest tick ([IterationOrder.FORWARD]) or the newest tick ([IterationOrder.BACKWARD])
- * of the sliding window. If [bufferSize] is `-1`, the buffer is unlimited, i.e. all ticks are
- * loaded and no tick is ever evicted.
+ * of the sliding window. If [bufferSize] is `-1`, the buffer is unlimited (no eviction due to
+ * exceeding a maximum size); ticks may still be removed during unrolling at the end of the source.
  *
  * The sequence can only be consumed once.
  *
