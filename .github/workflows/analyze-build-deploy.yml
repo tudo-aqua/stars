@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 0 # Required for version number generation
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
@@ -62,7 +62,7 @@ jobs:
           fetch-depth: 0 # Required for version number generation
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
@@ -93,7 +93,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
@@ -148,7 +148,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
@@ -181,7 +181,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
@@ -212,7 +212,7 @@ jobs:
           fetch-depth: 0 # Required for version number generation & diff generation
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JDK_VERSION }}
