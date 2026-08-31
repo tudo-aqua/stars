@@ -98,11 +98,9 @@ abstract class ManualLabelTests<
     return DynamicTest.dynamicTest(
         "Predicate '${'$'}{predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[${'$'}from,${'$'}to]s'"
     ) {
-      val predicate = predicate
-      if (shouldHold) {
-        matchingTicks.forEach { tick -> assertTrue(predicate.holds(tick)) }
-      } else {
-        matchingTicks.forEach { tick -> assertFalse(predicate.holds(tick)) }
+      when (shouldHold) {
+        true -> matchingTicks.forEach { tick -> assertTrue(predicate.holds(tick)) }
+        false -> matchingTicks.forEach { tick -> assertFalse(predicate.holds(tick)) }
       }
     }
   }
