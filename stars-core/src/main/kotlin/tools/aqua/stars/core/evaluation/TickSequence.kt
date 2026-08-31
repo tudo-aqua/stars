@@ -27,14 +27,15 @@ import tools.aqua.stars.core.utils.nextOrNull
  * [bufferSize], meaning that the oldest ticks are removed when the size exceeds this limit and
  * their predecessors are set to `null`. Depending on the [iterationOrder], the iterator returns
  * either the oldest tick ([IterationOrder.FORWARD]) or the newest tick ([IterationOrder.BACKWARD])
- * of the sliding window.
+ * of the sliding window. If [bufferSize] is `-1`, the buffer is unlimited (no eviction due to
+ * exceeding a maximum size); ticks may still be removed during unrolling at the end of the source.
  *
  * The sequence can only be consumed once.
  *
  * @param T [TickDataType].
  * @property name The name/origin of the sequence.
  * @property bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
- *   tick is removed.
+ *   tick is removed. A value of `-1` loads all ticks into an unlimited buffer.
  * @property iterationOrder The order in which ticks are returned.
  * @property iterationMode The mode in which the iteration is performed. See [IterationMode] for
  *   details.
@@ -51,7 +52,9 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
   private val onceConstraint = java.util.concurrent.atomic.AtomicBoolean(true)
 
   init {
-    require(bufferSize > 0) { "Buffer size must be greater than 0" }
+    require(bufferSize > 0 || bufferSize == -1) {
+      "Buffer size must be greater than 0, or -1 to indicate an unlimited buffer size"
+    }
   }
 
   override fun iterator(): Iterator<T> {
@@ -64,17 +67,23 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
       var size: Int = 0
       var initialized: Boolean = false
       var finished: Boolean = false
+      // Set when `bufferSize` is -1 and the source contains exactly one tick. In that case,
+      // `nextItem` stays `null` after initialization, so this flag is what makes `hasNext()`
+      // report the sole tick as available for one final `next()` call.
+      var awaitingSoleTick: Boolean = false
 
       override fun next(): T {
         // Call hasNext() to ensure we have a next item
         if (!hasNext()) throw NoSuchElementException("No more elements in the sequence")
 
+        awaitingSoleTick = false
+
         // We have a new item
         if (nextItem != null) linkNext()
 
-        // If the buffer size exceeds the limit or the iteration is already at the end and
-        // unrolling, remove the oldest tick
-        if (size > bufferSize || finished) removeOldest()
+        // If the buffer size exceeds the limit (unless unlimited) or the iteration is already at
+        // the end and unrolling, remove the oldest tick
+        if ((bufferSize != -1 && size > bufferSize) || finished) removeOldest()
 
         return checkNotNull(
             when (iterationOrder) {
@@ -85,6 +94,10 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
       }
 
       override fun hasNext(): Boolean {
+        // If we are still awaiting the one and only tick of an unlimited-buffer sequence, return
+        // true
+        if (awaitingSoleTick) return true
+
         // If we already have a next item, return true
         if (nextItem != null) return true
 
@@ -130,6 +143,37 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
           size = 1
 
           if (bufferSize == 1) return true
+
+          if (bufferSize == -1) {
+            // Load all remaining ticks. The most recently retrieved tick is always kept pending
+            // in `nextItem` instead of being linked immediately, so that once the underlying
+            // source is exhausted, the last tick is still linked by the first call to `next()` -
+            // mirroring the bounded pre-fill below. `nextItem` still holds `next` (the first
+            // tick) at this point, so it is cleared here rather than being mistaken for a
+            // genuinely pending second tick.
+            nextItem = null
+            var queued: T? = null
+            while (retrieveNext()) {
+              val fetched = checkNotNull(nextItem)
+              nextItem = null
+
+              if (queued != null) {
+                nextItem = queued
+                linkNext()
+              }
+
+              queued = fetched
+            }
+
+            if (queued != null) {
+              nextItem = queued
+            } else {
+              // The source contained exactly one tick, which is already `firstItem`/`lastItem`.
+              awaitingSoleTick = true
+            }
+
+            return true
+          }
 
           // Try to fill buffer completely
           while (size < bufferSize - 1) {
@@ -213,7 +257,7 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
      * @param T [TickDataType].
      * @param name The name/origin of the sequence.
      * @param bufferSize The maximum size of the buffer. If the size exceeds this limit, the oldest
-     *   tick is removed.
+     *   tick is removed. A value of `-1` loads all ticks into an unlimited buffer.
      * @param iterationOrder The order in which ticks are returned.
      * @param iterationMode The mode in which the iteration is performed. See [IterationMode] for
      *   details.
@@ -230,6 +274,29 @@ class TickSequence<T : TickDataType<*, T, *, *>>(
             bufferSize = bufferSize,
             iterationOrder = iterationOrder,
             iterationMode = iterationMode,
+            getNextValue = iterator()::nextOrNull,
+        )
+
+    /**
+     * Creates a [TickSequence] from an [Iterable] of [TickDataType]s that loads all ticks into a
+     * single, unlimited, doubly linked list and yields only its first tick. All other ticks remain
+     * reachable from that first tick via [TickDataType.nextTick]. This is equivalent to calling
+     * [asTickSequence] with an unlimited [bufferSize][TickSequence.bufferSize] of `-1`,
+     * [IterationOrder.FORWARD] iteration order and [IterationMode.FULL_FRAME] iteration mode.
+     *
+     * @param T [TickDataType].
+     * @param name The name/origin of the sequence.
+     * @return A [TickSequence] that yields the first tick of the given [Iterable], fully linked to
+     *   all subsequent ticks.
+     */
+    fun <T : TickDataType<*, T, *, *>> Iterable<T>.asSegment(
+        name: String = "",
+    ): TickSequence<T> =
+        TickSequence(
+            name = name,
+            bufferSize = -1,
+            iterationOrder = IterationOrder.FORWARD,
+            iterationMode = IterationMode.FULL_FRAME,
             getNextValue = iterator()::nextOrNull,
         )
   }
