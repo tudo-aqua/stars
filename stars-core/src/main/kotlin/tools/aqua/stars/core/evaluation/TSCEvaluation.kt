@@ -361,7 +361,7 @@ class TSCEvaluation<
     metricProviders.forEachInstance<Stateful> { it.printState() }
 
     // Call the 'evaluate' and then the 'print' function for all PostEvaluationMetricProviders
-    println("Running post evaluation metrics")
+    logInfo("Running post evaluation metrics")
     metricProviders.forEachInstance<PostEvaluationMetricProvider<E, T, U, D>> {
       it.postEvaluate()
       it.printPostEvaluationResult()
@@ -369,13 +369,13 @@ class TSCEvaluation<
 
     // Plot the results of all Plottable metrics
     if (writePlots) {
-      println("Creating Plots")
+      logInfo("Creating Plots")
       metricProviders.forEachInstance<Plottable> { it.writePlots() }
     }
 
     // Write CSV of the results of all Plottable metrics
     if (writePlotDataCSV) {
-      println("Writing CSVs")
+      logInfo("Writing CSVs")
       metricProviders.forEachInstance<Plottable> { it.writePlotDataCSV() }
     }
 
@@ -385,7 +385,7 @@ class TSCEvaluation<
 
       // Write JSON files of all Serializable metrics
       if (writeSerializedResults) {
-        println("Writing serialized results")
+        logInfo("Writing serialized results")
         ApplicationConstantsHolder.writeMetaInfo(
             "$serializedResultsFolder/$applicationStartTimeString/"
         )
@@ -394,7 +394,7 @@ class TSCEvaluation<
 
       // Compare the results to the latest run
       if (compareToPreviousRun) {
-        println("Comparing to previous run")
+        logInfo("Comparing to previous run")
         ApplicationConstantsHolder.writeMetaInfo(
             "$comparedResultsFolder/$applicationStartTimeString/"
         )

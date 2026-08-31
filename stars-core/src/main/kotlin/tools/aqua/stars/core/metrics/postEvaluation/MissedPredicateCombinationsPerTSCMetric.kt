@@ -86,7 +86,7 @@ class MissedPredicateCombinationsPerTSCMetric<
    */
   override fun printPostEvaluationResult() {
     val evaluationResult = postEvaluate()
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missing Predicate Combinations Per TSC \n$CONSOLE_SEPARATOR"
     )
     evaluationResult.forEach { (tsc, missedPredicates) ->

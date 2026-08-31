@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Add `name` property to `TickSequence`.
 - Add `TickAndTickSequenceMetricProvider`.
 - Add `sum` and `sumOrNull` extension functions to `Iterable<TickDifference<*>>`.
+- Add adjustable log levels for loggers and evaluation hooks.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
 

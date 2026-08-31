@@ -103,7 +103,7 @@ class InvalidTSCInstancesPerTSCMetric<
    * classes and their reasons for invalidity.
    */
   override fun printState() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Invalid TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
     )
     invalidInstancesMap.forEach { (tsc, invalidInstancesMap) ->

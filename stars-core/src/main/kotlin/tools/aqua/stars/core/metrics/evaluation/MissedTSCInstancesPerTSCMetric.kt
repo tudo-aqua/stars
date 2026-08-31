@@ -88,9 +88,9 @@ class MissedTSCInstancesPerTSCMetric<
   /** Returns a [Map] containing the list of missed [TSCInstance]s for each [TSC]. */
   override fun getState(): Map<TSC<E, T, U, D>, List<TSCInstance<E, T, U, D>>> = missedInstances
 
-  /** Prints the count of missed [TSCInstance]s for each [TSC] using [println]. */
+  /** Prints the count of missed [TSCInstance]s for each [TSC] using [logInfo]. */
   override fun printState() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Missed TSC Instances Per TSC \n$CONSOLE_SEPARATOR"
     )
     getState().forEach { (tsc, missedInstances) ->

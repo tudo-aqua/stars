@@ -85,7 +85,7 @@ class FailedMonitorsMetric<
 
   /** Prints the count of failed monitors for each [TSC]. */
   override fun printPostEvaluationResult() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Count Of Failed Monitors Per TSC \n$CONSOLE_SEPARATOR"
     )
     failedMonitors.forEach { (tsc, failedMonitors) ->

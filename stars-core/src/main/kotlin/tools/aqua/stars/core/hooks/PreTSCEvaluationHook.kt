@@ -93,6 +93,7 @@ abstract class PreTSCEvaluationHook<
           }
           // Include current TSC in the list
           EvaluationHookResult.OK -> {
+            EvaluationHookStringWrapper.ok(tsc, hooks)
             resultingList.add(tsc)
           }
         }

@@ -84,6 +84,7 @@ abstract class PreTickEvaluationHook<
         }
         // Continue with evaluation
         EvaluationHookResult.OK -> {
+          EvaluationHookStringWrapper.ok(tick, hooks)
           null
         }
       } to hookResults
