@@ -172,7 +172,7 @@ naming:
     # Rationale: better suited for code review
     active: false
   FunctionNaming:
-    functionPattern: '([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,.\-\(\)\{\}#]+\`)'
+    functionPattern: '([a-z][a-zA-Z0-9]*)|(\`[a-zA-Z0-9 ,_.\-\(\)\{\}#]+\`)'
     active: true
   FunctionParameterNaming:
     active: true
