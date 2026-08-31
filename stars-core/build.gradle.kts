@@ -35,8 +35,8 @@ dependencies {
   implementation(libs.slf4j.api)
   implementation(libs.slf4j.simple)
   implementation(libs.kotlinx.serialization.json)
-  testFixturesImplementation(libs.kotlin.test)
-  testFixturesImplementation(libs.junit.jupiter)
+  testFixturesApi(libs.kotlin.test)
+  testFixturesApi(libs.junit.jupiter)
 }
 
 // Ensure the testFixtures component is published via a dedicated publication
