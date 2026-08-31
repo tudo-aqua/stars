@@ -20,6 +20,7 @@
 package tools.aqua.stars.core.utils
 
 import java.io.File
+import java.util.logging.Logger
 import org.jetbrains.letsPlot.Stat
 import org.jetbrains.letsPlot.export.ggsave
 import org.jetbrains.letsPlot.geom.geomBar
@@ -34,9 +35,16 @@ import org.jetbrains.letsPlot.scale.scaleXContinuous
 import org.jetbrains.letsPlot.scale.scaleXLog10
 import org.jetbrains.letsPlot.scale.scaleYContinuous
 import org.jetbrains.letsPlot.scale.scaleYLog10
+import tools.aqua.stars.core.metrics.providers.Loggable
 
 /** Sets the offset to distinguish lines with equal trajectory. */
 private const val POSITION_DODGE = 0.3
+
+/** [Loggable] instance used for logging messages related to plotting. */
+private object DataPlotterLogger : Loggable {
+  override val loggerIdentifier: String = "data-plotter"
+  override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+}
 
 /**
  * Saves a PNG file with a line chart based on the given values.
@@ -67,7 +75,7 @@ fun plotDataAsLineChart(
     logScaleY: Boolean = false,
 ) {
   if (plot == null) {
-    println("Skip plotting, as there was no data provided.")
+    DataPlotterLogger.logWarning("Skip plotting, as there was no data provided.")
     return
   }
 
@@ -112,7 +120,7 @@ fun plotDataAsBarChart(
     logScaleY: Boolean = false,
 ) {
   if (plot == null) {
-    println("Skip plotting, as there was no data provided.")
+    DataPlotterLogger.logWarning("Skip plotting, as there was no data provided.")
     return
   }
 
@@ -153,7 +161,7 @@ fun plotDataAsHistogram(
     logScaleY: Boolean = false,
 ) {
   if (plot == null) {
-    println("Skip plotting, as there was no data provided.")
+    DataPlotterLogger.logWarning("Skip plotting, as there was no data provided.")
     return
   }
 

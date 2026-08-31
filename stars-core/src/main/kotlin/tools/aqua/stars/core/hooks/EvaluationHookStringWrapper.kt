@@ -17,41 +17,39 @@
 
 package tools.aqua.stars.core.hooks
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metrics.providers.Loggable
 import tools.aqua.stars.core.utils.ApplicationConstantsHolder
 
 /**
  * Custom String wrapper indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP].
  */
-object EvaluationHookStringWrapper {
-  /**
-   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK] to the
-   * console.
-   */
+object EvaluationHookStringWrapper : Loggable {
+  override val loggerIdentifier: String = "evaluation-hooks"
+  override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+
+  /** Logs a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK]. */
   fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     if (hooks.isEmpty()) return
 
     requireNotEmpty(hooks)
-    if (isLoggable(EvaluationHookResult.OK)) println(createMsg(EvaluationHookResult.OK, obj, hooks))
+    if (isLoggable(EvaluationHookResult.OK)) logInfo(createMsg(EvaluationHookResult.OK, obj, hooks))
   }
 
-  /**
-   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP] to
-   * the console.
-   */
+  /** Logs a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP]. */
   fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     requireNotEmpty(hooks)
     if (isLoggable(EvaluationHookResult.SKIP))
-        println("Skipping evaluation since ${createMsg(EvaluationHookResult.SKIP, obj, hooks)}")
+        logWarning("Skipping evaluation since ${createMsg(EvaluationHookResult.SKIP, obj, hooks)}")
   }
 
-  /**
-   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.CANCEL] to
-   * the console.
-   */
+  /** Logs a message indicating that an [EvaluationHook] returned [EvaluationHookResult.CANCEL]. */
   fun cancel(obj: Any, hooks: Collection<EvaluationHook<*>>) {
     requireNotEmpty(hooks)
     if (isLoggable(EvaluationHookResult.CANCEL))
-        println("Cancelling evaluation since ${createMsg(EvaluationHookResult.CANCEL, obj, hooks)}")
+        logSevere(
+            "Cancelling evaluation since ${createMsg(EvaluationHookResult.CANCEL, obj, hooks)}"
+        )
   }
 
   /**

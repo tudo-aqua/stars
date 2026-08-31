@@ -26,7 +26,7 @@ import tools.aqua.stars.core.tsc.builder.tsc
 /** The tests in this class test the correct functionality of the [TSC.toString] method. */
 class TSCToStringTest {
 
-  /** Given an empty [TSC], the println should also be empty. */
+  /** Given an empty [TSC], the string should also be empty. */
   @Test
   fun `Test empty TSC`() {
     assertFailsWith<IllegalStateException> {
