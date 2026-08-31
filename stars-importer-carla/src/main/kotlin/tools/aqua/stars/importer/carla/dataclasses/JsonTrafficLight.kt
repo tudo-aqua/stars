@@ -35,6 +35,7 @@ import kotlinx.serialization.Serializable
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
  * @property collisions The list of actor IDs, this [JsonTrafficLight] is colliding with.
+ * @property laneMarkingContacts The lane markings this [JsonTrafficLight]'s bounding box touches.
  * @property state The current state oif the traffic light.
  * @property relatedOpenDriveId The related open drive identifier.
  */
@@ -54,4 +55,6 @@ data class JsonTrafficLight(
     @SerialName("collisions") override val collisions: List<Int>,
     @SerialName("state") var state: Int,
     @SerialName("related_open_drive_id") val relatedOpenDriveId: Int,
+    @SerialName("lane_marking_contacts")
+    override val laneMarkingContacts: List<JsonLaneMarkingContact> = emptyList(),
 ) : JsonActor()

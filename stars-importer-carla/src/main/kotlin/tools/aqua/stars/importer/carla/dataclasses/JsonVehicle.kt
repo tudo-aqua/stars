@@ -40,7 +40,11 @@ import kotlinx.serialization.Serializable
  * @property velocity The current velocity.
  * @property acceleration The current acceleration.
  * @property angularVelocity The current angular velocity.
+ * @property leftBlinker Whether the left blinker is currently on.
+ * @property rightBlinker Whether the right blinker is currently on.
+ * @property steeringAngle The current steering wheel input in `[-1.0, 1.0]`.
  * @property collisions The list of actor IDs, this [JsonVehicle] is colliding with.
+ * @property laneMarkingContacts The lane markings this [JsonVehicle]'s bounding box touches.
  */
 @Serializable
 @SerialName("Vehicle")
@@ -61,7 +65,12 @@ data class JsonVehicle(
     @SerialName("velocity") val velocity: JsonVector3D,
     @SerialName("acceleration") val acceleration: JsonVector3D,
     @SerialName("angular_velocity") val angularVelocity: JsonVector3D,
+    @SerialName("left_blinker") val leftBlinker: Boolean = false,
+    @SerialName("right_blinker") val rightBlinker: Boolean = false,
+    @SerialName("steering_angle") val steeringAngle: Double = 0.0,
     @SerialName("collisions") override val collisions: List<Int>,
+    @SerialName("lane_marking_contacts")
+    override val laneMarkingContacts: List<JsonLaneMarkingContact> = emptyList(),
 ) : JsonActor() {
 
   /** The effective velocity. */

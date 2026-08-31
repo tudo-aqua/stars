@@ -30,10 +30,14 @@ All notable changes to this project will be documented in this file.
 - Add adjustable log levels for loggers and evaluation hooks.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
+- Import the additional fields from the updated CARLA export: lane marking contacts (`Actor.laneMarkingContacts`), vehicle blinkers and steering angle (`Vehicle.leftBlinker`, `Vehicle.rightBlinker`, `Vehicle.steeringAngle`), pedestrian kinematics (`Pedestrian.velocity`, `Pedestrian.acceleration`, `Pedestrian.angularVelocity`), and per-lane markings, adjacent/overlapping lanes and topology (`Lane.leftLaneMarking`, `Lane.rightLaneMarking`, `Lane.leftLane`, `Lane.rightLane`, `Lane.overlappingLanes`, `Lane.laneTopology`).
+- Add `LaneMarking`, `LaneMarkingType`, `LaneMarkingColor`, `LaneMarkingContact`, `ContactSide`, and `LaneTopology` data classes/enums.
+- Add `WeatherType.DustStorm` and the corresponding `DustStorm` CARLA weather preset.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
 - Fix yield calculation for specific CARLA maps.
+- Fix `getSeed` throwing when a dynamic data filename carries no `_seed_<n>` marker; it now returns `0`.
 
 ### Changed
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.

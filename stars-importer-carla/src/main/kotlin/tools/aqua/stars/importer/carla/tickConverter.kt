@@ -43,13 +43,19 @@ fun getMapName(fileName: String): String =
  * Returns the seed value for the given [fileName].
  *
  * @param fileName The filename from which the seed value should be calculated from.
+ * @return The parsed seed, or `0` when the filename carries no `_seed_<n>` marker (e.g. manually
+ *   recorded runs).
  * @throws IllegalStateException When the [fileName] does not include "dynamic_data".
  */
 fun getSeed(fileName: String): Int =
     when {
       fileName.isEmpty() -> 0
       fileName.contains("dynamic_data") ->
-          fileName.split("dynamic_data_")[1].split("_seed_")[1].split(".")[0].toInt()
+          fileName
+              .substringAfter("dynamic_data_")
+              .substringAfter("_seed_", missingDelimiterValue = "")
+              .substringBefore(".")
+              .toIntOrNull() ?: 0
       fileName.contains("static_data") ->
           error("Cannot get seed name for map data! Analyzed file: $fileName")
       else -> error("Unknown filename format")
