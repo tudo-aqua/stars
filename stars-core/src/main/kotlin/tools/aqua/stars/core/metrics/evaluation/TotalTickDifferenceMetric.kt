@@ -111,7 +111,7 @@ class TotalTickDifferenceMetric<
 
   /** Prints the current [totalTickDifference]. */
   override fun printState() {
-    println(
+    logInfo(
         "\n$CONSOLE_SEPARATOR\n$CONSOLE_INDENT Total Tick Difference per Tick Sequence \n$CONSOLE_SEPARATOR"
     )
     totalTickDifference.forEach { (tickSequenceName, tickDifference) ->

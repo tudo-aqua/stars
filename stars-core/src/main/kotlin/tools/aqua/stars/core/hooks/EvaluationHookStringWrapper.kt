@@ -17,26 +17,39 @@
 
 package tools.aqua.stars.core.hooks
 
+import java.util.logging.Logger
+import tools.aqua.stars.core.metrics.providers.Loggable
+import tools.aqua.stars.core.utils.ApplicationConstantsHolder
+
 /**
  * Custom String wrapper indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP].
  */
-object EvaluationHookStringWrapper {
-  /**
-   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP] to
-   * the console.
-   */
-  fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    require(hooks.isNotEmpty()) { "No hooks provided." }
-    println(createMsg(EvaluationHookResult.SKIP, obj, hooks))
+object EvaluationHookStringWrapper : Loggable {
+  override val loggerIdentifier: String = "evaluation-hooks"
+  override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+
+  /** Logs a message indicating that an [EvaluationHook] returned [EvaluationHookResult.OK]. */
+  fun ok(obj: Any, hooks: Collection<EvaluationHook<*>>) {
+    if (hooks.isEmpty()) return
+
+    requireNotEmpty(hooks)
+    if (isLoggable(EvaluationHookResult.OK)) logInfo(createMsg(EvaluationHookResult.OK, obj, hooks))
   }
 
-  /**
-   * Prints a message indicating that an [EvaluationHook] returned [EvaluationHookResult.CANCEL] to
-   * the console.
-   */
+  /** Logs a message indicating that an [EvaluationHook] returned [EvaluationHookResult.SKIP]. */
+  fun skip(obj: Any, hooks: Collection<EvaluationHook<*>>) {
+    requireNotEmpty(hooks)
+    if (isLoggable(EvaluationHookResult.SKIP))
+        logWarning("Skipping evaluation since ${createMsg(EvaluationHookResult.SKIP, obj, hooks)}")
+  }
+
+  /** Logs a message indicating that an [EvaluationHook] returned [EvaluationHookResult.CANCEL]. */
   fun cancel(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    require(hooks.isNotEmpty()) { "No hooks provided." }
-    println(createMsg(EvaluationHookResult.CANCEL, obj, hooks))
+    requireNotEmpty(hooks)
+    if (isLoggable(EvaluationHookResult.CANCEL))
+        logSevere(
+            "Cancelling evaluation since ${createMsg(EvaluationHookResult.CANCEL, obj, hooks)}"
+        )
   }
 
   /**
@@ -44,7 +57,9 @@ object EvaluationHookStringWrapper {
    * [EvaluationHookResult.ABORT].
    */
   fun abort(obj: Any, hooks: Collection<EvaluationHook<*>>) {
-    throw EvaluationHookAbort(createMsg(EvaluationHookResult.ABORT, obj, hooks))
+    throw EvaluationHookAbort(
+        "Aborting evaluation since ${createMsg(EvaluationHookResult.ABORT, obj, hooks)}"
+    )
   }
 
   private fun createMsg(
@@ -52,11 +67,17 @@ object EvaluationHookStringWrapper {
       obj: Any,
       hooks: Collection<EvaluationHook<*>>,
   ) =
-      "$hookResult evaluation since ${
-      hooks.joinToString(
+      "${hooks.joinToString(
         separator = ", ",
         prefix = "[",
         postfix = "]",
       ) { "${it.javaClass.name} ${it.identifier}" }
     } returned $hookResult for ${obj.javaClass.name} \n ${obj}."
+
+  private fun isLoggable(result: EvaluationHookResult): Boolean =
+      result.ordinal >= ApplicationConstantsHolder.evaluationHookLogLevel.ordinal
+
+  private fun requireNotEmpty(hooks: Collection<EvaluationHook<*>>) {
+    require(hooks.isNotEmpty()) { "No hooks provided." }
+  }
 }

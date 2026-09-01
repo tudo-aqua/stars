@@ -21,6 +21,7 @@ package tools.aqua.stars.importer.carla
 
 import java.io.File
 import java.nio.file.Path
+import java.util.logging.Logger
 import java.util.zip.ZipFile
 import kotlin.io.path.exists
 import kotlin.io.path.extension
@@ -34,9 +35,16 @@ import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import tools.aqua.stars.core.evaluation.TickSequence
 import tools.aqua.stars.core.evaluation.TickSequence.Companion.asTickSequence
+import tools.aqua.stars.core.metrics.providers.Loggable
 import tools.aqua.stars.data.av.dataclasses.TickData
 import tools.aqua.stars.data.av.dataclasses.World
 import tools.aqua.stars.importer.carla.dataclasses.*
+
+/** [Loggable] instance used for logging messages related to Carla data file handling. */
+private object CarlaDataFileHandlingLogger : Loggable {
+  override val loggerIdentifier: String = "carla-data-file-handling"
+  override val logger: Logger = Loggable.getLogger(loggerIdentifier)
+}
 
 /** Carla data serializer module. */
 val carlaDataSerializerModule: SerializersModule = SerializersModule {
@@ -157,7 +165,9 @@ fun loadTicks(
 
       if (currentDynamicDataPathIterator.hasNext()) {
         val currentDynamicDataPath = currentDynamicDataPathIterator.next()
-        println("Reading simulation run file: ${currentDynamicDataPath.toUri()}")
+        CarlaDataFileHandlingLogger.logInfo(
+            "Reading simulation run file: ${currentDynamicDataPath.toUri()}"
+        )
 
         // Holds the current simulationRun object
         val simulationRun = getJsonContentOfPath<List<JsonTickData>>(currentDynamicDataPath)

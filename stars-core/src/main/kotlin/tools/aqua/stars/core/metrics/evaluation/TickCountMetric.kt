@@ -70,7 +70,7 @@ class TickCountMetric<
    */
   override fun getState(): Long = tickCount
 
-  /** Prints the current state using [println]. */
+  /** Prints the current state using [logInfo]. */
   override fun printState() {
     logInfo("Analyzed $tickCount ticks.")
   }
