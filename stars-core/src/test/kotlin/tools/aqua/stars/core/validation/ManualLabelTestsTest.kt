@@ -73,6 +73,21 @@ class ManualLabelTestsTest {
     runnerFor(file).testManualLabeledTestFiles().single().executable.execute()
   }
 
+  /** An explicit interval that selects no ticks fails instead of silently passing. */
+  @Test
+  fun testIntervalMatchingNoTicksFails() {
+    val file =
+        manuallyLabelledFile(ticks) {
+          predicateHolds(alwaysHolds) {
+            interval(SimpleTickDataUnit(10L), SimpleTickDataUnit(20L))
+          }
+        }
+
+    val test = runnerFor(file).testManualLabeledTestFiles().single()
+
+    assertFailsWith<IllegalStateException> { test.executable.execute() }
+  }
+
   /** Configured intervals still produce one test per interval. */
   @Test
   fun testConfiguredIntervalsProduceOneTestEach() {

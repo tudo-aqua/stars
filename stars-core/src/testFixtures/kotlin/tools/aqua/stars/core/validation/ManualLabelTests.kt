@@ -98,10 +98,17 @@ abstract class ManualLabelTests<
     val matchingTicks =
         interval?.let { allTicks.getTicksInInterval(it.fromTickUnit, it.toTickUnit) } ?: allTicks
     val intervalDescription =
-        interval?.let { "'[${it.fromTickUnit},${it.toTickUnit}]s'" } ?: "the whole tick sequence"
+        interval?.let { "[${it.fromTickUnit}, ${it.toTickUnit}]" } ?: "the whole tick sequence"
     return DynamicTest.dynamicTest(
         "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in $intervalDescription"
     ) {
+      // A configured interval that selects no ticks is a misconfiguration, not a pass.
+      if (interval != null) {
+        check(matchingTicks.isNotEmpty()) {
+          "Interval [${interval.fromTickUnit}, ${interval.toTickUnit}] selects no ticks; " +
+              "check the tick units against the ticks in the file."
+        }
+      }
       when (shouldHold) {
         true -> matchingTicks.forEach { tick -> assertTrue(predicate.holds(tick)) }
         false -> matchingTicks.forEach { tick -> assertFalse(predicate.holds(tick)) }
