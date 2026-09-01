@@ -44,10 +44,12 @@ abstract class ManualLabelTests<
   protected abstract val manualLabelTestFiles: List<ManualLabelFile<T, U, D>>
 
   /**
-   * Generates dynamic tests for manually labeled test files by validating predicates on specified
-   * intervals of tick sequences. The method processes manually labeled test files to generate test
-   * cases for predicates expected to hold and not to hold in certain intervals of given tick
-   * sequences.
+   * Generates dynamic tests for manually labeled test files by validating predicates on tick
+   * sequences. The method processes manually labeled test files to generate test cases for
+   * predicates expected to hold and not to hold.
+   *
+   * A predicate configured without any interval is validated against every tick in the file;
+   * otherwise one test per configured interval is generated.
    *
    * @return A list of dynamically generated tests based on the manual labeling configurations
    *   provided in the test files. For each entry in [manualLabelTestFiles], a list of dynamic tests
@@ -58,46 +60,47 @@ abstract class ManualLabelTests<
       manualLabelTestFiles.flatMap { manualLabelTestFile ->
         val allTicks = manualLabelTestFile.ticksToTest
         check(allTicks.any()) { "There has to be at least one tick in the sequence of ticks." }
-        val dynamicTests = mutableListOf<DynamicTest>()
-        dynamicTests.addAll(
-            manualLabelTestFile.predicatesToHold.flatMap { manualLabelPredicate ->
-              manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
-                createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, true)
-              }
+
+        val labeledPredicates =
+            manualLabelTestFile.predicatesToHold.map { it to true } +
+                manualLabelTestFile.predicatesToNotHold.map { it to false }
+
+        labeledPredicates.flatMap { (manualLabelPredicate, shouldHold) ->
+          val intervals = manualLabelPredicate.manualLabelIntervals
+          if (intervals.isEmpty()) {
+            // No interval configured: validate the predicate against the whole tick sequence.
+            listOf(createDynamicTest(manualLabelPredicate.predicate, null, allTicks, shouldHold))
+          } else {
+            intervals.map { interval ->
+              createDynamicTest(manualLabelPredicate.predicate, interval, allTicks, shouldHold)
             }
-        )
-        dynamicTests.addAll(
-            manualLabelTestFile.predicatesToNotHold.flatMap { manualLabelPredicate ->
-              manualLabelPredicate.manualLabelIntervals.map { (from, to) ->
-                createDynamicTest(manualLabelPredicate.predicate, from, to, allTicks, false)
-              }
-            }
-        )
-        return dynamicTests
+          }
+        }
       }
 
   /**
-   * Creates a dynamic test that evaluates whether a given predicate holds or does not hold for a
-   * specified interval within a sequence of ticks.
+   * Creates a dynamic test that evaluates whether a given predicate holds or does not hold within a
+   * sequence of ticks.
    *
    * @param predicate The predicate to be evaluated.
-   * @param from The start of the interval (inclusive).
-   * @param to The end of the interval (inclusive).
+   * @param interval The interval to restrict the evaluation to, or `null` to evaluate every tick.
    * @param allTicks The list of all ticks to be analyzed.
    * @param shouldHold Indicates whether the predicate is expected to hold (true) or not hold
-   *   (false) in the interval.
+   *   (false).
    * @return A dynamically generated test case for the specified predicate and interval.
    */
   private fun createDynamicTest(
       predicate: Predicate<T>,
-      from: U,
-      to: U,
+      interval: ManualLabelInterval<U, D>?,
       allTicks: List<T>,
       shouldHold: Boolean,
   ): DynamicTest {
-    val matchingTicks = allTicks.getTicksInInterval(from, to)
+    val matchingTicks =
+        interval?.let { allTicks.getTicksInInterval(it.fromTickUnit, it.toTickUnit) } ?: allTicks
+    val intervalDescription =
+        interval?.let { "'[${it.fromTickUnit},${it.toTickUnit}]s'" } ?: "the whole tick sequence"
     return DynamicTest.dynamicTest(
-        "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[${from},${to}]s'"
+        "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in $intervalDescription"
     ) {
       when (shouldHold) {
         true -> matchingTicks.forEach { tick -> assertTrue(predicate.holds(tick)) }

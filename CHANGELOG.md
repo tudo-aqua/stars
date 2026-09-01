@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Move the manual labeling DSL (`ManualLabelFile`, `manuallyLabelledFile`, `ManualLabelPredicate`, `ManualLabelInterval`) from `stars-core`'s `main` source set into its `testFixtures` source set, next to `ManualLabelTests`. These classes are now only available via the `test-fixtures` artifact (`tools.aqua:stars-core:<version>:test-fixtures`).
+- Make intervals optional in the manual labeling DSL: a predicate registered via `predicateHolds` / `predicateDoesNotHold` without any `interval(...)` is now validated against every tick in the `ManualLabelFile`.
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 - Remove `evaluate()` from `EvaluationHook`.
 - Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 
