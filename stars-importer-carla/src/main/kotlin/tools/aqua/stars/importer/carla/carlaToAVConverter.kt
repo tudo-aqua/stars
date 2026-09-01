@@ -47,6 +47,7 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType
  */
 fun JsonTickData.toTickData(world: World, source: String): TickData =
     TickData(
+        world = world,
         currentTickUnit = TickDataUnitSeconds(currentTick),
         entities = actorPositions.mapNotNull { it.toActorOrNull(world = world) }.toSet(),
         trafficLights = actorPositions.mapNotNull { it.toTrafficLightOrNull() },
