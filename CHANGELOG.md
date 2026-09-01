@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - Fix yield calculation for specific CARLA maps.
 
 ### Changed
+- Move the manual labeling DSL (`ManualLabelFile`, `manuallyLabelledFile`, `ManualLabelPredicate`, `ManualLabelInterval`) from `stars-core`'s `main` source set into its `testFixtures` source set, next to `ManualLabelTests`. These classes are now only available via the `test-fixtures` artifact (`tools.aqua:stars-core:<version>:test-fixtures`).
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 - Remove `evaluate()` from `EvaluationHook`.
 - Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 
