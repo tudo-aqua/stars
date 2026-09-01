@@ -57,6 +57,7 @@ abstract class ManualLabelTests<
   fun testManualLabeledTestFiles(): List<DynamicTest> =
       manualLabelTestFiles.flatMap { manualLabelTestFile ->
         val allTicks = manualLabelTestFile.ticksToTest
+        check(allTicks.any()) { "There has to be at least one tick in the sequence of ticks." }
         val dynamicTests = mutableListOf<DynamicTest>()
         dynamicTests.addAll(
             manualLabelTestFile.predicatesToHold.flatMap { manualLabelPredicate ->
@@ -96,7 +97,7 @@ abstract class ManualLabelTests<
   ): DynamicTest {
     val matchingTicks = allTicks.getTicksInInterval(from, to)
     return DynamicTest.dynamicTest(
-        "Predicate '${'$'}{predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[${'$'}from,${'$'}to]s'"
+        "Predicate '${predicate.name}' should ${if (shouldHold) "" else "not"} hold in '[${from},${to}]s'"
     ) {
       when (shouldHold) {
         true -> matchingTicks.forEach { tick -> assertTrue(predicate.holds(tick)) }
