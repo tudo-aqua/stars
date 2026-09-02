@@ -40,6 +40,8 @@ All notable changes to this project will be documented in this file.
 - Fix `getSeed` throwing when a dynamic data filename carries no `_seed_<n>` marker; it now returns `0`.
 
 ### Changed
+- Move the manual labeling DSL (`ManualLabelFile`, `manuallyLabelledFile`, `ManualLabelPredicate`, `ManualLabelInterval`) into `stars-core`'s `testFixtures` source set; it is now only available via the `test-fixtures` artifact.
+- Make `interval(...)` optional in the manual labeling DSL: a predicate without an interval is checked against every tick, and an interval matching no ticks fails instead of passing silently.
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 - Remove `evaluate()` from `EvaluationHook`.
 - Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 

@@ -20,7 +20,6 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.benmanes.gradle.versions.updates.resolutionstrategy.ComponentFilter
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
@@ -98,6 +97,7 @@ subprojects {
   apply(plugin = "java-library")
   apply(plugin = "signing")
   apply(plugin = "org.jetbrains.kotlin.jvm")
+  apply(plugin = "java-test-fixtures")
 
   group = rootProject.group
 
@@ -145,19 +145,7 @@ subprojects {
         isCanBeResolved = false
       }
 
-  val tests = configurations.create("tests")
-
-  val testJar =
-      tasks.register<Jar>("testJar") {
-        description = "Assembles a jar archive containing the compiled test classes."
-        archiveClassifier.set("tests")
-        from(project.the<SourceSetContainer>()["test"].output)
-      }
-
-  artifacts {
-    add(kdoc.name, kdocJar.get())
-    add(tests.name, testJar.get())
-  }
+  artifacts { add(kdoc.name, kdocJar) }
 
   dependencies {
     add("testImplementation", catalogLibs.kotlin.test)
