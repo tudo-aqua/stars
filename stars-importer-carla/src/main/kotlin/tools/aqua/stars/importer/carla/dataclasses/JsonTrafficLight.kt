@@ -35,9 +35,9 @@ import kotlinx.serialization.Serializable
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
  * @property collisions The list of actor IDs, this [JsonTrafficLight] is colliding with.
- * @property laneMarkingContacts The lane markings this [JsonTrafficLight]'s bounding box touches.
- * @property state The current state oif the traffic light.
+ * @property state The current state of the traffic light.
  * @property relatedOpenDriveId The related open drive identifier.
+ * @property laneMarkingContacts The lane markings this [JsonTrafficLight]'s bounding box touches.
  */
 @Serializable
 @SerialName("TrafficLight")
