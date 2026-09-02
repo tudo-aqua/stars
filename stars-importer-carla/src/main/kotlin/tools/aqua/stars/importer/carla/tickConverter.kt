@@ -26,30 +26,65 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonVehicle
 /**
  * Returns the name of the map.
  *
+ * For dynamic data files the map name is everything between the `dynamic_data_` prefix and the
+ * optional `_seed_<n>` marker (or the file extension when no seed is present).
+ *
  * @param fileName The filename.
- * @throws IllegalStateException When the [fileName] is not empty and does not include "static_data"
- *   or "dynamic_data".
+ * @throws IllegalStateException When the [fileName] is empty or does not include "static_data" or
+ *   "dynamic_data".
  */
 @Suppress("unused")
 fun getMapName(fileName: String): String =
     when {
-      fileName.isEmpty() -> "test_case"
+      fileName.isEmpty() -> error("Cannot derive a map name from an empty filename")
       fileName.contains("static_data") -> fileName.split("static_data_")[1].split(".zip")[0]
-      fileName.contains("dynamic_data") -> fileName.split("dynamic_data_")[1].split("_seed")[0]
+      fileName.contains("dynamic_data") -> {
+        val afterPrefix = fileName.substringAfter("dynamic_data_")
+        if (hasSeed(fileName)) afterPrefix.substringBefore("_seed")
+        else afterPrefix.substringBeforeLast(".")
+      }
       else -> error("Unknown filename format")
     }
+
+/**
+ * Returns whether the given [fileName] carries a `_seed_<n>` marker with a numeric seed.
+ *
+ * @param fileName The filename to inspect.
+ */
+fun hasSeed(fileName: String): Boolean =
+    fileName
+        .substringAfter("_seed_", missingDelimiterValue = "")
+        .substringBefore(".")
+        .toIntOrNull() != null
+
+/**
+ * Returns [dynamicDataFiles] ordered by the seed encoded in their filename. When any file carries
+ * no `_seed_<n>` marker the given order is kept unchanged.
+ *
+ * @param dynamicDataFiles The dynamic data file [Path]s to order.
+ */
+fun orderDynamicDataFilesBySeed(dynamicDataFiles: List<Path>): List<Path> =
+    if (dynamicDataFiles.all { hasSeed(it.fileName.toString()) })
+        dynamicDataFiles.sortedBy { getSeed(it.fileName.toString()) }
+    else dynamicDataFiles
 
 /**
  * Returns the seed value for the given [fileName].
  *
  * @param fileName The filename from which the seed value should be calculated from.
+ * @return The parsed seed, or `0` when the filename carries no `_seed_<n>` marker (e.g. manually
+ *   recorded runs). Use [hasSeed] to distinguish a real seed of `0` from a missing marker.
  * @throws IllegalStateException When the [fileName] does not include "dynamic_data".
  */
 fun getSeed(fileName: String): Int =
     when {
       fileName.isEmpty() -> 0
       fileName.contains("dynamic_data") ->
-          fileName.split("dynamic_data_")[1].split("_seed_")[1].split(".")[0].toInt()
+          fileName
+              .substringAfter("dynamic_data_")
+              .substringAfter("_seed_", missingDelimiterValue = "")
+              .substringBefore(".")
+              .toIntOrNull() ?: 0
       fileName.contains("static_data") ->
           error("Cannot get seed name for map data! Analyzed file: $fileName")
       else -> error("Unknown filename format")

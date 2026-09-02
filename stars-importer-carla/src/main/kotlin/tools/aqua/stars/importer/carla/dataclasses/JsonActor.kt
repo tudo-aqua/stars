@@ -56,4 +56,11 @@ sealed class JsonActor {
 
   /** The [List] of all collision events ([List] of ActorIDs). */
   @SerialName("collisions") abstract val collisions: List<Int>
+
+  /**
+   * The [List] of [JsonLaneMarkingContact]s the actor's bounding box touches this tick. Empty when
+   * the box lies within its lane's markings.
+   */
+  @SerialName("lane_marking_contacts")
+  abstract val laneMarkingContacts: List<JsonLaneMarkingContact>
 }

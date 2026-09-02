@@ -33,6 +33,8 @@ import tools.aqua.stars.core.types.EntityType
  * @property location The [Location] of the [Actor]. Default: origin.
  * @property rotation The [Rotation] of the [Actor]. Default: no rotation.
  * @property collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ * @property laneMarkingContacts The [List] of [LaneMarkingContact]s the [Actor]'s [BoundingBox]
+ *   touches this tick. Empty when the box lies within its lane's markings. Default: empty [List].
  * @property lane The [Actor]'s [Lane].
  * @property positionOnLane The [Actor]'s position in the [Lane].
  */
@@ -48,6 +50,7 @@ sealed class Actor(
     val location: Location = Location(),
     val rotation: Rotation = Rotation(),
     val collisions: List<Int> = emptyList(),
+    val laneMarkingContacts: List<LaneMarkingContact> = emptyList(),
     val lane: Lane = Lane(),
     var positionOnLane: Double = 0.0,
 ) : EntityType<Actor, TickData, TickDataUnitSeconds, TickDataDifferenceSeconds>() {

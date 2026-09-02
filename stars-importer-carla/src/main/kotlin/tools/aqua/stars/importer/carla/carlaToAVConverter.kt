@@ -26,6 +26,7 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType
 import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.CloudyNoon
 import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.CloudySunset
 import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.Default
+import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.DustStorm
 import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.HardRainNoon
 import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.HardRainSunset
 import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType.MidRainNoon
@@ -46,6 +47,7 @@ import tools.aqua.stars.importer.carla.dataclasses.JsonDataWeatherParametersType
  */
 fun JsonTickData.toTickData(world: World, source: String): TickData =
     TickData(
+        world = world,
         currentTickUnit = TickDataUnitSeconds(currentTick),
         entities = actorPositions.mapNotNull { it.toActorOrNull(world = world) }.toSet(),
         trafficLights = actorPositions.mapNotNull { it.toTrafficLightOrNull() },
@@ -92,11 +94,15 @@ fun JsonVehicle.toVehicle(positionOnLane: Double, lane: Lane): Vehicle =
         location = location.toLocation(),
         rotation = rotation.toRotation(),
         collisions = collisions,
+        laneMarkingContacts = laneMarkingContacts.map { it.toLaneMarkingContact() },
         isEgo = egoVehicle,
         forwardVector = forwardVector.toVector3D(),
         velocity = velocity.toVector3D(),
         acceleration = acceleration.toVector3D(),
         angularVelocity = angularVelocity.toVector3D(),
+        leftBlinker = leftBlinker,
+        rightBlinker = rightBlinker,
+        steeringAngle = steeringAngle,
         lane = lane,
         positionOnLane = positionOnLane,
         vehicleType = getVehicleTypeFromTypeId(typeId),
@@ -116,8 +122,31 @@ fun JsonPedestrian.toPedestrian(positionOnLane: Double, lane: Lane): Pedestrian 
         location = location.toLocation(),
         rotation = rotation.toRotation(),
         collisions = collisions,
+        laneMarkingContacts = laneMarkingContacts.map { it.toLaneMarkingContact() },
         lane = lane,
         positionOnLane = positionOnLane,
+        velocity = velocity.toVector3D(),
+        acceleration = acceleration.toVector3D(),
+        angularVelocity = angularVelocity.toVector3D(),
+    )
+
+/** Converts [JsonLaneMarking] to [LaneMarking]. */
+fun JsonLaneMarking.toLaneMarking(): LaneMarking =
+    LaneMarking(
+        markingType = LaneMarkingType.getByValue(markingType.value),
+        color = LaneMarkingColor.getByValue(color.value),
+        width = width,
+    )
+
+/** Converts [JsonLaneMarkingContact] to [LaneMarkingContact]. */
+fun JsonLaneMarkingContact.toLaneMarkingContact(): LaneMarkingContact =
+    LaneMarkingContact(
+        side = ContactSide.getByValue(side),
+        roadId = roadId,
+        laneId = laneId,
+        marking = marking?.toLaneMarking(),
+        isCrossing = isCrossing,
+        penetration = penetration,
     )
 
 /** Converts [JsonWorld] to [Map]. */
@@ -165,6 +194,9 @@ fun JsonLane.toLane(isJunction: Boolean): Lane =
             contactAreas = emptyList(),
             trafficLights = emptyList(),
             laneDirection = LaneDirection.UNKNOWN,
+            leftLaneMarking = leftLaneMarking?.toLaneMarking(),
+            rightLaneMarking = rightLaneMarking?.toLaneMarking(),
+            laneTopology = LaneTopology.getByValue(laneTopology),
         )
         .apply {
           trafficLights = this@toLane.trafficLights.map { it.toStaticTrafficLight() }
@@ -310,6 +342,7 @@ fun JsonDataWeatherParametersType.toWeatherType(): WeatherType =
       MidRainSunset -> WeatherType.MidRainy
       HardRainNoon,
       HardRainSunset -> WeatherType.HardRainy
+      DustStorm -> WeatherType.DustStorm
     }
 
 /** Extracts [Daytime] from [JsonDataWeatherParametersType]. */
@@ -321,6 +354,7 @@ fun JsonDataWeatherParametersType.toDaytime(): Daytime =
       SoftRainNoon,
       CloudyNoon,
       WetCloudyNoon,
+      DustStorm,
       ClearNoon -> Daytime.Noon
       HardRainSunset,
       SoftRainSunset,
@@ -430,6 +464,17 @@ private fun JsonLane.update(lanes: List<Lane>) {
         }
         jsonContactArea.toContactArea(contactLane1, contactLane2)
       }
+
+  // Adjacent and overlapping lanes may reference lanes that are not part of the loaded map
+  // (e.g. opposite-direction or non-driving lanes); resolve them leniently and skip misses.
+  fun resolve(info: JsonContactLaneInfo): ContactLaneInfo? =
+      lanes
+          .firstOrNull { it.laneId == info.laneId && it.road.id == info.roadId }
+          ?.let { ContactLaneInfo(lane = it) }
+
+  lane.leftLane = this.leftLane?.let { resolve(it) }
+  lane.rightLane = this.rightLane?.let { resolve(it) }
+  lane.overlappingLanes = this.overlappingLanes.mapNotNull { resolve(it) }
 }
 
 private fun Lane.update() {
