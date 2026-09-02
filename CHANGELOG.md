@@ -30,17 +30,20 @@ All notable changes to this project will be documented in this file.
 - Add adjustable log levels for loggers and evaluation hooks.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
-- Import the additional fields from the updated CARLA export: lane marking contacts (`Actor.laneMarkingContacts`), vehicle blinkers and steering angle (`Vehicle.leftBlinker`, `Vehicle.rightBlinker`, `Vehicle.steeringAngle`), pedestrian kinematics (`Pedestrian.velocity`, `Pedestrian.acceleration`, `Pedestrian.angularVelocity`), and per-lane markings, adjacent/overlapping lanes and topology (`Lane.leftLaneMarking`, `Lane.rightLaneMarking`, `Lane.leftLane`, `Lane.rightLane`, `Lane.overlappingLanes`, `Lane.laneTopology`).
-- Add `LaneMarking`, `LaneMarkingType`, `LaneMarkingColor`, `LaneMarkingContact`, `ContactSide`, and `LaneTopology` data classes/enums.
-- Add `WeatherType.DustStorm` and the corresponding `DustStorm` CARLA weather preset.
+- Add `LaneMarking`, `LaneMarkingType`, `LaneMarkingColor`, `LaneMarkingContact`, `ContactSide` and `LaneTopology`.
+- Add fields to `Actor` (lane marking contacts), `Vehicle` (blinkers, steering angle), `Pedestrian` (velocity, acceleration, angular velocity) and `Lane` (edge markings, adjacent/overlapping lanes, topology).
+- Add `WeatherType.DustStorm` and the `DustStorm` CARLA weather preset.
+- Add `hasSeed` and `orderDynamicDataFilesBySeed` helpers to the CARLA importer.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
 - Fix yield calculation for specific CARLA maps.
-- Fix `getSeed` throwing when a dynamic data filename carries no `_seed_<n>` marker; it now returns `0`.
+- Support CARLA data files whose filename carries no `_seed_<n>` marker.
 
 ### Changed
 - Move the manual labeling DSL (`ManualLabelFile`, `manuallyLabelledFile`, `ManualLabelPredicate`, `ManualLabelInterval`) into `stars-core`'s `testFixtures` source set; it is now only available via the `test-fixtures` artifact.
+- `loadTicks`'s `orderFilesBySeed` flag is now respected and only sorts when every filename has a `_seed_<n>` marker; removed the unused `orderFilesBySeed` parameter from the `loadTicks(List<CarlaSimulationRunsWrapper>, …)` overload.
+- `getMapName` now rejects an empty filename with an error.
 - Make `interval(...)` optional in the manual labeling DSL: a predicate without an interval is checked against every tick, and an interval matching no ticks fails instead of passing silently.
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 - Remove `evaluate()` from `EvaluationHook`.
