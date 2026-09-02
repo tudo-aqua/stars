@@ -25,6 +25,9 @@ import tools.aqua.stars.core.types.TickUnit
 /**
  * The DSL builder for manual label predicates.
  *
+ * Configuring [interval]s is optional: a predicate without any interval is validated against every
+ * tick in the enclosing [ManualLabelFile].
+ *
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].

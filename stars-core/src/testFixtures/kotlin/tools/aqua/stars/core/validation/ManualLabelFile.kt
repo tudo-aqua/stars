@@ -46,11 +46,12 @@ class ManualLabelFile<
    *
    * @param predicate The abstract predicate to be evaluated against tick sequences.
    * @param manualLabelPredicateInvocation A lambda for configuring the manual label predicate,
-   *   including defining the intervals where the predicate is expected to hold true.
+   *   including defining the intervals where the predicate is expected to hold true. Optional: when
+   *   no interval is configured, the predicate is expected to hold for every tick in the file.
    */
   fun predicateHolds(
       predicate: Predicate<T>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<T, U, D>.() -> Unit,
+      manualLabelPredicateInvocation: ManualLabelPredicate<T, U, D>.() -> Unit = {},
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)
@@ -63,11 +64,13 @@ class ManualLabelFile<
    *
    * @param predicate The abstract predicate to be evaluated against tick sequences.
    * @param manualLabelPredicateInvocation A lambda for configuring the manual label predicate,
-   *   including defining the intervals where the predicate is expected not to hold true.
+   *   including defining the intervals where the predicate is expected not to hold true. Optional:
+   *   when no interval is configured, the predicate is expected not to hold for any tick in the
+   *   file.
    */
   fun predicateDoesNotHold(
       predicate: Predicate<T>,
-      manualLabelPredicateInvocation: ManualLabelPredicate<T, U, D>.() -> Unit,
+      manualLabelPredicateInvocation: ManualLabelPredicate<T, U, D>.() -> Unit = {},
   ) {
     val manualLabelPredicate = ManualLabelPredicate(predicate)
     manualLabelPredicate.apply(manualLabelPredicateInvocation)
