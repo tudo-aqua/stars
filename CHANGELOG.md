@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Add adjustable log levels for loggers and evaluation hooks.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
+- Add relative comparison functions `isBehindOf`, `isInFrontOf` and `isParallelTo` to `BoundingBox2D`.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
