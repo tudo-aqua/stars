@@ -223,7 +223,7 @@ fun loadTicks(
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
-): Sequence<TickSequence<TickData>> =
+): TickSequence<TickData> =
     loadTicks(
         simulationRunsWrappers =
             listOf(
@@ -237,7 +237,7 @@ fun loadTicks(
         egoIds = egoIds,
         useEveryVehicleAsEgo = useEveryVehicleAsEgo,
         useFirstVehicleAsEgo = useFirstVehicleAsEgo,
-    )
+    ).first()
 
 /**
  * Returns a [Sequence] of [TickSequence]s given a path to a [mapDataFile] in combination with a
