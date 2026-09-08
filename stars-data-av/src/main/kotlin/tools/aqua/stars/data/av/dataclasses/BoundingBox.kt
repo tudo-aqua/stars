@@ -41,6 +41,8 @@ data class BoundingBox(
     val topLeftBack: Location = Location(),
 ) {
 
+  val length: Double = (bottomLeftFront - bottomLeftBack).magnitude()
+
   /** Converts this [BoundingBox] to a 2D [BoundingBox2D]. */
   fun toBoundingBox2D(): BoundingBox2D =
       BoundingBox2D(

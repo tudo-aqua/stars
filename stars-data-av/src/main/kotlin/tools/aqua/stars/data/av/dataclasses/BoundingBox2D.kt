@@ -156,4 +156,50 @@ data class BoundingBox2D(
     }
     return true
   }
+
+  /**
+   * Checks if this [BoundingBox2D] is entirely behind [other] with respect to their shared
+   * direction of travel, i.e. every vertex of this bounding box lies further back along the
+   * [vectorFront] axis than every vertex of [other]. Only the longitudinal position is compared;
+   * any lateral (left/right) offset is ignored, so two bounding boxes on neighboring lanes can be
+   * "behind"/"in front of" each other even though they would not collide if one were extended
+   * towards the front (see [extendFront] and [collidesWith]).
+   *
+   * This assumes both bounding boxes have (approximately) the same heading, e.g. because they are
+   * on a straight street. If neither this nor [other] [isBehindOf] the other, they are positioned
+   * side by side, see [isParallelTo]. A pair of bounding boxes that only touch at a single point
+   * along the front axis (no overlap, but no gap either) is considered side by side rather than
+   * behind/in front of, so that the two properties stay mutually exclusive with [isParallelTo].
+   */
+  fun isBehindOf(other: BoundingBox2D): Boolean {
+    val axis = vectorFront
+    val thisMax = getVertices().maxOf { axis.dot(it.toVector2D()) }
+    val otherMin = other.getVertices().minOf { axis.dot(it.toVector2D()) }
+    return thisMax < otherMin
+  }
+
+  /**
+   * Checks if this [BoundingBox2D] is entirely in front of [other], i.e. [other] [isBehindOf] this
+   * [BoundingBox2D]. See [isBehindOf] for details, in particular regarding lateral offset.
+   */
+  fun isInFrontOf(other: BoundingBox2D): Boolean = other.isBehindOf(this)
+
+  /**
+   * Checks if this [BoundingBox2D] is positioned side by side with [other], i.e. neither is
+   * entirely behind the other along their direction of travel, so the two bounding boxes would
+   * touch if both were extended sideways (see [extendLeft]/[extendRight]) far enough. This is the
+   * counterpart to [isBehindOf]/[isInFrontOf]: for two bounding boxes with the same heading, exactly
+   * one of "behind", "in front of" or "parallel to" holds.
+   */
+  fun isParallelTo(other: BoundingBox2D): Boolean {
+    listOf(vectorFront, other.vectorFront).forEach { axis ->
+      val vertices1 = this.getVertices().map { axis.dot(it.toVector2D()) }
+      val vertices2 = other.getVertices().map { axis.dot(it.toVector2D()) }
+
+      if (vertices1.max() < vertices2.min() || vertices2.max() < vertices1.min()) {
+        return false
+      }
+    }
+    return true
+  }
 }
