@@ -26,17 +26,25 @@ import tools.aqua.stars.core.types.TickUnit
  */
 data class TickDataUnitMilliseconds(val tickMillis: Long) :
     TickUnit<TickDataUnitMilliseconds, TickDataDifferenceMilliseconds>() {
-  override fun plus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
+  override operator fun plus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
       TickDataUnitMilliseconds(this.tickMillis + other.differenceMillis)
 
-  override fun minus(other: TickDataUnitMilliseconds): TickDataDifferenceMilliseconds =
+  operator fun plus(millis: Number): TickDataUnitMilliseconds =
+      TickDataUnitMilliseconds(this.tickMillis + millis.toLong())
+
+  override operator fun minus(other: TickDataUnitMilliseconds): TickDataDifferenceMilliseconds =
       TickDataDifferenceMilliseconds(this.tickMillis - other.tickMillis)
 
-  override fun minus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
+  override operator fun minus(other: TickDataDifferenceMilliseconds): TickDataUnitMilliseconds =
       TickDataUnitMilliseconds(this.tickMillis - other.differenceMillis)
 
-  override fun compareTo(other: TickDataUnitMilliseconds): Int =
+  operator fun minus(millis: Number): TickDataUnitMilliseconds =
+      TickDataUnitMilliseconds(this.tickMillis - millis.toLong())
+
+  override operator fun compareTo(other: TickDataUnitMilliseconds): Int =
       this.tickMillis.compareTo(other.tickMillis)
+
+  operator fun compareTo(millis: Number): Int = this.tickMillis.compareTo(millis.toLong())
 
   override fun serialize(): String = this.tickMillis.toString()
 
@@ -44,10 +52,4 @@ data class TickDataUnitMilliseconds(val tickMillis: Long) :
       TickDataUnitMilliseconds(str.toLong())
 
   override fun toString(): String = "${this.tickMillis}ms"
-
-  override fun equals(other: Any?): Boolean =
-      if (other is TickDataUnitMilliseconds) this.tickMillis == other.tickMillis
-      else super.equals(other)
-
-  override fun hashCode(): Int = this.tickMillis.hashCode()
 }

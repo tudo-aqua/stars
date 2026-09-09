@@ -24,16 +24,25 @@ import tools.aqua.stars.core.types.TickDifference
  *
  * @property differenceSeconds Difference in seconds.
  */
-class TickDataDifferenceSeconds(val differenceSeconds: Double) :
+data class TickDataDifferenceSeconds(val differenceSeconds: Double) :
     TickDifference<TickDataDifferenceSeconds>() {
-  override fun compareTo(other: TickDataDifferenceSeconds): Int =
-      this.differenceSeconds.compareTo(other.differenceSeconds)
-
-  override fun plus(other: TickDataDifferenceSeconds): TickDataDifferenceSeconds =
+  override operator fun plus(other: TickDataDifferenceSeconds): TickDataDifferenceSeconds =
       TickDataDifferenceSeconds(this.differenceSeconds + other.differenceSeconds)
 
-  override fun minus(other: TickDataDifferenceSeconds): TickDataDifferenceSeconds =
+  operator fun plus(seconds: Number): TickDataDifferenceSeconds =
+      TickDataDifferenceSeconds(this.differenceSeconds + seconds.toDouble())
+
+  override operator fun minus(other: TickDataDifferenceSeconds): TickDataDifferenceSeconds =
       TickDataDifferenceSeconds(this.differenceSeconds - other.differenceSeconds)
+
+  operator fun minus(seconds: Number): TickDataDifferenceSeconds =
+      TickDataDifferenceSeconds(this.differenceSeconds - seconds.toDouble())
+
+  override operator fun compareTo(other: TickDataDifferenceSeconds): Int =
+      this.differenceSeconds.compareTo(other.differenceSeconds)
+
+  operator fun compareTo(seconds: Number): Int =
+      this.differenceSeconds.compareTo(seconds.toDouble())
 
   override fun serialize(): String = this.differenceSeconds.toString()
 
@@ -41,10 +50,4 @@ class TickDataDifferenceSeconds(val differenceSeconds: Double) :
       TickDataDifferenceSeconds(str.toDouble())
 
   override fun toString(): String = "${this.differenceSeconds}s"
-
-  override fun equals(other: Any?): Boolean =
-      if (other is TickDataDifferenceSeconds) this.differenceSeconds == other.differenceSeconds
-      else super.equals(other)
-
-  override fun hashCode(): Int = this.differenceSeconds.hashCode()
 }

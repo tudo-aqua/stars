@@ -26,14 +26,26 @@ import tools.aqua.stars.core.types.TickDifference
  */
 data class TickDataDifferenceMilliseconds(val differenceMillis: Long) :
     TickDifference<TickDataDifferenceMilliseconds>() {
-  override fun compareTo(other: TickDataDifferenceMilliseconds): Int =
-      this.differenceMillis.compareTo(other.differenceMillis)
-
-  override fun plus(other: TickDataDifferenceMilliseconds): TickDataDifferenceMilliseconds =
+  override operator fun plus(
+      other: TickDataDifferenceMilliseconds
+  ): TickDataDifferenceMilliseconds =
       TickDataDifferenceMilliseconds(this.differenceMillis + other.differenceMillis)
 
-  override fun minus(other: TickDataDifferenceMilliseconds): TickDataDifferenceMilliseconds =
+  operator fun plus(millis: Number): TickDataDifferenceMilliseconds =
+      TickDataDifferenceMilliseconds(this.differenceMillis + millis.toLong())
+
+  override operator fun minus(
+      other: TickDataDifferenceMilliseconds
+  ): TickDataDifferenceMilliseconds =
       TickDataDifferenceMilliseconds(this.differenceMillis - other.differenceMillis)
+
+  operator fun minus(millis: Number): TickDataDifferenceMilliseconds =
+      TickDataDifferenceMilliseconds(this.differenceMillis - millis.toLong())
+
+  override operator fun compareTo(other: TickDataDifferenceMilliseconds): Int =
+      this.differenceMillis.compareTo(other.differenceMillis)
+
+  operator fun compareTo(millis: Number): Int = this.differenceMillis.compareTo(millis.toLong())
 
   override fun serialize(): String = this.differenceMillis.toString()
 
@@ -41,10 +53,4 @@ data class TickDataDifferenceMilliseconds(val differenceMillis: Long) :
       TickDataDifferenceMilliseconds(str.toLong())
 
   override fun toString(): String = "${this.differenceMillis}ms"
-
-  override fun equals(other: Any?): Boolean =
-      if (other is TickDataDifferenceMilliseconds) this.differenceMillis == other.differenceMillis
-      else super.equals(other)
-
-  override fun hashCode(): Int = this.differenceMillis.hashCode()
 }
