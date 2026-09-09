@@ -26,17 +26,26 @@ import tools.aqua.stars.core.types.TickUnit
  */
 class TickDataUnitSeconds(val tickSeconds: Double) :
     TickUnit<TickDataUnitSeconds, TickDataDifferenceSeconds>() {
-  override fun plus(other: TickDataDifferenceSeconds): TickDataUnitSeconds =
+  override operator fun plus(other: TickDataDifferenceSeconds): TickDataUnitSeconds =
       TickDataUnitSeconds(this.tickSeconds + other.differenceSeconds)
 
-  override fun minus(other: TickDataDifferenceSeconds): TickDataUnitSeconds =
+  operator fun plus(seconds: Number): TickDataUnitSeconds =
+      TickDataUnitSeconds(this.tickSeconds + seconds.toDouble())
+
+  override operator fun minus(other: TickDataDifferenceSeconds): TickDataUnitSeconds =
       TickDataUnitSeconds(this.tickSeconds - other.differenceSeconds)
 
-  override fun minus(other: TickDataUnitSeconds): TickDataDifferenceSeconds =
+  override operator fun minus(other: TickDataUnitSeconds): TickDataDifferenceSeconds =
       TickDataDifferenceSeconds(this.tickSeconds - other.tickSeconds)
 
-  override fun compareTo(other: TickDataUnitSeconds): Int =
+  operator fun minus(seconds: Number): TickDataUnitSeconds =
+      TickDataUnitSeconds(this.tickSeconds - seconds.toDouble())
+
+  override operator fun compareTo(other: TickDataUnitSeconds): Int =
       this.tickSeconds.compareTo(other.tickSeconds)
+
+  operator fun compareTo(seconds: Number): Int =
+      this.tickSeconds.compareTo(seconds.toDouble())
 
   override fun serialize(): String = this.tickSeconds.toString()
 
