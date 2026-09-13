@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Add adjustable log levels for loggers and evaluation hooks.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
+- Add CMFTBL operator `freeze` to freeze the current timestamp of a predicate evaluation and use it for future evaluations.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
@@ -42,6 +43,7 @@ All notable changes to this project will be documented in this file.
 - Remove `evaluate()` from `EvaluationHook`.
 - Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 
 - Move `evaluationFunction()` from constructor to `evaluate()` function in `PreTickEvaluationHook` and `PreTSCEvaluationHook`.
+- Move CMFTBL operator `bind` to package `misc`.
 
 ## [2.1] - 23.01.2026
 
