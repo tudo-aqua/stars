@@ -192,8 +192,9 @@ fun loadTicks(
 }
 
 /**
- * Returns a [TickSequence]s given a [CarlaSimulationRunsWrapper]. The [CarlaSimulationRunsWrapper]
- * contains the information about the used map data and the dynamic data, each as [Path]s.
+ * Returns a [Sequence] of [TickSequence]s given a [CarlaSimulationRunsWrapper]. The
+ * [CarlaSimulationRunsWrapper] contains the information about the used map data and the dynamic
+ * data, each as [Path]s.
  *
  * Exactly one of [useEveryVehicleAsEgo], [useFirstVehicleAsEgo], [egoIds], or ego-flagged IDs in
  * the loaded data must be used to select ego vehicles.
@@ -214,7 +215,7 @@ fun loadTicks(
  *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
  *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
  *   flags in the JSON input.
- * @return A [TickSequence]s based on the given [simulationRunsWrapper].
+ * @return A [Sequence] of [TickSequence]s based on the given [simulationRunsWrapper].
  */
 fun loadTicks(
     simulationRunsWrapper: CarlaSimulationRunsWrapper,
@@ -223,16 +224,15 @@ fun loadTicks(
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
-): TickSequence<TickData> =
+): Sequence<TickSequence<TickData>> =
     loadTicks(
-            simulationRunsWrappers = listOf(simulationRunsWrapper),
-            bufferSize = bufferSize,
-            orderFilesBySeed = orderFilesBySeed,
-            egoIds = egoIds,
-            useEveryVehicleAsEgo = useEveryVehicleAsEgo,
-            useFirstVehicleAsEgo = useFirstVehicleAsEgo,
-        )
-        .first()
+        simulationRunsWrappers = listOf(simulationRunsWrapper),
+        bufferSize = bufferSize,
+        orderFilesBySeed = orderFilesBySeed,
+        egoIds = egoIds,
+        useEveryVehicleAsEgo = useEveryVehicleAsEgo,
+        useFirstVehicleAsEgo = useFirstVehicleAsEgo,
+    )
 
 /**
  * Returns a [Sequence] of [TickSequence]s given a path to a [mapDataFile] in combination with a
