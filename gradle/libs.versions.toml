@@ -24,7 +24,7 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version =
 
 [plugins]
 task-tree = { id = "com.dorongold.task-tree", version = "4.0.2" }
-versions = { id = "com.github.ben-manes.versions", version = "0.53.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.61.0" }
 spotless = { id = "com.diffplug.spotless", version = "8.10.0" }
 git-versioning = { id = "me.qoomon.git-versioning", version = "6.4.4" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
