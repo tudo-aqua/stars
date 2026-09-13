@@ -36,6 +36,15 @@ package tools.aqua.stars.data.av.dataclasses
  * @property contactAreas List of [ContactArea]s on this [Lane].
  * @property trafficLights List of [StaticTrafficLight]s on this [Lane].
  * @property laneDirection The [LaneDirection] of this [Lane].
+ * @property leftLaneMarking The [LaneMarking] on the left edge of this [Lane], if any.
+ * @property rightLaneMarking The [LaneMarking] on the right edge of this [Lane], if any.
+ * @property leftLane The adjacent [Lane] to the left (via [ContactLaneInfo]), if any.
+ * @property rightLane The adjacent [Lane] to the right (via [ContactLaneInfo]), if any.
+ * @property overlappingLanes List of [ContactLaneInfo]s for [Lane]s that physically share the same
+ *   road surface with this [Lane] for a stretch (e.g. a highway on-/off-ramp running alongside the
+ *   mainline).
+ * @property laneTopology The [LaneTopology] describing how this [Lane] relates to its
+ *   [overlappingLanes].
  */
 data class Lane(
     val laneId: Int = 0,
@@ -52,6 +61,12 @@ data class Lane(
     var contactAreas: List<ContactArea> = emptyList(),
     var trafficLights: List<StaticTrafficLight> = emptyList(),
     var laneDirection: LaneDirection = LaneDirection.STRAIGHT,
+    val leftLaneMarking: LaneMarking? = null,
+    val rightLaneMarking: LaneMarking? = null,
+    var leftLane: ContactLaneInfo? = null,
+    var rightLane: ContactLaneInfo? = null,
+    var overlappingLanes: List<ContactLaneInfo> = emptyList(),
+    val laneTopology: LaneTopology = LaneTopology.None,
 ) {
 
   /** The [Road] this [Lane] belongs to. */

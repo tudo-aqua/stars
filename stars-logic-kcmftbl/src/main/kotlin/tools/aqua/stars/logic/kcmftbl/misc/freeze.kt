@@ -15,28 +15,25 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.data.av.dataclasses
+package tools.aqua.stars.logic.kcmftbl.misc
+
+import tools.aqua.stars.core.types.EntityType
+import tools.aqua.stars.core.types.TickDataType
+import tools.aqua.stars.core.types.TickDifference
+import tools.aqua.stars.core.types.TickUnit
 
 /**
- * Weather presets for the simulator.
+ * Implementation of the 'freeze' operator.
  *
- * Values mirror the CARLA Python API.
+ * @param E [EntityType].
+ * @param T [TickDataType].
+ * @param U [TickUnit].
+ * @param D [TickDifference].
+ * @param phi The predicate.
  */
-enum class WeatherType {
-  /** Clear sky / no precipitation. */
-  Clear,
-  /** Overcast / cloudy. */
-  Cloudy,
-  /** Wet ground / aftermath of rain. */
-  Wet,
-  /** Wet ground with cloud cover. */
-  WetCloudy,
-  /** Light/soft rain. */
-  SoftRainy,
-  /** Moderate rain. */
-  MidRainy,
-  /** Heavy rain. */
-  HardRainy,
-  /** Dust storm. */
-  DustStorm,
-}
+fun <
+    E : EntityType<E, T, U, D>,
+    T : TickDataType<E, T, U, D>,
+    U : TickUnit<U, D>,
+    D : TickDifference<D>,
+    > freeze(tick: T, phi: (U) -> Boolean): Boolean = phi(tick.currentTickUnit)

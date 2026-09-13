@@ -37,6 +37,7 @@ import kotlinx.serialization.Serializable
  * @property semanticTags The semantic tags of the [JsonTrafficSign] from the CARLA simulation.
  * @property boundingBox The bounding box of the [JsonTrafficSign].
  * @property collisions The list of actor IDs, this [JsonTrafficSign] is colliding with.
+ * @property laneMarkingContacts The lane markings this [JsonTrafficSign]'s bounding box touches.
  */
 @Serializable
 @SerialName("TrafficSign")
@@ -54,4 +55,6 @@ data class JsonTrafficSign(
     @SerialName("semantic_tags") override val semanticTags: List<Int>,
     @SerialName("bounding_box") override val boundingBox: JsonBoundingBox?,
     @SerialName("collisions") override val collisions: List<Int>,
+    @SerialName("lane_marking_contacts")
+    override val laneMarkingContacts: List<JsonLaneMarkingContact> = emptyList(),
 ) : JsonActor()
