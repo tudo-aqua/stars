@@ -31,6 +31,9 @@ All notable changes to this project will be documented in this file.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
 - Add CMFTBL operator `freeze` to freeze the current timestamp of a predicate evaluation and use it for future evaluations.
+- Add `plus(Number)`, `minus(Number)`, and `compareTo(Number)` operator overloads to `TickDataUnitSeconds`, `TickDataDifferenceSeconds`, `TickDataUnitMilliseconds`, and `TickDataDifferenceMilliseconds`.
+- Add relative comparison functions `isBehindOf`, `isInFrontOf` and `isParallelTo` to `BoundingBox2D`.
+- Add `loadTicks` overloads returning a single `TickSequence<TickData>`.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
@@ -44,6 +47,8 @@ All notable changes to this project will be documented in this file.
 - Change `PreTickEvaluationHook` and `PreTSCEvaluationHook` to be `abstract` classes. 
 - Move `evaluationFunction()` from constructor to `evaluate()` function in `PreTickEvaluationHook` and `PreTSCEvaluationHook`.
 - Move CMFTBL operator `bind` to package `misc`.
+- Change `TickDataUnitSeconds` and `TickDataDifferenceSeconds` to `data class`, for consistency with `TickDataUnitMilliseconds` and `TickDataDifferenceMilliseconds`.
+- Change `loadTicks(mapDataFile: Path, dynamicDataFile: Path, ...)` return type from `Sequence<TickSequence<TickData>>` to `TickSequence<TickData>`, since it only ever loads one recording.
 
 ## [2.1] - 23.01.2026
 
