@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - Add unlimited buffer size (`bufferSize = -1`) to `TickSequence`.
 - Add `asSegment` extension function to load an `Iterable<TickDataType>` as a single, fully linked `TickSequence`.
 - Add `plus(Number)`, `minus(Number)`, and `compareTo(Number)` operator overloads to `TickDataUnitSeconds`, `TickDataDifferenceSeconds`, `TickDataUnitMilliseconds`, and `TickDataDifferenceMilliseconds`.
+- Add relative comparison functions `isBehindOf`, `isInFrontOf` and `isParallelTo` to `BoundingBox2D`.
 - Add `loadTicks` overloads returning a single `TickSequence<TickData>`.
 
 ### Fixed
