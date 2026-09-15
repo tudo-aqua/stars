@@ -27,9 +27,9 @@ import kotlin.test.assertTrue
  */
 class BoundingBoxComparisonTest {
 
-  /** Test AABoundingBox2D one in front of the other. */
+  /** Test BoundingBox2D one in front of the other. */
   @Test
-  fun `Test AABoundingBox2D in front of other`() {
+  fun `Test BoundingBox2D in front of other`() {
     val bb1 =
         BoundingBox2D(
             leftFront = Location2D(3.0, 3.0),
@@ -56,9 +56,9 @@ class BoundingBoxComparisonTest {
     assertFalse(bb2.isInFrontOf(bb1))
   }
 
-  /** Test AABoundingBox2D one in front of the other but touching at a point. */
+  /** Test BoundingBox2D one in front of the other but touching at a point. */
   @Test
-  fun `Test AABoundingBox2D in front of other but touching at a point`() {
+  fun `Test BoundingBox2D in front of other but touching at a point`() {
     val bb1 =
         BoundingBox2D(
             leftFront = Location2D(2.0, 3.0),
@@ -85,9 +85,9 @@ class BoundingBoxComparisonTest {
     assertFalse(bb2.isInFrontOf(bb1))
   }
 
-  /** Test AABoundingBox2D parallel. */
+  /** Test BoundingBox2D parallel. */
   @Test
-  fun `Test AABoundingBox2D parallel`() {
+  fun `Test BoundingBox2D parallel`() {
     val bb1 =
         BoundingBox2D(
             leftFront = Location2D(1.0, 3.0),
@@ -114,9 +114,9 @@ class BoundingBoxComparisonTest {
     assertFalse(bb2.isInFrontOf(bb1))
   }
 
-  /** Test AABoundingBox2D parallel with offset. */
+  /** Test BoundingBox2D parallel with offset. */
   @Test
-  fun `Test AABoundingBox2D parallel with offset`() {
+  fun `Test BoundingBox2D parallel with offset`() {
     val bb1 =
         BoundingBox2D(
             leftFront = Location2D(1.5, 3.0),
