@@ -21,12 +21,15 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-/** Tests for [BoundingBox2D.collidesWith]. */
+/**
+ * Tests for [BoundingBox2D.isBehindOf], [BoundingBox2D.isInFrontOf], and
+ * [BoundingBox2D.isParallelTo].
+ */
 class BoundingBoxComparisonTest {
 
-  /** Test AABoundingBox2D one in front of the other. */
+  /** Test BoundingBox2D one in front of the other. */
   @Test
-  fun `Test AABoundingBox2D in front of other`() {
+  fun `Test BoundingBox2D in front of other`() {
     val bb1 =
         BoundingBox2D(
             leftFront = Location2D(3.0, 3.0),
@@ -53,24 +56,24 @@ class BoundingBoxComparisonTest {
     assertFalse(bb2.isInFrontOf(bb1))
   }
 
-  /** Test AABoundingBox2D one in front of the other but touching at a point. */
+  /** Test BoundingBox2D one in front of the other but touching at a point. */
   @Test
-  fun `Test AABoundingBox2D in front of other but touching at a point`() {
+  fun `Test BoundingBox2D in front of other but touching at a point`() {
     val bb1 =
-      BoundingBox2D(
-        leftFront = Location2D(2.0, 3.0),
-        rightFront = Location2D(2.0, 2.0),
-        rightBack = Location2D(1.0, 2.0),
-        leftBack = Location2D(1.0, 3.0),
-      )
+        BoundingBox2D(
+            leftFront = Location2D(2.0, 3.0),
+            rightFront = Location2D(2.0, 2.0),
+            rightBack = Location2D(1.0, 2.0),
+            leftBack = Location2D(1.0, 3.0),
+        )
 
     val bb2 =
-      BoundingBox2D(
-        leftFront = Location2D(1.0, 1.0),
-        rightFront = Location2D(1.0, 0.0),
-        rightBack = Location2D(0.0, 0.0),
-        leftBack = Location2D(0.0, 1.0),
-      )
+        BoundingBox2D(
+            leftFront = Location2D(1.0, 1.0),
+            rightFront = Location2D(1.0, 0.0),
+            rightBack = Location2D(0.0, 0.0),
+            leftBack = Location2D(0.0, 1.0),
+        )
 
     assertFalse(bb1.isBehindOf(bb2))
     assertFalse(bb2.isBehindOf(bb1))
@@ -82,24 +85,24 @@ class BoundingBoxComparisonTest {
     assertFalse(bb2.isInFrontOf(bb1))
   }
 
-  /** Test AABoundingBox2D parallel. */
+  /** Test BoundingBox2D parallel. */
   @Test
-  fun `Test AABoundingBox2D parallel`() {
+  fun `Test BoundingBox2D parallel`() {
     val bb1 =
-      BoundingBox2D(
-        leftFront = Location2D(1.0, 3.0),
-        rightFront = Location2D(1.0, 2.0),
-        rightBack = Location2D(0.0, 2.0),
-        leftBack = Location2D(0.0, 3.0),
-      )
+        BoundingBox2D(
+            leftFront = Location2D(1.0, 3.0),
+            rightFront = Location2D(1.0, 2.0),
+            rightBack = Location2D(0.0, 2.0),
+            leftBack = Location2D(0.0, 3.0),
+        )
 
     val bb2 =
-      BoundingBox2D(
-        leftFront = Location2D(1.0, 1.0),
-        rightFront = Location2D(1.0, 0.0),
-        rightBack = Location2D(0.0, 0.0),
-        leftBack = Location2D(0.0, 1.0),
-      )
+        BoundingBox2D(
+            leftFront = Location2D(1.0, 1.0),
+            rightFront = Location2D(1.0, 0.0),
+            rightBack = Location2D(0.0, 0.0),
+            leftBack = Location2D(0.0, 1.0),
+        )
 
     assertFalse(bb1.isBehindOf(bb2))
     assertFalse(bb2.isBehindOf(bb1))
@@ -111,26 +114,24 @@ class BoundingBoxComparisonTest {
     assertFalse(bb2.isInFrontOf(bb1))
   }
 
-  /**
-   * Test AABoundingBox2D parallel with offset.
-   */
+  /** Test BoundingBox2D parallel with offset. */
   @Test
-  fun `Test AABoundingBox2D parallel with offset`() {
+  fun `Test BoundingBox2D parallel with offset`() {
     val bb1 =
-      BoundingBox2D(
-        leftFront = Location2D(1.5, 3.0),
-        rightFront = Location2D(1.5, 2.0),
-        rightBack = Location2D(0.5, 2.0),
-        leftBack = Location2D(0.5, 3.0),
-      )
+        BoundingBox2D(
+            leftFront = Location2D(1.5, 3.0),
+            rightFront = Location2D(1.5, 2.0),
+            rightBack = Location2D(0.5, 2.0),
+            leftBack = Location2D(0.5, 3.0),
+        )
 
     val bb2 =
-      BoundingBox2D(
-        leftFront = Location2D(1.0, 1.0),
-        rightFront = Location2D(1.0, 0.0),
-        rightBack = Location2D(0.0, 0.0),
-        leftBack = Location2D(0.0, 1.0),
-      )
+        BoundingBox2D(
+            leftFront = Location2D(1.0, 1.0),
+            rightFront = Location2D(1.0, 0.0),
+            rightBack = Location2D(0.0, 0.0),
+            leftBack = Location2D(0.0, 1.0),
+        )
 
     assertFalse(bb1.isBehindOf(bb2))
     assertFalse(bb2.isBehindOf(bb1))

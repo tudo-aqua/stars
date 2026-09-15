@@ -169,8 +169,8 @@ data class BoundingBox2D(
    * the result stays correct even when the two bounding boxes have slightly different headings,
    * e.g. because [other] is mid lane-change. If neither this nor [other] [isBehindOf] the other,
    * they are positioned side by side, see [isParallelTo]. A pair of bounding boxes that only touch
-   * at a single point along a front axis (no overlap, but no gap either) is considered side by
-   * side rather than behind/in front of, so that the two properties stay mutually exclusive with
+   * at a single point along a front axis (no overlap, but no gap either) is considered side by side
+   * rather than behind/in front of, so that the two properties stay mutually exclusive with
    * [isParallelTo].
    */
   fun isBehindOf(other: BoundingBox2D): Boolean =
@@ -190,8 +190,8 @@ data class BoundingBox2D(
    * Checks if this [BoundingBox2D] is positioned side by side with [other], i.e. neither is
    * entirely behind the other along their direction of travel, so the two bounding boxes would
    * touch if both were extended sideways (see [extendLeft]/[extendRight]) far enough. This is the
-   * counterpart to [isBehindOf]/[isInFrontOf]: for two bounding boxes with the same heading, exactly
-   * one of "behind", "in front of" or "parallel to" holds.
+   * counterpart to [isBehindOf]/[isInFrontOf]: for two bounding boxes with the same heading,
+   * exactly one of "behind", "in front of" or "parallel to" holds.
    */
   fun isParallelTo(other: BoundingBox2D): Boolean {
     listOf(vectorFront, other.vectorFront).forEach { axis ->

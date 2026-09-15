@@ -29,6 +29,7 @@ import tools.aqua.stars.core.types.TickUnit
  * @param T [TickDataType].
  * @param U [TickUnit].
  * @param D [TickDifference].
+ * @param tick The [TickDataType] to freeze.
  * @param phi The predicate.
  */
 fun <
@@ -36,4 +37,4 @@ fun <
     T : TickDataType<E, T, U, D>,
     U : TickUnit<U, D>,
     D : TickDifference<D>,
-    > freeze(tick: T, phi: (U) -> Boolean): Boolean = phi(tick.currentTickUnit)
+> freeze(tick: T, phi: (U) -> Boolean): Boolean = phi(tick.currentTickUnit)
