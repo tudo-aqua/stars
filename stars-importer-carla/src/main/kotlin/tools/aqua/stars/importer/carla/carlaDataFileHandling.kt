@@ -203,9 +203,6 @@ fun loadTicks(
  *   dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether to sort the dynamic data files by the seed encoded in their
- *   filename (`..._seed_<n>...`). Has no effect for a single file or when a file carries no seed
- *   marker.
  * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
  *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
  *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
@@ -216,24 +213,22 @@ fun loadTicks(
  *   of each simulation run will be treated as the ego vehicle (this vehicle might not be present in
  *   all ticks). When empty, ego vehicles are determined by [egoIds], [useEveryVehicleAsEgo], or ego
  *   flags in the JSON input.
- * @return A [Sequence] of [TickSequence]s based on the given [mapDataFile] and [dynamicDataFile].
+ * @return A [Sequence] of [TickSequence]s based on the given [simulationRunsWrapper].
  */
 fun loadTicks(
-    mapDataFile: Path,
-    dynamicDataFile: Path,
+    simulationRunsWrapper: CarlaSimulationRunsWrapper,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
-): TickSequence<TickData> =
+): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers = listOf(simulationRunsWrapper),
         bufferSize = bufferSize,
         egoIds = egoIds,
         useEveryVehicleAsEgo = useEveryVehicleAsEgo,
         useFirstVehicleAsEgo = useFirstVehicleAsEgo,
-    ).first()
+    )
 
 /**
  * Returns a [Sequence] of [TickSequence]s given a path to a [mapDataFile] in combination with a
@@ -268,8 +263,8 @@ fun loadTicks(
         simulationRunsWrappers =
             listOf(
                 CarlaSimulationRunsWrapper(
-                    mapDataFile,
-                    dynamicDataFiles,
+                    staticDataFile = mapDataFile,
+                    dynamicDataFiles = dynamicDataFiles,
                     sortFilesBySeed = orderFilesBySeed,
                 )
             ),
@@ -313,9 +308,14 @@ fun loadTicks(
 ): TickSequence<TickData> =
     loadTicks(
             simulationRunsWrappers =
-                listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+                listOf(
+                    CarlaSimulationRunsWrapper(
+                        staticDataFile = mapDataFile,
+                        dynamicDataFiles = listOf(dynamicDataFile),
+                        sortFilesBySeed = orderFilesBySeed,
+                    )
+                ),
             bufferSize = bufferSize,
-            orderFilesBySeed = orderFilesBySeed,
             egoIds = egoIds,
             useEveryVehicleAsEgo = useEveryVehicleAsEgo,
             useFirstVehicleAsEgo = useFirstVehicleAsEgo,
@@ -353,7 +353,13 @@ fun loadTicks(
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =
-            mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
+            mapToDynamicDataFiles.map {
+              CarlaSimulationRunsWrapper(
+                  staticDataFile = it.key,
+                  dynamicDataFiles = it.value,
+                  sortFilesBySeed = orderFilesBySeed,
+              )
+            },
         bufferSize = bufferSize,
         egoIds = egoIds,
         useEveryVehicleAsEgo = useEveryVehicleAsEgo,
@@ -392,7 +398,6 @@ fun loadTicks(
             simulationRunsWrappers =
                 mapToDynamicDataFile.map { CarlaSimulationRunsWrapper(it.key, listOf(it.value)) },
             bufferSize = bufferSize,
-            orderFilesBySeed = orderFilesBySeed,
             egoIds = egoIds,
             useEveryVehicleAsEgo = useEveryVehicleAsEgo,
             useFirstVehicleAsEgo = useFirstVehicleAsEgo,
