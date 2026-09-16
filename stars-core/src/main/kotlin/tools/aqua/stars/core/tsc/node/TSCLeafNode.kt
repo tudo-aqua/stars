@@ -22,7 +22,7 @@ import tools.aqua.stars.core.evaluation.Predicate
 import tools.aqua.stars.core.types.*
 
 /**
- * Leaf [TSC] node.
+ * Leaf TSC node.
  *
  * @param E [EntityType].
  * @param T [TickDataType].
