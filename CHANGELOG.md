@@ -1,3 +1,4 @@
+[2.2]: https://github.com/tudo-aqua/stars/releases/tag/v2.2
 [2.1]: https://github.com/tudo-aqua/stars/releases/tag/v2.1
 [2.0]: https://github.com/tudo-aqua/stars/releases/tag/v2.0
 [1.1]: https://github.com/tudo-aqua/stars/releases/tag/v1.1
@@ -20,7 +21,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.2] - TBA
+## [2.2] - 16.09.2026
 
 ### Added
 - Add `IterationMode` parameter to `TickSequence`.

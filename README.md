@@ -21,7 +21,7 @@ Start by adding the latest version of STARS as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:stars-core:2.1")
+implementation("tools.aqua:stars-core:2.2")
 ```
 
 #### Maven
@@ -29,7 +29,7 @@ implementation("tools.aqua:stars-core:2.1")
 <dependency>
   <groupId>tools.aqua</groupId>
   <artifactId>stars-core</artifactId>
-  <version>2.1</version>
+  <version>2.2</version>
 </dependency>
 ``` 
 
@@ -38,9 +38,9 @@ If you want to use the manual labeling framework, add the following dependencies
 ```kotlin
 dependencies {
   testImplementation(kotlin("test-junit5"))
-  testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.2")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.2")
-  testImplementation(group = "tools.aqua", name = "stars-core", version = "2.1", classifier = "test-fixtures")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.3")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.3")
+  testImplementation(group = "tools.aqua", name = "stars-core", version = "2.2", classifier = "test-fixtures")
 }
 ```
 
