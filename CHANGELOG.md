@@ -46,7 +46,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Move the manual labeling DSL (`ManualLabelFile`, `manuallyLabelledFile`, `ManualLabelPredicate`, `ManualLabelInterval`) into `stars-core`'s `testFixtures` source set; it is now only available via the `test-fixtures` artifact.
-- `loadTicks`'s `orderFilesBySeed` flag is now respected and only sorts when every filename has a `_seed_<n>` marker; removed the unused `orderFilesBySeed` parameter from the `loadTicks(List<CarlaSimulationRunsWrapper>, …)` overload.
+- `loadTicks`'s `sortFilesBySeed` flag is now respected and only sorts when every filename has a `_seed_<n>` marker; removed the unused `sortFilesBySeed` parameter from the `loadTicks(List<CarlaSimulationRunsWrapper>, …)` overload.
 - `getMapName` now rejects an empty filename with an error.
 - Make `interval(...)` optional in the manual labeling DSL: a predicate without an interval is checked against every tick, and an interval matching no ticks fails instead of passing silently.
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
@@ -264,7 +264,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Add git pre-commit hook for `spotlessCheck`
-- Add `orderFilesBySeed` flag to the `loadSegments()` function which loads the `AVDataClasses`
+- Add `sortFilesBySeed` flag to the `loadSegments()` function which loads the `AVDataClasses`
 - Add logging for `AverageVehiclesInEgoBlockMetric`
 - Add additional scaled plots `validTSCInstanceOccurrencesPerProjection_scaled` and
   `validTSCInstancesProgressionPerProjection_combined_percentage_scaled`
