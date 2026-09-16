@@ -43,6 +43,7 @@ dependencies {
 publishing {
   publications {
     create<MavenPublication>("testFixtures") {
+      artifactId = "${project.name}-test-fixtures"
       val testFixturesComponent = components.findByName("testFixtures")
       if (testFixturesComponent != null) {
         from(testFixturesComponent)
