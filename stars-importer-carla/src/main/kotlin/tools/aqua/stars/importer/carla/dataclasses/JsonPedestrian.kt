@@ -35,6 +35,10 @@ import kotlinx.serialization.Serializable
  * @property location The [JsonLocation] of the traffic light
  * @property rotation The [JsonRotation] of the traffic light
  * @property collisions The list of actor IDs, this [JsonPedestrian] is colliding with.
+ * @property velocity The current velocity.
+ * @property acceleration The current acceleration.
+ * @property angularVelocity The current angular velocity.
+ * @property laneMarkingContacts The lane markings this [JsonPedestrian]'s bounding box touches.
  */
 @Serializable
 @SerialName("Pedestrian")
@@ -50,4 +54,9 @@ data class JsonPedestrian(
     @SerialName("location") override val location: JsonLocation,
     @SerialName("rotation") override val rotation: JsonRotation,
     @SerialName("collisions") override val collisions: List<Int>,
+    @SerialName("velocity") val velocity: JsonVector3D = JsonVector3D(0.0, 0.0, 0.0),
+    @SerialName("acceleration") val acceleration: JsonVector3D = JsonVector3D(0.0, 0.0, 0.0),
+    @SerialName("angular_velocity") val angularVelocity: JsonVector3D = JsonVector3D(0.0, 0.0, 0.0),
+    @SerialName("lane_marking_contacts")
+    override val laneMarkingContacts: List<JsonLaneMarkingContact> = emptyList(),
 ) : JsonActor()

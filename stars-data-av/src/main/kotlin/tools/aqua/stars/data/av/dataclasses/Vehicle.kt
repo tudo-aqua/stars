@@ -37,6 +37,8 @@ import kotlin.math.sqrt
  * @param rotation The [Rotation] of the [Vehicle].
  * @param collisions The [List] of all colliding [Actor] IDs of the [Vehicle]. Default: empty
  *   [List].
+ * @param laneMarkingContacts The [List] of [LaneMarkingContact]s of the [Vehicle]. Default: empty
+ *   [List].
  * @param lane The [Vehicle]'s [Lane].
  * @param positionOnLane The [Vehicle]'s position in the [Lane].
  * @property isEgo Whether this is the own [Vehicle].
@@ -44,6 +46,9 @@ import kotlin.math.sqrt
  * @property velocity The current velocity in m/s of the [Vehicle].
  * @property acceleration The current acceleration m/s² of the [Vehicle].
  * @property angularVelocity The current angular velocity of the [Vehicle].
+ * @property leftBlinker Whether the [Vehicle]'s left blinker is currently on.
+ * @property rightBlinker Whether the [Vehicle]'s right blinker is currently on.
+ * @property steeringAngle The current steering wheel input of the [Vehicle] in `[-1.0, 1.0]`.
  * @property vehicleType The [VehicleType] of the [Vehicle].
  */
 class Vehicle(
@@ -58,6 +63,7 @@ class Vehicle(
     location: Location = Location(),
     rotation: Rotation = Rotation(),
     collisions: List<Int> = emptyList(),
+    laneMarkingContacts: List<LaneMarkingContact> = emptyList(),
     lane: Lane = Lane(),
     positionOnLane: Double = 0.0,
     var isEgo: Boolean = false,
@@ -65,6 +71,9 @@ class Vehicle(
     var velocity: Vector3D = Vector3D(),
     var acceleration: Vector3D = Vector3D(),
     val angularVelocity: Vector3D = Vector3D(),
+    val leftBlinker: Boolean = false,
+    val rightBlinker: Boolean = false,
+    val steeringAngle: Double = 0.0,
     val vehicleType: VehicleType = VehicleType.CAR,
 ) :
     Actor(
@@ -79,6 +88,7 @@ class Vehicle(
         location = location,
         rotation = rotation,
         collisions = collisions,
+        laneMarkingContacts = laneMarkingContacts,
         lane = lane,
         positionOnLane = positionOnLane,
     ) {
@@ -123,6 +133,7 @@ class Vehicle(
           location = location,
           rotation = rotation,
           collisions = collisions,
+          laneMarkingContacts = laneMarkingContacts,
           lane = lane,
           positionOnLane = positionOnLane,
           isEgo = isEgo,
@@ -130,6 +141,9 @@ class Vehicle(
           velocity = velocity,
           acceleration = acceleration,
           angularVelocity = angularVelocity,
+          leftBlinker = leftBlinker,
+          rightBlinker = rightBlinker,
+          steeringAngle = steeringAngle,
           vehicleType = vehicleType,
       )
 

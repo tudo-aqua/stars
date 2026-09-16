@@ -31,8 +31,13 @@ package tools.aqua.stars.data.av.dataclasses
  * @param location The [Location] of the [Pedestrian].
  * @param rotation The [Rotation] of the [Pedestrian].
  * @param collisions The [List] of all colliding [Actor] IDs. Default: empty [List].
+ * @param laneMarkingContacts The [List] of [LaneMarkingContact]s of the [Pedestrian]. Default:
+ *   empty [List].
  * @param lane The [Pedestrian]'s [Lane].
  * @param positionOnLane The [Pedestrian]'s position in the [Lane].
+ * @property velocity The current velocity in m/s of the [Pedestrian].
+ * @property acceleration The current acceleration in m/s² of the [Pedestrian].
+ * @property angularVelocity The current angular velocity of the [Pedestrian].
  */
 class Pedestrian(
     id: Int = 0,
@@ -46,8 +51,12 @@ class Pedestrian(
     location: Location = Location(),
     rotation: Rotation = Rotation(),
     collisions: List<Int> = emptyList(),
+    laneMarkingContacts: List<LaneMarkingContact> = emptyList(),
     lane: Lane = Lane(),
     positionOnLane: Double = 0.0,
+    var velocity: Vector3D = Vector3D(),
+    var acceleration: Vector3D = Vector3D(),
+    val angularVelocity: Vector3D = Vector3D(),
 ) :
     Actor(
         id = id,
@@ -61,6 +70,7 @@ class Pedestrian(
         location = location,
         rotation = rotation,
         collisions = collisions,
+        laneMarkingContacts = laneMarkingContacts,
         lane = lane,
         positionOnLane = positionOnLane,
     ) {
@@ -78,7 +88,11 @@ class Pedestrian(
           location = location,
           rotation = rotation,
           collisions = collisions,
+          laneMarkingContacts = laneMarkingContacts,
           lane = lane,
           positionOnLane = positionOnLane,
+          velocity = velocity,
+          acceleration = acceleration,
+          angularVelocity = angularVelocity,
       )
 }

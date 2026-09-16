@@ -115,12 +115,13 @@ fun loadWorld(staticDataFile: Path): World =
  * Exactly one of [useEveryVehicleAsEgo], [useFirstVehicleAsEgo], [egoIds], or ego-flagged IDs in
  * the loaded data must be used to select ego vehicles.
  *
+ * The order of the dynamic data files is taken as-is from each [CarlaSimulationRunsWrapper]; to
+ * sort them by seed, configure `sortFilesBySeed` when constructing the wrapper.
+ *
  * @param simulationRunsWrappers The [List] of [CarlaSimulationRunsWrapper]s that wrap the map data
  *   to its dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map.
  * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
  *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
  *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
@@ -136,7 +137,6 @@ fun loadWorld(staticDataFile: Path): World =
 fun loadTicks(
     simulationRunsWrappers: List<CarlaSimulationRunsWrapper>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
@@ -203,8 +203,6 @@ fun loadTicks(
  *   dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map.
  * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
  *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
  *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
@@ -220,7 +218,6 @@ fun loadTicks(
 fun loadTicks(
     simulationRunsWrapper: CarlaSimulationRunsWrapper,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
@@ -228,7 +225,6 @@ fun loadTicks(
     loadTicks(
         simulationRunsWrappers = listOf(simulationRunsWrapper),
         bufferSize = bufferSize,
-        orderFilesBySeed = orderFilesBySeed,
         egoIds = egoIds,
         useEveryVehicleAsEgo = useEveryVehicleAsEgo,
         useFirstVehicleAsEgo = useFirstVehicleAsEgo,
@@ -243,8 +239,8 @@ fun loadTicks(
  *   data for the simulation.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map.
+ * @param sortFilesBySeed Whether to sort the [dynamicDataFiles] by the seed encoded in their
+ *   filename (`..._seed_<n>...`). Has no effect when any file carries no seed marker.
  * @param egoIds List of ego vehicle IDs to consider. If empty, this parameter does not restrict ego
  *   selection; ego vehicles are then determined by [useEveryVehicleAsEgo], [useFirstVehicleAsEgo],
  *   or ego markings in the input data.
@@ -258,15 +254,21 @@ fun loadTicks(
     mapDataFile: Path,
     dynamicDataFiles: List<Path>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
+    sortFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
-        simulationRunsWrappers = listOf(CarlaSimulationRunsWrapper(mapDataFile, dynamicDataFiles)),
+        simulationRunsWrappers =
+            listOf(
+                CarlaSimulationRunsWrapper(
+                    staticDataFile = mapDataFile,
+                    dynamicDataFiles = dynamicDataFiles,
+                    sortFilesBySeed = sortFilesBySeed,
+                )
+            ),
         bufferSize = bufferSize,
-        orderFilesBySeed = orderFilesBySeed,
         egoIds = egoIds,
         useEveryVehicleAsEgo = useEveryVehicleAsEgo,
         useFirstVehicleAsEgo = useFirstVehicleAsEgo,
@@ -281,7 +283,7 @@ fun loadTicks(
  *   simulation.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ * @param sortFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
  * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
  *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
@@ -299,16 +301,21 @@ fun loadTicks(
     mapDataFile: Path,
     dynamicDataFile: Path,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
+    sortFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
 ): TickSequence<TickData> =
     loadTicks(
             simulationRunsWrappers =
-                listOf(CarlaSimulationRunsWrapper(mapDataFile, listOf(dynamicDataFile))),
+                listOf(
+                    CarlaSimulationRunsWrapper(
+                        staticDataFile = mapDataFile,
+                        dynamicDataFiles = listOf(dynamicDataFile),
+                        sortFilesBySeed = sortFilesBySeed,
+                    )
+                ),
             bufferSize = bufferSize,
-            orderFilesBySeed = orderFilesBySeed,
             egoIds = egoIds,
             useEveryVehicleAsEgo = useEveryVehicleAsEgo,
             useFirstVehicleAsEgo = useFirstVehicleAsEgo,
@@ -321,8 +328,8 @@ fun loadTicks(
  * @param mapToDynamicDataFiles The [World] of static data to dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
- *   the map.
+ * @param sortFilesBySeed Whether to sort the dynamic data files of each map by the seed encoded in
+ *   their filename (`..._seed_<n>...`). Has no effect for a map whose files carry no seed marker.
  * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
  *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
  *   [useFirstVehicleAsEgo], or ego flags in the JSON input.
@@ -339,16 +346,21 @@ fun loadTicks(
 fun loadTicks(
     mapToDynamicDataFiles: Map<Path, List<Path>>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
+    sortFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
 ): Sequence<TickSequence<TickData>> =
     loadTicks(
         simulationRunsWrappers =
-            mapToDynamicDataFiles.map { CarlaSimulationRunsWrapper(it.key, it.value) },
+            mapToDynamicDataFiles.map {
+              CarlaSimulationRunsWrapper(
+                  staticDataFile = it.key,
+                  dynamicDataFiles = it.value,
+                  sortFilesBySeed = sortFilesBySeed,
+              )
+            },
         bufferSize = bufferSize,
-        orderFilesBySeed = orderFilesBySeed,
         egoIds = egoIds,
         useEveryVehicleAsEgo = useEveryVehicleAsEgo,
         useFirstVehicleAsEgo = useFirstVehicleAsEgo,
@@ -360,7 +372,7 @@ fun loadTicks(
  * @param mapToDynamicDataFile The [World] of static data to dynamic data.
  * @param bufferSize The size of the buffer for each [TickSequence]. This is the window of ticks
  *   that gets supplied to the TSCEvaluation.
- * @param orderFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
+ * @param sortFilesBySeed Whether the dynamic data files should be sorted by their seeds instead of
  *   the map.
  * @param egoIds List of ego vehicle IDs to consider. When non-empty, these IDs are used to select
  *   ego vehicles. When empty, ego vehicles are determined by [useEveryVehicleAsEgo],
@@ -377,16 +389,21 @@ fun loadTicks(
 fun loadTicks(
     mapToDynamicDataFile: Map<Path, Path>,
     bufferSize: Int = 100,
-    orderFilesBySeed: Boolean = false,
+    sortFilesBySeed: Boolean = false,
     egoIds: List<Int> = emptyList(),
     useEveryVehicleAsEgo: Boolean = false,
     useFirstVehicleAsEgo: Boolean = false,
 ): TickSequence<TickData> =
     loadTicks(
             simulationRunsWrappers =
-                mapToDynamicDataFile.map { CarlaSimulationRunsWrapper(it.key, listOf(it.value)) },
+                mapToDynamicDataFile.map {
+                  CarlaSimulationRunsWrapper(
+                      staticDataFile = it.key,
+                      dynamicDataFiles = listOf(it.value),
+                      sortFilesBySeed = sortFilesBySeed,
+                  )
+                },
             bufferSize = bufferSize,
-            orderFilesBySeed = orderFilesBySeed,
             egoIds = egoIds,
             useEveryVehicleAsEgo = useEveryVehicleAsEgo,
             useFirstVehicleAsEgo = useFirstVehicleAsEgo,

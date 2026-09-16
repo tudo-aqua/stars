@@ -34,13 +34,20 @@ All notable changes to this project will be documented in this file.
 - Add `plus(Number)`, `minus(Number)`, and `compareTo(Number)` operator overloads to `TickDataUnitSeconds`, `TickDataDifferenceSeconds`, `TickDataUnitMilliseconds`, and `TickDataDifferenceMilliseconds`.
 - Add relative comparison functions `isBehindOf`, `isInFrontOf` and `isParallelTo` to `BoundingBox2D`.
 - Add `loadTicks` overloads returning a single `TickSequence<TickData>`.
+- Add `LaneMarking`, `LaneMarkingType`, `LaneMarkingColor`, `LaneMarkingContact`, `ContactSide` and `LaneTopology`.
+- Add fields to `Actor` (lane marking contacts), `Vehicle` (blinkers, steering angle), `Pedestrian` (velocity, acceleration, angular velocity) and `Lane` (edge markings, adjacent/overlapping lanes, topology).
+- Add `WeatherType.DustStorm` and the `DustStorm` CARLA weather preset.
+- Add `hasSeed` and `orderDynamicDataFilesBySeed` helpers to the CARLA importer.
 
 ### Fixed
 - Fix ``TotalTickDifferenceMetric`` throwing ``IllegalStateException`` when presented the same tick twice.
 - Fix yield calculation for specific CARLA maps.
+- Support CARLA data files whose filename carries no `_seed_<n>` marker.
 
 ### Changed
 - Move the manual labeling DSL (`ManualLabelFile`, `manuallyLabelledFile`, `ManualLabelPredicate`, `ManualLabelInterval`) into `stars-core`'s `testFixtures` source set; it is now only available via the `test-fixtures` artifact.
+- `loadTicks`'s `sortFilesBySeed` flag is now respected and only sorts when every filename has a `_seed_<n>` marker; removed the unused `sortFilesBySeed` parameter from the `loadTicks(List<CarlaSimulationRunsWrapper>, …)` overload.
+- `getMapName` now rejects an empty filename with an error.
 - Make `interval(...)` optional in the manual labeling DSL: a predicate without an interval is checked against every tick, and an interval matching no ticks fails instead of passing silently.
 - Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
 - Remove `evaluate()` from `EvaluationHook`.
@@ -257,7 +264,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Add git pre-commit hook for `spotlessCheck`
-- Add `orderFilesBySeed` flag to the `loadSegments()` function which loads the `AVDataClasses`
+- Add `sortFilesBySeed` flag to the `loadSegments()` function which loads the `AVDataClasses`
 - Add logging for `AverageVehiclesInEgoBlockMetric`
 - Add additional scaled plots `validTSCInstanceOccurrencesPerProjection_scaled` and
   `validTSCInstancesProgressionPerProjection_combined_percentage_scaled`

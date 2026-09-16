@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2026 The STARS Project Authors
+ * Copyright 2026 The STARS Project Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +18,14 @@
 package tools.aqua.stars.data.av.dataclasses
 
 /**
- * Weather presets for the simulator.
+ * Data class for a lane marking on one side of a [Lane].
  *
- * Values mirror the CARLA Python API.
+ * @property markingType The [LaneMarkingType] of the marking.
+ * @property color The [LaneMarkingColor] of the marking.
+ * @property width The width of the marking in meters.
  */
-enum class WeatherType {
-  /** Clear sky / no precipitation. */
-  Clear,
-  /** Overcast / cloudy. */
-  Cloudy,
-  /** Wet ground / aftermath of rain. */
-  Wet,
-  /** Wet ground with cloud cover. */
-  WetCloudy,
-  /** Light/soft rain. */
-  SoftRainy,
-  /** Moderate rain. */
-  MidRainy,
-  /** Heavy rain. */
-  HardRainy,
-  /** Dust storm. */
-  DustStorm,
-}
+data class LaneMarking(
+    val markingType: LaneMarkingType = LaneMarkingType.NONE,
+    val color: LaneMarkingColor = LaneMarkingColor.Standard,
+    val width: Double = 0.0,
+)

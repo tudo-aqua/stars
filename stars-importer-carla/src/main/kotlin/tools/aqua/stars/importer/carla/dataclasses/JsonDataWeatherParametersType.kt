@@ -74,4 +74,7 @@ enum class JsonDataWeatherParametersType(val value: Int) {
 
   /** Heavy rain at sunset. */
   @SerialName("14") HardRainSunset(14),
+
+  /** Dust storm. */
+  @SerialName("15") DustStorm(15),
 }

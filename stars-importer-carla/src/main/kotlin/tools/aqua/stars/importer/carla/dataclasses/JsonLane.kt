@@ -37,6 +37,14 @@ import kotlinx.serialization.Serializable
  * @property landmarks List of [JsonLandmark]s on list lane.
  * @property contactAreas List of [JsonContactArea]s on this lane.
  * @property trafficLights List of [JsonStaticTrafficLight]s on this lane.
+ * @property leftLaneMarking The [JsonLaneMarking] on the left edge of this lane, if any.
+ * @property rightLaneMarking The [JsonLaneMarking] on the right edge of this lane, if any.
+ * @property leftLane The adjacent lane to the left, if any.
+ * @property rightLane The adjacent lane to the right, if any.
+ * @property overlappingLanes List of [JsonContactLaneInfo]s for lanes that physically share the
+ *   same road surface with this lane for a stretch.
+ * @property laneTopology Raw topology string describing how this lane relates to its
+ *   [overlappingLanes] (e.g. "Merging", "Diverging", "Merging & Diverging", "Overlapping", "").
  */
 @Serializable
 data class JsonLane(
@@ -54,4 +62,10 @@ data class JsonLane(
     @SerialName("landmarks") var landmarks: List<JsonLandmark>,
     @SerialName("contact_areas") val contactAreas: List<JsonContactArea>,
     @SerialName("traffic_lights") var trafficLights: List<JsonStaticTrafficLight>,
+    @SerialName("left_lane_marking") val leftLaneMarking: JsonLaneMarking? = null,
+    @SerialName("right_lane_marking") val rightLaneMarking: JsonLaneMarking? = null,
+    @SerialName("left_lane") val leftLane: JsonContactLaneInfo? = null,
+    @SerialName("right_lane") val rightLane: JsonContactLaneInfo? = null,
+    @SerialName("overlapping_lanes") val overlappingLanes: List<JsonContactLaneInfo> = emptyList(),
+    @SerialName("lane_topology") val laneTopology: String = "",
 )
