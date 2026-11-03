@@ -58,6 +58,9 @@ All notable changes to this project will be documented in this file.
 - Change `TickDataUnitSeconds` and `TickDataDifferenceSeconds` to `data class`, for consistency with `TickDataUnitMilliseconds` and `TickDataDifferenceMilliseconds`.
 - Change `loadTicks(mapDataFile: Path, dynamicDataFile: Path, ...)` return type from `Sequence<TickSequence<TickData>>` to `TickSequence<TickData>`, since it only ever loads one recording.
 
+### Changed
+- Change implementation of `TotalTickDifferenceMetric` to use new `TickAndTickSequenceMetricProvider`.
+
 ## [2.1] - 23.01.2026
 
 ### Added
