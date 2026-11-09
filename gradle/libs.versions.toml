@@ -28,7 +28,7 @@ versions = { id = "com.github.ben-manes.versions", version = "0.64.0" }
 spotless = { id = "com.diffplug.spotless", version = "8.10.0" }
 git-versioning = { id = "me.qoomon.git-versioning", version = "6.4.4" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
-dokka = { id = "org.jetbrains.dokka", version = "2.2.0" }
+dokka = { id = "org.jetbrains.dokka", version = "2.3.0" }
 maven-publish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.4.10" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.4.10" }
